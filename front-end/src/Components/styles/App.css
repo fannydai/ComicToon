@@ -1,4 +1,4 @@
-.App-container {
+.App-unauth-container {
   height: 100vh;
   width: 100%;
 
@@ -10,4 +10,12 @@
 .App-unauth {
     height: 50%;
     width: 25%;
+}
+
+.App-auth-container {
+  height: 100vh;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
 }

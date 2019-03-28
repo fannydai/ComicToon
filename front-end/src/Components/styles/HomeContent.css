@@ -1,0 +1,34 @@
+/* The bottom takes up what the navbar doesn't take up */
+.home-content-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-form {
+    width: 50%;
+    justify-content: center;
+}
+
+/* The bottom fills up what the search doesn't take up */
+.comic-container {
+    width: 100%;
+    flex-grow: 1;
+}
+
+/* Make the subcontainers fixed in height */
+.subscriptions-container {
+    width: 100%;
+    height: 33%;
+}
+
+.recent-container {
+    width: 100%;
+    height: 33%;
+}
+
+.favorites-container {
+    width: 100%;
+    height: 33%;
+}
