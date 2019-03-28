@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './styles/App.css';
 
 import Authentication from './Authentication';
-import NavigationBar from './NavigationBar';
 import HomeContent from './HomeContent';
 
 class App extends Component {
@@ -18,10 +17,7 @@ class App extends Component {
 			);
 		} else {
 			return (
-				<div className="App-auth-container">
-					<NavigationBar />
-					<HomeContent />
-				</div>
+				<HomeContent />
 			);
 		}
 	}

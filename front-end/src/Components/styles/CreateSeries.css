@@ -1,0 +1,54 @@
+.create-series-container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Everything but the navbar */
+.create-bottom-container {
+    flex-grow: 1;
+    display: flex;  
+}
+
+.create-form {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.name-input {
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* First input */
+.name-form-control {
+    width: 50%;
+}
+
+/* Middle section */
+.genre-input {
+    height: 40%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.genre-table {
+    border: 1px solid black;
+    width: 20%;
+}
+
+.genre-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-bottom {
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

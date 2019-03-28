@@ -7,13 +7,15 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import CreateSeries from './Components/CreateSeries';
 
 library.add(faChevronLeft, faChevronRight);
 
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
-            <Route path="/" component={App} />
+            <Route exact path="/" component={App} />
+            <Route path="/create/series" component={CreateSeries} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')
