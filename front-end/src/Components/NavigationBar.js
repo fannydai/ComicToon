@@ -18,7 +18,7 @@ class NavigationBar extends Component {
                     <Nav className="mr-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         <NavDropdown title="Comic">
-                            <NavDropdown.Item href="">View My Comics</NavDropdown.Item>
+                            <NavDropdown.Item href="/view/comics">View My Comics</NavDropdown.Item>
                             <NavDropdown.Item href="">View My Series</NavDropdown.Item>
                             <NavDropdown.Item href="">Create Comic</NavDropdown.Item>
                             <NavDropdown.Item href="/upload">Upload Comic</NavDropdown.Item>

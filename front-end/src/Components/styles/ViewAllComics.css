@@ -1,0 +1,23 @@
+.view-comics-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.view-comics-top {
+    text-align: center;
+}
+
+.view-comics-bottom {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.view-comics-card {
+    width: 18rem;
+}
+
+.card-img-top {
+    object-fit: cover;
+}

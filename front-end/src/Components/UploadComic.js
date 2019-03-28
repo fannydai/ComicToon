@@ -31,7 +31,7 @@ class UploadComic extends Component {
                         </div>
                         <div className="upload-sharing">
                             <div className="upload-sharing-inner">
-                                <table className="sharing-table">
+                                <table className="upload-sharing-table">
                                     <tbody>
                                         <tr><td>User 1</td></tr>
                                         <tr><td>User 2</td></tr>
@@ -39,7 +39,7 @@ class UploadComic extends Component {
                                         <tr><td>User 4</td></tr>
                                     </tbody>
                                 </table>
-                                <div className="sharing-right">
+                                <div className="upload-sharing-right">
                                 <Form.Control type="text" placeholder="Add User..." />
                                 <Button type="submit" variant="success">Add</Button>
                                 <Form.Check type="radio" name="privacy" label="Public" defaultChecked />

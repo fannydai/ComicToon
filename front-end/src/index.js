@@ -9,6 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronLeft, faChevronRight, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import CreateSeries from './Components/CreateSeries';
 import UploadComic from './Components/UploadComic';
+import ViewAllComics from './Components/ViewAllComics';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -18,6 +19,7 @@ ReactDOM.render(
             <Route exact path="/" component={App} />
             <Route path="/create/series" component={CreateSeries} />
             <Route path="/upload" component={UploadComic} />
+            <Route path="/view/comics" component={ViewAllComics} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')
