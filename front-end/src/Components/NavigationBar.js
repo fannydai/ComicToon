@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
+import './styles/NavigationBar.css';
+
 class NavigationBar extends Component {
     
     handleLogout() {

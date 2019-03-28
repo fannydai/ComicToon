@@ -11,11 +11,11 @@ class CreateSeries extends Component {
                  <NavigationBar />
                  <div className="create-bottom-container">
                     <Form className="create-form">
-                        <div className="name-input">
-                            <Form.Control className="name-form-control" type="text" placeholder="Type Series Name..." />
+                        <div className="create-series-name-input">
+                            <Form.Control className="create-series-name-form-control" type="text" placeholder="Type Series Name..." />
                         </div>
-                        <div className="genre-input">
-                            <table className="genre-table">
+                        <div className="create-series-genre-input">
+                            <table className="create-series-genre-table">
                                 <tbody>
                                     <tr><td>Horror</td></tr>
                                     <tr><td>Romance</td></tr>
@@ -23,12 +23,12 @@ class CreateSeries extends Component {
                                     <tr><td>Action</td></tr>
                                 </tbody>
                             </table>
-                            <div class="genre-right">
+                            <div class="create-series-genre-right">
                                 <Form.Control type="text" placeholder="Genre/Tags" />
                                 <Button type="submit" variant="success">Add</Button>
                             </div>
                         </div>
-                        <div className="create-bottom">
+                        <div className="create-series-bottom">
                             <Button type="submit" variant="primary">Create Series</Button>
                         </div>
                     </Form>

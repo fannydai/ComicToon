@@ -17,7 +17,7 @@ class UploadComic extends Component {
                             <p>Drop file here</p>
                         </div>
                         <div className="upload-info">
-                            <Form.Control className="name-input" type="text" placeholder="Type Comic Name..." />
+                            <Form.Control className="upload-name-input" type="text" placeholder="Type Comic Name..." />
                             <Dropdown className="upload-dropdown">
                                 <Dropdown.Toggle variant="outline-info">
                                     Select Series
