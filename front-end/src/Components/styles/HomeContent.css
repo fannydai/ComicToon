@@ -21,14 +21,40 @@
 .subscriptions-container {
     width: 100%;
     height: 33%;
+    display: flex;
+    flex-direction: column;
 }
 
 .recent-container {
     width: 100%;
     height: 33%;
+    display: flex;
+    flex-direction: column;
 }
 
 .favorites-container {
     width: 100%;
     height: 33%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-container {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+}
+
+.left-container {
+    display:flex;
+    align-items: center;
+}
+
+.middle-container {
+    flex-grow: 1;
+}
+
+.right-container {
+    display:flex;
+    align-items: center;
 }
