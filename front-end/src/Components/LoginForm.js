@@ -8,7 +8,7 @@ class LoginForm extends Component {
             <Form className="login-form">
                 <Form.Control type="email" placeholder="Enter your email..." />
                 <Form.Control type="password" placeholder="Enter your password..." />
-                <Button type="submit" varient="primary">Login</Button>
+                <Button type="submit" variant="primary">Login</Button>
             </Form>
         );
     }

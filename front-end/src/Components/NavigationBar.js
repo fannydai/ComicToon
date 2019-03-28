@@ -19,7 +19,7 @@ class NavigationBar extends Component {
                             <NavDropdown.Item href="">View My Comics</NavDropdown.Item>
                             <NavDropdown.Item href="">View My Series</NavDropdown.Item>
                             <NavDropdown.Item href="">Create Comic</NavDropdown.Item>
-                            <NavDropdown.Item href="">Upload Comic</NavDropdown.Item>
+                            <NavDropdown.Item href="/upload">Upload Comic</NavDropdown.Item>
                             <NavDropdown.Item href="/create/series">Create Series</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>

@@ -13,7 +13,7 @@ class HomeContent extends Component {
                 <div className="home-content-container">
                     <Form inline className="search-form">
                             <Form.Control type="text" placeholder="Search..." />
-                            <Button type="submit" varient="success">Search</Button>
+                            <Button type="submit" variant="success">Search</Button>
                     </Form>
                     <div className="comic-container">
                         <div className="subscriptions-container">

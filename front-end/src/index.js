@@ -6,16 +6,18 @@ import App from './Components/App';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import CreateSeries from './Components/CreateSeries';
+import UploadComic from './Components/UploadComic';
 
-library.add(faChevronLeft, faChevronRight);
+library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path="/" component={App} />
             <Route path="/create/series" component={CreateSeries} />
+            <Route path="/upload" component={UploadComic} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')
