@@ -24,6 +24,8 @@
 .comic-container {
     height: 90%;
     width: 100%;
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 
 /* Make the subcontainers fixed in height */
@@ -79,5 +81,5 @@
 .home-content-img {
     height: 100%;
     width: 75%;
-    object-fit: none;
+    object-fit: cover;
 }

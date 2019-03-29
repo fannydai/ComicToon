@@ -9,6 +9,16 @@ import pi from './images/pi.png';
 import yeti from './images/yeti.png';
 
 class HomeContent extends Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(event) {
+        console.log(event.target);
+        // Go to the comic/series
+    }
+
     render() {
         return (
             <div className="home-main-container">
@@ -26,17 +36,17 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={shoes} />
                                     </div>
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={shoes} />
                                     </div>
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={shoes} />
                                     </div>
                                 </div>
-                                <div className="right-container">
+                                <div className="right-container" onClick={this.handleClick}>
                                     <FontAwesomeIcon icon="chevron-right" />
                                 </div>
                             </div>
@@ -48,17 +58,17 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={pi} />
                                     </div>
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={pi} />
                                     </div>
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={pi} />
                                     </div>
                                 </div>
-                                <div className="right-container">
+                                <div className="right-container" onClick={this.handleClick}>
                                     <FontAwesomeIcon icon="chevron-right" />
                                 </div>
                             </div>
@@ -70,13 +80,13 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={yeti} />
                                     </div>
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={yeti} />
                                     </div>
-                                    <div className="img-container">
+                                    <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={yeti} />
                                     </div>
                                 </div>
