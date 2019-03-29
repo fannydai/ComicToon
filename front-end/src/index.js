@@ -12,7 +12,7 @@ import UploadComic from './Components/UploadComic';
 import ViewAllComics from './Components/ViewAllComics';
 import ViewAllSeries from './Components/ViewAllSeries';
 import CreateComic from './Components/CreateComic';
-import Error400 from './Components/Error400';
+import Error404 from './Components/Error404';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -25,7 +25,7 @@ ReactDOM.render(
             <Route path="/upload" component={UploadComic} />
             <Route exact path="/view/comics" component={ViewAllComics} />
             <Route exact path="/view/series" component={ViewAllSeries} />
-            <Route path="*" component={Error400} />
+            <Route path="*" component={Error404} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')

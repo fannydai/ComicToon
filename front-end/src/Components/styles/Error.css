@@ -3,5 +3,18 @@
     width: 100vw;
     background: url("../images/400BadRequest.jpg") no-repeat center;
     background-size: 100%;
+}
 
+.error-403-container {
+    height: 100vh;
+    width: 100vw;
+    background: url("../images/403Forbidden.jpg") no-repeat center;
+    background-size: 100%;
+}
+
+.error-404-container {
+    height: 100vh;
+    width: 100vw;
+    background: url("../images/404PageNotFound.jpg") no-repeat center;
+    background-size: 100%;
 }
