@@ -41,7 +41,11 @@
 }
 
 /* Make the dropdown fill the space */
+/*
 div.upload-dropdown > button, div {
+    width: 100%;
+}*/
+.upload-dropdown > button + div {
     width: 100%;
 }
 
@@ -60,7 +64,15 @@ div.upload-dropdown > button, div {
     align-items: center;
 }
 
+.upload-table-container {
+    height: 100%;
+    width: 35%;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
 .upload-sharing-table {
+    height: 100%;
     width: 35%;
 }
 

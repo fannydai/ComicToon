@@ -31,14 +31,21 @@ class UploadComic extends Component {
                         </div>
                         <div className="upload-sharing">
                             <div className="upload-sharing-inner">
-                                <table className="upload-sharing-table">
-                                    <tbody>
-                                        <tr><td>User 1</td></tr>
-                                        <tr><td>User 2</td></tr>
-                                        <tr><td>User 3</td></tr>
-                                        <tr><td>User 4</td></tr>
-                                    </tbody>
-                                </table>
+                                <div className="upload-table-container">
+                                    <table className="upload-sharing-table">
+                                        <tbody>
+                                            <tr><td>User 1</td></tr>
+                                            <tr><td>User 2</td></tr>
+                                            <tr><td>User 3</td></tr>
+                                            <tr><td>User 4</td></tr>
+                                            <tr><td>UserWithALongUsernameThatDoes'tFit</td></tr>
+                                            <tr><td>User 6</td></tr>
+                                            <tr><td>User 7</td></tr>
+                                            <tr><td>User 8</td></tr>
+                                            <tr><td>User 9</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div className="upload-sharing-right">
                                 <Form.Control type="text" placeholder="Add User..." />
                                 <Button type="submit" variant="success">Add</Button>

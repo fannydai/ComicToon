@@ -11,6 +11,7 @@ import CreateSeries from './Components/CreateSeries';
 import UploadComic from './Components/UploadComic';
 import ViewAllComics from './Components/ViewAllComics';
 import ViewAllSeries from './Components/ViewAllSeries';
+import CreateComic from './Components/CreateComic';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -18,7 +19,8 @@ ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path="/" component={App} />
-            <Route path="/create/series" component={CreateSeries} />
+            <Route exact path="/create/series" component={CreateSeries} />
+            <Route exact path="/create/comic" component={CreateComic} />
             <Route path="/upload" component={UploadComic} />
             <Route exact path="/view/comics" component={ViewAllComics} />
             <Route exact path="/view/series" component={ViewAllSeries} />

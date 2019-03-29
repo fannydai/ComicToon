@@ -34,12 +34,19 @@
 .create-series-genre-input {
     height: 40%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 
+.create-series-table-container {
+    height: 100%;
+    width: 20%;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
 .create-series-genre-table {
-    border: 1px solid black;
+    /*border: 1px solid black;*/
     width: 20%;
 }
 

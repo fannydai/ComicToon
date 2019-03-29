@@ -15,14 +15,23 @@ class CreateSeries extends Component {
                             <Form.Control className="create-series-name-form-control" type="text" placeholder="Type Series Name..." />
                         </div>
                         <div className="create-series-genre-input">
-                            <table className="create-series-genre-table">
-                                <tbody>
-                                    <tr><td>Horror</td></tr>
-                                    <tr><td>Romance</td></tr>
-                                    <tr><td>Comedy</td></tr>
-                                    <tr><td>Action</td></tr>
-                                </tbody>
-                            </table>
+                            <div className="create-series-table-container">
+                                <table className="create-series-genre-table">
+                                    <tbody>
+                                        <tr><td>Horror</td></tr>
+                                        <tr><td>Romance</td></tr>
+                                        <tr><td>Comedy</td></tr>
+                                        <tr><td>Action</td></tr>
+                                        <tr><td>Action</td></tr>
+                                        <tr><td>SuperCoolGenreThatDoesn'tFitHere</td></tr>
+                                        <tr><td>Action</td></tr>
+                                        <tr><td>Action</td></tr>
+                                        <tr><td>Action</td></tr>
+                                        <tr><td>Action</td></tr>
+                                        <tr><td>Action</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="create-series-genre-right">
                                 <Form.Control type="text" placeholder="Genre/Tags" />
                                 <Button type="submit" variant="success">Add</Button>
