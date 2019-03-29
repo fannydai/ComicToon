@@ -2,3 +2,7 @@ nav > div > div:nth-child(2) {
     display: flex;
     justify-content: flex-end;
 }
+
+nav {
+    min-height: 10vh;
+}
