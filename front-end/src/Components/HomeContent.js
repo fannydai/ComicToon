@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap'; 
+import { Button, Form, Image } from 'react-bootstrap'; 
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
+import shoes from './images/shoes.png';
+import pi from './images/pi.png';
+import yeti from './images/yeti.png';
 
 class HomeContent extends Component {
     render() {
@@ -23,7 +26,15 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
-
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={shoes} />
+                                    </div>
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={shoes} />
+                                    </div>
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={shoes} />
+                                    </div>
                                 </div>
                                 <div className="right-container">
                                     <FontAwesomeIcon icon="chevron-right" />
@@ -37,7 +48,15 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
-
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={pi} />
+                                    </div>
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={pi} />
+                                    </div>
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={pi} />
+                                    </div>
                                 </div>
                                 <div className="right-container">
                                     <FontAwesomeIcon icon="chevron-right" />
@@ -51,7 +70,15 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
-
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={yeti} />
+                                    </div>
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={yeti} />
+                                    </div>
+                                    <div className="img-container">
+                                        <Image className="home-content-img" src={yeti} />
+                                    </div>
                                 </div>
                                 <div className="right-container">
                                     <FontAwesomeIcon icon="chevron-right" />

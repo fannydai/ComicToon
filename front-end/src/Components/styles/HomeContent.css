@@ -15,14 +15,15 @@
 }
 
 .search-form {
+    height: 10%;
     width: 50%;
     justify-content: center;
 }
 
 /* The bottom fills up what the search doesn't take up */
 .comic-container {
+    height: 90%;
     width: 100%;
-    flex-grow: 1;
 }
 
 /* Make the subcontainers fixed in height */
@@ -60,9 +61,23 @@
 
 .middle-container {
     flex-grow: 1;
+    display: flex;
+    flex: row;
+    justify-content: space-evenly;
 }
 
 .right-container {
     display:flex;
     align-items: center;
+}
+
+.img-container {
+    display: flex;
+    justify-content: center;
+}
+
+.home-content-img {
+    height: 100%;
+    width: 75%;
+    object-fit: none;
 }
