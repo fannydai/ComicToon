@@ -8,7 +8,7 @@ import pusheen from './images/pusheen.png';
 class ViewAllComics extends Component {
     render() {
         return (
-            <div class="view-comics-container">
+            <div className="view-comics-container">
                 <NavigationBar />
                 <div className="view-comics-top">
                     <h1>My Comics</h1>

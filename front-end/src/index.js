@@ -10,6 +10,7 @@ import { faChevronLeft, faChevronRight, faCloudUploadAlt } from '@fortawesome/fr
 import CreateSeries from './Components/CreateSeries';
 import UploadComic from './Components/UploadComic';
 import ViewAllComics from './Components/ViewAllComics';
+import ViewAllSeries from './Components/ViewAllSeries';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -19,7 +20,8 @@ ReactDOM.render(
             <Route exact path="/" component={App} />
             <Route path="/create/series" component={CreateSeries} />
             <Route path="/upload" component={UploadComic} />
-            <Route path="/view/comics" component={ViewAllComics} />
+            <Route exact path="/view/comics" component={ViewAllComics} />
+            <Route exact path="/view/series" component={ViewAllSeries} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')

@@ -1,28 +1,23 @@
-.view-comics-container {
+.view-series-container {
     height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-.view-comics-top {
+.view-series-top {
     text-align: center;
 }
 
-.view-comics-bottom {
+.view-series-bottom {
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
     padding-left: 2vw;
     padding-right: 2vw;
 }
 
-.view-comics-card {
+.view-series-card {
     width: 18rem;
     margin-bottom: 5vh;
-}
-
-.card-img-top {
-    object-fit: cover;
 }
