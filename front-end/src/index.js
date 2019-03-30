@@ -17,6 +17,7 @@ import Verify from './Components/Verify';
 import Logout from './Components/Logout';
 import Admin from './Components/Admin'
 import About from './Components/About'
+import UpdateComic from './Components/UpdateComic';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -34,7 +35,8 @@ ReactDOM.render(
             <Route exact path="/verify" component={Verify} />
             <Route exact path="/logout" component={Logout} />   
             <Route exact path="/admin" component={Admin} /> 
-            <Route exact path="/about" component={About} />  
+            <Route exact path="/about" component={About} /> 
+            <Route exact path="/update" component={UpdateComic} />  
             <Redirect from="/" exact to="/welcome"/>
             <Route path="*" component={Error404} />
         </Switch>
