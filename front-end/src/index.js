@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './Components/App';
-//import * as serviceWorker from './serviceWorker';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronLeft, faChevronRight, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
@@ -13,18 +12,28 @@ import ViewAllComics from './Components/ViewAllComics';
 import ViewAllSeries from './Components/ViewAllSeries';
 import CreateComic from './Components/CreateComic';
 import Error404 from './Components/Error404';
+import HomeContent from './Components/HomeContent'
+import Verify from './Components/Verify';
+import Logout from './Components/Logout';
+import Admin from './Components/Admin'
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
-            <Route exact path="/" component={App} />
+            <Route exact path="/welcome" component={App} />
             <Route exact path="/create/series" component={CreateSeries} />
             <Route exact path="/create/comic" component={CreateComic} />
             <Route path="/upload" component={UploadComic} />
             <Route exact path="/view/comics" component={ViewAllComics} />
             <Route exact path="/view/series" component={ViewAllSeries} />
+            <Route exact path="/upload" component={UploadComic} />
+            <Route exact path="/home" component={HomeContent} />
+            <Route exact path="/verify" component={Verify} />
+            <Route exact path="/logout" component={Logout} />   
+            <Route exact path="/admin" component={Admin} />  
+            <Redirect from="/" exact to="/welcome"/>
             <Route path="*" component={Error404} />
         </Switch>
     </BrowserRouter>,

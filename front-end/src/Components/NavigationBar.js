@@ -4,9 +4,15 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import './styles/NavigationBar.css';
 
 class NavigationBar extends Component {
+
+    constructor(props){
+        super(props);
+    }
     
-    handleLogout() {
-        
+    handleLogout = () => {
+        //some code
+        console.log("here")
+        //this.props.history.push('/logout') //idk why this doesn't work lol
     }
 
     render() {

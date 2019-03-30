@@ -11,10 +11,9 @@ import yeti from './images/yeti.png';
 class HomeContent extends Component {
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(event) {
+    handleClick = (event) => {
         console.log(event.target);
         // Go to the comic/series
     }
@@ -22,7 +21,7 @@ class HomeContent extends Component {
     render() {
         return (
             <div className="home-main-container">
-                <NavigationBar />
+                <NavigationBar history={this.props.history}/>
                 <div className="home-content-container">
                     <Form inline className="search-form">
                             <Form.Control type="text" placeholder="Search..." />
