@@ -26,7 +26,7 @@ class Verify extends Component {
         return (
             <div className="verify-form-container">
 				<div className="verify">
-                <h1>Verify Your Account!</h1>
+                    <h1>Verify Your Account!</h1>
                     <Form className="verify-form" onSubmit={this.handleRequest}>
                         <Form.Control name="email" type="email" onChange={this.handleChange} placeholder="Enter your email..." />
                         <Form.Control name="key" type="key" onChange={this.handleChange} placeholder="Enter the key found in your email... " />
@@ -34,7 +34,6 @@ class Verify extends Component {
                     </Form>
 				</div>
 			</div>
- 
         );
     }
 }
