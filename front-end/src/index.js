@@ -18,6 +18,7 @@ import Logout from './Components/Logout';
 import Admin from './Components/Admin'
 import About from './Components/About'
 import UpdateComic from './Components/UpdateComic';
+import Canvas from './Components/Canvas'
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -36,7 +37,8 @@ ReactDOM.render(
             <Route exact path="/logout" component={Logout} />   
             <Route exact path="/admin" component={Admin} /> 
             <Route exact path="/about" component={About} /> 
-            <Route exact path="/update" component={UpdateComic} />  
+            <Route exact path="/update" component={UpdateComic} /> 
+            <Route exact path="/canvas" component={Canvas} />  
             <Redirect from="/" exact to="/welcome"/>
             <Route path="*" component={Error404} />
         </Switch>
