@@ -1,0 +1,17 @@
+.DS_Store
+.idea
+.bowerrc
+bower_components
+node_modules
+**/node_modules
+*.iml
+dist/docs
+
+drawerJs.v12.suo
+obj/Release/DrawerJs.njsprojResolveAssemblyReference.cache
+
+
+
+.jshintrc
+.editorconfig
+npm-debug.log
