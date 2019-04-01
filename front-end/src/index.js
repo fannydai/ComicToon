@@ -19,6 +19,8 @@ import Admin from './Components/Admin'
 import About from './Components/About'
 import UpdateComic from './Components/UpdateComic';
 import Canvas from './Components/Canvas'
+import ViewSubs from './Components/ViewSubscriptions'
+import ViewRecents from './Components/ViewRecents'
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -39,6 +41,8 @@ ReactDOM.render(
             <Route exact path="/about" component={About} /> 
             <Route exact path="/update" component={UpdateComic} /> 
             <Route exact path="/canvas" component={Canvas} />  
+            <Route exact path="/subscriptions" component={ViewSubs} /> 
+            <Route exact path="/recents" component={ViewRecents} /> 
             <Redirect from="/" exact to="/welcome"/>
             <Route path="*" component={Error404} />
         </Switch>
