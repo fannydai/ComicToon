@@ -30,7 +30,6 @@ ReactDOM.render(
             <Route exact path="/welcome" component={App} />
             <Route exact path="/create/series" component={CreateSeries} />
             <Route exact path="/create/comic" component={CreateComic} />
-            <Route path="/upload" component={UploadComic} />
             <Route exact path="/view/comics" component={ViewAllComics} />
             <Route exact path="/view/series" component={ViewAllSeries} />
             <Route exact path="/upload" component={UploadComic} />
