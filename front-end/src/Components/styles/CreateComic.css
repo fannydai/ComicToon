@@ -1,3 +1,4 @@
+/* Top level container */
 .create-comic-container {
     height: 100vh;
     width: 100vw;
@@ -5,6 +6,7 @@
     flex-direction: column;
 }
 
+/* Everything except the navbar */
 .create-comic-bottom {
     flex-grow: 1;
     display: flex;
@@ -14,10 +16,12 @@
     flex-grow: 1;
 }
 
+/* Where the user would click to create the comic */
 .create-panels-container {
     height: 45%;
 }
 
+/* Comic name and series */
 .create-comic-info {
     height: 15%;
     width: 100%;
@@ -38,6 +42,7 @@
     width: 100%;
 }
 
+/* Comic sharing and privacy */
 .create-comic-sharing {
     height: 30%;
     width: 100%;
@@ -63,6 +68,7 @@
     width: 35%;
 }
 
+/* Submit section */
 .create-comic-submit {
     height: 10%;
     display: flex;
