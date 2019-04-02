@@ -60,7 +60,6 @@ class ViewAllComics extends Component {
                         </Card.Body>
                     </Card>
                 </div>
-
             </div>
         );
     }

@@ -7,6 +7,7 @@ import './styles/HomeContent.css';
 import shoes from './images/shoes.png';
 import pi from './images/pi.png';
 import yeti from './images/yeti.png';
+import Footer from './Footer';
 
 class HomeContent extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class HomeContent extends Component {
                     </Form>
                     <div className="comic-container">
                         <div className="subscriptions-container">
-                            <h1>Subscriptions</h1>
+                            <h2>Subscriptions</h2>
                             <div className="content-container">
                                 <div className="left-container" onClick={this.handleLeft}>
                                     <FontAwesomeIcon icon="chevron-left" />
@@ -59,7 +60,7 @@ class HomeContent extends Component {
                             </div>
                         </div>
                         <div className="recent-container">
-                            <h1>Recent Creations</h1>
+                            <h2>Recent Creations</h2>
                             <div className="content-container">
                                 <div className="left-container" onClick={this.handleLeft}>
                                     <FontAwesomeIcon icon="chevron-left" />
@@ -81,7 +82,7 @@ class HomeContent extends Component {
                             </div>
                         </div>
                         <div className="favorites-container">
-                            <h1>Favorites</h1>
+                            <h2>Favorites</h2>
                             <div className="content-container">
                                 <div className="left-container" onClick={this.handleLeft}>
                                     <FontAwesomeIcon icon="chevron-left" />
@@ -104,6 +105,7 @@ class HomeContent extends Component {
                         </div>
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }

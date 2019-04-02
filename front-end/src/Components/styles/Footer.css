@@ -1,0 +1,11 @@
+.footer-container {
+    min-height: 5%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-paragraph {
+    margin-bottom: 0;
+}
