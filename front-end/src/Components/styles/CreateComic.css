@@ -7,5 +7,65 @@
 
 .create-comic-bottom {
     flex-grow: 1;
+    display: flex;
+}
+
+.create-comic-form {
+    flex-grow: 1;
+}
+
+.create-panels-container {
+    height: 45%;
+}
+
+.create-comic-info {
+    height: 15%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-comic-name-input {
+    width: 50%;
+}
+
+.create-comic-dropdown {
+    width: 50%;
+}
+
+.create-comic-dropdown > button + div {
+    width: 100%;
+}
+
+.create-comic-sharing {
+    height: 30%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.create-comic-sharing-inner {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.create-comic-sharing-left {
+    height: 100%;
+    width: 40%;
+    overflow: auto;
+}
+
+.create-comic-sharing-table {
+    height: 100%;
+    width: 35%;
+}
+
+.create-comic-submit {
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

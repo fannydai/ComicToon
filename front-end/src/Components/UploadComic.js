@@ -47,10 +47,10 @@ class UploadComic extends Component {
                                     </table>
                                 </div>
                                 <div className="upload-sharing-right">
-                                <Form.Control type="text" placeholder="Add User..." />
-                                <Button type="submit" variant="success">Add</Button>
-                                <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
-                                <Form.Check type="radio" name="privacy" label="Private" />
+                                    <Form.Control type="text" placeholder="Add User..." />
+                                    <Button type="submit" variant="success">Add</Button>
+                                    <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
+                                    <Form.Check type="radio" name="privacy" label="Private" />
                                 </div>
                             </div>
                         </div>

@@ -1,0 +1,11 @@
+.canvas-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas-bottom {
+    flex-grow: 1;
+    width: 100%;
+}
