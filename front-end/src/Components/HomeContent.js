@@ -18,6 +18,14 @@ class HomeContent extends Component {
         // Go to the comic/series
     }
 
+    handleLeft = (event) => {
+
+    }
+
+    handleRight = (event) => {
+        
+    }
+
     render() {
         return (
             <div className="home-main-container">
@@ -31,7 +39,7 @@ class HomeContent extends Component {
                         <div className="subscriptions-container">
                             <h1>Subscriptions</h1>
                             <div className="content-container">
-                                <div className="left-container">
+                                <div className="left-container" onClick={this.handleLeft}>
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
@@ -45,7 +53,7 @@ class HomeContent extends Component {
                                         <Image className="home-content-img" src={shoes} />
                                     </div>
                                 </div>
-                                <div className="right-container" onClick={this.handleClick}>
+                                <div className="right-container" onClick={this.handleRight}>
                                     <FontAwesomeIcon icon="chevron-right" />
                                 </div>
                             </div>
@@ -53,7 +61,7 @@ class HomeContent extends Component {
                         <div className="recent-container">
                             <h1>Recent Creations</h1>
                             <div className="content-container">
-                                <div className="left-container">
+                                <div className="left-container" onClick={this.handleLeft}>
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
@@ -67,7 +75,7 @@ class HomeContent extends Component {
                                         <Image className="home-content-img" src={pi} />
                                     </div>
                                 </div>
-                                <div className="right-container" onClick={this.handleClick}>
+                                <div className="right-container" onClick={this.handleRight}>
                                     <FontAwesomeIcon icon="chevron-right" />
                                 </div>
                             </div>
@@ -75,7 +83,7 @@ class HomeContent extends Component {
                         <div className="favorites-container">
                             <h1>Favorites</h1>
                             <div className="content-container">
-                                <div className="left-container">
+                                <div className="left-container" onClick={this.handleLeft}>
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
@@ -89,7 +97,7 @@ class HomeContent extends Component {
                                         <Image className="home-content-img" src={yeti} />
                                     </div>
                                 </div>
-                                <div className="right-container">
+                                <div className="right-container" onClick={this.handleRight}>
                                     <FontAwesomeIcon icon="chevron-right" />
                                 </div>
                             </div>

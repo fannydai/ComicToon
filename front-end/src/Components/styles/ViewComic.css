@@ -1,0 +1,31 @@
+.view-comic-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comic-bottom {
+    flex-grow: 1;
+    display: flex;
+}
+
+.view-comic-left {
+    height: 100%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comic-left-top {
+    height: 50%;
+}
+
+.view-comic-left-bottom {
+    height: 50%;
+}
+
+.view-comic-right {
+    height: 100%;
+    width: 20%;
+}

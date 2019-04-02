@@ -15,12 +15,12 @@ import Error404 from './Components/Error404';
 import HomeContent from './Components/HomeContent'
 import Verify from './Components/Verify';
 import Logout from './Components/Logout';
-import Admin from './Components/Admin'
-import About from './Components/About'
+import Admin from './Components/Admin';
+import About from './Components/About';
 import UpdateComic from './Components/UpdateComic';
-import Canvas from './Components/Canvas'
-import ViewSubs from './Components/ViewSubscriptions'
-import ViewRecents from './Components/ViewRecents'
+import Canvas from './Components/Canvas';
+import ViewSubs from './Components/ViewSubscriptions';
+import ViewRecents from './Components/ViewRecents';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt);
 
@@ -41,7 +41,7 @@ ReactDOM.render(
             <Route exact path="/update" component={UpdateComic} /> 
             <Route exact path="/canvas" component={Canvas} />  
             <Route exact path="/subscriptions" component={ViewSubs} /> 
-            <Route exact path="/recents" component={ViewRecents} /> 
+            <Route exact path="/recents" component={ViewRecents} />
             <Redirect from="/" exact to="/welcome"/>
             <Route path="*" component={Error404} />
         </Switch>
