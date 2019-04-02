@@ -12,6 +12,9 @@ import Footer from './Footer';
 class HomeContent extends Component {
     constructor(props) {
         super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.handleLeft = this.handleLeft.bind(this);
+        this.handleRight = this.handleRight.bind(this);
     }
 
     handleClick = (event) => {

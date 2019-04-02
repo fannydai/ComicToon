@@ -17,8 +17,35 @@
 }
 
 /* Where the user would click to create the comic */
-.create-panels-container {
+.create-comic-panel-container {
     height: 45%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.create-comic-panel-middle {
+    height: 100%;
+    width: 50%;
+    display: flex;
+}
+
+.create-comic-panel-inner {
+    width: 25%;
+}
+
+.create-comic-panel-plus {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+}
+
+.create-comic-img {
+    height: 100%;
+    width: 100%;
 }
 
 /* Comic name and series */
