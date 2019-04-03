@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import './styles/App.css';
 import { Image } from 'react-bootstrap'; 
+import './styles/App.css';
 
 
 import Authentication from './Authentication';
@@ -16,13 +16,12 @@ class App extends Component {
 			return (
 				
 				<div className="App-unauth-container">
-				
 					<div className="App-unauth">
-					<div className = "logo">
-					<Image className="logoimage" src={logo} fluid width="200" />
-					</div>
-					<Authentication />
-					<Footer/>
+						<div className = "logo">
+							<Image className="logoimage" src={logo} fluid width="200" />
+						</div>
+						<Authentication />
+						<Footer/>
 					</div>
 				</div>
 			);

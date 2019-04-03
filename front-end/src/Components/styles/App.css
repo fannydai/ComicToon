@@ -9,11 +9,12 @@
 }
 
 .App-unauth {
+    min-width: 350px;
     width: 25%;
     background-color: white;
 }
 
-.logo{
+.logo{ 
   display: flex;
   align-items: center;
   justify-content: center;

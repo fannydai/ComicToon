@@ -13,6 +13,32 @@ body {
     margin-bottom : 5px;
 }
 
+.nav {
+    min-width: 350px;
+    align-items: center;
+    justify-content: center;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+/* 
+Change tabs. but it will change the nav bar.
+
+a {
+    color: #1d8eff !important;
+}
+  
+.nav-link:not(.active):hover {
+    background: #1d8eff !important;
+    color: #F2F2F2 !important;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #FF69b4 !important;
+} */
+
 button {
     border: 2px solid #1d8eff;
     background-color: #69B4FF;
