@@ -9,7 +9,8 @@
 }
 
 .view-comics-bottom {
-    flex-grow: 1;
+    /*flex-grow: 1;*/
+    height: 85%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

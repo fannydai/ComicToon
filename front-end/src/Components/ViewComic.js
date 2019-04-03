@@ -6,6 +6,7 @@ import NavigationBar from './NavigationBar';
 import Comic from './Comic';
 import './styles/ViewComic.css';
 import pusheen from './images/pusheen.png';
+import shoes from './images/shoes.png';
 
 class ViewComic extends Component {
 
@@ -42,7 +43,7 @@ class ViewComic extends Component {
                                     <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
                                 </div>
                                 <div className="view-comic-panel-container">
-                                    
+                                    <img className="view-comic-panel-img" src={shoes} />
                                 </div>
                                 <div className="view-comic-navigate">
                                     <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
