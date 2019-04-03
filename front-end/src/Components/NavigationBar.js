@@ -20,7 +20,7 @@ class NavigationBar extends Component {
     render() {
         return (
             <Navbar expand="sm">
-                <Navbar.Brand><a href = "/home"><Image className="logoimage" src={logo} fluid width="75" /></a></Navbar.Brand>
+                <Navbar.Brand><a href = "/home"><Image className="logoimage" src={logo} fluid width="50" /></a></Navbar.Brand>
                 <Navbar.Toggle aria-controls="top-nav" />
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">
