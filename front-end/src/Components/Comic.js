@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import NavigationBar from './NavigationBar';
+import {Image} from 'react-bootstrap';
 import './styles/Comic.css';
 
-class Comic extends Component {
-    render() {
-        return (
-            <div className="create-comic-container">
-                <NavigationBar />
-            </div>
-        );
-    }
+
+function Comic(props){
+    return(
+        <Image className="home-content-img" src={props.src}/>
+    )
 }
+
 
 export default Comic;

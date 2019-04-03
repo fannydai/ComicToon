@@ -12,9 +12,6 @@ import Footer from './Footer';
 class HomeContent extends Component {
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
-        this.handleLeft = this.handleLeft.bind(this);
-        this.handleRight = this.handleRight.bind(this);
     }
 
     handleClick = (event) => {
@@ -28,6 +25,16 @@ class HomeContent extends Component {
 
     handleRight = (event) => {
         
+    }
+
+    handleGoToComic = (event) => {
+        //console.log(event.target.src)
+        this.props.history.push({
+            pathname: "/view/comic",
+            state: {
+                src: event.target.src
+            }
+          });
     }
 
     render() {
@@ -48,13 +55,13 @@ class HomeContent extends Component {
                                 </div>
                                 <div className="middle-container">
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} />
+                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
                                     </div>
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} />
+                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
                                     </div>
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} />
+                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
                                     </div>
                                 </div>
                                 <div className="right-container" onClick={this.handleRight}>
@@ -70,13 +77,13 @@ class HomeContent extends Component {
                                 </div>
                                 <div className="middle-container">
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} />
+                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
                                     </div>
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} />
+                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
                                     </div>
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} />
+                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
                                     </div>
                                 </div>
                                 <div className="right-container" onClick={this.handleRight}>
@@ -92,13 +99,13 @@ class HomeContent extends Component {
                                 </div>
                                 <div className="middle-container">
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} />
+                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
                                     </div>
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} />
+                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
                                     </div>
                                     <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} />
+                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
                                     </div>
                                 </div>
                                 <div className="right-container" onClick={this.handleRight}>
