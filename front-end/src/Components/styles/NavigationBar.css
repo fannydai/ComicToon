@@ -8,3 +8,13 @@ nav {
     padding : 10px;
     background-color: white;
 }
+
+.navbar-search-form {
+    flex-grow: 1;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.navbar-search-input {
+    flex-grow: 1;
+}

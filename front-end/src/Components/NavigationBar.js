@@ -35,12 +35,11 @@ class NavigationBar extends Component {
                             <NavDropdown.Item href="/create/series">Create Series</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                    
-                    <Nav className="ml-auto">
-                    <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-success">Search</Button>
+                    <Form className="navbar-search-form" inline>
+                        <FormControl type="text" placeholder="Search" className="navbar-search-input mr-sm-2" />
+                        <Button variant="outline-success">Search</Button>
                     </Form>
+                    <Nav className="ml-auto">
                         <Nav.Link onSelect={this.handleLogout()}>Log out</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
