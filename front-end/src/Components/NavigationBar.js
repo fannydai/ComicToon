@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown,Image,Form,FormControl,Button } from 'react-bootstrap';
 
+import './styles/App.css';
 import './styles/NavigationBar.css';
+
+import logo from './images/logo.jpg';
+
 
 class NavigationBar extends Component {
 
@@ -18,7 +22,7 @@ class NavigationBar extends Component {
     render() {
         return (
             <Navbar expand="sm">
-                <Navbar.Brand>ComicToon</Navbar.Brand>
+                <Navbar.Brand><a href = "/home"><Image className="logoimage" src={logo} fluid width="75" /></a></Navbar.Brand>
                 <Navbar.Toggle aria-controls="top-nav" />
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">
@@ -31,7 +35,12 @@ class NavigationBar extends Component {
                             <NavDropdown.Item href="/create/series">Create Series</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
+                    
                     <Nav className="ml-auto">
+                    <Form inline>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                    <Button variant="outline-success">Search</Button>
+                    </Form>
                         <Nav.Link onSelect={this.handleLogout()}>Log out</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
