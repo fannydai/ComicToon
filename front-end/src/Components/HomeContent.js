@@ -42,10 +42,6 @@ class HomeContent extends Component {
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
                 <div className="home-content-container">
-                    <Form inline className="search-form">
-                            <Form.Control type="text" placeholder="Search..." />
-                            <Button type="submit" variant="success">Search</Button>
-                    </Form>
                     <div className="comic-container">
                         <div className="subscriptions-container">
                             <h2>Subscriptions</h2>

@@ -5,3 +5,7 @@
     padding: 25px;
     background-color: white;
 }
+
+.paddedFormControl{
+    margin-bottom : 5px;
+}

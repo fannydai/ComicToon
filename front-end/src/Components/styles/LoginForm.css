@@ -8,3 +8,6 @@
 body{
     background-image: url("../images/background.png");
 }
+.paddedFormControl{
+    margin-bottom : 5px;
+}
