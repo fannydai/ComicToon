@@ -13,6 +13,10 @@ class NavigationBar extends Component {
         super(props);
     }
 
+    handleLogout() {
+        localStorage.removeItem('user');
+    }
+
     render() {
         return (
             <Navbar expand="sm">
@@ -34,7 +38,7 @@ class NavigationBar extends Component {
                         <Button variant="outline-success">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
-                        <Nav.Link href="/logout">Log out</Nav.Link>
+                        <Nav.Link href="/logout" onClick={this.handleLogout}>Log out</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
