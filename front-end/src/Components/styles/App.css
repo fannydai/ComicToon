@@ -11,3 +11,9 @@
     height: 50%;
     width: 25%;
 }
+
+.logo{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

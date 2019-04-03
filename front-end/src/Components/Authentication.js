@@ -9,7 +9,7 @@ class Authentication extends Component {
 
     render() {
         return (
-            <Tabs defaultActiveKey="login">
+            <Tabs className="tab-wrapper" defaultActiveKey="login">
                 <Tab eventKey="login" title="Login">
                     <LoginForm />
                 </Tab>

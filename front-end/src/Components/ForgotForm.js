@@ -8,7 +8,7 @@ class ForgotForm extends Component {
             <div className="Forgot-container">
                 
                 <Form className="forgot-form">
-                <p>Please enter your email associated with your account. We will email you your password reset link.</p>
+                <p>Please enter your email associated with your account. You will be emailed a password reset link valid for 24 hours.</p>
                     <Form.Control type="email" placeholder="Enter your email..." />
                     <Button type="submit" variant="primary" >Submit</Button>
                 </Form>
