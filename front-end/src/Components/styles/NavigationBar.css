@@ -5,6 +5,7 @@ nav > div > div:nth-child(2) {
 
 nav {
     background-color: white;
+    height: 15%;
 }
 
 .navbar-search-form {
