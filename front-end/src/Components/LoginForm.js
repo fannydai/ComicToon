@@ -6,9 +6,9 @@ class LoginForm extends Component {
     render() {
         return (
             <Form className="login-form">
-                <Form.Control type="email" placeholder="Enter your email..." />
-                <Form.Control type="password" placeholder="Enter your password..." />
-                <Button type="submit" variant="primary">Login</Button>
+                <Form.Control type="email" className = "paddedFormControl" placeholder="Enter your email..." />
+                <Form.Control type="password" className = "paddedFormControl" placeholder="Enter your password..." />
+                <Button type="submit" className = "paddedFormControl" variant="primary">Login</Button>
             </Form>
         );
     }
