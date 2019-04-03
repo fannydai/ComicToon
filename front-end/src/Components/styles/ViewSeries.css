@@ -1,0 +1,29 @@
+.view-one-series-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.view-one-series-bottom {
+    flex-grow: 1;
+}
+
+.view-one-series-heading {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.view-one-series-comics {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+
+.view-one-series-card {
+    width: 18rem;
+    margin-bottom: 5vw;
+}
