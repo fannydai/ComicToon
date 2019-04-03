@@ -18,6 +18,7 @@ import Verify from './Components/Verify';
 import Admin from './Components/Admin';
 import About from './Components/About';
 import UpdateComic from './Components/UpdateComic';
+import UpdateSeries from './Components/UpdateSeries';
 import Canvas from './Components/Canvas';
 import ViewSubs from './Components/ViewSubscriptions';
 import ViewRecents from './Components/ViewRecents';
@@ -46,6 +47,7 @@ ReactDOM.render(
             <Route exact path="/view/comic" component={ViewComic} />  
             <Route exact path="/view/series/1" component={ViewSeries} />
             <Route exact path="/update/comic" component={UpdateComic} />
+            <Route exact path="/update/series" component={UpdateSeries} />
             <Route exact path="/recents" component={ViewRecents} />
             <Redirect from="/" exact to="/welcome"/>
             <Route path="*" component={Error404} />
