@@ -27,7 +27,6 @@ class CreateComic extends Component {
     }
 
     handleNavigateCanvas() {
-        
     }
 
     handleSubmit() {
