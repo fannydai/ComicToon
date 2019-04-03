@@ -61,6 +61,15 @@ class HomeContent extends Component {
                                     <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
                                     </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
+                                    </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
+                                    </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
+                                    </div>
                                 </div>
                                 <div className="right-container" onClick={this.handleRight}>
                                     <FontAwesomeIcon icon="chevron-right" />
@@ -83,6 +92,15 @@ class HomeContent extends Component {
                                     <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
                                     </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
+                                    </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
+                                    </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
+                                    </div>  
                                 </div>
                                 <div className="right-container" onClick={this.handleRight}>
                                     <FontAwesomeIcon icon="chevron-right" />
@@ -96,6 +114,15 @@ class HomeContent extends Component {
                                     <FontAwesomeIcon icon="chevron-left" />
                                 </div>
                                 <div className="middle-container">
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
+                                    </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
+                                    </div>
+                                    <div className="img-container" onClick={this.handleClick}>
+                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
+                                    </div>
                                     <div className="img-container" onClick={this.handleClick}>
                                         <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
                                     </div>
