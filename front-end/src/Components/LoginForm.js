@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import './styles/LoginForm.css';
+import './styles/Welcome.css';
 
 class LoginForm extends Component {
     render() {
         return (
-            <Form className="login-form">
+            <Form className="welcome">
                 <Form.Control type="email" className = "paddedFormControl" placeholder="Enter your email..." />
                 <Form.Control type="password" className = "paddedFormControl" placeholder="Enter your password..." />
-                <Button type="submit" className = "paddedFormControl" variant="primary">Login</Button>
+                <button type="submit" className = "paddedFormControl">Login</button>
             </Form>
         );
     }

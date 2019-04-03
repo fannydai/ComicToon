@@ -14,7 +14,6 @@ import CreateComic from './Components/CreateComic';
 import Error404 from './Components/Error404';
 import HomeContent from './Components/HomeContent'
 import Verify from './Components/Verify';
-import Logout from './Components/Logout';
 import Admin from './Components/Admin';
 import About from './Components/About';
 import UpdateComic from './Components/UpdateComic';
@@ -36,7 +35,7 @@ ReactDOM.render(
             <Route exact path="/upload" component={UploadComic} />
             <Route exact path="/home" component={HomeContent} />
             <Route exact path="/verify" component={Verify} />
-            <Route exact path="/logout" component={Logout} />   
+            <Route exact path="/logout" component={App} />   
             <Route exact path="/admin" component={Admin} /> 
             <Route exact path="/about" component={About} /> 
             <Route exact path="/update" component={UpdateComic} /> 

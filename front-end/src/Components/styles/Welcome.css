@@ -1,11 +1,14 @@
-.forgot-form {
+.welcome {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 25px;
     background-color: white;
+    padding: 50px;
+    min-height: 350px;
 }
-
+body {
+    background-image: url("../images/background.png");
+}
 .paddedFormControl{
     margin-bottom : 5px;
 }
@@ -18,19 +21,18 @@ button {
     padding: 5px;
     cursor: pointer;
     margin: 5px;
-  
     transition: 0.5s;
-  }
-  button:hover {
-    background-color: #F2F2F2;
-    color: #69B4FF;
-  }
-  button:after {
-    content: ' \00bb';
-    opacity: 0;
-    transition: 0.5s;
-  }
-  button:hover:after {
-    opacity: 1;
-    right: 0;
-  }
+}
+button:hover {
+  background-color: #F2F2F2;
+  color: #69B4FF;
+}
+button:after {
+  content: ' \00bb';
+  opacity: 0;
+  transition: 0.5s;
+}
+button:hover:after {
+  opacity: 1;
+  right: 0;
+}

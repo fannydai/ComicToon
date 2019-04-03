@@ -4,8 +4,6 @@ nav > div > div:nth-child(2) {
 }
 
 nav {
-    min-height: 15vh;
-    padding : 10px;
     background-color: white;
 }
 

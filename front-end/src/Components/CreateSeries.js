@@ -9,6 +9,7 @@ class CreateSeries extends Component {
         return (
             <div className="create-series-container">
                  <NavigationBar />
+
                  <div className="create-bottom-container">
                     <Form className="create-form">
                         <div className="create-series-name-input">
@@ -42,6 +43,7 @@ class CreateSeries extends Component {
                         </div>
                     </Form>
                  </div>
+                 
             </div>
         );
     }

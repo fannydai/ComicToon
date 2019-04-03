@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
+import './styles/Welcome.css';
 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ForgotForm from './ForgotForm';
 
 class Authentication extends Component {
-
     render() {
         return (
-            <Tabs className="tab-wrapper" defaultActiveKey="login">
+            <Tabs defaultActiveKey="login">
                 <Tab eventKey="login" title="Login">
                     <LoginForm />
                 </Tab>
