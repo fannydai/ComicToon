@@ -10,10 +10,15 @@ class ViewSeries extends Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
     handleClick() {
         this.props.history.push('/view/comic');
+    }
+
+    handleUpdate() {
+        this.props.history.push('/update/comic');
     }
 
     render() {
@@ -26,49 +31,54 @@ class ViewSeries extends Component {
                         <h2>By: Pusheen</h2>
                     </div>
                     <div className="view-one-series-comics">
-                        <Card className="view-one-series-card" onClick={this.handleClick}>
-                            <Card.Img variant="top" src={pusheen} />
+                        <Card className="view-one-series-card">
+                            <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
                             <Card.Body>
                                 <Card.Title>Pusheen wants a cookie</Card.Title>
                                 <Card.Text>Artist: Pusheen</Card.Text>
                                 <Card.Text>Series: Animals</Card.Text>
                                 <Card.Text>Rate: +200</Card.Text>
+                                <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
                             </Card.Body>
                         </Card>
-                        <Card className="view-one-series-card" onClick={this.handleClick}>
-                            <Card.Img variant="top" src={pusheen} />
+                        <Card className="view-one-series-card">
+                            <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
                             <Card.Body>
                                 <Card.Title>Pusheen wants a cookie</Card.Title>
                                 <Card.Text>Artist: Pusheen</Card.Text>
                                 <Card.Text>Series: Animals</Card.Text>
                                 <Card.Text>Rate: +200</Card.Text>
+                                <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
                             </Card.Body>
                         </Card>
-                        <Card className="view-one-series-card" onClick={this.handleClick}>
-                            <Card.Img variant="top" src={pusheen} />
+                        <Card className="view-one-series-card">
+                            <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
                             <Card.Body>
                                 <Card.Title>Pusheen wants a cookie</Card.Title>
                                 <Card.Text>Artist: Pusheen</Card.Text>
                                 <Card.Text>Series: Animals</Card.Text>
                                 <Card.Text>Rate: +200</Card.Text>
+                                <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
                             </Card.Body>
                         </Card>
-                        <Card className="view-one-series-card" onClick={this.handleClick}>
-                            <Card.Img variant="top" src={pusheen} />
+                        <Card className="view-one-series-card">
+                            <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
                             <Card.Body>
                                 <Card.Title>Pusheen wants a cookie</Card.Title>
                                 <Card.Text>Artist: Pusheen</Card.Text>
                                 <Card.Text>Series: Animals</Card.Text>
                                 <Card.Text>Rate: +200</Card.Text>
+                                <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
                             </Card.Body>
                         </Card>
-                        <Card className="view-one-series-card" onClick={this.handleClick}>
-                            <Card.Img variant="top" src={pusheen} />
+                        <Card className="view-one-series-card">
+                            <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
                             <Card.Body>
                                 <Card.Title>Pusheen wants a cookie</Card.Title>
                                 <Card.Text>Artist: Pusheen</Card.Text>
                                 <Card.Text>Series: Animals</Card.Text>
                                 <Card.Text>Rate: +200</Card.Text>
+                                <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
                             </Card.Body>
                         </Card>
                     </div>
