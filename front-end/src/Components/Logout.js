@@ -7,6 +7,7 @@ import './styles/App.css';
 class Logout extends Component {
 
     render() {
+        localStorage.removeItem('user');
         return (
             <div className="App-unauth-container">
                 <div className="App-unauth">
