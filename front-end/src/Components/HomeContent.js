@@ -12,6 +12,7 @@ import Footer from './Footer';
 class HomeContent extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props);
     }
 
     handleClick = (event) => {
@@ -29,6 +30,7 @@ class HomeContent extends Component {
 
     handleGoToComic = (event) => {
         //console.log(event.target.src)
+        console.log(this.props);
         this.props.history.push({
             pathname: "/view/comic",
             state: {
