@@ -6,7 +6,7 @@ import './styles/Comic.css';
 
 function Comic(props){
     return(
-        <Image className="home-content-img" src={props.src}/>
+        <Image className="home-content-img" src={props.src} style={{width: 400, height: 400}}/>
     )
 }
 
