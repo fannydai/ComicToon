@@ -5,7 +5,8 @@ import App from './Components/App';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import CreateSeries from './Components/CreateSeries';
 import UploadComic from './Components/UploadComic';
 import ViewAllComics from './Components/ViewAllComics';
@@ -22,7 +23,7 @@ import ViewSubs from './Components/ViewSubscriptions';
 import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 
-library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus);
+library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash);
 
 ReactDOM.render(
     <BrowserRouter>
