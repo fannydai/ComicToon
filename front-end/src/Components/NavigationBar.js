@@ -12,12 +12,6 @@ class NavigationBar extends Component {
     constructor(props){
         super(props);
     }
-    
-    handleLogout = () => {
-        //some code
-        console.log("here")
-        //this.props.history.push('/logout') //idk why this doesn't work lol
-    }
 
     render() {
         return (
@@ -40,7 +34,7 @@ class NavigationBar extends Component {
                         <Button variant="outline-success">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
-                        <Nav.Link onSelect={this.handleLogout}>Log out</Nav.Link>
+                        <Nav.Link href="/logout">Log out</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
