@@ -4,6 +4,8 @@
     width: 100vw;
     display: flex;
     flex-direction: column;
+    background-color : papayawhip;
+    
 }
 
 /* Everything except the navbar */

@@ -7,7 +7,7 @@ class Canvas extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            iframe: '<iframe class="muro" src="deviantart_muro_sandbox.html?background=..%2Fimages%2Fcrane_squared_by_mudimba_and_draweverywhere.png">'
+            iframe: '<iframe class="muro" height = 100%; src="deviantart_muro_sandbox.html?background=..%2Fimages%2Fcrane_squared_by_mudimba_and_draweverywhere.png">'
         }    
     }
     
