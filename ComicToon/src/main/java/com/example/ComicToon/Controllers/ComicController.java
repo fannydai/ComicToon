@@ -29,6 +29,8 @@ public class ComicController{
     private RatingRepository ratingRepository;
 
 
+    //Create Comic Series
+
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/create/series", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
@@ -51,6 +53,48 @@ public class ComicController{
         }
         return result;
     }
+
+    //Delete Comic Series (and of course every comic in the series)
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/delete/series", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeleteComicSeriesResult deleteComicSeries(@RequestBody DeleteComicSeriesForm form){
+        DeleteComicSeriesResult result = new DeleteComicSeriesResult();
+
+        ArrayList<ComicSeriesModel> candidates = ComicSeriesRepository.findByname(form.getSeriesName());
+        UserModel owner = userRepository.findByusername(form.getOwnerName());
+        if(candidates == null || owner == null){
+            result.setResult("failure");
+            return result;
+        }
+        else{
+            for(ComicSeriesModel candidate: candidates){
+                if(candidate.getUserID().equals(owner.getId())){
+                    ComicSeriesModel toDelete = candidate;
+                    for(String c: toDelete.getComics()){
+                        ArrayList<ComicModel> candidates2 = comicRepository.findByname(c);
+                        for(ComicModel d : candidates2){
+                            if(d.getUserID().equals(owner.getId())){
+                                comicRepository.delete(d);
+                                break;
+                            }
+
+                        }
+                    }
+                    ComicSeriesRepository.delete(toDelete);
+                    break;
+                }
+            }
+            result.setResult("Deleted series & all enclosed comics");
+        }
+
+        return result;
+    }
+
+    //View Comic Series
+
+    //Create Comic
+
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/create/comic", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
@@ -95,6 +139,7 @@ public class ComicController{
         return result;
     }
 
+    //View Comic 
     //TODO SUGGESTION
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/view/comic", method = RequestMethod.POST, consumes = {"application/json"})
