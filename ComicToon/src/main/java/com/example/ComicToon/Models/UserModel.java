@@ -16,8 +16,8 @@ public class UserModel{
     private boolean verified;
     private String key;
     private boolean active;
-    private ArrayList<ComicModel> comics;
-    private ArrayList<ComicSeriesModel> comicSeries;
+    private ArrayList<String> comics;
+    private ArrayList<String> comicSeries;
 
     public String getId() {
         return this.id;
@@ -87,19 +87,19 @@ public class UserModel{
         this.active = active;
     }
 
-    public ArrayList<ComicModel> getComics() {
+    public ArrayList<String> getComics() {
         return this.comics;
     }
 
-    public void setComics(ArrayList<ComicModel> comics) {
+    public void setComics(ArrayList<String> comics) {
         this.comics = comics;
     }
 
-    public ArrayList<ComicSeriesModel> getComicSeries() {
+    public ArrayList<String> getComicSeries() {
         return this.comicSeries;
     }
 
-    public void setComicSeries(ArrayList<ComicSeriesModel> comicSeries) {
+    public void setComicSeries(ArrayList<String> comicSeries) {
         this.comicSeries = comicSeries;
     }
     //private ArrayList<SubscriptionModel> subscriptions;
@@ -113,8 +113,8 @@ public class UserModel{
         this.verified = false;
         this.key = "key";
         this.active = true;
-        this.comics = new ArrayList<ComicModel>();
-        this.comicSeries = new ArrayList();
+        this.comics = new ArrayList<String>();
+        this.comicSeries = new ArrayList<String>();
         //this.subscriptions = new ArrayList();
     }
 

@@ -12,6 +12,7 @@ public class ComicSeriesModel{
     private String name;
     private String userID;
     private ArrayList<ComicModel> comics;
+    private ArrayList<String> genre;
     private String privacy;
 
     public String getId() {
@@ -54,11 +55,15 @@ public class ComicSeriesModel{
         this.privacy = privacy;
     }
 
-    public ComicSeriesModel(String name, String userID, String privacy) {
+    public ComicSeriesModel(String name, String userID, String privacy, String[] genres) {
         this.name = name;
         this.setUserID(userID);
         this.setPrivacy(privacy);
         this.setComics(new ArrayList<ComicModel>());
+        this.genre = new ArrayList<String>();
+        for(String gen: genres){
+            genre.add(gen);
+        }
     }
 
     
