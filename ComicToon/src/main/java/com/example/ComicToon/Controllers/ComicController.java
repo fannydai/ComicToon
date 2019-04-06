@@ -139,6 +139,37 @@ public class ComicController{
         return result;
     }
 
+    //Delete Comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/delete/comic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeleteComicResult deleteComic(@RequestBody DeleteComicForm form){
+        DeleteComicResult result = new DeleteComicResult();
+        ArrayList<ComicModel> findComicList = comicRepository.findByname(form.getComicName());
+        UserModel findUser = userRepository.findByusername(form.getOwnerName());
+        if(findComicList.isEmpty() || findUser == null){
+            result.setResult("failed");
+        }
+        else{
+
+            for(ComicModel r : findComicList){
+                if(r.getUserID().equals(findUser.getId())){
+                    ComicSeriesModel series = ComicSeriesRepository.findByid(r.getComicSeriesID());
+                    series.getComics().remove(r.getId());
+                    ComicSeriesRepository.save(series);
+                    comicRepository.delete(r);
+                    result.setResult("Deleted Comic and reference in its series");
+
+                }
+            }
+        }
+
+
+
+        return result;
+    }
+
+
     //View Comic 
     //TODO SUGGESTION
     @CrossOrigin(origins = "http://localhost:3000")
