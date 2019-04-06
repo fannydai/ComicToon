@@ -11,7 +11,7 @@ public class ComicSeriesModel{
     @Field()
     private String name;
     private String userID;
-    private ArrayList<ComicModel> comics;
+    private ArrayList<String> comics;
     private ArrayList<String> genre;
     private String privacy;
 
@@ -39,11 +39,11 @@ public class ComicSeriesModel{
         this.userID = userID;
     }
 
-    public ArrayList<ComicModel> getComics() {
+    public ArrayList<String> getComics() {
         return this.comics;
     }
 
-    public void setComics(ArrayList<ComicModel> comics) {
+    public void setComics(ArrayList<String> comics) {
         this.comics = comics;
     }
 
@@ -59,7 +59,7 @@ public class ComicSeriesModel{
         this.name = name;
         this.setUserID(userID);
         this.setPrivacy(privacy);
-        this.setComics(new ArrayList<ComicModel>());
+        this.setComics(new ArrayList<String>());
         this.genre = new ArrayList<String>();
         for(String gen: genres){
             genre.add(gen);

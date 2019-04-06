@@ -12,10 +12,10 @@ public class ComicModel{
     private String name;
     private String userID;
     private String comicSeriesID;
-    private ArrayList<PanelModel> panelsList;
-    private ArrayList <CommentModel> commentsList;
+    private ArrayList<String> panelsList;
+    private ArrayList <String> commentsList;
     private String Date;
-    private ArrayList<RatingModel> RatingsID;
+    private ArrayList<String> RatingsID;
 
     public String getId() {
         return this.id;
@@ -49,19 +49,19 @@ public class ComicModel{
         this.comicSeriesID = comicSeriesID;
     }
 
-    public ArrayList<PanelModel> getPanelsList() {
+    public ArrayList<String> getPanelsList() {
         return this.panelsList;
     }
 
-    public void setPanelsList(ArrayList<PanelModel> panelsList) {
+    public void setPanelsList(ArrayList<String> panelsList) {
         this.panelsList = panelsList;
     }
 
-    public ArrayList<CommentModel> getCommentsList() {
+    public ArrayList<String> getCommentsList() {
         return this.commentsList;
     }
 
-    public void setCommentsList(ArrayList<CommentModel> commentsList) {
+    public void setCommentsList(ArrayList<String> commentsList) {
         this.commentsList = commentsList;
     }
 
@@ -73,11 +73,11 @@ public class ComicModel{
         this.Date = Date;
     }
 
-    public ArrayList<RatingModel> getRatingsID() {
+    public ArrayList<String> getRatingsID() {
         return this.RatingsID;
     }
 
-    public void setRatingsID(ArrayList<RatingModel> RatingsID) {
+    public void setRatingsID(ArrayList<String> RatingsID) {
         this.RatingsID = RatingsID;
     }
 
@@ -87,9 +87,9 @@ public class ComicModel{
         this.userID = userID;
         this.comicSeriesID = comicSeriesID;
         this.Date = Date;
-        this.panelsList = new ArrayList<PanelModel>();
-        this.commentsList = new ArrayList<CommentModel>();
-        this.RatingsID = new ArrayList<RatingModel>();
+        this.panelsList = new ArrayList<String>();
+        this.commentsList = new ArrayList<String>();
+        this.RatingsID = new ArrayList<String>();
     }
 
     
