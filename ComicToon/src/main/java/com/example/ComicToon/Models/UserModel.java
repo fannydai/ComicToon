@@ -18,9 +18,24 @@ public class UserModel{
     private boolean active;
     private ArrayList<String> comics;
     private ArrayList<String> comicSeries;
+    private ArrayList<String> subscriptions;
 
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * @return the subscriptions
+     */
+    public ArrayList<String> getSubscriptions() {
+        return subscriptions;
+    }
+
+    /**
+     * @param subscriptions the subscriptions to set
+     */
+    public void setSubscriptions(ArrayList<String> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     public void setId(String id) {

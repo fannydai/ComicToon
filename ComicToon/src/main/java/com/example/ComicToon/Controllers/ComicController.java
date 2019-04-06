@@ -278,7 +278,35 @@ public class ComicController{
         return result;
     }
 
-    //View Subscriptions
+    //View Subscriptions (list of subscriptions of a user -> not same as the subscriptions section of homepage)
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewSubscriptionsResult viewSubscriptions(@RequestBody ViewSubscriptionsForm form){
+        ViewSubscriptionsResult result = new ViewSubscriptionsResult();
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if(user==null){
+            return result;
+        }
+        for(String subscriptionsid : user.getSubscriptions()){
+            result.getSeries().add(ComicSeriesRepository.findByid(subscriptionsid));
+        }
+
+        return result;
+    }
 
     //View Recent Creations
+    //someone else do it due benchmark1
+
+
+
+    //OTHERS (After benchmark 1)
+
+    //Subscribe To Comic
+
+    //Rate Comic
+
+    //Download Comic
+
+    //Comment on Comic
 }
