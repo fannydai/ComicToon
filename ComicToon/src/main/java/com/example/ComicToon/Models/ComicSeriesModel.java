@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class ComicSeriesModel{
     @Id
-    private String id;
+    public String id;
     @Field()
     private String name;
     private String userID;

@@ -72,6 +72,10 @@ public class UserRestController {
         return result;
     }
 
+    // @CrossOrigin(origins = "http://localhost:3000")
+    // @RequestMapping(value = "/forgot", method = RequestMethod.POST, consumes = {"application/json"})
+    // @ResponseBody
+
     public List<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
         authList.add(new SimpleGrantedAuthority("ROLE_USER"));

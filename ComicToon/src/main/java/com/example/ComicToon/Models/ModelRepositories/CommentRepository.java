@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 
 public interface CommentRepository extends MongoRepository<CommentModel, String>{
-    public CommentModel findByID(String id);
+    public CommentModel findByid(String id);
     public List<CommentModel> findAll();
 }

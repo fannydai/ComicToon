@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 
 public interface RatingRepository extends MongoRepository<RatingModel, String>{
-    public RatingModel findByID(String id);
+    public RatingModel findByid(String id);
     public List<RatingModel> findAll();
 }

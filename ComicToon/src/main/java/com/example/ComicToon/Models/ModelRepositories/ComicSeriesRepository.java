@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 
 public interface ComicSeriesRepository extends MongoRepository<ComicSeriesModel, String>{
-    public ComicSeriesModel findByID(String id);
+    public ComicSeriesModel findByid(String id);
     public List<ComicSeriesModel> findAll();
 }
