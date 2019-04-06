@@ -16,6 +16,16 @@ public class ComicModel{
     private ArrayList <String> commentsList;
     private String Date;
     private ArrayList<String> RatingsID;
+    //shared with userIDs
+    private ArrayList<String> sharedWith;
+
+    public ArrayList<String> getSharedWith() {
+        return this.sharedWith;
+    }
+
+    public void setSharedWith(ArrayList<String> sharedWith) {
+        this.sharedWith = sharedWith;
+    }
 
     public String getId() {
         return this.id;
@@ -82,7 +92,7 @@ public class ComicModel{
     }
 
 
-    public ComicModel(String name, String userID, String comicSeriesID, String Date){
+    public ComicModel(String name, String userID, String comicSeriesID, String Date, String[] share){
         this.name = name;
         this.userID = userID;
         this.comicSeriesID = comicSeriesID;
@@ -90,6 +100,10 @@ public class ComicModel{
         this.panelsList = new ArrayList<String>();
         this.commentsList = new ArrayList<String>();
         this.RatingsID = new ArrayList<String>();
+        this.sharedWith = new ArrayList<String>();
+        for (String s: share){
+            sharedWith.add(s);
+        }
     }
 
     

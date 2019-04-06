@@ -9,5 +9,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ComicRepository extends MongoRepository<ComicModel, String>{
     public ComicModel findByid(String ID);
+    public ComicModel findByname(String name);
     public List<ComicModel> findAll();
 }
