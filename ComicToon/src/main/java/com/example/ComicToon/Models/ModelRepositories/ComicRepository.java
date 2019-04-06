@@ -6,9 +6,10 @@ import com.example.ComicToon.Models.ComicModel;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.ArrayList;
 
 public interface ComicRepository extends MongoRepository<ComicModel, String>{
     public ComicModel findByid(String ID);
-    public ComicModel findByname(String name);
+    public ArrayList<ComicModel> findByname(String name);
     public List<ComicModel> findAll();
 }

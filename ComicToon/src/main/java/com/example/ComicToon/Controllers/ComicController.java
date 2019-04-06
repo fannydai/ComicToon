@@ -63,7 +63,12 @@ public class ComicController{
             return result;
         }
         else{
-            ComicSeriesModel series = ComicSeriesRepository.findByname(form.getSeries());
+            ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
+            ComicSeriesModel series = null;
+            for(ComicSeriesModel s : seriesList){
+                if(s.getUserID().equals(user.getId()))
+                    series = s;
+            }
             if(series!=null){
                 //create and save new comic
                 Date date = new Date();
@@ -89,4 +94,66 @@ public class ComicController{
 
         return result;
     }
+
+    //TODO SUGGESTION
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/comic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewComicResult viewComic(@RequestBody ViewComicForm form){
+        ViewComicResult result = new ViewComicResult();
+        ArrayList<ComicModel> findComicList = comicRepository.findByname(form.getComicName());
+        ComicModel findComic = null;
+        for(ComicModel c: findComicList){
+            if(c.getUserID().equals(form.getComicOwnerName()))
+                findComic = c;
+        }
+        
+        if(findComic!=null){
+
+            ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
+            ArrayList<CommentModel> comments = new ArrayList<CommentModel>();
+            ArrayList<RatingModel> ratings = new ArrayList<RatingModel>();
+            ArrayList<PanelModel> panels = new ArrayList<PanelModel>();
+
+            result.setComicName(findComic.getName());
+            result.setCreatorName(form.getComicOwnerName());
+            result.setSeriesName(series.getName());
+            for(String c: findComic.getCommentsList()){
+                CommentModel findComment = commentRepository.findByid(c);
+                if(findComment!=null){
+                    comments.add(findComment);
+                }
+            }
+            result.setCommentsList(comments);
+
+            for(String r: findComic.getRatingsID()){
+                RatingModel rating = ratingRepository.findByid(r);
+                if(rating!=null){
+                    ratings.add(rating);
+                }
+            }
+
+            result.setRatingsID(ratings);
+
+            for(String p: findComic.getPanelsList()){
+                PanelModel panel = panelRepository.findByid(p);
+                if(panel !=null){
+                    panels.add(panel);
+                }
+            }
+            result.setPanels(panels);
+
+            result.setSuggestions(null);
+
+
+        }
+        else{
+            return result;
+        }
+        
+
+
+        return result;
+    }
+
 }
