@@ -10,32 +10,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
+
 @SpringBootApplication
-public class ComicToonApplication {
-	public static void main(String[] args) {
+public class ComicToonApplication{
+    public static void main(String[] args) {
 		SpringApplication.run(ComicToonApplication.class, args);
 	}
 
-	//Probably not needed
-    @Configuration
-    protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-        
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.addFilterBefore(new CorsSupport(), ChannelProcessingFilter.class);
-            http
-            .authorizeRequests()
-            .antMatchers("/","/register","/login", "/pickWord", "/userMove", "/botMove/*", "/pastGames/*")
-            .permitAll()
-            .and()
-            .authorizeRequests()
-            .anyRequest()
-            .authenticated()
-            .and().csrf().disable();
-        }
-	}
+
+@Configuration
+protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(new CorsSupport(), ChannelProcessingFilter.class);
+        http
+        .authorizeRequests()
+        .antMatchers("/","/register","/login", "/forgotPassword", "/userMove", "/botMove/*", "/pastGames/*")
+        .permitAll()
+        .and()
+        .authorizeRequests()
+        .anyRequest()
+        .authenticated()
+        .and().csrf().disable();
+    }
 }
-
-
-
-
+}

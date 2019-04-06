@@ -78,6 +78,7 @@ class CreateComic extends Component {
                         <div className="create-comic-sharing">
                             <div className="create-comic-sharing-inner">
                                 <div className="create-comic-sharing-left">
+                                    <h2>Shared With</h2>
                                     <table className="create-comic-sharing-table">
                                         <tbody>
                                             <tr><td>User 1</td></tr>
