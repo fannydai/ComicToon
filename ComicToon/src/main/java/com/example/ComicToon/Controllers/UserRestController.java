@@ -108,12 +108,46 @@ public class UserRestController {
         return result;
     }
 
-    // @CrossOrigin(origins = "http://localhost:3000")
-    // @RequestMapping(value = "/forgotVerification", method = RequestMethod.POST, consumes = {"application/json"})
-    // @ResponseBody
-    // public ForgotVerificationResult forgotVerification(@RequestBody ForgotVerificationForm form){
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/forgotVerification", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ForgotVerificationResult forgotVerification(@RequestBody ForgotVerificationForm form){
+        ForgotVerificationResult result = new ForgotVerificationResult();
+        List<UserModel> users = userRepository.findAll();
+        UserModel userWithKey = null;
+        for (UserModel user:users){
+            if (user.getKey().equals(form.getKey())){
+                userWithKey = user;
+            }
+        }
+        if (userWithKey!= null){
+            result.setResult("success");
+            return result;
+        }
 
-    // }
+        result.setResult("failure");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/forgotChangePassword", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ChangePasswordResult forgotChangePassword(@RequestBody ChangePasswordForm form){
+        ChangePasswordResult result = new ChangePasswordResult();
+
+        UserModel findUser = userRepository.findByusername(form.getUsername());
+
+        if(findUser!=null){
+            findUser.setPassword(form.getPassword());
+            userRepository.save(findUser);
+            result.setResult("success");
+        }
+        else{
+            result.setResult("failure");
+        }
+
+        return result;
+    }
 
 
     public List<GrantedAuthority> getAuthorities() {
