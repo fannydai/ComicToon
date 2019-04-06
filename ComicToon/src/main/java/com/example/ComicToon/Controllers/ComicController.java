@@ -91,7 +91,30 @@ public class ComicController{
         return result;
     }
 
-    //View Comic Series
+    //View Comic Series (not my series thats different)
+        //show all comics (links?) in series
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/comic-series", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewComicSeriesResult viewComicSeries(@RequestBody ViewComicSeriesForm form){
+        ViewComicSeriesResult result = new ViewComicSeriesResult();
+
+        ArrayList <ComicSeriesModel> candidates = ComicSeriesRepository.findByname(form.getComicSeriesName());
+        UserModel owner = userRepository.findByusername(form.getOwnerName());
+
+        for (ComicSeriesModel candidate: candidates){
+            if(candidate.getUserID().equals(owner.getId())){
+                for(String comicID : candidate.getComics()){
+                    ComicModel comic = comicRepository.findByid(comicID);
+                    result.getComics().add(comic);
+                }
+                break;
+            }
+        }
+        return result;
+    }
+
 
     //Create Comic
 
@@ -232,4 +255,30 @@ public class ComicController{
         return result;
     }
 
+
+    //The "my" use cases are bellow
+
+    //View Own Comic Series
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/series", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewMySeriesResult viewMySeries(@RequestBody ViewMySeriesForm form){
+        ViewMySeriesResult result = new ViewMySeriesResult();
+
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if(user == null){
+            return result;
+        }else{
+            for (String seriesID : user.getComicSeries()){
+                ComicSeriesModel series = ComicSeriesRepository.findByid(seriesID);
+                result.getComicSeries().add(series);
+            }
+        }
+
+        return result;
+    }
+
+    //View Subscriptions
+
+    //View Recent Creations
 }
