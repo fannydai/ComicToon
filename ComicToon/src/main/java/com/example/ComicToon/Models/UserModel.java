@@ -9,6 +9,7 @@ public class UserModel{
     @Id
     public String id;
     @Field()
+    private String email;
     private String username;
     private String password;
     private String userType;
@@ -24,6 +25,10 @@ public class UserModel{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmail(){
+        return this.email;
     }
 
     public String getUsername() {
@@ -100,7 +105,8 @@ public class UserModel{
     //private ArrayList<SubscriptionModel> subscriptions;
 
 
-    public UserModel(String username, String password, String userType){
+    public UserModel(String email,String username, String password, String userType){
+        this.email = email;
         this.username = username;
         this.password = password;
         this.userType = userType;

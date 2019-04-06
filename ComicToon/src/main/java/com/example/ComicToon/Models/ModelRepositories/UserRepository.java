@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserRepository extends MongoRepository<UserModel, String>{
     public UserModel findByusername(String username);
+    public UserModel findByemail(String email);
     public UserModel findbyID(String id);
     public List<UserModel> findAll();
 }
