@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './Components/App';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -24,39 +25,37 @@ import ViewSubs from './Components/ViewSubscriptions';
 import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
+import store from './Components/Store'
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash);
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Switch>
-            <Route exact path="/welcome" component={App} />
-            <Route exact path="/create/series" component={CreateSeries} />
-            <Route exact path="/create/comic" component={CreateComic} />
-            <Route exact path="/view/comics" component={ViewAllComics} />
-            <Route exact path="/view/series" component={ViewAllSeries} />
-            <Route exact path="/upload" component={UploadComic} />
-            <Route exact path="/home" component={HomeContent} />
-            <Route exact path="/verify" component={Verify} />
-            <Route exact path="/logout" component={App} />   
-            <Route exact path="/admin" component={Admin} /> 
-            <Route exact path="/about" component={About} /> 
-            <Route exact path="/update" component={UpdateComic} /> 
-            <Route exact path="/canvas" component={Canvas} />  
-            <Route exact path="/subscriptions" component={ViewSubs} />
-            <Route exact path="/view/comic" component={ViewComic} />  
-            <Route exact path="/view/series/1" component={ViewSeries} />
-            <Route exact path="/update/comic" component={UpdateComic} />
-            <Route exact path="/update/series" component={UpdateSeries} />
-            <Route exact path="/recents" component={ViewRecents} />
-            <Redirect from="/" exact to="/welcome"/>
-            <Route path="*" component={Error404} />
-        </Switch>
-    </BrowserRouter>,
+    <Provider store={store}>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/welcome" component={App} />
+                <Route exact path="/create/series" component={CreateSeries} />
+                <Route exact path="/create/comic" component={CreateComic} />
+                <Route exact path="/view/comics" component={ViewAllComics} />
+                <Route exact path="/view/series" component={ViewAllSeries} />
+                <Route exact path="/upload" component={UploadComic} />
+                <Route exact path="/home" component={HomeContent} />
+                <Route exact path="/verify" component={Verify} />
+                <Route exact path="/logout" component={App} />   
+                <Route exact path="/admin" component={Admin} /> 
+                <Route exact path="/about" component={About} /> 
+                <Route exact path="/update" component={UpdateComic} /> 
+                <Route exact path="/canvas" component={Canvas} />  
+                <Route exact path="/subscriptions" component={ViewSubs} />
+                <Route exact path="/view/comic" component={ViewComic} />  
+                <Route exact path="/view/series/1" component={ViewSeries} />
+                <Route exact path="/update/comic" component={UpdateComic} />
+                <Route exact path="/update/series" component={UpdateSeries} />
+                <Route exact path="/recents" component={ViewRecents} />
+                <Redirect from="/" exact to="/welcome"/>
+                <Route path="*" component={Error404} />
+            </Switch>
+        </BrowserRouter>
+    </Provider>,
     document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-//serviceWorker.unregister();
