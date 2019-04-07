@@ -16,6 +16,13 @@ export default function(state = initState, action){
                 email: action.payload.email,
                 isValidated: action.payload.verified
             };
+        case REGISTER_USER:
+            return{
+                username: action.payload.username,
+                pwd: action.payload.pwd,
+                email: action.payload.email,
+                isValidated: action.payload.verified
+            };
         case ERR:
             return{
                 username: action.payload.username,

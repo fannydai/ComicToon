@@ -30,3 +30,42 @@ export const LoginUser = (email, pwd) => (dispatch) => {
             }
     })();
 }
+
+export const RegisterUser = (username, email, pwd) => (dispatch) => {
+    (async () => {
+        const res = await fetch("http://localhost:8080/register", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                email: email,
+                username: username,
+                password: pwd
+            })
+        });
+        let content = await res.json();
+        if(content.status === "Email Already Exists") { 
+            alert("EMAIL EXISTS ALREADY!!");
+            dispatch({
+                type: REGISTER_USER,
+                payload: {username: "", pwd: "", email: "", verified: false}
+            });
+        }
+        else if(content.status === "Username Already Exists"){ 
+            alert("USERNAME EXISTS ALREADY!!");
+            dispatch({
+                type: REGISTER_USER,
+                payload: {username: "", pwd: "", email: "", verified: false}
+            });
+        }
+        else {
+            if (!window.localStorage.getItem('user')) localStorage.setItem('user', username);
+            dispatch({
+                type: REGISTER_USER,
+                payload: {username: username, pwd: pwd, email: email, verified: false}
+            });
+        }
+    })();
+}

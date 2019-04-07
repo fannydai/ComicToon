@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import {Redirect} from 'react-router-dom'
 import './styles/Welcome.css';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
+import {RegisterUser} from '../Actions/UserActions'
+
+const StateToProps = (state) => ({ //application level state via redux
+    user: state.user
+});
 
 class RegisterForm extends Component {
     constructor() {
@@ -15,30 +22,15 @@ class RegisterForm extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.user.username !== "") this.setState({isValidated: true})   
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.state.pwd !== this.state.confirm)
             alert("PASSWORD AND CONFIRM PASSWORD DON'T MATCH!")
-        else{
-            (async () => {
-                const res = await fetch("http://localhost:8080/register", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json; charset=utf-8"
-                    },
-                    body: JSON.stringify({
-                        email: this.state.email,
-                        username: this.state.username,
-                        password: this.state.pwd
-                    })
-                });
-                let content = await res.json();
-                if(content.status === "Email Already Exists") alert("EMAIL EXISTS ALREADY!!")
-                else if(content.status === "Username Already Exists") alert("USERNAME EXISTS ALREADY!!")
-                else this.setState({isValidated: true})
-            })();
-        }
+        else this.props.RegisterUser(this.state.username, this.state.email, this.state.pwd)
     }
 
     handleChange = e => {
@@ -48,7 +40,7 @@ class RegisterForm extends Component {
 
     render() {
         if(this.state.isValidated)
-            return <Redirect push to="/verify"/>;
+            return <Redirect push to="/home"/> //return <Redirect push to="/verify"/>; <--for benchmark 3
 
         return (
             <Form className="welcome" onSubmit={this.handleSubmit}>
@@ -61,5 +53,9 @@ class RegisterForm extends Component {
         );
     }
 }
+RegisterForm.propTypes = {
+    RegisterUser: PropTypes.func.isRequired,
+    user: PropTypes.object,
+};
 
-export default RegisterForm;
+export default connect(StateToProps, {RegisterUser})(RegisterForm);
