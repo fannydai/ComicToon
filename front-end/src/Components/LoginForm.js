@@ -30,7 +30,10 @@ class LoginForm extends Component {
             let content = await res.json();
             console.log(content)
             if(content.status === "Incorrect Login Details") alert("INCORRECT EMAIL OR PASSWORD!!")
-            else this.setState({isValidated: true})
+            else { 
+                localStorage.setItem('user', content.username)
+                this.setState({isValidated: true})
+            }
         })();
 
     }
