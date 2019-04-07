@@ -1,4 +1,4 @@
-import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES } from './Types';
+import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES } from './../Actions/Types';
 
 const initState = {
     subscriptions: [],
