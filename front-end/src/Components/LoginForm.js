@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import './styles/Welcome.css';
 import {Redirect} from 'react-router-dom'
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux'
+import {LoginUser} from '../Actions/UserActions'
+
+const StateToProps = (state) => ({ //application level state via redux
+    user: state.user
+});
 
 class LoginForm extends Component {
     constructor() {
@@ -13,30 +20,15 @@ class LoginForm extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.user.username !== "") this.setState({isValidated: true})   
+    }
+
     handleLogin = (e) => {
         e.preventDefault();
-        (async () => {
-            const res = await fetch("http://localhost:8080/login", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.pwd
-                })
-            });
-            let content = await res.json();
-            console.log(content)
-            if(content.status === "Incorrect Login Details") alert("INCORRECT EMAIL OR PASSWORD!!")
-            else { 
-                localStorage.setItem('user', content.username)
-                this.setState({isValidated: true})
-            }
-        })();
-
+        this.props.LoginUser(this.state.email, this.state.pwd);
     }
+
     handleChange = e => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -53,7 +45,12 @@ class LoginForm extends Component {
                 <button type="submit" className = "paddedFormControl">Login</button>
             </Form>
         );
-    }
+    } 
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+    LoginUser: PropTypes.func.isRequired,
+    user: PropTypes.object,
+};
+
+export default connect(StateToProps, {LoginUser})(LoginForm);
