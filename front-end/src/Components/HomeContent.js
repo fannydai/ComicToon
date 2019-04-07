@@ -25,6 +25,7 @@ class HomeContent extends Component {
 
     handleRight = (event) => {
         
+        
     }
 
     handleGoToComic = (event) => {
