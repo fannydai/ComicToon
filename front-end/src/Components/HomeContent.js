@@ -12,7 +12,6 @@ import Footer from './Footer';
 class HomeContent extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props);
     }
 
     handleClick = (event) => {
