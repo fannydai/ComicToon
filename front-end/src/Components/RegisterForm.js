@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
-import {Redirect} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import './styles/Welcome.css';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
@@ -17,13 +17,12 @@ class RegisterForm extends Component {
           username: "",
           pwd: "",
           email: "",
-          confirm: "",
-          isValidated: false
+          confirm: ""
         };
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.user.username !== "") this.setState({isValidated: true})   
+        if(nextProps.user.username !== "") this.props.history.push('/home') 
     }
 
     handleSubmit = (e) => {
@@ -39,9 +38,6 @@ class RegisterForm extends Component {
     }
 
     render() {
-        if(this.state.isValidated)
-            return <Redirect push to="/home"/> //return <Redirect push to="/verify"/>; <--for benchmark 3
-
         return (
             <Form className="welcome" onSubmit={this.handleSubmit}>
                 <Form.Control type="email" className = "paddedFormControl" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
@@ -58,4 +54,4 @@ RegisterForm.propTypes = {
     user: PropTypes.object,
 };
 
-export default connect(StateToProps, {RegisterUser})(RegisterForm);
+export default connect(StateToProps, {RegisterUser})(withRouter(RegisterForm));
