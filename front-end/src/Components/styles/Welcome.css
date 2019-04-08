@@ -3,14 +3,14 @@
     flex-direction: column;
     justify-content: center;
     background-color: white;
-    padding: 50px;
+    padding: 10%;
     min-height: 350px;
 }
 body {
     background-image: url("../images/background.png");
 }
 .paddedFormControl{
-    margin-bottom : 5px;
+    margin-bottom : 10px;
 }
 
 .nav {

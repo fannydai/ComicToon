@@ -11,7 +11,6 @@ class Logout extends Component {
         return (
             <div className="App-unauth-container">
                 <div className="App-unauth">
-                    <h1>Your're Logged Out! What Next?...</h1>
                     <Authentication />
                 </div>
             </div>
