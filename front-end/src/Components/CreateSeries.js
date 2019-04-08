@@ -5,15 +5,33 @@ import NavigationBar from './NavigationBar';
 import './styles/CreateSeries.css';
 
 class CreateSeries extends Component {
+    constructor () {
+        super()
+        this.state = {
+            username: "",
+            seriesName: "",
+            genre : "",
+            privacy: "" //default private
+        }
+    }
+
+    handleSubmit = (e) => {
+        e.preventfault();
+
+    }
+    handleChange = (e) => {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
+    }
+
     render() {
         return (
             <div className="create-series-container">
                  <NavigationBar />
-
                  <div className="create-bottom-container">
-                    <Form className="create-form">
+                    <Form className="create-form" onSubmit={this.handleSubmit}>
                         <div className="create-series-name-input">
-                            <Form.Control className="create-series-name-form-control" type="text" placeholder="Type Series Name..." />
+                            <Form.Control className="create-series-name-form-control" name="seriesName" type="text" placeholder="Type Series Name..." />
                         </div>
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">
@@ -34,16 +52,14 @@ class CreateSeries extends Component {
                                 </table>
                             </div>
                             <div class="create-series-genre-right">
-                                <Form.Control type="text" placeholder="Genre/Tags" />
-                                <Button type="submit" variant="success">Add</Button>
+                                <Form.Control type="text" name="genre" placeholder="Genre/Tags (ex. #horror #action #funny)" />
                             </div>
                         </div>
                         <div className="create-series-bottom">
                             <Button type="submit" variant="primary">Create Series</Button>
                         </div>
                     </Form>
-                 </div>
-                 
+                 </div>  
             </div>
         );
     }
