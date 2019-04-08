@@ -26,6 +26,12 @@ class Canvas2 extends Component {
             width: window.innerWidth,
             isDrawingMode: false
         });
+        this.canvas.on('object:added', (event) => {
+            this.handleSave(event);
+        });
+        this.canvas.on('object:modified', (event) => {
+            this.handleSave(event);
+        });
         this.pencilBrush = new fabric.PencilBrush(this.canvas);
         this.pencilBrush.color = this.state.brushColor;
         this.pencilBrush.width = 1;
@@ -52,23 +58,52 @@ class Canvas2 extends Component {
     }
 
     handleUndo = (event) => {
+        console.log('UNDO', this.state.undo);
+        console.log('PREVIOUS', this.state.previousCanvas);
+        const newRedo = [...this.state.redo, this.state.previousCanvas];
+        console.log('NEW REDO', newRedo);
+        this.setState({ redo: newRedo });
+        this.canvas.clear();
+        const newUndo = [...this.state.undo];
+        const lastElement = newUndo.pop();
+        this.canvas.loadFromJSON(lastElement, () => {
+            this.setState({ previousCanvas: lastElement });
+            this.setState({ undo: newUndo });
+        });
+
     }
 
     handleRedo = (event) => {
-
+        console.log('REDO', this.state.redo);
+        console.log('PREVIOUS', this.state.previousCanvas);
+        const newUndo = [...this.state.undo, this.state.previousCanvas];
+        this.setState({ undo: newUndo });
+        this.canvas.clear();
+        const newRedo = [...this.state.redo];
+        const lastElement = newRedo.pop();
+        this.canvas.loadFromJSON(lastElement, () => {
+            this.setState({ previousCanvas: lastElement });
+            this.setState({ redo: newRedo });
+        });
     }
 
     handleMouseDown = (event) => {
 
     }
 
-    handleMouseUp = (event) => {
-        console.log(JSON.stringify(this.canvas));
-        // Check if the canvas changed
-        if (this.previousCanvas != this.canvas.toJSON()) {
-            this.setState({ redo: [] });
-            
+    handleSave = (event) => {
+        console.log(event);
+
+        console.log('SAVING');
+        const newCanvas = this.canvas.toJSON()
+        this.setState({ redo: [] });
+        // Push the canvas onto the undo stack
+        if (this.state.previousCanvas) {
+            const newUndo = this.state.undo;
+            newUndo.push(this.state.previousCanvas);
+            this.setState({ undo: newUndo });
         }
+        this.setState({ previousCanvas: newCanvas });
     }
 
     render() {
@@ -84,7 +119,7 @@ class Canvas2 extends Component {
                     <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
                     <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
                 </div>
-                <canvas id='canvas' onMouseUp={this.handleMouseUp}></canvas>
+                <canvas id='canvas'></canvas>
             </div>
         );
     }

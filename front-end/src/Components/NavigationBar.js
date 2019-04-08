@@ -47,7 +47,7 @@ class NavigationBar extends Component {
                         <Button variant="outline-success">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
-                        <Nav.Link href="/logout" onClick={this.handleLogout}>Log out</Nav.Link>
+                        <Nav.Link href="/logout" onClick={this.handleLogout}>Log Out</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
