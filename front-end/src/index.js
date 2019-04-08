@@ -6,7 +6,9 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash,
+    faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo
+} from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import CreateSeries from './Components/CreateSeries';
 import UploadComic from './Components/UploadComic';
@@ -26,8 +28,10 @@ import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store'
+import Canvas2 from './Components/Canvas2';
 
-library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash);
+library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash,
+    faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo);
 
 ReactDOM.render(
     <Provider store={store}>
@@ -52,6 +56,7 @@ ReactDOM.render(
                 <Route exact path="/update/comic" component={UpdateComic} />
                 <Route exact path="/update/series" component={UpdateSeries} />
                 <Route exact path="/recents" component={ViewRecents} />
+                <Route exact path="/test" component={Canvas2} />
                 <Redirect from="/" exact to="/welcome"/>
                 <Route path="*" component={Error404} />
             </Switch>

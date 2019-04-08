@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
 import { Button, Form, Image } from 'react-bootstrap'; 
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -8,6 +10,11 @@ import shoes from './images/shoes.png';
 import pi from './images/pi.png';
 import yeti from './images/yeti.png';
 import Footer from './Footer';
+import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
+
+const StateToProps = (state) => ({ //application level state via redux
+    info: state.info
+});
 
 class HomeContent extends Component {
     constructor(props) {
@@ -147,4 +154,11 @@ class HomeContent extends Component {
     }
 }
 
-export default HomeContent;
+HomeContent.propTypes = {
+    getSubscriptions: PropTypes.func.isRequired,
+    getRecentCreations: PropTypes.func.isRequired,
+    getFavorites: PropTypes.func.isRequired,
+    info: PropTypes.object
+}
+
+export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites })(HomeContent);

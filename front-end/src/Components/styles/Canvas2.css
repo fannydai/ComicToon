@@ -1,0 +1,17 @@
+.canvas2-container {
+    height: 100vh;
+    width: 100vw;
+}
+
+.canvas-tool-container {
+    height: 10%;
+    width: 100%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.icon-container {
+    height: 100%;
+}
