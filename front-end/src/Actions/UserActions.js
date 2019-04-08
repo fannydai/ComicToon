@@ -61,7 +61,7 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
             });
         }
         else {
-            if (!window.localStorage.getItem('user')) localStorage.setItem('user', username);
+            localStorage.setItem('user', username);
             dispatch({
                 type: REGISTER_USER,
                 payload: {username: username, pwd: pwd, email: email, verified: false}
