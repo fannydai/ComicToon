@@ -5,27 +5,19 @@
     align-items: center;
     justify-content: center;
     padding-bottom: 5px;
-    background-color: white;
+    background: rgba(255, 255, 255, 0.5);
+
+    width: 100%;
+    position: absolute;
+    bottom: 0 !important;
 }
 
 .footer-paragraph {
     margin-bottom: 0;
 }
 
-.footer-paragraph a,
-.footer-paragraph a:hover {
+.footer-paragraph:hover {
     color: #1d8eff;
-}
-
-.footer-paragraph a::before,
-.footer-paragraph a::after {
-    content:"\00a0\00a0";
-}
-
-.footer-paragraph a:hover::before {
-    content:"\003c";
-}
-
-.footer-paragraph a:hover::after {
-    content:"\003e";
+    text-decoration: underline;
+    cursor: pointer;
 }

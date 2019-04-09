@@ -3,9 +3,10 @@ import { Navbar, Nav, NavDropdown,Image,Form,FormControl,Button } from 'react-bo
 import { connect } from 'react-redux'
 import './styles/App.css';
 import './styles/NavigationBar.css';
+
+import logo from './images/small_logo.png';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import logo from './images/logo.jpg';
 import { createSeries, viewMySeries, upload, createComic, viewMyComic} from './../Actions/NavbarActions';
 
 const StateToProps = (state) => ({ //application level state via redux

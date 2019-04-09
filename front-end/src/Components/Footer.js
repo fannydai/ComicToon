@@ -9,7 +9,7 @@ class Footer extends Component {
     render() {
         return (
             <footer className="footer-container">
-                <p className="footer-paragraph" onClick={this.handleGoToAbout}>All content&nbsp;&#169;Hot Pink Enterprise</p>
+                <p className="footer-paragraph" onClick={this.handleGoToAbout}>All content&nbsp;&#169;&nbsp;Hot Pink Enterprise</p>
             </footer>
         );
     }
