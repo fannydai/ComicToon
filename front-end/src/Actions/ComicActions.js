@@ -1,4 +1,4 @@
-import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES } from './Types';
+import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL } from './Types';
 
 // Don't call these functions yet, back-end is not set up
 export const getSubscriptions = (username) => (dispatch) => {
@@ -53,4 +53,11 @@ export const getFavorites = (username) => (dispatch) => {
             payload: { favorites: content.favorites }
         });
     })();
+}
+
+export const addPanel = (panel, json) => (dispatch) => {
+    dispatch({
+        type: ADD_PANEL,
+        payload: { newComic: { panel: panel, json: json} }
+    });
 }
