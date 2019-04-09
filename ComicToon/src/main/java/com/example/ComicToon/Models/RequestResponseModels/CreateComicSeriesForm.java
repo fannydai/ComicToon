@@ -1,10 +1,11 @@
 package com.example.ComicToon.Models.RequestResponseModels;
 
+import java.util.ArrayList;
 
 public class CreateComicSeriesForm {
     private String username;
     private String name;
-    private String[] genre;
+    private ArrayList<String> genre;
     private String privacy;
 
     public String getUsername() {
@@ -22,11 +23,11 @@ public class CreateComicSeriesForm {
     public void setName (String name){
         this.name = name;
     }
-    public String[] getGenre(){
+    public ArrayList<String> getGenre(){
         return this.genre;
     }
 
-    public void setGenre (String[] genre){
+    public void setGenre (ArrayList<String> genre){
         this.genre = genre;
     }
     public String getPrivacy(){
