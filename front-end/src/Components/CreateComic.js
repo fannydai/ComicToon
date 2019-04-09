@@ -11,6 +11,7 @@ import Footer from './Footer';
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
+import ComicSharingTable from './ComicSharingTable';
 let AllSerieses = null;
 
 
@@ -31,7 +32,8 @@ class CreateComic extends Component {
             comicName: '',
             sharedUsers: '',
             userInput: '',
-            privacy: 'Public'
+            privacy: 'Public',
+            sharedUsersList: []
         }
     }
 
@@ -74,10 +76,22 @@ class CreateComic extends Component {
         //todo
     }
 
+    handleComicName = (event) => {
+        console.log(event.target.value);
+        this.setState({ comicName: event.target.value });
+    }
+
     handleAddUser = (event) => {
-        console.log('HERE');
-        console.log(event);
         this.setState({ userInput: event.target.value });
+    }
+
+    handleAddUserEnter = (event) => {
+        if (event.key === 'Enter') {
+            console.log('PRESSED ENTER');
+            const newUsers = this.state.userInput.split(' ');
+            console.log('USERS TO ADD', newUsers);
+            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers] });
+        }
     }
 
     handlePrivacy = (event) => {
@@ -113,7 +127,7 @@ class CreateComic extends Component {
                             </div>
                         </div>
                         <div className="create-comic-info">
-                            <Form.Control className="create-comic-name-input" type="text"  value={this.state.userInput} placeholder="Type Comic Name..." onChange={this.handleAddUser} />
+                            <Form.Control className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
                             <Dropdown className="create-comic-dropdown">
                                 <Dropdown.Toggle variant="outline-info">
                                     Select Series
@@ -129,23 +143,11 @@ class CreateComic extends Component {
                             <div className="create-comic-sharing-inner">
                                 <div className="create-comic-sharing-left">
                                     <h2>Shared With</h2>
-                                    <table className="create-comic-sharing-table">
-                                        <tbody>
-                                            <tr><td>User 1</td></tr>
-                                            <tr><td>User 2</td></tr>
-                                            <tr><td>User 3</td></tr>
-                                            <tr><td>User 4</td></tr>
-                                            <tr><td>UserWithALongUsernameThatDoes'tFit</td></tr>
-                                            <tr><td>User 6</td></tr>
-                                            <tr><td>User 7</td></tr>
-                                            <tr><td>User 8</td></tr>
-                                            <tr><td>User 9</td></tr>
-                                        </tbody>
-                                    </table>
+                                    <ComicSharingTable usernames={this.state.sharedUsersList} />
                                 </div>
                                 <div className="create-comic-sharing-right">
                                     <label>Add User: </label>
-                                    <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" />
+                                    <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
                                     <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                     <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                 </div>
