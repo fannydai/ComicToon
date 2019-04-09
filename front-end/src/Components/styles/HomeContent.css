@@ -1,21 +1,23 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
 .home-main-container {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .home-content-container {
-    width: 90%;
-    justify-content: center;
-    align-items: center;
+	width: 90%;
+	justify-content: center;
+	align-items: center;
 }
 
 .comic {
-    height: 170px !important;
-    width: 170px !important;
-    padding-left: 20px;
-    padding-right: 20px;
-    object-fit: contain !important;
+	object-fit: contain !important;
+}
+
+.slick-prev:before, .slick-next:before {
+    color: black;
 }

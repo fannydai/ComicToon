@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
+import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
+
+import Slider from "react-slick";
 
 import shoes from './images/shoes.png';
 import pi from './images/pi.png';
 import yeti from './images/yeti.png';
 import Footer from './Footer';
-import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
 
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
-
-// import Glide from '@glidejs/glide'
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
@@ -40,31 +40,102 @@ class HomeContent extends Component {
     }
 
     render() {
+        var props = {
+            dots: false,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            initialSlide: 0,
+            centerMode: true,
+            autoplay: true,
+            autoplaySpeed: 5000,
+            responsive: [
+                {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: false
+                }
+                },
+                {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    initialSlide: 2
+                }
+                },
+                {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+                }
+            ]
+        };
+
         return (
             <div class="home-main-container">
                 <NavigationBar history={this.props.history}/>
+
                 <div class="home-content-container">
                     <h2>Subscriptions</h2>
-
-                    <div class="glide">
-                    <div data-glide-el="track" class="glide__track">
-                        <ul class="glide__slides">
-                        <li class="glide__slide"><img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/></li>
-                        <li class="glide__slide"><img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/></li>
-                        <li class="glide__slide"><img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/></li>
-                        </ul>
-                    </div>
-                    </div>
-
-                    {/* <Glide {...props}>
-                        <img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                    </Glide> */}
-
-                    {/* <h2>Recent Creations</h2>
-                    <h2>Favorites</h2> */}
+                    <Slider {...props}>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                    </Slider>
                 </div>
+
+                <div class="home-content-container">
+                    <h2>Recent Creations</h2>
+                    <Slider {...props}>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                    </Slider>
+                </div>
+
+                <div class="home-content-container">
+                    <h2>Favorites</h2>
+                    <Slider {...props}>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                    </Slider>
+                </div>
+
                 <Footer />
             </div>
         );

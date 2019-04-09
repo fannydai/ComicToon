@@ -34,7 +34,7 @@ class About extends Component {
                 </p>
                 <ul>
                     <li>Fabricjs</li>
-                    <li><a href="https://github.com/andrewangelle/react-glide">react-glider</a></li>
+                    <li>slick</li>
                 </ul>
             </div>
             </div>
