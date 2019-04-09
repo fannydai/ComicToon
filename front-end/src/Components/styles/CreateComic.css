@@ -1,16 +1,17 @@
 /* Top level container */
 .create-comic-container {
-    height: 100vh;
-    width: 100vw;
     display: flex;
     flex-direction: column;
-    background-color : whitesmoke;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Everything except the navbar */
 .create-comic-bottom {
+    width: 90%;
     flex-grow: 1;
     display: flex;
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .create-comic-form {
@@ -22,7 +23,6 @@
 
 /* Where the user would click to create the comic */
 .create-comic-panel-container {
-    height: 45%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -30,7 +30,6 @@
 }
 
 .create-comic-panel-middle {
-    height: 100%;
     width: 50%;
     display: flex;
 }
@@ -48,13 +47,11 @@
 }
 
 .create-comic-img {
-    height: 100%;
     width: 100%;
 }
 
 /* Comic name and series */
 .create-comic-info {
-    height: 15%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -75,40 +72,34 @@
 
 /* Comic sharing and privacy */
 .create-comic-sharing {
-    height: 30%;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
 .create-comic-sharing-inner {
-    height: 100%;
     width: 50%;
     display: flex;
     justify-content: space-between;
 }
 
 .create-comic-sharing-left {
-    height: 100%;
     width: 40%;
     overflow: auto;
 }
 
 .create-comic-sharing-table {
-    height: 100%;
     width: 35%;
 }
 
 /* Submit section */
 .create-comic-submit {
-    height: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .update-comic-submit {
-    height: 10%;
     width: 50%;
     display: flex;
     justify-content: space-between;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import './styles/About.css';
 
 
@@ -37,6 +38,7 @@ class About extends Component {
                     <li>slick</li>
                 </ul>
             </div>
+            <Footer />
             </div>
         );
     }

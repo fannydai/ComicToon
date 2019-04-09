@@ -11,8 +11,8 @@
     position: absolute;
     bottom: 0 !important;
 
-    margin-top: 10px;
-    position: relative;
+    margin-top: 10px !important;
+    position: relative !important;
 }
 
 .footer-paragraph {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import './styles/ViewAllComics.css';
 import pusheen from './images/pusheen.png';
 
@@ -84,6 +85,7 @@ class ViewAllComics extends Component {
                         </Card.Body>
                     </Card>
                 </div>
+                <Footer />
             </div>
         );
     }

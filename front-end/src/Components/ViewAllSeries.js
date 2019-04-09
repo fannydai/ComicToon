@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Card } from 'react-bootstrap';
 
-import NavigationBar from './NavigationBar';
 import './styles/ViewAllSeries.css';
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import pusheen from './images/pusheen.png';
 
 class ViewAllSeries extends Component {
@@ -74,6 +75,7 @@ class ViewAllSeries extends Component {
                         </Card.Body>
                     </Card>
                 </div>
+                <Footer />
             </div>
         );
     }
