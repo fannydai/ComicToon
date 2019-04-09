@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
 import './styles/Canvas2.css';
-import { Form } from 'react-bootstrap';
 
 class Canvas2 extends Component {
 
@@ -13,6 +12,7 @@ class Canvas2 extends Component {
         this.state = {
             canRedo: false,
             canUndo: false,
+            zooming: false,
             canvasState: null,
             brushColor: '#FF0000',
             undo: [],
@@ -60,11 +60,46 @@ class Canvas2 extends Component {
     }
 
     handleColor = (event) => {
-        console.log(event.target.value);
         this.setState({ brushColor: event.target.value });
         // Change the brush color
-        console.log(this.canvas);
         this.canvas.freeDrawingBrush.color = event.target.value;
+    }
+
+    handleZoom = (event) => {
+        if (!this.state.zooming) {
+            console.log('ZOOMING');
+            this.setState({ zooming: true });
+            this.canvas.on('mouse:wheel', (opt) => {
+                var delta = opt.e.deltaY;
+                var zoom = this.canvas.getZoom();
+                zoom = zoom + delta/200;
+                if (zoom > 20) zoom = 20;
+                if (zoom < 0.01) zoom = 0.01;
+                this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+                opt.e.preventDefault();
+                opt.e.stopPropagation();
+                var vpt = this.canvas.viewportTransform;
+                if (zoom < 400 / 1000) {
+                this.canvas.viewportTransform[4] = 200 - 1000 * zoom / 2;
+                this.canvas.viewportTransform[5] = 200 - 1000 * zoom / 2;
+                } else {
+                    if (vpt[4] >= 0) {
+                        this.canvas.viewportTransform[4] = 0;
+                    } else if (vpt[4] < this.canvas.getWidth() - 1000 * zoom) {
+                        this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
+                    }
+                    if (vpt[5] >= 0) {
+                        this.canvas.viewportTransform[5] = 0;
+                    } else if (vpt[5] < this.canvas.getHeight() - 1000 * zoom) {
+                        this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
+                    }
+                }
+            })
+        } else {
+            console.log('CANNOT ZOOM');
+            this.setState({ zooming: false });
+            this.canvas.off('mouse:wheel');
+        }
     }
 
     handleUndo = (event) => {
@@ -121,7 +156,7 @@ class Canvas2 extends Component {
                     <FontAwesomeIcon className="icon-container" icon="paint-brush" size="2x" onClick={this.handlePaint} />
                     <FontAwesomeIcon className="icon-container" icon="font" size="2x" onClick={this.handleText} />
                     <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
-                    <FontAwesomeIcon className="icon-container" icon="arrows-alt" size="2x" />
+                    <FontAwesomeIcon className="icon-container" icon="search-plus" size="2x" onClick={this.handleZoom} />
                     <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
                     <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
                 </div>
