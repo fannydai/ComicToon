@@ -34,6 +34,7 @@ class CreateComic extends Component {
 
         this.state = {
             comicName: '',
+            comicDescription: '',
             userInput: '',
             comicPanelIndex: 0,
             privacy: 'Public',
@@ -87,10 +88,32 @@ class CreateComic extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         console.log(this.state)
+        if (this.state.comicName === '') {
+            alert('Please enter a comic name.');
+        } else if (this.state.comicDescription === '') {
+            alert('Please enter a comic description.');
+        } else {
+            (async () => {
+                const res = await fetch("http://localhost:8080/create/comic", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        comic: this.props.comic.newComic
+                      })
+                });
+            })();
+        }
     }
 
     handleComicName = (event) => {
         this.setState({ comicName: event.target.value });
+    }
+
+    handleComicDescription = (event) => {
+        this.setState({ comicDescription: event.target.value });
     }
 
     handleAddUser = (event) => {
@@ -175,7 +198,8 @@ class CreateComic extends Component {
                                 </Slider>
                             </div>
                             <div className="create-comic-info">
-                                <Form.Control className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
+                                <Form.Control required className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
+                                <Form.Control.Feedback type="invalid">Please name the comic.</Form.Control.Feedback>
                                 <Dropdown className="create-comic-dropdown">
                                     <Dropdown.Toggle variant="outline-info">
                                         Select Series
@@ -184,6 +208,9 @@ class CreateComic extends Component {
                                         {this.renderUserSeries()}
                                     </Dropdown.Menu>
                                 </Dropdown>
+                            </div>
+                            <div className="create-comic-description">
+                                <Form.Control required className="create-comic-description-input" as="textarea" rows="3"  placeholder="Write a description of the comic" value={this.state.comicDescription} onChange={this.handleComicDescription} />
                             </div>
                             <div className="create-comic-sharing">
                                 <div className="create-comic-sharing-inner">

@@ -40,7 +40,9 @@
 
 .create-comic-panel-inner {
     /*min-height: 25%;*/
+    height: 100%;
     width: 25%;
+    border: 1px solid black;
 }
 
 .create-comic-panel-plus {
@@ -73,6 +75,10 @@
 
 .create-comic-dropdown > button + div {
     width: 100%;
+}
+
+.create-comic-description {
+    width: 50%;
 }
 
 /* Comic sharing and privacy */
