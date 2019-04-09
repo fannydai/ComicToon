@@ -68,7 +68,7 @@ class CreateComic extends Component {
     }
 
     handleNavigateCanvas() {
-        this.props.history.push('/test');
+        this.props.history.push('/canvas');
     }
 
     handleSubmit = (event) => {
