@@ -33,11 +33,13 @@
 }
 
 .create-comic-panel-middle {
+    height: 100%;
     width: 50%;
     display: flex;
 }
 
 .create-comic-panel-inner {
+    /*min-height: 25%;*/
     width: 25%;
 }
 

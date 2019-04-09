@@ -8,10 +8,25 @@ public class PanelModel{
     public String id;
     @Field()
     private String image;
+    private String canvas;
     private String comicID;
 
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * @return the canvas
+     */
+    public String getCanvas() {
+        return canvas;
+    }
+
+    /**
+     * @param canvas the canvas to set
+     */
+    public void setCanvas(String canvas) {
+        this.canvas = canvas;
     }
 
     public void setId(String id) {
@@ -34,8 +49,9 @@ public class PanelModel{
         this.comicID = comicID;
     }
 
-    public PanelModel(String image, String comicID){
+    public PanelModel(String image, String canvas, String comicID){
         this.image = image;
+        this.canvas = canvas;
         this.comicID = comicID;
     }
 

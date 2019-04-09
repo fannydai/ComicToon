@@ -24,6 +24,7 @@ class Canvas extends Component {
             zooming: false,
             canvasState: null,
             brushColor: '#FF0000',
+            lineWidth: 1,
             undo: [],
             redo: [],
             previousCanvas: null
@@ -46,6 +47,17 @@ class Canvas extends Component {
         this.canvas.freeDrawingBrush.color = this.state.brushColor;
         //this.pencilBrush.width = 1;
         this.canvas.freeDrawingBrush.width = 1;
+
+        // Scaling
+        /*
+        this.canvas.on('object:scaling', (e) => {
+            if (e.target.strokeWidthUnscaled && e.target.strokeWidth) {
+                e.target.strokeWidthUnscaled = e.target.strokeWidth;
+            }
+            if (e.target.strokeWidthUnscaled) {
+                e.target.strokeWidth = e.target.strokeWidthUnscaled  / e.target.scaleX; 
+            }
+        });*/
     }
 
     handlePencil = (event) => {
@@ -76,8 +88,10 @@ class Canvas extends Component {
 
     handleLine = (event) => {
         console.log('MAKING LINE');
-        const newLine = new fabric.Line([25, 50, 100, 100], {
-            stroke: this.state.brushColor
+        console.log(this.state.lineWidth);
+        const newLine = new fabric.Line([0, 0, 50, 50], {
+            stroke: this.state.brushColor,
+            strokeWidth: this.state.lineWidth
         });
         this.canvas.add(newLine);
     }
@@ -211,6 +225,10 @@ class Canvas extends Component {
         this.props.history.push('/create/comic');
     }
 
+    handleChangeLineWidth = (event) => {
+        this.setState({ lineWidth: event.target.value });
+    }
+
     render() {
         return (
             <div className="canvas2-container">
@@ -219,10 +237,8 @@ class Canvas extends Component {
                     <FontAwesomeIcon className="icon-container" icon="pencil-alt" onClick={this.handlePencil} />
                     <FontAwesomeIcon className="icon-container" icon="paint-brush" onClick={this.handlePaint} />
                     <FontAwesomeIcon className="icon-container" icon="font" onClick={this.handleText} />
-                    <FontAwesomeIcon className="icon-container" icon="palette" onClick={this.handleColor} />
                     <FontAwesomeIcon className="icon-container" icon="slash" onClick={this.handleLine} />
-                    {/* <input type="color" value={this.state.brushColor} onChange={this.handleColor} /> */}
-                    {/* <div className="rando" onClick={this.handleLine}></div> */}
+                    <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
                     <FontAwesomeIcon className="icon-container" icon="circle" onClick={this.handleCircle} />
                     <FontAwesomeIcon className="icon-container" icon="square" onClick={this.handleRectangle} />
                     <FontAwesomeIcon className="icon-container" icon="caret-up" onClick={this.handleTriangle} />
@@ -234,6 +250,12 @@ class Canvas extends Component {
                 </div>
                 <div className="canvas-bottom-container">
                     <canvas id='canvas'></canvas>
+                </div>
+                <div className="canvas-bottom-tool-container">
+                    <div>
+                        <div for="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
+                        <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
+                    </div>
                 </div>
             </div>
         );
