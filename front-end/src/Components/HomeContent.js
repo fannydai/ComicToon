@@ -50,6 +50,8 @@ class HomeContent extends Component {
             centerMode: true,
             autoplay: true,
             autoplaySpeed: 5000,
+            pauseOnFocus: true,
+            pauseOnHover: true,
             responsive: [
                 {
                 breakpoint: 1024,

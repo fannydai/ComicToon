@@ -1,10 +1,8 @@
 .view-one-series-container {
     display: flex;
     flex-direction: column;
-}
-
-.view-one-series-bottom {
-    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
 }
 
 .view-one-series-heading {
@@ -15,10 +13,16 @@
     align-items: center;
 }
 
+.view-one-series-bottom {
+    background: rgba(245, 245, 245, 0.8);
+    width: 90%;
+}
+
 .view-one-series-comics {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     padding-left: 2vw;
     padding-right: 2vw;
 }

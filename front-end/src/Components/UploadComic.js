@@ -3,6 +3,7 @@ import { Button, Dropdown, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import './styles/UploadComic.css';
 
 class UploadComic extends Component {
@@ -64,6 +65,7 @@ class UploadComic extends Component {
                         </div>
                     </Form>
                 </div>
+                <Footer />
             </div>
         );
     }

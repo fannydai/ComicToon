@@ -1,22 +1,20 @@
 .view-comic-container {
-    height: 100vh;
-    width: 100vw;
     display: flex;
     flex-direction: column;
-}
-
-.view-comic-bottom {
-    /*flex-grow: 1;*/
-    height: 85%;
-    display: flex;
+    align-items: center;
     justify-content: center;
 }
 
+.view-comic-bottom {
+    height: 85%;
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
 .view-comic-overlay {
-    width: 90%;
-    height: 100%;
-    background-color: white;
-    opacity: 1.0;
+    background: rgba(245, 245, 245, 0.8);
     display: flex;
 }
 

@@ -3,6 +3,8 @@ import { Button, Form } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
+
 import './styles/CreateSeries.css';
 import { createSeries} from './../Actions/NavbarActions';
 import {withRouter} from 'react-router-dom'
@@ -72,6 +74,7 @@ class CreateSeries extends Component {
                         </div>
                     </Form>
                  </div>  
+                 <Footer />
             </div>
         );
     }

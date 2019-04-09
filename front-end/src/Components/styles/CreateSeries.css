@@ -1,15 +1,16 @@
 .create-series-container {
-    height: 100vh;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    background-color: whitesmoke;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Everything but the navbar */
 .create-bottom-container {
-    flex-grow: 1;
-    display: flex;  
+    width: 90%;
+    background: rgba(245, 245, 245, 0.8);
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .create-form {
