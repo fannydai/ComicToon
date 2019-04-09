@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
-import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -8,7 +7,7 @@ import PropTypes from 'prop-types';
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
-<<<<<<< HEAD
+
 import addPanel from './images/addPanel.png';
 import ComicSharingTable from './ComicSharingTable';
 
@@ -18,11 +17,6 @@ import Footer from './Footer';
 import './styles/CreateComic.css';
 
 let AllSerieses = null;
-=======
-
-import ComicSharingTable from './ComicSharingTable';
->>>>>>> fb2c77998c59f1bc8e1db94594f908e3cf10b84f
-
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
@@ -123,7 +117,6 @@ class CreateComic extends Component {
     }
 
     render() {
-<<<<<<< HEAD
         var props = {
             dots: false,
             infinite: false,
@@ -160,11 +153,15 @@ class CreateComic extends Component {
                 }
             ]
         };
-        return (
+
+        if(this.state.loading) return (<h1>Loading ...</h1>)
+        else{
+            return (
             <div className="create-comic-container">
                 <NavigationBar />
                 <div className="create-comic-bottom">
                     <Form className="create-comic-form" onSubmit={this.handleSubmit}>
+
                         <div className="create-comic-panel-container">
                             <Slider {...props}>
                                 <img src={shoes1} className="panel" onClick={this.handleNavigateCanvas}/>
@@ -197,69 +194,17 @@ class CreateComic extends Component {
                                     <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
                                     <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                     <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
-=======
-        if(this.state.loading) return (<h1>Loading ...</h1>)
-        else{
-            return (
-                <div className="create-comic-container">
-                    <NavigationBar />
-                    <div className="create-comic-bottom">
-                        <Form className="create-comic-form" onSubmit={this.handleSubmit}>
-                            <div className="create-comic-panel-container">
-                                <div className="create-comic-panel-left">
-                                    <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
-                                </div>
-                                <div className="create-comic-panel-middle">
-                                    <div className="create-comic-panel-inner">
-                                        <img className="create-comic-img" src={shoes1} />
-                                    </div>
-                                    <div className="create-comic-panel-inner">
-                                        <img className="create-comic-img" src={shoes2} />
-                                    </div>
-                                    <div className="create-comic-panel-inner">
-                                        <img className="create-comic-img" src={shoes3} />
-                                    </div>
-                                    <div className="create-comic-panel-plus">
-                                        <FontAwesomeIcon icon="plus" size="2x" onClick={this.handleNavigateCanvas} />
-                                    </div>
-                                </div>
-                                <div className="create-comic-panel-right">
-                                    <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
                                 </div>
                             </div>
-                            <div className="create-comic-info">
-                                <Form.Control className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
-                                <Dropdown className="create-comic-dropdown">
-                                    <Dropdown.Toggle variant="outline-info">
-                                        Select Series
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu >
-                                        {this.renderUserSeries()}
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </div>
-                            <div className="create-comic-sharing">
-                                <div className="create-comic-sharing-inner">
-                                    <div className="create-comic-sharing-left">
-                                        <h2>Shared With</h2>
-                                        <ComicSharingTable usernames={this.state.sharedUsersList} />
-                                    </div>
-                                    <div className="create-comic-sharing-right">
-                                        <label>Add User: </label>
-                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
-                                        <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
-                                        <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
-                                    </div>
->>>>>>> fb2c77998c59f1bc8e1db94594f908e3cf10b84f
-                                </div>
-                            </div>
-                            <div className="create-comic-submit">
-                                <Button type="submit" variant="success" onClick={this.handleSubmit}>Create Comic</Button>
-                            </div>
-                        </Form>
-                    </div>
-                    <Footer />
+                        </div>
+                        <div className="create-comic-submit">
+                            <Button type="submit" variant="success" onClick={this.handleSubmit}>Create Comic</Button>
+                        </div>
+
+                    </Form>
                 </div>
+                <Footer />
+            </div>
             );
         }
     }
