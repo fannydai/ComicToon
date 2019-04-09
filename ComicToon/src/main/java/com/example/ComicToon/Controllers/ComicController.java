@@ -44,7 +44,7 @@ public class ComicController{
         }
         else{
             //create and save new series
-            ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(),user.getId(),form.getPrivacy(), form.getGenre());
+            ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(),form.getDescription(),user.getId(),form.getPrivacy(), form.getGenre());
             ComicSeriesRepository.save(newComicSeries);
             //add comicseries id -> user
             user.getComicSeries().add(newComicSeries.getId());

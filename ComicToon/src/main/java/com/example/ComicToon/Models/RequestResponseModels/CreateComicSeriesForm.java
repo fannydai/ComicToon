@@ -5,11 +5,26 @@ import java.util.ArrayList;
 public class CreateComicSeriesForm {
     private String username;
     private String name;
+    private String description;
     private ArrayList<String> genre;
     private String privacy;
 
     public String getUsername() {
         return this.username;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setUsername(String username) {
