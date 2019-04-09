@@ -24,7 +24,7 @@ export default function(state = initState, action) {
             };
         case UPLOAD:
             return {
-                //todo
+                //todo for milestone 2
             };
         case VIEWCOMIC:
             return {

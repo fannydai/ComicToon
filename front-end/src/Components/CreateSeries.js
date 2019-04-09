@@ -22,7 +22,7 @@ class CreateSeries extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.UserSeries !== this.props.UserSeries) alert(`Series "${this.state.seriesName}" Created!!`)
+        if(nextProps.UserSeries !== this.props.UserSeries && nextProps.UserSeries !== "") alert(`Series "${this.state.seriesName}" Created!!`)
         else alert(`Series "${this.state.seriesName}" NOT Created... Error`) //on error
     }
 

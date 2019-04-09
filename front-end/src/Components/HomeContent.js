@@ -79,10 +79,10 @@ class HomeContent extends Component {
         };
 
         return (
-            <div class="home-main-container">
+            <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
 
-                <div class="home-content-container">
+                <div className="home-content-container">
                     <h2>Subscriptions</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
@@ -100,7 +100,7 @@ class HomeContent extends Component {
                     </Slider>
                 </div>
 
-                <div class="home-content-container">
+                <div className="home-content-container">
                     <h2>Recent Creations</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
@@ -118,7 +118,7 @@ class HomeContent extends Component {
                     </Slider>
                 </div>
 
-                <div class="home-content-container">
+                <div className="home-content-container">
                     <h2>Favorites</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
