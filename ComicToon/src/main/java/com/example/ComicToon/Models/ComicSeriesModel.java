@@ -55,14 +55,14 @@ public class ComicSeriesModel{
         this.privacy = privacy;
     }
 
-    public ComicSeriesModel(String name, String userID, String privacy, String[] genres) {
+    public ComicSeriesModel(String name, String userID, String privacy, String[] genre) {
         this.name = name;
         this.setUserID(userID);
         this.setPrivacy(privacy);
         this.setComics(new ArrayList<String>());
         this.genre = new ArrayList<String>();
-        for(String gen: genres){
-            genre.add(gen);
+        for(String gen: genre){
+            this.genre.add(gen);
         }
     }
 
