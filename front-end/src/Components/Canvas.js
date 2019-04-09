@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import { fabric } from 'fabric';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
@@ -23,6 +24,7 @@ class Canvas extends Component {
             zooming: false,
             canvasState: null,
             brushColor: '#FF0000',
+            lineWidth: 1,
             undo: [],
             redo: [],
             previousCanvas: null
@@ -45,6 +47,17 @@ class Canvas extends Component {
         this.canvas.freeDrawingBrush.color = this.state.brushColor;
         //this.pencilBrush.width = 1;
         this.canvas.freeDrawingBrush.width = 1;
+
+        // Scaling
+        /*
+        this.canvas.on('object:scaling', (e) => {
+            if (e.target.strokeWidthUnscaled && e.target.strokeWidth) {
+                e.target.strokeWidthUnscaled = e.target.strokeWidth;
+            }
+            if (e.target.strokeWidthUnscaled) {
+                e.target.strokeWidth = e.target.strokeWidthUnscaled  / e.target.scaleX; 
+            }
+        });*/
     }
 
     handlePencil = (event) => {
@@ -75,8 +88,10 @@ class Canvas extends Component {
 
     handleLine = (event) => {
         console.log('MAKING LINE');
-        const newLine = new fabric.Line([25, 50, 100, 100], {
-            stroke: this.state.brushColor
+        console.log(this.state.lineWidth);
+        const newLine = new fabric.Line([0, 0, 50, 50], {
+            stroke: this.state.brushColor,
+            strokeWidth: this.state.lineWidth
         });
         this.canvas.add(newLine);
     }
@@ -210,27 +225,37 @@ class Canvas extends Component {
         this.props.history.push('/create/comic');
     }
 
+    handleChangeLineWidth = (event) => {
+        this.setState({ lineWidth: event.target.value });
+    }
+
     render() {
         return (
             <div className="canvas2-container">
                 <NavigationBar />
                 <div className="canvas-tool-container">
-                    <FontAwesomeIcon className="icon-container" icon="pencil-alt" size="2x" onClick={this.handlePencil} />
-                    <FontAwesomeIcon className="icon-container" icon="paint-brush" size="2x" onClick={this.handlePaint} />
-                    <FontAwesomeIcon className="icon-container" icon="font" size="2x" onClick={this.handleText} />
+                    <FontAwesomeIcon className="icon-container" icon="pencil-alt" onClick={this.handlePencil} />
+                    <FontAwesomeIcon className="icon-container" icon="paint-brush" onClick={this.handlePaint} />
+                    <FontAwesomeIcon className="icon-container" icon="font" onClick={this.handleText} />
+                    <FontAwesomeIcon className="icon-container" icon="slash" onClick={this.handleLine} />
                     <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
-                    <div className="rando" onClick={this.handleLine}></div>
-                    <FontAwesomeIcon className="icon-container" icon="circle" size="2x" onClick={this.handleCircle} />
-                    <FontAwesomeIcon className="icon-container" icon="square" size="2x" onClick={this.handleRectangle} />
-                    <FontAwesomeIcon className="icon-container" icon="caret-up" size="2x" onClick={this.handleTriangle} />
-                    <FontAwesomeIcon className="icon-container" icon="search-plus" size="2x" onClick={this.handleZoom} />
-                    <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
-                    <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
-                    <FontAwesomeIcon className="icon-container" icon="download" size="2x" onClick={this.handleDownload} />
-                    <FontAwesomeIcon className="icon-container" icon="check" size="2x" onClick={this.handleDone} />
+                    <FontAwesomeIcon className="icon-container" icon="circle" onClick={this.handleCircle} />
+                    <FontAwesomeIcon className="icon-container" icon="square" onClick={this.handleRectangle} />
+                    <FontAwesomeIcon className="icon-container" icon="caret-up" onClick={this.handleTriangle} />
+                    <FontAwesomeIcon className="icon-container" icon="search-plus" onClick={this.handleZoom} />
+                    <FontAwesomeIcon className="icon-container" icon="undo" onClick={this.handleUndo} />
+                    <FontAwesomeIcon className="icon-container" icon="redo" onClick={this.handleRedo} />
+                    <FontAwesomeIcon className="icon-container" icon="download" onClick={this.handleDownload} />
+                    <FontAwesomeIcon className="icon-container" icon="check" onClick={this.handleDone} />
                 </div>
                 <div className="canvas-bottom-container">
                     <canvas id='canvas'></canvas>
+                </div>
+                <div className="canvas-bottom-tool-container">
+                    <div>
+                        <div for="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
+                        <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
+                    </div>
                 </div>
             </div>
         );

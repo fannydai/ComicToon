@@ -1,6 +1,8 @@
 .canvas2-container {
-    height: 100vh;
-    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .canvas-tool-container {
@@ -14,7 +16,14 @@
 }
 
 .icon-container {
+    color: #383838;
     height: 100%;
+    font-size: 2em;
+}
+
+.icon-container:hover {
+    color: black;
+    cursor: pointer;
 }
 
 .rando {
@@ -22,4 +31,24 @@
     width: 5px;
     background-color: black;
     transform: rotate(45deg);
+}
+
+.canvas-bottom-container {
+    width: 100%;
+    margin-top: 20px;
+    border: 2px solid black;
+}
+
+.canvas-bottom-tool-container {
+    height: 10vh;
+    width: 100%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#canvas {
+    background-color: white;
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import './styles/CreateSeries.css';
 
 class UpdateSeries extends Component {
@@ -59,7 +60,7 @@ class UpdateSeries extends Component {
                         </div>
                     </Form>
                  </div>
-                 
+                 <Footer />
             </div>
         );
     }
