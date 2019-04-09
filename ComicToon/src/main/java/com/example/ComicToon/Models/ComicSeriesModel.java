@@ -55,7 +55,7 @@ public class ComicSeriesModel{
         this.privacy = privacy;
     }
 
-    public ComicSeriesModel(String name, String userID, String privacy, String[] genre) {
+    public ComicSeriesModel(String name, String userID, String privacy, ArrayList<String> genre) {
         this.name = name;
         this.setUserID(userID);
         this.setPrivacy(privacy);

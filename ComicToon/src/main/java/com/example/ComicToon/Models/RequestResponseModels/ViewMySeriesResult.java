@@ -6,7 +6,7 @@ import com.example.ComicToon.Models.ComicSeriesModel;
 
 public class ViewMySeriesResult {
 
-    private ArrayList<ComicSeriesModel> comics;
+    private ArrayList<ComicSeriesModel> comics = new ArrayList<>();
 
     public ArrayList<ComicSeriesModel> getComicSeries() {
         return this.comics;

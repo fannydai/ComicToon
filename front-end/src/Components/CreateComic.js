@@ -11,7 +11,6 @@ import Footer from './Footer';
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
-let AllSerieses = null;
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -31,7 +30,10 @@ class CreateComic extends Component {
             comicName: '',
             sharedUsers: '',
             userInput: '',
-            privacy: 'Public'
+            privacy: 'Public',
+            UserSerieses: null,
+            selected_series: "",
+            loading: true
         }
     }
 
@@ -49,12 +51,8 @@ class CreateComic extends Component {
               })
             });
             let content = await res.json();
-            console.log(content)
+            this.setState({UserSerieses: content.comicSeries, loading: false})
         })();
-    }
-
-    getAllUserSeries(){
-        //todo
     }
 
     handleLeft() {
@@ -63,6 +61,16 @@ class CreateComic extends Component {
 
     handleRight() {
 
+    }
+
+    renderUserSeries(){
+        return (
+            this.state.UserSerieses.map(item=>
+                <div key={item.name}>
+                    <Dropdown.Item>{item.name}</Dropdown.Item>
+                </div>
+            )
+        )
     }
 
     handleNavigateCanvas() {
@@ -85,80 +93,81 @@ class CreateComic extends Component {
     }
 
     render() {
-        return (
-            <div className="create-comic-container">
-                <NavigationBar />
-                <div className="create-comic-bottom">
-                    <Form className="create-comic-form" onSubmit={this.handleSubmit}>
-                        <div className="create-comic-panel-container">
-                            <div className="create-comic-panel-left">
-                                <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
-                            </div>
-                            <div className="create-comic-panel-middle">
-                                <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes1} />
+        if(this.state.loading) return (<h1>Loading ...</h1>)
+        else{
+            return (
+                <div className="create-comic-container">
+                    <NavigationBar />
+                    <div className="create-comic-bottom">
+                        <Form className="create-comic-form" onSubmit={this.handleSubmit}>
+                            <div className="create-comic-panel-container">
+                                <div className="create-comic-panel-left">
+                                    <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
                                 </div>
-                                <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes2} />
+                                <div className="create-comic-panel-middle">
+                                    <div className="create-comic-panel-inner">
+                                        <img className="create-comic-img" src={shoes1} />
+                                    </div>
+                                    <div className="create-comic-panel-inner">
+                                        <img className="create-comic-img" src={shoes2} />
+                                    </div>
+                                    <div className="create-comic-panel-inner">
+                                        <img className="create-comic-img" src={shoes3} />
+                                    </div>
+                                    <div className="create-comic-panel-plus">
+                                        <FontAwesomeIcon icon="plus" size="2x" onClick={this.handleNavigateCanvas} />
+                                    </div>
                                 </div>
-                                <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes3} />
-                                </div>
-                                <div className="create-comic-panel-plus">
-                                    <FontAwesomeIcon icon="plus" size="2x" onClick={this.handleNavigateCanvas} />
-                                </div>
-                            </div>
-                            <div className="create-comic-panel-right">
-                                <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
-                            </div>
-                        </div>
-                        <div className="create-comic-info">
-                            <Form.Control className="create-comic-name-input" type="text"  value={this.state.userInput} placeholder="Type Comic Name..." onChange={this.handleAddUser} />
-                            <Dropdown className="create-comic-dropdown">
-                                <Dropdown.Toggle variant="outline-info">
-                                    Select Series
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item>XKCD</Dropdown.Item>
-                                    <Dropdown.Item>SMBC</Dropdown.Item>
-                                    <Dropdown.Item>Cyanide and Happiness</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                        <div className="create-comic-sharing">
-                            <div className="create-comic-sharing-inner">
-                                <div className="create-comic-sharing-left">
-                                    <h2>Shared With</h2>
-                                    <table className="create-comic-sharing-table">
-                                        <tbody>
-                                            <tr><td>User 1</td></tr>
-                                            <tr><td>User 2</td></tr>
-                                            <tr><td>User 3</td></tr>
-                                            <tr><td>User 4</td></tr>
-                                            <tr><td>UserWithALongUsernameThatDoes'tFit</td></tr>
-                                            <tr><td>User 6</td></tr>
-                                            <tr><td>User 7</td></tr>
-                                            <tr><td>User 8</td></tr>
-                                            <tr><td>User 9</td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div className="create-comic-sharing-right">
-                                    <label>Add User: </label>
-                                    <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" />
-                                    <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
-                                    <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
+                                <div className="create-comic-panel-right">
+                                    <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
                                 </div>
                             </div>
-                        </div>
-                        <div className="create-comic-submit">
-                            <Button type="submit" variant="success" onClick={this.handleSubmit}>Create Comic</Button>
-                        </div>
-                    </Form>
+                            <div className="create-comic-info">
+                                <Form.Control className="create-comic-name-input" type="text"  value={this.state.userInput} placeholder="Type Comic Name..." onChange={this.handleAddUser} />
+                                <Dropdown className="create-comic-dropdown">
+                                    <Dropdown.Toggle variant="outline-info">
+                                        Select Series
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        {this.renderUserSeries()}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
+                            <div className="create-comic-sharing">
+                                <div className="create-comic-sharing-inner">
+                                    <div className="create-comic-sharing-left">
+                                        <h2>Shared With</h2>
+                                        <table className="create-comic-sharing-table">
+                                            <tbody>
+                                                <tr><td>User 1</td></tr>
+                                                <tr><td>User 2</td></tr>
+                                                <tr><td>User 3</td></tr>
+                                                <tr><td>User 4</td></tr>
+                                                <tr><td>UserWithALongUsernameThatDoes'tFit</td></tr>
+                                                <tr><td>User 6</td></tr>
+                                                <tr><td>User 7</td></tr>
+                                                <tr><td>User 8</td></tr>
+                                                <tr><td>User 9</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="create-comic-sharing-right">
+                                        <label>Add User: </label>
+                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" />
+                                        <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
+                                        <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="create-comic-submit">
+                                <Button type="submit" variant="success" onClick={this.handleSubmit}>Create Comic</Button>
+                            </div>
+                        </Form>
+                    </div>
+                    <Footer />
                 </div>
-                <Footer />
-            </div>
-        );
+            );
+        }
     }
 }
 

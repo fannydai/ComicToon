@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ComicToonApplication",
+            "request": "launch",
+            "mainClass": "com.example.ComicToon.ComicToonApplication",
+            "projectName": "ComicToon"
+        }
+    ]
+}
