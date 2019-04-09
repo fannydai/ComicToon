@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import {withRouter} from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 import './styles/CreateComic.css';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
@@ -9,7 +11,12 @@ import Footer from './Footer';
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
+let AllSerieses = null;
 
+
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user
+});
 class CreateComic extends Component {
 
     constructor(props) {
@@ -18,6 +25,28 @@ class CreateComic extends Component {
         this.handleRight = this.handleRight.bind(this);
         this.handleNavigateCanvas = this.handleNavigateCanvas.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount(){
+        console.log(this.props);
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/series", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                username: this.props.CurrUser.username
+              })
+            });
+            let content = await res.json();
+            console.log(content)
+        })();
+    }
+
+    getAllUserSeries(){
+        //todo
     }
 
     handleLeft() {
@@ -115,4 +144,8 @@ class CreateComic extends Component {
     }
 }
 
-export default CreateComic;
+CreateComic.propTypes = {
+    CurrUser: PropTypes.object
+}
+
+export default connect(StateToProps, {})(withRouter(CreateComic));
