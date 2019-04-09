@@ -36,11 +36,11 @@ class LoginForm extends Component {
     render() {
         return (
             <Form className="welcome" onSubmit={this.handleLogin}>
-                <div class="bubbletext">
+                <div className="bubbletext">
                     <Form.Control id="email" type="email" name="email" className ="paddedFormControl textbox" placeholder="Enter your email..." onChange={this.handleChange}/>
                 </div>
                 <br />
-                <div class="bubbletext">
+                <div className="bubbletext">
                     <Form.Control id="pwd" type="password" name="pwd" className ="paddedFormControl textbox" placeholder="Enter your password..." onChange={this.handleChange}/>
                 </div>
                 <br />

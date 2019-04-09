@@ -40,16 +40,16 @@ class RegisterForm extends Component {
     render() {
         return (
             <Form className="welcome" onSubmit={this.handleSubmit}>
-                <div class="bubbletext">
+                <div className="bubbletext">
                     <Form.Control type="email" className = "paddedFormControl textbox" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
                 </div>
-                <div class="bubbletext">
+                <div className="bubbletext">
                     <Form.Control type="text" className = "paddedFormControl textbox" name= "username" placeholder="Choose a username..." onChange={this.handleChange} />
                 </div>
-                <div class="bubbletext">
+                <div className="bubbletext">
                     <Form.Control type="password" className = "paddedFormControl textbox" name= "pwd" placeholder="Create a password..." onChange={this.handleChange} />
                 </div>
-                <div class="bubbletext">
+                <div className="bubbletext">
                     <Form.Control type="password" className = "paddedFormControl textbox" name="confirm" placeholder="Confirm password..." onChange={this.handleChange}/>
                 </div>
                 <button type="submit" className = "paddedFormControl" variant="primary">Register</button>

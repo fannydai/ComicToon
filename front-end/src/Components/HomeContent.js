@@ -85,54 +85,54 @@ class HomeContent extends Component {
                 <div class="home-content-container">
                     <h2>Subscriptions</h2>
                     <Slider {...props}>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
                     </Slider>
                 </div>
 
                 <div class="home-content-container">
                     <h2>Recent Creations</h2>
                     <Slider {...props}>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
                     </Slider>
                 </div>
 
                 <div class="home-content-container">
                     <h2>Favorites</h2>
                     <Slider {...props}>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
                     </Slider>
                 </div>
 

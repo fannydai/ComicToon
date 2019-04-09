@@ -10,7 +10,7 @@ class ForgotForm extends Component {
                 <Form className="welcome">
                     <p>Please enter your email associated with your account. You will be emailed a password reset link valid for 24 hours.</p>
                     <br />
-                    <div class="bubbletext">
+                    <div className="bubbletext">
                         <Form.Control type="email" className = "paddedFormControl textbox" placeholder="Enter your email..." />
                     </div>
                     <br />
