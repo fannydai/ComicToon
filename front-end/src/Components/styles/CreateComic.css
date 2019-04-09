@@ -9,9 +9,9 @@
 /* Everything except the navbar */
 .create-comic-bottom {
     width: 90%;
-    flex-grow: 1;
-    display: flex;
-    background-color: whitesmoke;
+    background: rgba(245, 245, 245, 0.8);
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .create-comic-form {

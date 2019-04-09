@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import './styles/ViewSeries.css';
 import pusheen from './images/pusheen.png';
 
@@ -25,11 +26,11 @@ class ViewSeries extends Component {
         return (
             <div className="view-one-series-container">
                 <NavigationBar />
+                <div className="view-one-series-heading">
+                    <h1>Animals</h1>
+                    <h2>By: Pusheen</h2>
+                </div>
                 <div className="view-one-series-bottom">
-                    <div className="view-one-series-heading">
-                        <h1>Animals</h1>
-                        <h2>By: Pusheen</h2>
-                    </div>
                     <div className="view-one-series-comics">
                         <Card className="view-one-series-card">
                             <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
@@ -83,6 +84,7 @@ class ViewSeries extends Component {
                         </Card>
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }
