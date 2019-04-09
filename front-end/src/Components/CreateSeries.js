@@ -16,8 +16,8 @@ class CreateSeries extends Component {
     }
 
     handleSubmit = (e) => {
-        e.preventfault();
-
+        e.preventDefault();
+        //todo
     }
     handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,7 +31,7 @@ class CreateSeries extends Component {
                  <div className="create-bottom-container">
                     <Form className="create-form" onSubmit={this.handleSubmit}>
                         <div className="create-series-name-input">
-                            <Form.Control className="create-series-name-form-control" name="seriesName" type="text" placeholder="Type Series Name..." />
+                            <Form.Control className="create-series-name-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
                         </div>
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">
@@ -51,8 +51,8 @@ class CreateSeries extends Component {
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="create-series-genre-right">
-                                <Form.Control type="text" name="genre" placeholder="Genre/Tags (ex. #horror #action #funny)" />
+                            <div className="create-series-genre-right">
+                                <Form.Control type="text" name="genre" placeholder="Genre/Tags (ex. #horror #action #funny)" onChange={this.handleChange} />
                             </div>
                         </div>
                         <div className="create-series-bottom">

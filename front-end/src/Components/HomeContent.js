@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import { Button, Form, Image } from 'react-bootstrap'; 
+import { Image } from 'react-bootstrap'; 
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import {withRouter} from 'react-router-dom'
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 import shoes from './images/shoes.png';
@@ -13,7 +13,7 @@ import Footer from './Footer';
 import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
 
 const StateToProps = (state) => ({ //application level state via redux
-    info: state.info
+    comic: state.comic
 });
 
 class HomeContent extends Component {
@@ -158,7 +158,7 @@ HomeContent.propTypes = {
     getSubscriptions: PropTypes.func.isRequired,
     getRecentCreations: PropTypes.func.isRequired,
     getFavorites: PropTypes.func.isRequired,
-    info: PropTypes.object
+    comic: PropTypes.object
 }
 
-export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites })(HomeContent);
+export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites })(withRouter(HomeContent));

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Image } from 'react-bootstrap'; 
 import './styles/App.css';
-// import {Provider} from 'react-redux'
 import Authentication from './Authentication';
 import HomeContent from './HomeContent';
 import logo from './images/logo.jpg';
 
 import Footer from './Footer';
-// import store from './Store'
 class App extends Component {
 
 	render() {

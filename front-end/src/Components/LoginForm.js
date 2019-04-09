@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Form} from 'react-bootstrap';
 import './styles/Welcome.css';
-import {Redirect} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 import {LoginUser} from '../Actions/UserActions'
@@ -16,12 +16,11 @@ class LoginForm extends Component {
         this.state = {
           pwd: "",
           email: "",
-          isValidated: false
         };
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.user.username !== "") this.setState({isValidated: true})   
+        if(nextProps.user.username !== "") this.props.history.push('/home')  
     }
 
     handleLogin = (e) => {
@@ -35,9 +34,6 @@ class LoginForm extends Component {
     }
 
     render() {
-        if(this.state.isValidated)
-            return <Redirect push to="/home"/>;
-
         return (
             <Form className="welcome" onSubmit={this.handleLogin}>
                 <Form.Control id="email" type="email" name="email" className = "paddedFormControl" placeholder="Enter your email..." onChange={this.handleChange}/>
@@ -53,4 +49,4 @@ LoginForm.propTypes = {
     user: PropTypes.object,
 };
 
-export default connect(StateToProps, {LoginUser})(LoginForm);
+export default connect(StateToProps, {LoginUser})(withRouter(LoginForm));

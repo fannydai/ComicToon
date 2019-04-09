@@ -4,8 +4,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: 5px;
+    background-color: white;
 }
 
 .footer-paragraph {
     margin-bottom: 0;
+}
+
+.footer-paragraph a,
+.footer-paragraph a:hover {
+    color: #1d8eff;
+}
+
+.footer-paragraph a::before,
+.footer-paragraph a::after {
+    content:"\00a0\00a0";
+}
+
+.footer-paragraph a:hover::before {
+    content:"\003c";
+}
+
+.footer-paragraph a:hover::after {
+    content:"\003e";
 }
