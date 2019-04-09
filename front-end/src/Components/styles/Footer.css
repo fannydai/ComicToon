@@ -6,13 +6,18 @@
     justify-content: center;
     padding-bottom: 5px;
     background: rgba(255, 255, 255, 0.5);
+
+    width: 100%;
+    position: absolute;
+    bottom: 0 !important;
 }
 
 .footer-paragraph {
     margin-bottom: 0;
 }
 
-.footer-paragraph a:hover {
+.footer-paragraph:hover {
     color: #1d8eff;
-    text-decoration: underline !important;
+    text-decoration: underline;
+    cursor: pointer;
 }

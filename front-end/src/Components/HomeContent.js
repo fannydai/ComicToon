@@ -9,18 +9,10 @@ import yeti from './images/yeti.png';
 import Footer from './Footer';
 import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
 
-import { Glide } from 'react-glide';
-
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 
-const props = {
-    autoPlay: true,
-    autoPlaySpeed: 5000,
-    onSlideChange: () => console.log('slide changed'),
-    infinite: true,
-    dots: false,
-}
+// import Glide from '@glidejs/glide'
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
@@ -53,32 +45,25 @@ class HomeContent extends Component {
                 <NavigationBar history={this.props.history}/>
                 <div class="home-content-container">
                     <h2>Subscriptions</h2>
-                    <Glide {...props}>
+
+                    <div class="glide">
+                    <div data-glide-el="track" class="glide__track">
+                        <ul class="glide__slides">
+                        <li class="glide__slide"><img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/></li>
+                        <li class="glide__slide"><img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/></li>
+                        <li class="glide__slide"><img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/></li>
+                        </ul>
+                    </div>
+                    </div>
+
+                    {/* <Glide {...props}>
                         <img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
                         <img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
                         <img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={shoes} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" height="175" width="175" onClick={this.handleGoToComic}/>
-                    </Glide>
-                    {/* <h2>Recent Creations</h2>
-                    <Glide {...props}>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
-                    </Glide>
-                    <h2>Favorites</h2>
-                    <Glide {...props}>
-                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
                     </Glide> */}
+
+                    {/* <h2>Recent Creations</h2>
+                    <h2>Favorites</h2> */}
                 </div>
                 <Footer />
             </div>
