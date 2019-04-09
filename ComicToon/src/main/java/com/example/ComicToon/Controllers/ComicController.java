@@ -37,6 +37,7 @@ public class ComicController{
     public CreateComicSeriesResult createComicSeries(@RequestBody CreateComicSeriesForm form){
         CreateComicSeriesResult result = new CreateComicSeriesResult();
         UserModel user = userRepository.findByusername(form.getUsername());
+        System.out.println(user);
         if (user == null){
             result.setResult("user does not exists");
             return result;

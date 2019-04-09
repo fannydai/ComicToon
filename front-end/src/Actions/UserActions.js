@@ -49,14 +49,14 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
         if(content.status === "Email Already Exists") { 
             alert("EMAIL EXISTS ALREADY!!");
             dispatch({
-                type: REGISTER_USER,
+                type: ERR,
                 payload: {username: "", pwd: "", email: "", verified: false}
             });
         }
         else if(content.status === "Username Already Exists"){ 
             alert("USERNAME EXISTS ALREADY!!");
             dispatch({
-                type: REGISTER_USER,
+                type: ERR,
                 payload: {username: "", pwd: "", email: "", verified: false}
             });
         }

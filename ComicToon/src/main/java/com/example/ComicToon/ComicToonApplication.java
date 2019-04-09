@@ -26,7 +26,22 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
         http.addFilterBefore(new CorsSupport(), ChannelProcessingFilter.class);
         http
         .authorizeRequests()
-        .antMatchers("/","/register","/login", "/forgotPassword", "/userMove", "/botMove/*", "/pastGames/*")
+        .antMatchers(
+            "/",
+            "/register",
+            "/login", 
+            "/forgot", 
+            "/forgotVerification", 
+            "/forgotChangePassword", 
+            "/create/series",
+            "/delete/series",
+            "/view/comic-series",
+            "/create/comic",
+            "/delete/comic",
+            "/view/comic",
+            "/view/series",
+            "/subscriptions"
+            )
         .permitAll()
         .and()
         .authorizeRequests()

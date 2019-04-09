@@ -1,18 +1,22 @@
-import { CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES } from './../Actions/Types';
+import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES } from './../Actions/Types';
 
 const initState = {
-    User_Serieses: [],
-    User_Comics: [],
-    User_Uploads: [],
-    User_Comic_Views: [],
-    User_Series_Views: []
+    User_Series: "",
+    User_Comic: "",
+    User_Upload: "",
+    User_Comic_View: [],
+    User_Series_View: []
 }
 
 export default function(state = initState, action) {
     switch(action.type) {
         case CREATESERIES:
             return {
-                //todo
+                User_Comic: state.User_Comic,
+                User_Series: action.payload.Series,
+                User_Upload: state.User_Upload,
+                User_Comic_View: state.User_Comic_View,
+                User_Series_View: state.User_Series_View
             };
         case CREATECOMIC:
             return {
@@ -30,6 +34,8 @@ export default function(state = initState, action) {
             return {
                 //todo
             };
+        case ERR:
+            return state;
         default:
             return state;
     }

@@ -35,7 +35,6 @@ public class UserRestController {
     @ResponseBody
     public RegistrationLoginResult register(@RequestBody RegistrationForm form){
         RegistrationLoginResult result = new RegistrationLoginResult();
-        System.out.println(form);
 
         if(userRepository.findByusername(form.getUsername()) == null && userRepository.findByemail(form.getEmail())==null){
             UserModel user = new UserModel(form.getEmail(),form.getUsername(), form.getPassword(),"Regular");
@@ -66,7 +65,6 @@ public class UserRestController {
         RegistrationLoginResult result = new RegistrationLoginResult();
         
         UserModel findUser = userRepository.findByemail(form.getEmail());
-        System.out.println(findUser);
         if(findUser !=null){
             if(findUser.getPassword().equals(form.getPassword())){
                 result.setStatus("success");

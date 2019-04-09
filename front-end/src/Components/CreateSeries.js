@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
-
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 import NavigationBar from './NavigationBar';
 import './styles/CreateSeries.css';
+import { createSeries} from './../Actions/NavbarActions';
+import {withRouter} from 'react-router-dom'
+
+const StateToProps = (state) => ({ //application level state via redux
+    UserSeries: state.NavBar.User_Series,
+    CurrUser: state.user
+});
 
 class CreateSeries extends Component {
     constructor () {
         super()
         this.state = {
-            username: "",
             seriesName: "",
-            genre : "",
-            privacy: "" //default private
+            genre : ""
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.UserSeries !== this.props.UserSeries) alert(`Series "${this.state.seriesName}" Created!!`)
+        else alert(`Series "${this.state.seriesName}" NOT Created... Error`) //on error
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        //todo
+        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.genre.split(" "), "private")
     }
+
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -65,4 +77,10 @@ class CreateSeries extends Component {
     }
 }
 
-export default CreateSeries;
+CreateSeries.propTypes = {
+    createSeries: PropTypes.func.isRequired,
+    UserSeries: PropTypes.string,
+    CurrUser: PropTypes.object
+}
+
+export default connect(StateToProps, {createSeries})(withRouter(CreateSeries));

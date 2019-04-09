@@ -24,12 +24,7 @@ export default function(state = initState, action){
                 isValidated: action.payload.verified
             };
         case ERR:
-            return{
-                username: action.payload.username,
-                pwd: action.payload.pwd,
-                email: action.payload.email,
-                isValidated: action.payload.verified
-            };
+            return state
         default: 
             return state
     }
