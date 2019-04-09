@@ -73,6 +73,46 @@ class Canvas2 extends Component {
         this.canvas.freeDrawingBrush.color = event.target.value;
     }
 
+    handleLine = (event) => {
+        console.log('MAKING LINE');
+        const newLine = new fabric.Line([25, 50, 100, 100], {
+            stroke: this.state.brushColor
+        });
+        this.canvas.add(newLine);
+    }
+
+    handleCircle = (event) => {
+        console.log('MAKING CIRCLE');
+        const newCircle = new fabric.Circle({
+            radius: 20,
+            left: 50,
+            top: 50
+        });
+        this.canvas.add(newCircle);
+    }
+
+    handleRectangle = (event) => {
+        console.log('MAKING RECTANGLE');
+        const newRect = new fabric.Rect({
+            left: 50,
+            top: 50,
+            height: 20,
+            width: 20
+        });
+        this.canvas.add(newRect);
+    }
+
+    handleTriangle = (event) => {
+        console.log('MAKING TRIANGLE');
+        const newTriangle = new fabric.Triangle({
+            left: 50,
+            top: 50,
+            height: 20,
+            width: 20
+        });
+        this.canvas.add(newTriangle);
+    }
+
     handleZoom = (event) => {
         if (!this.state.zooming) {
             console.log('ZOOMING');
@@ -179,13 +219,19 @@ class Canvas2 extends Component {
                     <FontAwesomeIcon className="icon-container" icon="paint-brush" size="2x" onClick={this.handlePaint} />
                     <FontAwesomeIcon className="icon-container" icon="font" size="2x" onClick={this.handleText} />
                     <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
+                    <div className="rando" onClick={this.handleLine}></div>
+                    <FontAwesomeIcon className="icon-container" icon="circle" size="2x" onClick={this.handleCircle} />
+                    <FontAwesomeIcon className="icon-container" icon="square" size="2x" onClick={this.handleRectangle} />
+                    <FontAwesomeIcon className="icon-container" icon="caret-up" size="2x" onClick={this.handleTriangle} />
                     <FontAwesomeIcon className="icon-container" icon="search-plus" size="2x" onClick={this.handleZoom} />
                     <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
                     <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
                     <FontAwesomeIcon className="icon-container" icon="download" size="2x" onClick={this.handleDownload} />
                     <FontAwesomeIcon className="icon-container" icon="check" size="2x" onClick={this.handleDone} />
                 </div>
-                <canvas id='canvas'></canvas>
+                <div className="canvas-bottom-container">
+                    <canvas id='canvas'></canvas>
+                </div>
             </div>
         );
     }
