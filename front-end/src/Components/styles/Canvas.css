@@ -16,12 +16,14 @@
 }
 
 .icon-container {
+    color: #383838;
     height: 100%;
     font-size: 2em;
 }
 
 .icon-container:hover {
-    color: #383838;
+    color: black;
+    cursor: pointer;
 }
 
 .rando {
