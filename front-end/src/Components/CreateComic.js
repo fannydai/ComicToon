@@ -30,14 +30,12 @@ class CreateComic extends Component {
 
         this.state = {
             comicName: '',
-            sharedUsers: '',
             userInput: '',
             privacy: 'Public',
             UserSerieses: null,
             selected_series: "",
             loading: true,
             sharedUsersList: []
-
         }
     }
 
@@ -71,7 +69,7 @@ class CreateComic extends Component {
         return (
             this.state.UserSerieses.map(item=>
                 <div key={item.name}>
-                    <Dropdown.Item name="selected_series" onClick={this.handleChange}>{item.name}</Dropdown.Item>
+                    <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
             )
         )
@@ -87,7 +85,6 @@ class CreateComic extends Component {
     }
 
     handleComicName = (event) => {
-        console.log(event.target.value);
         this.setState({ comicName: event.target.value });
     }
 
@@ -109,8 +106,9 @@ class CreateComic extends Component {
     }
 
     handleChange = e => {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });
+        console.log(e.target)
+        const { name } = e.target;
+        this.setState({ selected_series: name });
     }
 
     render() {
@@ -161,8 +159,8 @@ class CreateComic extends Component {
                                         <ComicSharingTable usernames={this.state.sharedUsersList} />
                                     </div>
                                     <div className="create-comic-sharing-right">
-                                        <label>Add User: </label>
-                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
+                                        <label>Add User: (Press 'Enter' to Add)</label>
+                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
                                         <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                         <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                     </div>
