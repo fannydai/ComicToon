@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
 import './styles/Canvas2.css';
+import { Form } from 'react-bootstrap';
 
 class Canvas2 extends Component {
 
@@ -13,7 +14,7 @@ class Canvas2 extends Component {
             canRedo: false,
             canUndo: false,
             canvasState: null,
-            brushColor: '#000000',
+            brushColor: '#FF0000',
             undo: [],
             redo: [],
             previousCanvas: null
@@ -33,8 +34,9 @@ class Canvas2 extends Component {
             this.handleSave(event);
         });
         this.pencilBrush = new fabric.PencilBrush(this.canvas);
-        this.pencilBrush.color = this.state.brushColor;
-        this.pencilBrush.width = 1;
+        this.canvas.freeDrawingBrush.color = this.state.brushColor;
+        //this.pencilBrush.width = 1;
+        this.canvas.freeDrawingBrush.width = 1;
     }
 
     handlePencil = (event) => {
@@ -55,6 +57,14 @@ class Canvas2 extends Component {
         event.preventDefault();
         const newText = new fabric.Text('Enter Text');
         this.canvas.add(newText).setActiveObject(newText);
+    }
+
+    handleColor = (event) => {
+        console.log(event.target.value);
+        this.setState({ brushColor: event.target.value });
+        // Change the brush color
+        console.log(this.canvas);
+        this.canvas.freeDrawingBrush.color = event.target.value;
     }
 
     handleUndo = (event) => {
@@ -87,10 +97,6 @@ class Canvas2 extends Component {
         });
     }
 
-    handleMouseDown = (event) => {
-
-    }
-
     handleSave = (event) => {
         console.log(event);
 
@@ -114,7 +120,7 @@ class Canvas2 extends Component {
                     <FontAwesomeIcon className="icon-container" icon="pencil-alt" size="2x" onClick={this.handlePencil} />
                     <FontAwesomeIcon className="icon-container" icon="paint-brush" size="2x" onClick={this.handlePaint} />
                     <FontAwesomeIcon className="icon-container" icon="font" size="2x" onClick={this.handleText} />
-                    <FontAwesomeIcon className="icon-container" icon="palette" size="2x" />
+                    <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
                     <FontAwesomeIcon className="icon-container" icon="arrows-alt" size="2x" />
                     <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
                     <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
