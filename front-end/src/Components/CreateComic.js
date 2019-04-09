@@ -25,6 +25,14 @@ class CreateComic extends Component {
         this.handleRight = this.handleRight.bind(this);
         this.handleNavigateCanvas = this.handleNavigateCanvas.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleAddUser = this.handleAddUser.bind(this);
+
+        this.state = {
+            comicName: '',
+            sharedUsers: '',
+            userInput: '',
+            privacy: 'Public'
+        }
     }
 
     componentDidMount(){
@@ -58,12 +66,22 @@ class CreateComic extends Component {
     }
 
     handleNavigateCanvas() {
-        this.props.history.push('/canvas');
+        this.props.history.push('/test');
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
+    handleSubmit = (event) => {
+        event.preventDefault();
         //todo
+    }
+
+    handleAddUser = (event) => {
+        console.log('HERE');
+        console.log(event);
+        this.setState({ userInput: event.target.value });
+    }
+
+    handlePrivacy = (event) => {
+        this.setState({ privacy: event.target.value });
     }
 
     render() {
@@ -95,7 +113,7 @@ class CreateComic extends Component {
                             </div>
                         </div>
                         <div className="create-comic-info">
-                            <Form.Control className="create-comic-name-input" type="text" placeholder="Type Comic Name..." />
+                            <Form.Control className="create-comic-name-input" type="text"  value={this.state.userInput} placeholder="Type Comic Name..." onChange={this.handleAddUser} />
                             <Dropdown className="create-comic-dropdown">
                                 <Dropdown.Toggle variant="outline-info">
                                     Select Series
@@ -128,8 +146,8 @@ class CreateComic extends Component {
                                 <div className="create-comic-sharing-right">
                                     <label>Add User: </label>
                                     <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" />
-                                    <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
-                                    <Form.Check type="radio" name="privacy" label="Private" />
+                                    <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
+                                    <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                 </div>
                             </div>
                         </div>
