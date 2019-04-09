@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 import './styles/About.css';
 
 
@@ -29,7 +30,15 @@ class About extends Component {
                     <li>Joel George</li>
                     <li>Jeffrey Zou</li>
                 </ul>
+                <p>
+                    Frameworks we used are
+                </p>
+                <ul>
+                    <li>Fabricjs</li>
+                    <li>slick</li>
+                </ul>
             </div>
+            <Footer />
             </div>
         );
     }

@@ -9,3 +9,4 @@ export const CREATECOMIC = 'CREATECOMIC';
 export const UPLOAD = 'UPLOAD';
 export const VIEWCOMIC = 'VIEWCOMIC';
 export const VIEWSERIES = 'VIEWSERIES';
+export const ADD_PANEL = 'ADD_PANEL';

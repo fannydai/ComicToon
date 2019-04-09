@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import { Image } from 'react-bootstrap'; 
-import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom'
-import NavigationBar from './NavigationBar';
-import './styles/HomeContent.css';
+import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
+
+import Slider from "react-slick";
+
 import shoes from './images/shoes.png';
 import pi from './images/pi.png';
 import yeti from './images/yeti.png';
 import Footer from './Footer';
-import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
+
+import NavigationBar from './NavigationBar';
+import './styles/HomeContent.css';
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
@@ -26,15 +28,6 @@ class HomeContent extends Component {
         // Go to the comic/series
     }
 
-    handleLeft = (event) => {
-
-    }
-
-    handleRight = (event) => {
-        
-        
-    }
-
     handleGoToComic = (event) => {
         //console.log(event.target.src)
         console.log(this.props);
@@ -47,107 +40,102 @@ class HomeContent extends Component {
     }
 
     render() {
+        var props = {
+            dots: false,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            initialSlide: 0,
+            centerMode: true,
+            autoplay: true,
+            autoplaySpeed: 5000,
+            responsive: [
+                {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: false
+                }
+                },
+                {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    initialSlide: 2
+                }
+                },
+                {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+                }
+            ]
+        };
+
         return (
-            <div className="home-main-container">
+            <div class="home-main-container">
                 <NavigationBar history={this.props.history}/>
-                <div className="home-content-container">
-                    <div className="comic-container">
-                        <div className="subscriptions-container">
-                            <h2>Subscriptions</h2>
-                            <div className="content-container">
-                                <div className="left-container" onClick={this.handleLeft}>
-                                    <FontAwesomeIcon icon="chevron-left" />
-                                </div>
-                                <div className="middle-container">
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={shoes} onClick={this.handleGoToComic}/>
-                                    </div>
-                                </div>
-                                <div className="right-container" onClick={this.handleRight}>
-                                    <FontAwesomeIcon icon="chevron-right" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="recent-container">
-                            <h2>Recent Creations</h2>
-                            <div className="content-container">
-                                <div className="left-container" onClick={this.handleLeft}>
-                                    <FontAwesomeIcon icon="chevron-left" />
-                                </div>
-                                <div className="middle-container">
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={pi} onClick={this.handleGoToComic}/>
-                                    </div>  
-                                </div>
-                                <div className="right-container" onClick={this.handleRight}>
-                                    <FontAwesomeIcon icon="chevron-right" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="favorites-container">
-                            <h2>Favorites</h2>
-                            <div className="content-container">
-                                <div className="left-container" onClick={this.handleLeft}>
-                                    <FontAwesomeIcon icon="chevron-left" />
-                                </div>
-                                <div className="middle-container">
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
-                                    </div>
-                                    <div className="img-container" onClick={this.handleClick}>
-                                        <Image className="home-content-img" src={yeti} onClick={this.handleGoToComic}/>
-                                    </div>
-                                </div>
-                                <div className="right-container" onClick={this.handleRight}>
-                                    <FontAwesomeIcon icon="chevron-right" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+
+                <div class="home-content-container">
+                    <h2>Subscriptions</h2>
+                    <Slider {...props}>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                    </Slider>
                 </div>
+
+                <div class="home-content-container">
+                    <h2>Recent Creations</h2>
+                    <Slider {...props}>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                    </Slider>
+                </div>
+
+                <div class="home-content-container">
+                    <h2>Favorites</h2>
+                    <Slider {...props}>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={yeti} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={pi} class="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} class="comic" onClick={this.handleGoToComic}/>
+                    </Slider>
+                </div>
+
                 <Footer />
             </div>
         );

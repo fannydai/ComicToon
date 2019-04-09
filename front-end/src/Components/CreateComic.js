@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import NavigationBar from './NavigationBar';
 import './styles/CreateComic.css';
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
+
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
@@ -107,6 +109,7 @@ class CreateComic extends Component {
                         </div>
                     </Form>
                 </div>
+                <Footer />
             </div>
         );
     }
