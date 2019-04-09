@@ -5,8 +5,8 @@ nav > div > div:nth-child(2) {
 
 nav {
     background-color: white;
-    height: 10%;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .navbar-search-form {
@@ -17,4 +17,10 @@ nav {
 
 .navbar-search-input {
     flex-grow: 1;
+}
+
+.logoimage {
+    width: 45px;
+    padding: 0;
+    margin: 0;
 }

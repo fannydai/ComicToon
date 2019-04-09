@@ -44,10 +44,18 @@ class RegisterForm extends Component {
 
         return (
             <Form className="welcome" onSubmit={this.handleSubmit}>
-                <Form.Control type="email" className = "paddedFormControl" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
-                <Form.Control type="text" className = "paddedFormControl" name= "username" placeholder="Choose a username..." onChange={this.handleChange} />
-                <Form.Control type="password" className = "paddedFormControl" name= "pwd" placeholder="Create a password..." onChange={this.handleChange} />
-                <Form.Control type="password" className = "paddedFormControl" name="confirm" placeholder="Confirm password..." onChange={this.handleChange}/>
+                <div class="bubbletext">
+                    <Form.Control type="email" className = "paddedFormControl textbox" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
+                </div>
+                <div class="bubbletext">
+                    <Form.Control type="text" className = "paddedFormControl textbox" name= "username" placeholder="Choose a username..." onChange={this.handleChange} />
+                </div>
+                <div class="bubbletext">
+                    <Form.Control type="password" className = "paddedFormControl textbox" name= "pwd" placeholder="Create a password..." onChange={this.handleChange} />
+                </div>
+                <div class="bubbletext">
+                    <Form.Control type="password" className = "paddedFormControl textbox" name="confirm" placeholder="Confirm password..." onChange={this.handleChange}/>
+                </div>
                 <button type="submit" className = "paddedFormControl" variant="primary">Register</button>
             </Form>
         );

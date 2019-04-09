@@ -4,7 +4,7 @@ import { Navbar, Nav, NavDropdown,Image,Form,FormControl,Button } from 'react-bo
 import './styles/App.css';
 import './styles/NavigationBar.css';
 
-import logo from './images/logo.jpg';
+import logo from './images/small_logo.png';
 
 
 class NavigationBar extends Component {
@@ -20,7 +20,7 @@ class NavigationBar extends Component {
     render() {
         return (
             <Navbar expand="sm">
-                <Navbar.Brand><a href = "/home"><Image className="logoimage" src={logo} fluid width="50" /></a></Navbar.Brand>
+                <a href = "/home"><Image className="logoimage" src={logo} fluid/></a>
                 <Navbar.Toggle aria-controls="top-nav" />
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">

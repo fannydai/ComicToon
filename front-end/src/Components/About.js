@@ -29,6 +29,13 @@ class About extends Component {
                     <li>Joel George</li>
                     <li>Jeffrey Zou</li>
                 </ul>
+                <p>
+                    Frameworks we used are
+                </p>
+                <ul>
+                    <li>Fabricjs</li>
+                    <li><a href="https://github.com/andrewangelle/react-glide">react-glider</a></li>
+                </ul>
             </div>
             </div>
         );

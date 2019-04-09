@@ -40,8 +40,14 @@ class LoginForm extends Component {
 
         return (
             <Form className="welcome" onSubmit={this.handleLogin}>
-                <Form.Control id="email" type="email" name="email" className = "paddedFormControl" placeholder="Enter your email..." onChange={this.handleChange}/>
-                <Form.Control id="pwd" type="password" name="pwd" className = "paddedFormControl" placeholder="Enter your password..." onChange={this.handleChange}/>
+                <div class="bubbletext">
+                    <Form.Control id="email" type="email" name="email" className ="paddedFormControl textbox" placeholder="Enter your email..." onChange={this.handleChange}/>
+                </div>
+                <br />
+                <div class="bubbletext">
+                    <Form.Control id="pwd" type="password" name="pwd" className ="paddedFormControl textbox" placeholder="Enter your password..." onChange={this.handleChange}/>
+                </div>
+                <br />
                 <button type="submit" className = "paddedFormControl">Login</button>
             </Form>
         );
