@@ -141,7 +141,7 @@ public class ComicController{
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();
-                ComicModel newComic = new ComicModel(form.getName(),user.getId(),series.getId(),strDate, form.getSharedWith());
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),series.getId(),strDate, form.getSharedWith());
                 comicRepository.save(newComic);
 
                 //now add comic reference to user
