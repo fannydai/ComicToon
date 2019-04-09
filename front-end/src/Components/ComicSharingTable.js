@@ -7,8 +7,8 @@ class ComicSharingTable extends Component {
     }
 
     render() {
-        const trs = this.props.usernames.map(username => {
-            return <tr><td>{username}</td></tr>
+        const trs = this.props.usernames.map((username, i) => {
+            return <tr key={i}><td>{username}</td></tr>
         });
         return (
             <table className="create-comic-sharing-table">

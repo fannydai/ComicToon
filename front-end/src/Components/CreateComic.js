@@ -12,11 +12,13 @@ import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
 import ComicSharingTable from './ComicSharingTable';
+import Panel from './Panel';
 let AllSerieses = null;
 
 
 const StateToProps = (state) => ({ //application level state via redux
-    CurrUser: state.user
+    CurrUser: state.user,
+    comic: state.comic
 });
 class CreateComic extends Component {
 
@@ -32,6 +34,7 @@ class CreateComic extends Component {
             comicName: '',
             sharedUsers: '',
             userInput: '',
+            comicPanelIndex: 0,
             privacy: 'Public',
             sharedUsersList: []
         }
@@ -110,13 +113,13 @@ class CreateComic extends Component {
                             </div>
                             <div className="create-comic-panel-middle">
                                 <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes1} />
+                                    <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[0]} />
                                 </div>
                                 <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes2} />
+                                    <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[1]} />
                                 </div>
                                 <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes3} />
+                                <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[2]} />
                                 </div>
                                 <div className="create-comic-panel-plus">
                                     <FontAwesomeIcon icon="plus" size="2x" onClick={this.handleNavigateCanvas} />

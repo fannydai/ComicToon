@@ -23,6 +23,7 @@
 
 /* Where the user would click to create the comic */
 .create-comic-panel-container {
+    min-height: 50vh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -30,11 +31,13 @@
 }
 
 .create-comic-panel-middle {
+    height: 100%;
     width: 50%;
     display: flex;
 }
 
 .create-comic-panel-inner {
+    /*min-height: 25%;*/
     width: 25%;
 }
 

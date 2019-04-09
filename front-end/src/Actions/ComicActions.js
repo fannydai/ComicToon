@@ -58,6 +58,6 @@ export const getFavorites = (username) => (dispatch) => {
 export const addPanel = (panel, json) => (dispatch) => {
     dispatch({
         type: ADD_PANEL,
-        payload: { newComic: { panel: panel, json: json} }
+        payload: { panel: panel, json: json}
     });
 }
