@@ -4,14 +4,18 @@ import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import './styles/CreateComic.css';
-import NavigationBar from './NavigationBar';
-import Footer from './Footer';
 
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
+import addPanel from './images/addPanel.png';
 import ComicSharingTable from './ComicSharingTable';
+
+import Slider from "react-slick";
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
+import './styles/CreateComic.css';
+
 let AllSerieses = null;
 
 
@@ -99,32 +103,54 @@ class CreateComic extends Component {
     }
 
     render() {
+        var props = {
+            dots: false,
+            infinite: false,
+            speed: 500,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            initialSlide: 0,
+            autoplay: false,
+            swipeToSlide: true,
+            responsive: [
+                {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: false
+                }
+                },
+                {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    initialSlide: 2
+                }
+                },
+                {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+                }
+            ]
+        };
         return (
             <div className="create-comic-container">
                 <NavigationBar />
                 <div className="create-comic-bottom">
                     <Form className="create-comic-form" onSubmit={this.handleSubmit}>
                         <div className="create-comic-panel-container">
-                            <div className="create-comic-panel-left">
-                                <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
-                            </div>
-                            <div className="create-comic-panel-middle">
-                                <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes1} />
-                                </div>
-                                <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes2} />
-                                </div>
-                                <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes3} />
-                                </div>
-                                <div className="create-comic-panel-plus">
-                                    <FontAwesomeIcon icon="plus" size="2x" onClick={this.handleNavigateCanvas} />
-                                </div>
-                            </div>
-                            <div className="create-comic-panel-right">
-                                <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
-                            </div>
+                            <Slider {...props}>
+                                <img src={shoes1} className="panel" onClick={this.handleNavigateCanvas}/>
+                                <img src={shoes2} className="panel" onClick={this.handleNavigateCanvas}/>
+                                <img src={shoes3} className="panel" onClick={this.handleNavigateCanvas}/>
+                                <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas}/>
+                            </Slider>
                         </div>
                         <div className="create-comic-info">
                             <Form.Control className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />

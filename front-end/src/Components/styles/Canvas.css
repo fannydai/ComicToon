@@ -1,6 +1,8 @@
 .canvas2-container {
-    height: 100vh;
-    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .canvas-tool-container {
@@ -15,6 +17,11 @@
 
 .icon-container {
     height: 100%;
+    font-size: 2em;
+}
+
+.icon-container:hover {
+    color: #383838;
 }
 
 .rando {
@@ -22,4 +29,14 @@
     width: 5px;
     background-color: black;
     transform: rotate(45deg);
+}
+
+.canvas-bottom-container {
+    width: 100%;
+    margin-top: 20px;
+    border: 2px solid black;
+}
+
+#canvas {
+    background-color: white;
 }

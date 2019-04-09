@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import { fabric } from 'fabric';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
@@ -215,19 +216,21 @@ class Canvas extends Component {
             <div className="canvas2-container">
                 <NavigationBar />
                 <div className="canvas-tool-container">
-                    <FontAwesomeIcon className="icon-container" icon="pencil-alt" size="2x" onClick={this.handlePencil} />
-                    <FontAwesomeIcon className="icon-container" icon="paint-brush" size="2x" onClick={this.handlePaint} />
-                    <FontAwesomeIcon className="icon-container" icon="font" size="2x" onClick={this.handleText} />
-                    <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
-                    <div className="rando" onClick={this.handleLine}></div>
-                    <FontAwesomeIcon className="icon-container" icon="circle" size="2x" onClick={this.handleCircle} />
-                    <FontAwesomeIcon className="icon-container" icon="square" size="2x" onClick={this.handleRectangle} />
-                    <FontAwesomeIcon className="icon-container" icon="caret-up" size="2x" onClick={this.handleTriangle} />
-                    <FontAwesomeIcon className="icon-container" icon="search-plus" size="2x" onClick={this.handleZoom} />
-                    <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
-                    <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
-                    <FontAwesomeIcon className="icon-container" icon="download" size="2x" onClick={this.handleDownload} />
-                    <FontAwesomeIcon className="icon-container" icon="check" size="2x" onClick={this.handleDone} />
+                    <FontAwesomeIcon className="icon-container" icon="pencil-alt" onClick={this.handlePencil} />
+                    <FontAwesomeIcon className="icon-container" icon="paint-brush" onClick={this.handlePaint} />
+                    <FontAwesomeIcon className="icon-container" icon="font" onClick={this.handleText} />
+                    <FontAwesomeIcon className="icon-container" icon="palette" onClick={this.handleColor} />
+                    <FontAwesomeIcon className="icon-container" icon="slash" onClick={this.handleLine} />
+                    {/* <input type="color" value={this.state.brushColor} onChange={this.handleColor} /> */}
+                    {/* <div className="rando" onClick={this.handleLine}></div> */}
+                    <FontAwesomeIcon className="icon-container" icon="circle" onClick={this.handleCircle} />
+                    <FontAwesomeIcon className="icon-container" icon="square" onClick={this.handleRectangle} />
+                    <FontAwesomeIcon className="icon-container" icon="caret-up" onClick={this.handleTriangle} />
+                    <FontAwesomeIcon className="icon-container" icon="search-plus" onClick={this.handleZoom} />
+                    <FontAwesomeIcon className="icon-container" icon="undo" onClick={this.handleUndo} />
+                    <FontAwesomeIcon className="icon-container" icon="redo" onClick={this.handleRedo} />
+                    <FontAwesomeIcon className="icon-container" icon="download" onClick={this.handleDownload} />
+                    <FontAwesomeIcon className="icon-container" icon="check" onClick={this.handleDone} />
                 </div>
                 <div className="canvas-bottom-container">
                     <canvas id='canvas'></canvas>
