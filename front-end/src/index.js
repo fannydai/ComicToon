@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash,
     faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo,
-    faSearchPlus
+    faSearchPlus, faCheck
 } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import CreateSeries from './Components/CreateSeries';
@@ -32,7 +32,7 @@ import store from './Components/Store'
 import Canvas2 from './Components/Canvas2';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash,
-    faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo, faSearchPlus);
+    faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo, faSearchPlus, faCheck);
 
 ReactDOM.render(
     <Provider store={store}>
