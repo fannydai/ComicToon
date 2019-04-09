@@ -3,15 +3,11 @@ import { Navbar, Nav, NavDropdown,Image,Form,FormControl,Button } from 'react-bo
 import { connect } from 'react-redux'
 import './styles/App.css';
 import './styles/NavigationBar.css';
-<<<<<<< HEAD
 
 import logo from './images/small_logo.png';
-=======
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import logo from './images/logo.jpg';
 import { createSeries, viewMySeries, upload, createComic, viewMyComic} from './../Actions/NavbarActions';
->>>>>>> c59427970566edb51b72d7f056adf0243d072025
 
 const StateToProps = (state) => ({ //application level state via redux
     NavBar: state.NavBar
@@ -34,11 +30,7 @@ class NavigationBar extends Component {
     render() {
         return (
             <Navbar expand="sm">
-<<<<<<< HEAD
-                <a href = "/home"><Image className="logoimage" src={logo} fluid/></a>
-=======
                 <Navbar.Brand><Image className="logoimage" src={logo} fluid width="50" onClick={this.handleGoToHome}/></Navbar.Brand>
->>>>>>> c59427970566edb51b72d7f056adf0243d072025
                 <Navbar.Toggle aria-controls="top-nav" />
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">

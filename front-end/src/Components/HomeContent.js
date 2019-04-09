@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import { Image } from 'react-bootstrap'; 
+import {withRouter} from 'react-router-dom'
 
 import shoes from './images/shoes.png';
 import pi from './images/pi.png';
