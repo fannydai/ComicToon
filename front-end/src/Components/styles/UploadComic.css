@@ -3,7 +3,6 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    background-color: whitesmoke;
 }
 
 /* Everything except the navbar */

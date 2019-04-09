@@ -1,6 +1,11 @@
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
 
+h2 {
+	text-align: center;
+	font-weight: bold;
+}
+
 .home-main-container {
 	width: 100%;
 	display: flex;
@@ -12,11 +17,12 @@
 	width: 90%;
 	justify-content: center;
 	align-items: center;
-	background: rgba(255, 255, 255, 0.5) !important;
 }
 
 .comic {
-	object-fit: contain !important;
+	height: 250px;
+	background: rgba(245, 245, 245, 0.7) !important;
+	padding: 10px;
 }
 
 .slick-prev:before, .slick-next:before {
