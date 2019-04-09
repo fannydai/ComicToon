@@ -23,7 +23,7 @@ const props = {
 }
 
 const StateToProps = (state) => ({ //application level state via redux
-    info: state.info
+    comic: state.comic
 });
 
 class HomeContent extends Component {
@@ -90,7 +90,7 @@ HomeContent.propTypes = {
     getSubscriptions: PropTypes.func.isRequired,
     getRecentCreations: PropTypes.func.isRequired,
     getFavorites: PropTypes.func.isRequired,
-    info: PropTypes.object
+    comic: PropTypes.object
 }
 
-export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites })(HomeContent);
+export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites })(withRouter(HomeContent));

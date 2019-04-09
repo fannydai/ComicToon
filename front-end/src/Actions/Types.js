@@ -1,6 +1,11 @@
 export const LOGIN_USER = 'LOGIN_USER';
 export const REGISTER_USER = 'REGISTER_USER';
-export const ERR = "ERR";
+export const ERR = 'ERR';
 export const GET_SUBSCRIPTIONS = 'GET_SUBSCRIPTIONS';
 export const GET_RECENT_CREATIONS = 'GET_RECENT_CREATIONS';
 export const GET_FAVORITES = 'GET_FAVORITES';
+export const CREATESERIES = 'CREATESERIES';
+export const CREATECOMIC = 'CREATECOMIC';
+export const UPLOAD = 'UPLOAD';
+export const VIEWCOMIC = 'VIEWCOMIC';
+export const VIEWSERIES = 'VIEWSERIES';

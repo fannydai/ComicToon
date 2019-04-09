@@ -6,12 +6,18 @@ import NavigationBar from './NavigationBar';
 import './styles/UploadComic.css';
 
 class UploadComic extends Component {
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        //todo
+    }
+
     render() {
         return (
             <div className="upload-comic-container">
                 <NavigationBar />
                 <div className="upload-bottom-container">
-                    <Form className="upload-form">
+                    <Form className="upload-form" onSubmit={this.handleSubmit}>
                         <div className="upload-container">
                             <FontAwesomeIcon icon="cloud-upload-alt" size="7x" />
                             <p>Drop file here</p>
@@ -47,8 +53,7 @@ class UploadComic extends Component {
                                     </table>
                                 </div>
                                 <div className="upload-sharing-right">
-                                    <Form.Control type="text" placeholder="Add User..." />
-                                    <Button type="submit" variant="success">Add</Button>
+                                    <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" />
                                     <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
                                     <Form.Check type="radio" name="privacy" label="Private" />
                                 </div>

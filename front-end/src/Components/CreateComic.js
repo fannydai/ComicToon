@@ -30,8 +30,9 @@ class CreateComic extends Component {
         this.props.history.push('/canvas');
     }
 
-    handleSubmit() {
-
+    handleSubmit = (e) => {
+        e.preventDefault();
+        //todo
     }
 
     render() {
@@ -39,7 +40,7 @@ class CreateComic extends Component {
             <div className="create-comic-container">
                 <NavigationBar />
                 <div className="create-comic-bottom">
-                    <Form className="create-comic-form">
+                    <Form className="create-comic-form" onSubmit={this.handleSubmit}>
                         <div className="create-comic-panel-container">
                             <div className="create-comic-panel-left">
                                 <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
@@ -94,8 +95,8 @@ class CreateComic extends Component {
                                     </table>
                                 </div>
                                 <div className="create-comic-sharing-right">
-                                    <Form.Control type="text" placeholder="Add User..." />
-                                    <Button type="submit" variant="success">Add</Button>
+                                    <label>Add User: </label>
+                                    <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" />
                                     <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
                                     <Form.Check type="radio" name="privacy" label="Private" />
                                 </div>

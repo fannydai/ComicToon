@@ -13,6 +13,10 @@ class ViewAllSeries extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
     }
 
+    componentWillMount(){
+        //todo
+    }
+
     handleClick() {
         this.props.history.push('/view/series/1');
     }

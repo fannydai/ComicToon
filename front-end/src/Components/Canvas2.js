@@ -12,8 +12,9 @@ class Canvas2 extends Component {
         this.state = {
             canRedo: false,
             canUndo: false,
+            zooming: false,
             canvasState: null,
-            brushColor: '#000000',
+            brushColor: '#FF0000',
             undo: [],
             redo: [],
             previousCanvas: null
@@ -33,8 +34,9 @@ class Canvas2 extends Component {
             this.handleSave(event);
         });
         this.pencilBrush = new fabric.PencilBrush(this.canvas);
-        this.pencilBrush.color = this.state.brushColor;
-        this.pencilBrush.width = 1;
+        this.canvas.freeDrawingBrush.color = this.state.brushColor;
+        //this.pencilBrush.width = 1;
+        this.canvas.freeDrawingBrush.width = 1;
     }
 
     handlePencil = (event) => {
@@ -55,6 +57,49 @@ class Canvas2 extends Component {
         event.preventDefault();
         const newText = new fabric.Text('Enter Text');
         this.canvas.add(newText).setActiveObject(newText);
+    }
+
+    handleColor = (event) => {
+        this.setState({ brushColor: event.target.value });
+        // Change the brush color
+        this.canvas.freeDrawingBrush.color = event.target.value;
+    }
+
+    handleZoom = (event) => {
+        if (!this.state.zooming) {
+            console.log('ZOOMING');
+            this.setState({ zooming: true });
+            this.canvas.on('mouse:wheel', (opt) => {
+                var delta = opt.e.deltaY;
+                var zoom = this.canvas.getZoom();
+                zoom = zoom + delta/200;
+                if (zoom > 20) zoom = 20;
+                if (zoom < 0.01) zoom = 0.01;
+                this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+                opt.e.preventDefault();
+                opt.e.stopPropagation();
+                var vpt = this.canvas.viewportTransform;
+                if (zoom < 400 / 1000) {
+                this.canvas.viewportTransform[4] = 200 - 1000 * zoom / 2;
+                this.canvas.viewportTransform[5] = 200 - 1000 * zoom / 2;
+                } else {
+                    if (vpt[4] >= 0) {
+                        this.canvas.viewportTransform[4] = 0;
+                    } else if (vpt[4] < this.canvas.getWidth() - 1000 * zoom) {
+                        this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
+                    }
+                    if (vpt[5] >= 0) {
+                        this.canvas.viewportTransform[5] = 0;
+                    } else if (vpt[5] < this.canvas.getHeight() - 1000 * zoom) {
+                        this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
+                    }
+                }
+            })
+        } else {
+            console.log('CANNOT ZOOM');
+            this.setState({ zooming: false });
+            this.canvas.off('mouse:wheel');
+        }
     }
 
     handleUndo = (event) => {
@@ -87,10 +132,6 @@ class Canvas2 extends Component {
         });
     }
 
-    handleMouseDown = (event) => {
-
-    }
-
     handleSave = (event) => {
         console.log(event);
 
@@ -114,8 +155,8 @@ class Canvas2 extends Component {
                     <FontAwesomeIcon className="icon-container" icon="pencil-alt" size="2x" onClick={this.handlePencil} />
                     <FontAwesomeIcon className="icon-container" icon="paint-brush" size="2x" onClick={this.handlePaint} />
                     <FontAwesomeIcon className="icon-container" icon="font" size="2x" onClick={this.handleText} />
-                    <FontAwesomeIcon className="icon-container" icon="palette" size="2x" />
-                    <FontAwesomeIcon className="icon-container" icon="arrows-alt" size="2x" />
+                    <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
+                    <FontAwesomeIcon className="icon-container" icon="search-plus" size="2x" onClick={this.handleZoom} />
                     <FontAwesomeIcon className="icon-container" icon="undo" size="2x" onClick={this.handleUndo} />
                     <FontAwesomeIcon className="icon-container" icon="redo" size="2x" onClick={this.handleRedo} />
                 </div>
