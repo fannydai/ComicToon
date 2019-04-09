@@ -100,9 +100,10 @@ class CreateComic extends Component {
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
             console.log('PRESSED ENTER');
-            const newUsers = this.state.userInput.split(' ');
-            console.log('USERS TO ADD', newUsers);
-            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers] }); 
+            let newUsers = this.state.userInput.split(' ');
+            let newUsers2 = newUsers.filter(item => item !== "")
+            console.log('USERS TO ADD', newUsers2);
+            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2] }); 
         }
     }
 
