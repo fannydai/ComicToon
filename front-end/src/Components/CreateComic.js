@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import './styles/CreateComic.css';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
+import Slider from 'react-slick';
 
 import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
@@ -14,6 +15,7 @@ import shoes3 from './images/shoes-3.png';
 
 import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
+import addPanel from './images/addPanel.png';
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -35,7 +37,7 @@ class CreateComic extends Component {
             userInput: '',
             comicPanelIndex: 0,
             privacy: 'Public',
-            UserSerieses: null,
+            UserSerieses: [],
             selected_series: "",
             loading: false,
             sharedUsersList: []
