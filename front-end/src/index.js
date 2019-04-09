@@ -29,7 +29,6 @@ import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store'
-import Canvas2 from './Components/Canvas2';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash,
     faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, 
@@ -58,7 +57,6 @@ ReactDOM.render(
                 <Route exact path="/update/comic" component={UpdateComic} />
                 <Route exact path="/update/series" component={UpdateSeries} />
                 <Route exact path="/recents" component={ViewRecents} />
-                <Route exact path="/test" component={Canvas2} />
                 <Redirect from="/" exact to="/welcome"/>
                 <Route path="*" component={Error404} />
             </Switch>
