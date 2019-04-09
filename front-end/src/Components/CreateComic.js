@@ -71,7 +71,7 @@ class CreateComic extends Component {
         return (
             this.state.UserSerieses.map(item=>
                 <div key={item.name}>
-                    <Dropdown.Item>{item.name}</Dropdown.Item>
+                    <Dropdown.Item name="selected_series" onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
             )
         )
@@ -83,7 +83,7 @@ class CreateComic extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        //todo
+        console.log(this.state)
     }
 
     handleComicName = (event) => {
@@ -100,12 +100,17 @@ class CreateComic extends Component {
             console.log('PRESSED ENTER');
             const newUsers = this.state.userInput.split(' ');
             console.log('USERS TO ADD', newUsers);
-            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers] });
+            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers] }); 
         }
     }
 
     handlePrivacy = (event) => {
         this.setState({ privacy: event.target.value });
+    }
+
+    handleChange = e => {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
     render() {
@@ -144,7 +149,7 @@ class CreateComic extends Component {
                                     <Dropdown.Toggle variant="outline-info">
                                         Select Series
                                     </Dropdown.Toggle>
-                                    <Dropdown.Menu>
+                                    <Dropdown.Menu >
                                         {this.renderUserSeries()}
                                     </Dropdown.Menu>
                                 </Dropdown>
