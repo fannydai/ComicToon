@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
-
+import ComicSharingTable from './ComicSharingTable';
 import './styles/CreateSeries.css';
 import { createSeries} from './../Actions/NavbarActions';
 import {withRouter} from 'react-router-dom'
@@ -19,23 +19,41 @@ class CreateSeries extends Component {
         super()
         this.state = {
             seriesName: "",
-            genre : ""
+            genre : "",
+            genreList: [],
+            seriesDes: ""
         }
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.UserSeries !== this.props.UserSeries && nextProps.UserSeries !== "") alert(`Series "${this.state.seriesName}" Created!!`)
+        console.log(nextProps)
+        if(nextProps.UserSeries !== this.props.UserSeries && nextProps.UserSeries !== "" && this.state.genreList != null) alert(`Series "${this.state.seriesName}" Created!!`)
         else alert(`Series "${this.state.seriesName}" NOT Created... Error`) //on error
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.genre.split(" "), "private")
+        console.log(this.state)
+        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
+        this.setState({genreList: []})
     }
 
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
+    }
+
+    handleAddUserEnter = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            let newGenres = this.state.genre.split(' ');
+            let newGenres2 = newGenres.filter(item => item !== "")
+            this.setState({ genreList: [...this.state.genreList, ...newGenres2] }); 
+        }
+    }
+
+    handleSeriesDescription = event =>{
+        this.setState({ seriesDes: event.target.value });
     }
 
     render() {
@@ -47,26 +65,18 @@ class CreateSeries extends Component {
                         <div className="create-series-name-input">
                             <Form.Control className="create-series-name-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
                         </div>
+                        <div className="create-series-description">
+                            <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
+                        </div>
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">
                                 <table className="create-series-genre-table">
-                                    <tbody>
-                                        <tr><td>Horror</td></tr>
-                                        <tr><td>Romance</td></tr>
-                                        <tr><td>Comedy</td></tr>
-                                        <tr><td>Action</td></tr>
-                                        <tr><td>Action</td></tr>
-                                        <tr><td>SuperCoolGenreThatDoesn'tFitHere</td></tr>
-                                        <tr><td>Action</td></tr>
-                                        <tr><td>Action</td></tr>
-                                        <tr><td>Action</td></tr>
-                                        <tr><td>Action</td></tr>
-                                        <tr><td>Action</td></tr>
-                                    </tbody>
+                                    <h2>Genre: </h2>
+                                    <ComicSharingTable usernames={this.state.genreList} />
                                 </table>
                             </div>
                             <div className="create-series-genre-right">
-                                <Form.Control type="text" name="genre" placeholder="Genre/Tags (ex. #horror #action #funny)" onChange={this.handleChange} />
+                                <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" onChange={this.handleChange} onKeyPress={this.handleAddUserEnter}/>
                             </div>
                         </div>
                         <div className="create-series-bottom">

@@ -9,10 +9,6 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import Slider from 'react-slick';
 
-import shoes1 from './images/shoes-1.png';
-import shoes2 from './images/shoes-2.png';
-import shoes3 from './images/shoes-3.png';
-
 import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
@@ -104,8 +100,6 @@ class CreateComic extends Component {
                     canvases.push(JSON.stringify(c.json));
                     images.push(c.panel);
                 });
-                console.log(canvases);
-                console.log(images);
                 const res = await fetch("http://localhost:8080/create/comic", {
                     method: "POST",
                     headers: {
@@ -122,6 +116,9 @@ class CreateComic extends Component {
                         images: images
                       })
                 });
+                let content = await res.json();
+                if(content.result === 'success') alert(`Comic '${this.state.comicName}' Created!!`)
+                else alert(`ERROR! Comic '${this.state.comicName}' NOT Created!!`)
             })();
         }
     }
@@ -140,6 +137,7 @@ class CreateComic extends Component {
 
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
+            event.preventDefault();
             console.log('PRESSED ENTER');
             let newUsers = this.state.userInput.split(' ');
             let newUsers2 = newUsers.filter(item => item !== "")
