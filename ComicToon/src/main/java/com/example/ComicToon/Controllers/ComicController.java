@@ -142,6 +142,16 @@ public class ComicController{
                 Date date = new Date();
                 String strDate = date.toString();
                 ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),series.getId(),strDate, form.getSharedWith());
+                // Create Panels for each and set references in comic
+                ArrayList<String> canvasList = form.getCanvases();
+                ArrayList<String> imageList = form.getImages();
+                ArrayList<String> panelRefs = new ArrayList<>();
+                for (int i = 0; i < canvasList.size(); i++) {
+                    PanelModel newPanel = new PanelModel(imageList.get(i), canvasList.get(i), newComic.getId());
+                    panelRepository.save(newPanel);
+                    panelRefs.add(newPanel.getId());
+                }
+                newComic.setPanelsList(panelRefs);
                 comicRepository.save(newComic);
 
                 //now add comic reference to user
