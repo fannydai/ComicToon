@@ -308,7 +308,7 @@ public class ComicController{
 
     //Subscribe to series
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/subscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @RequestMapping(value = "/subscribe", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
     public SubscriptionResult subscribe(@RequestBody SubscriptionForm form){
         SubscriptionResult result = new SubscriptionResult();
@@ -327,9 +327,21 @@ public class ComicController{
 
 
     //View Recent Creations
-    //someone else do it due benchmark1
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscriptions", method = RequestMethod.GET, consumes = {"application/json"})
+    @ResponseBody
+    public RecentCreationsResult recent(){
+        RecentCreationsResult result = new RecentCreationsResult();
 
+        List<ComicModel> comics = comicRepository.findAll();
+        ArrayList<ComicModel> recent10 = new ArrayList<ComicModel>();
 
+        for(ComicModel comic : comics){
+            System.out.println(comic.getDate());
+        }
+
+        return result;
+    }
 
     //OTHERS (After benchmark 1)
 
