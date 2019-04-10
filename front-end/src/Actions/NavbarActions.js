@@ -62,22 +62,41 @@ export const upload = () => (dispatch) => {
     // })();
 }
 
-export const createComic = () => (dispatch) => {
-    // (async () => {
-    //     const res = await fetch("http://localhost:8080/replaceFavorites", {
-    //         method: "POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json; charset=utf-8"
-    //         },
-    //         body: JSON.stringify({ username: "" })
-    //     });
-    //     let content = await res.json();
-    //     dispatch({
-    //         type: GET_FAVORITES,
-    //         payload: { favorites: content.favorites }
-    //     });
-    // })();
+export const createComic = (username, desc, comicName, seriesName, userList, canvases, images) => (dispatch) => {
+    (async () => {
+        const res = await fetch("http://localhost:8080/create/comic", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                username: username,
+                description: desc,
+                name: comicName,
+                series: seriesName,
+                sharedWith: userList,
+                canvases: canvases,
+                images: images
+              })
+        });
+        let content = await res.json();
+        console.log(content)
+        if(content.result === 'success'){ 
+            dispatch({
+                type: CREATECOMIC,
+                payload: { Comic: comicName }
+            });
+            alert(`Comic '${comicName}' Created!!`)
+        }
+        else {
+            dispatch({
+                type: ERR,
+                payload: { Comic: "" }
+            });
+            alert(`ERROR! Comic '${comicName}' NOT Created!!`)
+        }
+    })();
 }
 
 export const viewMyComic = () => (dispatch) => {
