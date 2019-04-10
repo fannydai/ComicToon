@@ -296,6 +296,26 @@ public class ComicController{
         return result;
     }
 
+    //Subscribe to series
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public SubscriptionResult subscribe(@RequestBody SubscriptionForm form){
+        SubscriptionResult result = new SubscriptionResult();
+
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if(user == null)
+            return result;
+        else{
+            user.getSubscriptions().add(form.getSeriesid());
+            result.setResult("success");
+        }
+
+
+        return result;
+    }
+
+
     //View Recent Creations
     //someone else do it due benchmark1
 
