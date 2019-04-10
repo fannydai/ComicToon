@@ -59,23 +59,24 @@ class ViewAllComics extends Component {
         console.log(e.target.name);
         console.log(this.props.CurrUser.username);
         e.persist();
-        fetch("http://localhost:8080/delete/comic", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
-        }).then(res=>res.json())
-            .then(data =>{ alert(`Comic deleted!!`)
-            console.log(e.target.name);
-            this.setState({allComics: this.state.allComics.filter(item => item.comicId !== e.target.name)});
-        });
+        (async () => {
+            fetch("http://localhost:8080/delete/comic", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
+            });
+        })();
+        alert(`Comic deleted!!`)
+        let newArr = this.state.allComics.filter(item => item.comicId !== e.target.name);
+        this.setState({allComics: newArr}, this.forceUpdate());
     }
 
     renderAll(){
         console.log(this.state.allComics)
-        if(this.state.allComics != null)
+        if(this.state.allComics != null && this.setState.allComics !== [])
             return (
                 this.state.allComics.map(item=> {
                     return item !== null ?
@@ -104,7 +105,7 @@ class ViewAllComics extends Component {
     }
 
     render() {
-        if(this.state.isLoading) return( <h1> Lading...</h1>)
+        if(this.state.isLoading) return( <h1> Loading...</h1>)
         else{
             return (
                 <div className="view-comics-container">
