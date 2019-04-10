@@ -25,12 +25,16 @@ public class RecentCreationsResult{
      * @param comics the comics to set
      */
     public void setComics(List<ComicModel> comics) {
-        this.comics.clear();
-        comics.sort(Comparator.comparing(ComicModel::getDate));
+        if(comics == null || comics.size()==0) {
+            this.comics = comics;
+        } else {
+            this.comics.clear();
+            comics.sort(Comparator.comparing(ComicModel::getDate));
 
-        int max = amtRecent > comics.size() ? amtRecent : comics.size();
-        for(int i=0; i<max; i++) {
-            this.comics.add(comics.get(i));
+            int max = amtRecent > comics.size() ? amtRecent : comics.size();
+            for(int i=0; i<max; i++) {
+                this.comics.add(comics.get(i));
+            }
         }
     }
 }

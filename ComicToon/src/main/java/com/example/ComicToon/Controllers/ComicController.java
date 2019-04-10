@@ -5,21 +5,9 @@ import com.example.ComicToon.Models.ModelRepositories.*;
 import com.example.ComicToon.Models.RequestResponseModels.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
-
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.stream.Collectors;
 import java.util.Date;
 
 @RestController
@@ -350,8 +338,6 @@ public class ComicController{
             user.getSubscriptions().add(form.getSeriesid());
             result.setResult("success");
         }
-
-
         return result;
     }
 
@@ -371,11 +357,11 @@ public class ComicController{
         return result;
     }
 
-    //View Recent Creations
+    // View Recent Creations
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/welcomerecent", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public RecentCreationsResult recent(@RequestBody ViewSubscriptionsForm form){
+    public RecentCreationsResult recent(@RequestBody ViewAllComicsForm form){
         List<ComicModel> comics = comicRepository.findAll();
         RecentCreationsResult result = new RecentCreationsResult(comics);
         // for(ComicModel comic : result.getComics()) {

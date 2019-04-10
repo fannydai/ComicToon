@@ -14,14 +14,6 @@ body {
     text-align: center;
 }
 
-.textbox {
-    border:none !important;
-    background-color:transparent !important;
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    box-shadow: none !important;
-}
-
 .nav {
     min-width: 350px;
     align-items: center;
@@ -70,44 +62,4 @@ button:after {
 button:hover:after {
   opacity: 1;
   right: 0;
-}
-
-/* For the bubbles */
-.bubbletext {
-    position: relative;
-    display:inline-block;
-    padding: 5px;
-    /* background: #FFFFFF; */
-    border: #69B4FF solid 2px;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    border-radius: 20px;
-    margin-bottom: 18px;
-}
-
-.bubbletext:after {
-    content: "";
-    position: absolute;
-    bottom: -15px;
-    left: 60%;
-    border-style: solid;
-    border-width: 15px 15px 0;
-    border-color: #FFFFFF transparent;
-    display: block;
-    width: 0;
-    z-index: 1;
-}
-
-.bubbletext:before {
-    content: "";
-    position: absolute;
-    bottom: -19.5px;
-    left: calc(60% - 3px) ;
-    border-style: solid;
-    border-width: 18px 18px 0;
-    border-color: #69B4FF
-    transparent;
-    display: block;
-    width: 0;
-    z-index: 0;
 }
