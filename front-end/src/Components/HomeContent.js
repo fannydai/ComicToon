@@ -52,9 +52,9 @@ class HomeContent extends Component {
         return (
             panelList.map(item=> {
                 return item !== null ?
-                <div key={item.id}>
-                    <img src={item.image} alt="can't load"></img>
-                </div>
+                <span key={item.id}>
+                    <img className="comic" src={item.image} alt="can't load"></img>
+                </span>
                 :
                 null
             })
