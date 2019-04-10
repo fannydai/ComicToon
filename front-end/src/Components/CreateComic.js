@@ -68,12 +68,16 @@ class CreateComic extends Component {
     }
 
     renderUserSeries(){
+        console.log(this.state.UserSerieses);
         return (
-            this.state.UserSerieses.map(item=>
+            this.state.UserSerieses.map(item=> {
+                return item !== null ?
                 <div key={item.name}>
                     <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
-            )
+                :
+                null
+            })
         )
     }
 

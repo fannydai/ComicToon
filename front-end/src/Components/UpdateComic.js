@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {withRouter} from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -8,34 +11,121 @@ import shoes1 from './images/shoes-1.png';
 import shoes2 from './images/shoes-2.png';
 import shoes3 from './images/shoes-3.png';
 
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user,
+    comic: state.comic
+});
 class UpdateComic extends Component {
 
     constructor(props) {
         super(props);
-        this.handleLeft = this.handleLeft.bind(this);
-        this.handleRight = this.handleRight.bind(this);
-        this.handleNavigateCanvas = this.handleNavigateCanvas.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            comicData: {},
+            comicName: this.props.match.params.comicName,
+            addUsers: '',
+            addUsersList: [],
+            series: []
+        }
     }
 
-    handleLeft() {
+    componentDidMount() {
+        (async () => {
+            // Need to fetch panel data
+            const res = await fetch('http://localhost:8080/view/comic', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicName: this.props.match.params.comicName,
+                    comicOwnerName: this.props.match.params.username
+                })
+            });
+            let content = await res.json();
+            console.log(content);
+            if (content.comicName) {
+                this.setState({ comicData: content });
+            } else {
+                alert('Could not find comic');
+                this.props.history.goBack();
+            }
+        })();
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/series", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                username: this.props.match.params.username
+              })
+            });
+            let content = await res.json();
+            console.log(content);
+            this.setState({ series: content.comicSeries })
+        })();
+    }    
+
+    handleLeft = (event) => {
 
     }
 
-    handleRight() {
+    handleRight = (event) => {
 
     }
 
-    handleNavigateCanvas() {
+    handleComicName = (event) => {
+        this.setState({ comicName: event.target.value })
+    }
+
+    renderUserSeries(){
+        return (
+            this.state.series.map(item=>
+                <div key={item.name}>
+                    <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
+                </div>
+            )
+        )
+    }
+
+    handleNavigateCanvas = (event) => {
         this.props.history.push('/canvas');
     }
 
-    handleSubmit() {
+    handleSubmit = (event) => {
 
     }
     
-    handleDelete() {
-        this.props.history.push('/view/comics');
+    handleDelete = (event) => {
+        (async () => {
+            const res = await fetch('http://localhost:8080/delete/comic', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicName: this.props.match.params.comicName,
+                    ownerName: this.props.match.params.username
+                })
+            });
+            let content = res.json();
+            console.log(content);
+            if (content.result === 'failed') {
+                alert('Could not delete comic');
+            } else {
+                this.props.history.push('/view/comics');
+            }
+        })();
+    }
+
+    handleChange = e => {
+        console.log(e.target)
+        const { name } = e.target;
+        this.setState({ selected_series: name });
+        alert(`Series '${name} Selected!'`)
     }
 
     render() {
@@ -67,15 +157,13 @@ class UpdateComic extends Component {
                             </div>
                         </div>
                         <div className="create-comic-info">
-                            <Form.Control className="create-comic-name-input" type="text" placeholder="Type Comic Name..." />
+                            <Form.Control className="create-comic-name-input" type="text" value={this.state.comicName} placeholder="Type Comic Name..." onChange={this.handleComicName} />
                             <Dropdown className="create-comic-dropdown">
                                 <Dropdown.Toggle variant="outline-info">
                                     Select Series
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item>XKCD</Dropdown.Item>
-                                    <Dropdown.Item>SMBC</Dropdown.Item>
-                                    <Dropdown.Item>Cyanide and Happiness</Dropdown.Item>
+                                    {this.renderUserSeries()}
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
@@ -115,4 +203,9 @@ class UpdateComic extends Component {
     }
 }
 
-export default UpdateComic;
+UpdateComic.propTypes = {
+    CurrUser: PropTypes.object,
+    comic: PropTypes.object
+}
+
+export default connect(StateToProps, {})(withRouter(UpdateComic));

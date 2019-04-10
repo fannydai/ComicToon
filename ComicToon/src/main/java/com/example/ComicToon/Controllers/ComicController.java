@@ -113,6 +113,7 @@ public class ComicController{
         System.out.println(owner.getId());
         System.out.println(candidates.size());
         for (ComicSeriesModel candidate: candidates){
+            System.out.println(candidate.getUserID());
             if(candidate.getUserID().equals(owner.getId())){
                 for(String comicID : candidate.getComics()){
                     ComicModel comic = comicRepository.findByid(comicID);

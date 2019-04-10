@@ -55,7 +55,7 @@ ReactDOM.render(
                 <Route exact path="/subscriptions" component={ViewSubs} />
                 <Route path="/view/comic/:username/:comicName" component={ViewComic} />  
                 <Route exact path="/view/series/:username/:seriesName" component={ViewSeries} />
-                <Route exact path="/update/comic" component={UpdateComic} />
+                <Route exact path="/update/comic/:username/:comicName" component={UpdateComic} />
                 <Route exact path="/update/series" component={UpdateSeries} />
                 <Route exact path="/recents" component={ViewRecents} />
                 <Redirect from="/" exact to="/welcome"/>
