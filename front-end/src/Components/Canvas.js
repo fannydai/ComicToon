@@ -247,7 +247,6 @@ class Canvas extends Component {
         return (
             <div className="panel-container">
                 <NavigationBar />
-
                 <div class="panel">
                     <div class="top-canvas">
                         <div className="canvas-tool-container">
@@ -271,7 +270,6 @@ class Canvas extends Component {
                         <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
                     </div>
                 </div>
-                
             </div>
         );
     }

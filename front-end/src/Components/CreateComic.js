@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
-import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -12,6 +11,7 @@ import Slider from 'react-slick';
 import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
+import {createComic} from '../Actions/NavbarActions'
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -42,7 +42,6 @@ class CreateComic extends Component {
     }
 
     componentDidMount(){
-        console.log(this.props);
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
               method: "POST",
@@ -57,6 +56,7 @@ class CreateComic extends Component {
             let content = await res.json();
             this.setState({UserSerieses: content.comicSeries, loading: false})
         })();
+        
     }
 
     handleLeft() {
@@ -93,42 +93,28 @@ class CreateComic extends Component {
         } else if (this.props.comic.newComic.length === 0) {
             alert('Please create at least one panel.');
         } else {
-            (async () => {
-                const canvases = [];
-                const images = [];
-                this.props.comic.newComic.forEach(c => {
-                    canvases.push(JSON.stringify(c.json));
-                    images.push(c.panel);
-                });
-                const res = await fetch("http://localhost:8080/create/comic", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json; charset=utf-8"
-                    },
-                    body: JSON.stringify({
-                        username: this.props.CurrUser.username,
-                        description: this.state.comicDescription,
-                        name: this.state.comicName,
-                        series: this.state.selected_series,
-                        sharedWith: this.state.sharedUsersList,
-                        canvases: canvases,
-                        images: images
-                      })
-                });
-                let content = await res.json();
-                console.log(content);
-                if(content.result === 'success') {
-                    alert(`Comic '${this.state.comicName}' Created!!`);
-                    this.props.history.push({
-                        pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
-                        state: {
-                            series: this.state.selected_series
-                        }
-                    });
+            const canvases = [];
+            const images = [];
+            this.props.comic.newComic.forEach(c => {
+                canvases.push(JSON.stringify(c.json));
+                images.push(c.panel);
+            });
+            this.props.createComic(
+                this.props.CurrUser.username, 
+                this.state.comicDescription, 
+                this.state.comicName, 
+                this.state.selected_series,
+                this.state.sharedUsersList,
+                canvases,
+                images
+            )
+            this.setState({sharedUsersList: []})
+            this.props.history.push({
+                pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
+                state: {
+                    series: this.state.selected_series
                 }
-                else alert(`ERROR! Comic '${this.state.comicName}' NOT Created!!`)
-            })();
+            });
         }
     }
 
@@ -163,6 +149,7 @@ class CreateComic extends Component {
         console.log(e.target)
         const { name } = e.target;
         this.setState({ selected_series: name });
+        alert(`Series '${name} Selected!'`)
     }
 
     render() {
@@ -264,7 +251,9 @@ class CreateComic extends Component {
 }
 
 CreateComic.propTypes = {
-    CurrUser: PropTypes.object
+    CurrUser: PropTypes.object,
+    comic: PropTypes.object,
+    createComic: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic})(withRouter(CreateComic));
