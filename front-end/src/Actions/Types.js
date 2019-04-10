@@ -10,3 +10,4 @@ export const UPLOAD = 'UPLOAD';
 export const VIEWCOMIC = 'VIEWCOMIC';
 export const VIEWSERIES = 'VIEWSERIES';
 export const ADD_PANEL = 'ADD_PANEL';
+export const SAVE_NEW_COMIC_DATA = 'SAVE_NEW_COMIC_DATA';

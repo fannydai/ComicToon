@@ -61,13 +61,15 @@ class ViewSeries extends Component {
     }
 
     handleUpdate = (event) => {
-        this.props.history.push('/update/comic');
+        if (this.state.comicData.id) {
+            this.props.history.push(`/update/comic/${this.state.comicData.username}/${this.state.comicData.name}`);
+        }
     }
 
     render() {
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
             return (
-                <Card className="view-one-series-card">
+                <Card key={i} className="view-one-series-card">
                     <Card.Img variant="top" src={this.state.panels[i]} onClick={this.handleClick} />
                     <Card.Body>
                         <Card.Title>{comic.name}</Card.Title>
