@@ -12,6 +12,7 @@ import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
 import {createComic} from '../Actions/NavbarActions'
+import { saveNewComic } from '../Actions/ComicActions';
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -30,16 +31,39 @@ class CreateComic extends Component {
             comicName: '',
             comicDescription: '',
             userInput: '',
-            comicPanelIndex: 0,
             privacy: 'Public',
             UserSerieses: [],
             selected_series: "",
-            loading: false,
+            loading: true,
             sharedUsersList: []
         }
     }
 
     componentDidMount(){
+        // Initialize values if comics is already being edited
+        const savedData = this.props.comic.saveNewComic;
+        if (savedData.comicName) {
+            this.setState({ comicName: savedData.comicName });
+        }
+        if (savedData.userInput) {
+            this.setState({ userInput: savedData.userInput });
+        }
+        if (savedData.comicDescription) {
+            this.setState({ comicDescription: savedData.comicDescription });
+        }
+        if (savedData.privacy) {
+            this.setState({ privacy: savedData.privacy });
+        }
+        if (savedData.UserSerieses) {
+            this.setState({ UserSerieses: savedData.UserSerieses });
+        }
+        if (savedData.selected_series) {
+            this.setState({ selected_series: savedData.selected_series });
+        }
+        if (savedData.sharedUsersList) {
+            this.setState({ sharedUsersList: savedData.sharedUsersList });
+        }
+
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
               method: "POST",
@@ -71,6 +95,16 @@ class CreateComic extends Component {
     }
 
     handleNavigateCanvas() {
+        // Save the current state to the store
+        this.props.saveNewComic({
+            comicName: this.state.comicName,
+            comicDescription: this.state.comicDescription,
+            userInput: this.state.userInput,
+            privacy: this.state.privacy,
+            UserSerieses: this.state.UserSerieses,
+            selected_series: this.state.selected_series,
+            sharedUsersList: this.state.sharedUsersList
+        });
         this.props.history.push('/canvas');
     }
 
@@ -101,7 +135,8 @@ class CreateComic extends Component {
                 canvases,
                 images
             )
-            this.setState({sharedUsersList: []})
+            this.setState({sharedUsersList: []});
+            this.props.saveNewComic({}); // Clear the current state of the new comi from the storec
             this.props.history.push({
                 pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
                 state: {
@@ -130,7 +165,7 @@ class CreateComic extends Component {
             let newUsers = this.state.userInput.split(' ');
             let newUsers2 = newUsers.filter(item => item !== "")
             console.log('USERS TO ADD', newUsers2);
-            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2] }); 
+            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2], userInput: '' }); 
         }
     }
 
@@ -199,7 +234,7 @@ class CreateComic extends Component {
                                 <Slider {...props}>
                                     {this.props.comic.newComic.length ? 
                                         this.props.comic.newComic.map((panel, i) => {
-                                            return <Panel className="create-comic-panel-inner" comic={panel} key={i} />
+                                            return <Panel comic={panel} key={i} />
                                         }) : null}
                                     <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas}/>
                                 </Slider>
@@ -248,7 +283,8 @@ class CreateComic extends Component {
 CreateComic.propTypes = {
     CurrUser: PropTypes.object,
     comic: PropTypes.object,
-    createComic: PropTypes.func.isRequired
+    createComic: PropTypes.func.isRequired,
+    saveNewComic: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {createComic})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic, saveNewComic})(withRouter(CreateComic));
