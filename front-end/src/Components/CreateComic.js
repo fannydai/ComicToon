@@ -136,7 +136,6 @@ class CreateComic extends Component {
                 images
             )
             this.setState({sharedUsersList: []});
-            this.props.saveNewComic({}); // Clear the current state of the new comi from the storec
             this.props.history.push({
                 pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
                 state: {

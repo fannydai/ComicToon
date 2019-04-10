@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA } from './Types';
 
 export const createSeries = (userName, seriesName, description, genres, privacy) => (dispatch) => {
     (async () => {
@@ -116,6 +116,32 @@ export const createComic = (username, desc, comicName, seriesName, userList, can
                 payload: { Comic: "" }
             });
             alert(`ERROR! Comic '${comicName}' NOT Created!!`)
+        }
+    })();
+}
+
+export const viewComic = (username, comicName) => (dispatch) => {
+    (async () => {
+        const res = await fetch('http://localhost:8080/view/comic', {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                comicName: comicName,
+                comicOwnerName: username
+            })
+        });
+        let content = await res.json();
+        console.log(content);
+        if (!content.comicName) {
+            alert('Could not find comic.'); // No comic/no permission
+        } else {
+            dispatch({
+                type: SAVE_NEW_COMIC_DATA,
+                payload: { saveNewComic: content }
+            })
         }
     })();
 }
