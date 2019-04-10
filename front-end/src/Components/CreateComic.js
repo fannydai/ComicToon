@@ -153,7 +153,8 @@ class CreateComic extends Component {
             slidesToShow: 4,
             slidesToScroll: 1,
             initialSlide: 0,
-            autoplay: false,
+            autoplay: true,
+            autoplaySpeed: 1000,
             swipeToSlide: true,
             responsive: [
                 {
@@ -182,11 +183,11 @@ class CreateComic extends Component {
                 }
             ]
         };
-
-        const firstPanel = this.props.comic.newComic[0] ? <div className="create-comic-panel-inner"><Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[0]} /></div> : null;
-        const secondPanel = this.props.comic.newComic[1] ? <div className="create-comic-panel-inner"><Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[1]} /></div> : null;
-        const thirdPanel = this.props.comic.newComic[2] ? <div className="create-comic-panel-inner"><Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[2]} /></div> : null;
-
+        /*
+        const firstPanel = this.props.comic.newComic[0] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[0]} /> : null;
+        const secondPanel = this.props.comic.newComic[1] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[1]} /> : null;
+        const thirdPanel = this.props.comic.newComic[2] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[2]} /> : null;
+        */
         if(this.state.loading) return (<h1>Loading ...</h1>)
         else{
             return (
@@ -196,9 +197,10 @@ class CreateComic extends Component {
                         <Form className="create-comic-form" onSubmit={this.handleSubmit}>
                             <div className="create-comic-panel-container">
                                 <Slider {...props}>
-                                    {firstPanel}
-                                    {secondPanel}
-                                    {thirdPanel}
+                                    {this.props.comic.newComic.length ? 
+                                        this.props.comic.newComic.map((panel, i) => {
+                                            return <Panel className="create-comic-panel-inner" comic={panel} key={i} />
+                                        }) : null}
                                     <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas}/>
                                 </Slider>
                             </div>
