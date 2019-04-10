@@ -293,6 +293,7 @@ public class ComicController{
                 ComicModel temp = findComicList.get(i);
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 pans.setComicName(temp.getName());
+                pans.setComicID(temp.getId());
                 for(int j=0; j<temp.getPanelsList().size(); j++){
                     PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
                     pans.getComicList().add(real);
@@ -300,6 +301,17 @@ public class ComicController{
                 result.getBundleComicList().add(pans);
             }
         }
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/delComic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DelComicResult deleteComic(@RequestBody DelComic form){
+        System.out.println("HERRRRRR");
+        comicRepository.deleteById(form.getID());
+        DelComicResult result = new DelComicResult();
+        result.setStatus("success");
         return result;
     }
 

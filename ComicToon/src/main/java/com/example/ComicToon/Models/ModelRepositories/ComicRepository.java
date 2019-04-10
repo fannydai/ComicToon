@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public interface ComicRepository extends MongoRepository<ComicModel, String>{
     public ComicModel findByid(String ID);
+    public void deleteById(String id);
     public ArrayList<ComicModel> findByUserID(String userID);
     public ArrayList<ComicModel> findByname(String name);
     public List<ComicModel> findAll();

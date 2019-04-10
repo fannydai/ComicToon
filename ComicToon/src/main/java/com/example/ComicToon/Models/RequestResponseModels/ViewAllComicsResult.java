@@ -6,6 +6,7 @@ import com.example.ComicToon.Models.PanelModel;
 
 public class ViewAllComicsResult {
     private String comicName;
+    private String comicId;
     private ArrayList<PanelModel> allComicsPanels = new ArrayList<>();
 
     public void setComicList(ArrayList<PanelModel> allComicsPanels) {
@@ -22,5 +23,13 @@ public class ViewAllComicsResult {
 
     public void setComicName(String comicName){
         this.comicName = comicName;
+    }
+
+    public String getComicID(){
+        return this.comicId;
+    }
+
+    public void setComicID(String comicId){
+        this.comicId = comicId;
     }
 }
