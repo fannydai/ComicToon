@@ -13,9 +13,9 @@
     padding-bottom: 25px;
 }
 
-.upload-form {
-    flex-grow: 1;
-}
+/* .upload-form {
+    width: 100%;
+} */
 
 /* Where the user does the uploading */
 .upload-container {
@@ -35,7 +35,7 @@
 }
 
 .upload-name-input {
-    width: 50%;
+    /* width: 50%; */
 }
 
 .upload-dropdown {
@@ -52,11 +52,12 @@
     height: 40%;
     display: flex;
     justify-content: center;
+    padding-bottom: 20px;
 }
 
 .upload-sharing-inner {
     height: 100%;
-    width: 50%;
+    /* width: 50%; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -65,17 +66,22 @@
 .upload-table-container {
     height: 100%;
     width: 35%;
+    min-width: 520px;
     overflow-y: auto;
     overflow-x: auto;
+    border: 1px solid black;
+    padding: 10px;
 }
 
 .upload-sharing-table {
     height: 100%;
-    width: 35%;
+    width: 60% !important;
+    min-width: 400px !important;
 }
 
 .upload-sharing-right {
-    width: 60%;
+    padding-left: 10px;
+    width: 30%;
 }
 
 /* Bottom */

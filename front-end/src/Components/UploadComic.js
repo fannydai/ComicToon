@@ -25,21 +25,13 @@ class UploadComic extends Component {
                         </div>
                         <div className="upload-info">
                             <Form.Control className="upload-name-input" type="text" placeholder="Type Comic Name..." />
-                            <Dropdown className="upload-dropdown">
-                                <Dropdown.Toggle variant="outline-info">
-                                    Select Series
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item>XKCD</Dropdown.Item>
-                                    <Dropdown.Item>SMBC</Dropdown.Item>
-                                    <Dropdown.Item>Cyanide and Happiness</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
+                            <br />
                         </div>
                         <div className="upload-sharing">
                             <div className="upload-sharing-inner">
                                 <div className="upload-table-container">
                                     <table className="upload-sharing-table">
+                                    <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" />
                                         <tbody>
                                             <tr><td>User 1</td></tr>
                                             <tr><td>User 2</td></tr>
@@ -54,9 +46,21 @@ class UploadComic extends Component {
                                     </table>
                                 </div>
                                 <div className="upload-sharing-right">
-                                    <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" />
                                     <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
                                     <Form.Check type="radio" name="privacy" label="Private" />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <Dropdown className="upload-dropdown">
+                                        <Dropdown.Toggle variant="outline-info">
+                                            Select Series
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item>XKCD</Dropdown.Item>
+                                            <Dropdown.Item>SMBC</Dropdown.Item>
+                                            <Dropdown.Item>Cyanide and Happiness</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </div>
                             </div>
                         </div>

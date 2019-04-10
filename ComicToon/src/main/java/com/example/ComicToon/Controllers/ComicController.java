@@ -244,7 +244,6 @@ public class ComicController{
         System.out.println(findComic);
         
         if(findComic!=null){
-
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
             ArrayList<CommentModel> comments = new ArrayList<CommentModel>();
             ArrayList<RatingModel> ratings = new ArrayList<RatingModel>();
@@ -277,17 +276,8 @@ public class ComicController{
                 }
             }
             result.setPanels(panels);
-
             result.setSuggestions(null);
-
-
         }
-        else{
-            return result;
-        }
-        
-
-
         return result;
     }
 
@@ -362,14 +352,14 @@ public class ComicController{
 
     //View Recent Creations
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/welcomerecent", method = RequestMethod.GET, consumes = {"application/json"})
+    @RequestMapping(value = "/welcomerecent", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
     public RecentCreationsResult recent(@RequestBody ViewSubscriptionsForm form){
         List<ComicModel> comics = comicRepository.findAll();
         RecentCreationsResult result = new RecentCreationsResult(comics);
-        for(ComicModel comic : result.getComics()) {
-            System.out.println(comic.getDate());
-        }
+        // for(ComicModel comic : result.getComics()) {
+        //     System.out.println(comic.getDate());
+        // }
         return result;
     }
 
