@@ -92,8 +92,20 @@ class CreateComic extends Component {
             alert('Please enter a comic name.');
         } else if (this.state.comicDescription === '') {
             alert('Please enter a comic description.');
+        } else if (this.selected_series === '') {
+            alert('Please select a series.');
+        } else if (this.props.comic.newComic.length === 0) {
+            alert('Please create at least one panel.');
         } else {
             (async () => {
+                const canvases = [];
+                const images = [];
+                this.props.comic.newComic.forEach(c => {
+                    canvases.push(JSON.stringify(c.json));
+                    images.push(c.panel);
+                });
+                console.log(canvases);
+                console.log(images);
                 const res = await fetch("http://localhost:8080/create/comic", {
                     method: "POST",
                     headers: {
@@ -101,7 +113,13 @@ class CreateComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comic: this.props.comic.newComic
+                        username: this.props.CurrUser.username,
+                        description: this.state.comicDescription,
+                        name: this.state.comicName,
+                        series: this.state.selected_series,
+                        sharedWith: this.state.sharedUsersList,
+                        canvases: canvases,
+                        images: images
                       })
                 });
             })();
