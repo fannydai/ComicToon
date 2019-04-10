@@ -109,6 +109,12 @@ class CreateComic extends Component {
                 images
             )
             this.setState({sharedUsersList: []})
+            this.props.history.push({
+                pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
+                state: {
+                    series: this.state.selected_series
+                }
+            });
         }
     }
 
