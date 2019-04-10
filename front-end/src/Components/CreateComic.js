@@ -177,7 +177,6 @@ class CreateComic extends Component {
         console.log(e.target)
         const { name } = e.target;
         this.setState({ selected_series: name });
-        alert(`Series '${name} Selected!'`)
     }
 
     render() {
@@ -244,7 +243,7 @@ class CreateComic extends Component {
                                 <Form.Control.Feedback type="invalid">Please name the comic.</Form.Control.Feedback>
                                 <Dropdown className="create-comic-dropdown">
                                     <Dropdown.Toggle variant="outline-info">
-                                        Select Series
+                                        {this.state.selected_series ? this.state.selected_series : 'Select Series'}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                         {this.renderUserSeries()}
