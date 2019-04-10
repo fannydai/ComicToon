@@ -344,15 +344,38 @@ public class ComicController{
     }
 
     // View Recent Creations
+    // @CrossOrigin(origins = "http://localhost:3000")
+    // @RequestMapping(value = "/welcomerecent", method = RequestMethod.POST, consumes = {"application/json"})
+    // @ResponseBody
+    // public RecentCreationsResult recent(@RequestBody ViewAllComicsForm form){
+    //     List<ComicModel> comics = comicRepository.findAll();
+    //     RecentCreationsResult result = new RecentCreationsResult();
+
+    //     for(ComicModel comic : comics) {
+    //         result.getComics().add(comicRepository.findByid(comic.getId()));
+    //     }
+    //     return result;
+    // }
+    
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/welcomerecent", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public RecentCreationsResult recent(@RequestBody ViewAllComicsForm form){
-        List<ComicModel> comics = comicRepository.findAll();
-        RecentCreationsResult result = new RecentCreationsResult();
-
-        for(ComicModel comic : comics) {
-            result.getComics().add(comicRepository.findByid(comic.getId()));
+    public BundleViewAllComics recent(@RequestBody ViewAllComicsForm form){
+        BundleViewAllComics result = new BundleViewAllComics();
+        UserModel theUser = userRepository.findByusername(form.getComicOwnerName());
+        List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
+        if(findComicList != null){
+            for(int i=0; i<findComicList.size(); i++){
+                ComicModel temp = findComicList.get(i);
+                ViewAllComicsResult pans = new ViewAllComicsResult();
+                pans.setComicName(temp.getName());
+                pans.setComicID(temp.getId());
+                for(int j=0; j<temp.getPanelsList().size(); j++){
+                    PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
+                    pans.getComicList().add(real);
+                }
+                result.getBundleComicList().add(pans);
+            }
         }
         return result;
     }

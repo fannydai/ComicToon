@@ -15,61 +15,73 @@ import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 
 const StateToProps = (state) => ({ //application level state via redux
-    CurrUser: state.user,
-    comic: state.comic
+    CurrUser: state.user
 });
 
 class HomeContent extends Component {
 
     constructor(props) {
         super(props);
-
+        // this.handleClick = this.handleClick.bind(this);
+        // this.handleUpdate = this.handleUpdate.bind(this);
         this.state = {
-
+            allComics: null,
+            isLoading: true
         }
     }
 
     componentDidMount(){
-        if(!this.props.match.params.username) {
-            // this.props.history.goBack();
-        }
-        /*
         (async () => {
             const res = await fetch("http://localhost:8080/welcomerecent", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-              },
-              body: JSON.stringify({
-                //   recents: this.props
-                // recents: this.props.match.params.result
-              })
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicOwnerName: this.props.CurrUser.username
+                })
             });
             let content = await res.json();
-            console.log(content);
-        })();      */
-        // Get all user's series
-        (async () => {
-            const res = await fetch("http://localhost:8080/view/series", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-              },
-              body: JSON.stringify({
-                username: this.props.CurrUser.username
-              })
-            });
-            let content = await res.json();
-            console.log(content);
-            if (content.comicSeries) {
-                this.props.getAllSeries(content.comicSeries);
-            }
-        })();  
+            console.log(content)
+            this.setState({allComics: content.bundleComicList, isLoading: false})
+        })();
     }
 
+    renderOne(panelList){
+        return (
+            panelList.map(item=> {
+                return item !== null ?
+                <div key={item.id}>
+                    <img src={item.image} alt="can't load"></img>
+                </div>
+                :
+                null
+            })
+        )
+    }
 
+    renderAll(){
+        console.log(this.state.allComics)
+        if(this.state.allComics != null)
+            return (
+                this.state.allComics.map(item=> {
+                    return item !== null ?
+                    <div key={item.comicName}>
+                        {/* <button onClick={this.handleDel} name={item.comicID}>Delete?</button> */}
+                        {this.renderOne(item.comicList)}
+                        <hr/>
+                    </div>
+                    :
+                    null
+                })
+            )
+        else{
+            return(
+                <h2>NO COMICS CREATED</h2>
+            )
+        }
+    }
 
 
     handleClick = (event) => {
@@ -153,20 +165,11 @@ class HomeContent extends Component {
 
                 <div className="home-content-container">
                     <h2>Recent Creations</h2>
-                    <Slider {...props}>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                    </Slider>
+                    {/* <Slider {...props}> */}
+                    <div>
+                        {this.renderAll()}
+                    </div>
+                    {/* </Slider> */}
                 </div>
 
                 <div className="home-content-container">

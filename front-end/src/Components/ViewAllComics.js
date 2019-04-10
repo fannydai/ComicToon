@@ -58,18 +58,18 @@ class ViewAllComics extends Component {
     handleDel = (e) => {
         console.log(e.target.name);
         e.persist();
-            fetch("http://localhost:8080/delComic", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({ id: e.target.name})
-            }).then(res=>res.json())
-                .then(data =>{ alert(`Comic deleted!!`)
-                console.log(e.target.name);
-                this.setState({allComics: this.state.allComics.filter(item => item.comicId !== e.target.name)});
-            });
+        fetch("http://localhost:8080/delComic", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({ id: e.target.name})
+        }).then(res=>res.json())
+            .then(data =>{ alert(`Comic deleted!!`)
+            console.log(e.target.name);
+            this.setState({allComics: this.state.allComics.filter(item => item.comicId !== e.target.name)});
+        });
     }
 
     renderAll(){
