@@ -253,7 +253,7 @@ class Canvas extends Component {
                 </div>
                 <div className="canvas-bottom-tool-container">
                     <div>
-                        <div for="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
+                        <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
                         <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
                     </div>
                 </div>
