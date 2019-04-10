@@ -56,27 +56,26 @@ class ViewSeries extends Component {
         })();
     }
 
-    handleClick = (event) => {
-        this.props.history.push('/view/comic');
+    handleClick = (comic, event) => {
+        console.log(comic);
+        this.props.history.push(`/view/comic/${comic.username}/${comic.name}`);
     }
 
-    handleUpdate = (event) => {
-        if (this.state.comicData.id) {
-            this.props.history.push(`/update/comic/${this.state.comicData.username}/${this.state.comicData.name}`);
-        }
+    handleUpdate = (comic, event) => {
+        this.props.history.push(`/update/comic/${comic.username}/${comic.name}`);
     }
 
     render() {
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
             return (
                 <Card key={i} className="view-one-series-card">
-                    <Card.Img variant="top" src={this.state.panels[i]} onClick={this.handleClick} />
+                    <Card.Img variant="top" src={this.state.panels[i]} />
                     <Card.Body>
-                        <Card.Title>{comic.name}</Card.Title>
+                        <Card.Title onClick={(e) => this.handleClick(comic, e)}>{comic.name}</Card.Title>
                         <Card.Text>Artist: {comic.username}</Card.Text>
                         <Card.Text>Series: {this.props.match.params.seriesName}</Card.Text>
                         <Card.Text>Rate: +200</Card.Text>
-                        <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
+                        <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(comic, e)}>Update</button></Card.Text>
                     </Card.Body>
                 </Card>
             );

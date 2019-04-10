@@ -116,7 +116,7 @@ class CreateComic extends Component {
             alert('Please enter a comic name.');
         } else if (this.state.comicDescription === '') {
             alert('Please enter a comic description.');
-        } else if (this.selected_series === '') {
+        } else if (this.state.selected_series === '') {
             alert('Please select a series.');
         } else if (this.props.comic.newComic.length === 0) {
             alert('Please create at least one panel.');
@@ -137,7 +137,7 @@ class CreateComic extends Component {
                 images
             )
             this.setState({sharedUsersList: []});
-            // Clear the panels and saved data
+            // Clear the panels and saved
             this.props.clearPanels();
             this.props.saveNewComic({});
             this.props.history.push({
