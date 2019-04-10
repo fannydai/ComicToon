@@ -53,7 +53,7 @@ ReactDOM.render(
                 <Route exact path="/update" component={UpdateComic} /> 
                 <Route exact path="/canvas" component={Canvas} />  
                 <Route exact path="/subscriptions" component={ViewSubs} />
-                <Route exact path="/view/comic" component={ViewComic} />  
+                <Route path="/view/comic/:username/:comicName" component={ViewComic} />  
                 <Route exact path="/view/series/1" component={ViewSeries} />
                 <Route exact path="/update/comic" component={UpdateComic} />
                 <Route exact path="/update/series" component={UpdateSeries} />

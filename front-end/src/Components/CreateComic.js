@@ -117,7 +117,16 @@ class CreateComic extends Component {
                       })
                 });
                 let content = await res.json();
-                if(content.result === 'success') alert(`Comic '${this.state.comicName}' Created!!`)
+                console.log(content);
+                if(content.result === 'success') {
+                    alert(`Comic '${this.state.comicName}' Created!!`);
+                    this.props.history.push({
+                        pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
+                        state: {
+                            series: this.state.selected_series
+                        }
+                    });
+                }
                 else alert(`ERROR! Comic '${this.state.comicName}' NOT Created!!`)
             })();
         }

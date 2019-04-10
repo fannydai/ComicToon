@@ -138,10 +138,11 @@ public class ComicController{
                     series = s;
             }
             if(series!=null){
+                System.out.println(form.getUsername());
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();
-                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),series.getId(),strDate, form.getSharedWith());
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith());
                 // Create Panels for each and set references in comic
                 ArrayList<String> canvasList = form.getCanvases();
                 ArrayList<String> imageList = form.getImages();
@@ -161,7 +162,7 @@ public class ComicController{
                 //now add comic reference to comic series
                 series.getComics().add(newComic.getId());
                 ComicSeriesRepository.save(series);
-                result.setResult("Sucess");
+                result.setResult("success");
             }
             else{
                 result.setResult("comic series does not exists");
@@ -211,12 +212,16 @@ public class ComicController{
     @ResponseBody
     public ViewComicResult viewComic(@RequestBody ViewComicForm form){
         ViewComicResult result = new ViewComicResult();
+        System.out.println("VIEW COMIC");
         ArrayList<ComicModel> findComicList = comicRepository.findByname(form.getComicName());
         ComicModel findComic = null;
         for(ComicModel c: findComicList){
-            if(c.getUserID().equals(form.getComicOwnerName()))
+            System.out.println(c.getUsername());
+            System.out.println(form.getComicOwnerName());
+            if(c.getUsername().equals(form.getComicOwnerName()))
                 findComic = c;
         }
+        System.out.println(findComic);
         
         if(findComic!=null){
 
