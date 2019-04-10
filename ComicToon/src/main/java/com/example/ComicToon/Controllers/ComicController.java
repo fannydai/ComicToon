@@ -285,12 +285,20 @@ public class ComicController{
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/view/allComics", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public ViewAllComicsResult viewAllComics(@RequestBody ViewAllComicsForm form){
-        ViewAllComicsResult result = new ViewAllComicsResult();
+    public BundleViewAllComics viewAllComics(@RequestBody ViewAllComicsForm form){
+        BundleViewAllComics result = new BundleViewAllComics();
         UserModel theUser = userRepository.findByusername(form.getComicOwnerName());
         List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
-        for(ComicModel c: findComicList){
-            result.getComicList().add(c);         
+        if(findComicList != null){
+            for(int i=0; i<findComicList.size(); i++){
+                ComicModel temp = findComicList.get(i);
+                ViewAllComicsResult pans = new ViewAllComicsResult();
+                for(int j=0; j<temp.getPanelsList().size(); j++){
+                    PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
+                    pans.getComicList().add(real);
+                }
+                result.getBundleComicList().add(pans);
+            }
         }
         return result;
     }

@@ -2,16 +2,16 @@ package com.example.ComicToon.Models.RequestResponseModels;
 
 import java.util.ArrayList;
 
-import com.example.ComicToon.Models.ComicModel;
+import com.example.ComicToon.Models.PanelModel;
 
 public class ViewAllComicsResult {
-    private ArrayList<ComicModel> allComics = new ArrayList<>();
+    private ArrayList<PanelModel> allComicsPanels = new ArrayList<>();
 
-    public void setComicList(ArrayList<ComicModel> allComics) {
-        this.allComics = allComics;
+    public void setComicList(ArrayList<PanelModel> allComicsPanels) {
+        this.allComicsPanels = allComicsPanels;
     }
 
-    public ArrayList<ComicModel> getComicList() {
-        return this.allComics;
+    public ArrayList<PanelModel> getComicList() {
+        return this.allComicsPanels;
     }
 }
