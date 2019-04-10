@@ -15,13 +15,40 @@ import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 
 const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user,
     comic: state.comic
 });
 
 class HomeContent extends Component {
+
     constructor(props) {
         super(props);
+
+        this.state = {
+
+        }
     }
+
+    componentDidMount(){
+
+        (async () => {
+            const res = await fetch("http://localhost:8080/welcomerecent", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                username: this.props.CurrUser.username
+              })
+            });
+            let content = await res.json();
+            this.setState({UserSerieses: content.comicSeries, loading: false})
+        })();      
+    }
+
+
+
 
     handleClick = (event) => {
         console.log(event.target);

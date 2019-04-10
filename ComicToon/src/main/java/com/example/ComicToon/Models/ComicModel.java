@@ -2,8 +2,12 @@ package com.example.ComicToon.Models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
-
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 public class ComicModel{
     @Id
@@ -21,6 +25,20 @@ public class ComicModel{
     //shared with userIDs
     private ArrayList<String> sharedWith;
 
+
+    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith){
+        this.name = name;
+        this.description = description;
+        this.userID = userID;
+        this.username = username;
+        this.comicSeriesID = comicSeriesID;
+        this.Date = Date;
+        this.panelsList = new ArrayList<String>();
+        this.commentsList = new ArrayList<String>();
+        this.RatingsID = new ArrayList<String>();
+        this.sharedWith = sharedWith;
+
+    }
 
     public String getDescription() {
         return this.description;
@@ -110,21 +128,18 @@ public class ComicModel{
         this.RatingsID = RatingsID;
     }
 
-
-    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith){
-        this.name = name;
-        this.description = description;
-        this.userID = userID;
-        this.username = username;
-        this.comicSeriesID = comicSeriesID;
-        this.Date = Date;
-        this.panelsList = new ArrayList<String>();
-        this.commentsList = new ArrayList<String>();
-        this.RatingsID = new ArrayList<String>();
-        this.sharedWith = sharedWith;
-
-    }
-
-    
-
+    private final static String dateFormat = "EEE MMM dd HH:mm:ss yyyy";
+    private final static Comparator<String> dateComp = new Comparator<String>() {
+        public int compare(String s1, String s2) {
+            Date d1 = null;
+            Date d2 = null;
+            try {
+                d1 = new SimpleDateFormat( dateFormat,Locale.ENGLISH ).parse(s1);
+                d2 = new SimpleDateFormat( dateFormat,Locale.ENGLISH ).parse(s2);
+            } catch (ParseException e) {
+                //HANDLE THIS EXCEPTION
+            }
+            return -1 * d1.compareTo(d2);
+        }
+    };
 }

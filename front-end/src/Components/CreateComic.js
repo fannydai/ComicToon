@@ -22,8 +22,6 @@ class CreateComic extends Component {
 
     constructor(props) {
         super(props);
-        this.handleLeft = this.handleLeft.bind(this);
-        this.handleRight = this.handleRight.bind(this);
         this.handleNavigateCanvas = this.handleNavigateCanvas.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddUser = this.handleAddUser.bind(this);
@@ -55,16 +53,7 @@ class CreateComic extends Component {
             });
             let content = await res.json();
             this.setState({UserSerieses: content.comicSeries, loading: false})
-        })();
-        
-    }
-
-    handleLeft() {
-
-    }
-
-    handleRight() {
-
+        })();   
     }
 
     renderUserSeries(){
