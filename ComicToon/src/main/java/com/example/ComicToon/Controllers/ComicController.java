@@ -362,8 +362,7 @@ public class ComicController{
     @ResponseBody
     public BundleViewAllComics recent(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
-        UserModel theUser = userRepository.findByusername(form.getComicOwnerName());
-        List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
+        List<ComicModel> findComicList = comicRepository.findAll();
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
                 ComicModel temp = findComicList.get(i);
