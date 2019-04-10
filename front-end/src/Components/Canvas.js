@@ -76,7 +76,12 @@ class Canvas extends Component {
     
     handleText = (event) => {
         event.preventDefault();
-        const newText = new fabric.Text('Enter Text');
+        const newText = new fabric.Textbox('Lorum ipsum dolor sit amet', {
+            left: 50,
+            top: 50,
+            width: 150,
+            fontSize: 20
+        });
         this.canvas.add(newText).setActiveObject(newText);
     }
 
@@ -248,7 +253,6 @@ class Canvas extends Component {
                         <div className="canvas-tool-container">
                             <FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} />
                             <FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} />
-                            <FontAwesomeIcon className="icon" icon="slash" onClick={this.handlePolygon} />
                             <FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} />
                             <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
                             <FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} />
