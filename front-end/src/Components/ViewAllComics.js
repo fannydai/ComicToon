@@ -66,4 +66,4 @@ ViewAllComics.propTypes = {
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, {})(withRouter(ViewAllComics));;
+export default connect(StateToProps, {})(withRouter(ViewAllComics));
