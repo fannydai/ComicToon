@@ -82,7 +82,7 @@ export const createComic = (username, desc, comicName, seriesName, userList, can
         });
         let content = await res.json();
         console.log(content)
-        if(content.result === 'Sucess'){ 
+        if(content.result === 'success'){ 
             dispatch({
                 type: CREATECOMIC,
                 payload: { Comic: comicName }
