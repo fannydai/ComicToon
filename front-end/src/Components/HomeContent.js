@@ -30,6 +30,9 @@ class HomeContent extends Component {
     }
 
     componentDidMount(){
+        if(!this.props.match.params.username) {
+            this.props.history.goBack();
+        }
 
         (async () => {
             const res = await fetch("http://localhost:8080/welcomerecent", {
@@ -39,11 +42,11 @@ class HomeContent extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.username
+                recents: this.props.match.params.comics
               })
             });
             let content = await res.json();
-            this.setState({UserSerieses: content.comicSeries, loading: false})
+            console.log(content);
         })();      
     }
 

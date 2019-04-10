@@ -5,40 +5,31 @@
     justify-content: center;
 }
 
-/* Everything but the navbar */
-.create-bottom-container {
+.create-form {
     width: 90%;
     background: rgba(245, 245, 245, 0.8);
     padding-top: 25px;
     padding-bottom: 25px;
-}
 
-.create-comic-description {
-    width: 50%; 
-}
-
-.create-form {
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-}
-
-.create-series-name-input {
-    height: 30%;
-    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 /* First input */
-.create-series-name-form-control {
-    width: 50%;
+.form-control,
+.create-series-description-input {
+    width: 60%;
+    min-width: 500px;
+    /* margin-bottom: 20px; */
 }
 
 /* Middle section */
 .create-series-genre-input {
-    height: 40%;
+    width: 90%;
+    height: 600px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,18 +37,23 @@
 
 .create-series-table-container {
     height: 100%;
-    width: 20%;
+    width: 40%;
+    border-bottom: 1px solid black;
     overflow-y: auto;
     overflow-x: auto;
 }
 
-.create-series-genre-table {
-    /*border: 1px solid black;*/
-    width: 20%;
+.list-genre {
+    height: 100%;
+    border: 1px solid black;
+    border-bottom: none;
+    padding: 10px;
 }
 
 .create-series-genre-right {
-    width: 30%;
+    width: 40%;
+    top: 0;
+    margin-left: 50px;
     display: flex;
     flex-direction: column;
 }
