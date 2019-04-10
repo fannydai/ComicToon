@@ -11,12 +11,27 @@ public class ComicSeriesModel{
     @Field()
     private String name;
     private String userID;
+    private String description;
     private ArrayList<String> comics;
     private ArrayList<String> genre;
     private String privacy;
 
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setId(String id) {
@@ -55,10 +70,11 @@ public class ComicSeriesModel{
         this.privacy = privacy;
     }
 
-    public ComicSeriesModel(String name, String userID, String privacy, ArrayList<String> genre) {
+    public ComicSeriesModel(String name, String description, String userID, String privacy, ArrayList<String> genre) {
         this.name = name;
         this.setUserID(userID);
         this.setPrivacy(privacy);
+        this.setDescription(description);
         this.setComics(new ArrayList<String>());
         this.genre = new ArrayList<String>();
         for(String gen: genre){
