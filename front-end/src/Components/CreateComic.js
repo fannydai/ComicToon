@@ -12,6 +12,7 @@ import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
 import {createComic} from '../Actions/NavbarActions'
+import { saveNewComic } from '../Actions/ComicActions';
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -22,8 +23,6 @@ class CreateComic extends Component {
 
     constructor(props) {
         super(props);
-        this.handleLeft = this.handleLeft.bind(this);
-        this.handleRight = this.handleRight.bind(this);
         this.handleNavigateCanvas = this.handleNavigateCanvas.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddUser = this.handleAddUser.bind(this);
@@ -32,16 +31,39 @@ class CreateComic extends Component {
             comicName: '',
             comicDescription: '',
             userInput: '',
-            comicPanelIndex: 0,
             privacy: 'Public',
             UserSerieses: [],
             selected_series: "",
-            loading: false,
+            loading: true,
             sharedUsersList: []
         }
     }
 
     componentDidMount(){
+        // Initialize values if comics is already being edited
+        const savedData = this.props.comic.saveNewComic;
+        if (savedData.comicName) {
+            this.setState({ comicName: savedData.comicName });
+        }
+        if (savedData.userInput) {
+            this.setState({ userInput: savedData.userInput });
+        }
+        if (savedData.comicDescription) {
+            this.setState({ comicDescription: savedData.comicDescription });
+        }
+        if (savedData.privacy) {
+            this.setState({ privacy: savedData.privacy });
+        }
+        if (savedData.UserSerieses) {
+            this.setState({ UserSerieses: savedData.UserSerieses });
+        }
+        if (savedData.selected_series) {
+            this.setState({ selected_series: savedData.selected_series });
+        }
+        if (savedData.sharedUsersList) {
+            this.setState({ sharedUsersList: savedData.sharedUsersList });
+        }
+
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
               method: "POST",
@@ -55,29 +77,34 @@ class CreateComic extends Component {
             });
             let content = await res.json();
             this.setState({UserSerieses: content.comicSeries, loading: false})
-        })();
-        
-    }
-
-    handleLeft() {
-
-    }
-
-    handleRight() {
-
+        })();   
     }
 
     renderUserSeries(){
+        console.log(this.state.UserSerieses);
         return (
-            this.state.UserSerieses.map(item=>
+            this.state.UserSerieses.map(item=> {
+                return item !== null ?
                 <div key={item.name}>
                     <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
-            )
+                :
+                null
+            })
         )
     }
 
     handleNavigateCanvas() {
+        // Save the current state to the store
+        this.props.saveNewComic({
+            comicName: this.state.comicName,
+            comicDescription: this.state.comicDescription,
+            userInput: this.state.userInput,
+            privacy: this.state.privacy,
+            UserSerieses: this.state.UserSerieses,
+            selected_series: this.state.selected_series,
+            sharedUsersList: this.state.sharedUsersList
+        });
         this.props.history.push('/canvas');
     }
 
@@ -108,7 +135,8 @@ class CreateComic extends Component {
                 canvases,
                 images
             )
-            this.setState({sharedUsersList: []})
+            this.setState({sharedUsersList: []});
+            this.props.saveNewComic({}); // Clear the current state of the new comi from the storec
             this.props.history.push({
                 pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
                 state: {
@@ -137,7 +165,7 @@ class CreateComic extends Component {
             let newUsers = this.state.userInput.split(' ');
             let newUsers2 = newUsers.filter(item => item !== "")
             console.log('USERS TO ADD', newUsers2);
-            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2] }); 
+            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2], userInput: '' }); 
         }
     }
 
@@ -160,7 +188,8 @@ class CreateComic extends Component {
             slidesToShow: 4,
             slidesToScroll: 1,
             initialSlide: 0,
-            autoplay: false,
+            autoplay: true,
+            autoplaySpeed: 1000,
             swipeToSlide: true,
             responsive: [
                 {
@@ -189,11 +218,11 @@ class CreateComic extends Component {
                 }
             ]
         };
-
-        const firstPanel = this.props.comic.newComic[0] ? <div className="create-comic-panel-inner"><Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[0]} /></div> : null;
-        const secondPanel = this.props.comic.newComic[1] ? <div className="create-comic-panel-inner"><Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[1]} /></div> : null;
-        const thirdPanel = this.props.comic.newComic[2] ? <div className="create-comic-panel-inner"><Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[2]} /></div> : null;
-
+        /*
+        const firstPanel = this.props.comic.newComic[0] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[0]} /> : null;
+        const secondPanel = this.props.comic.newComic[1] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[1]} /> : null;
+        const thirdPanel = this.props.comic.newComic[2] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[2]} /> : null;
+        */
         if(this.state.loading) return (<h1>Loading ...</h1>)
         else{
             return (
@@ -203,9 +232,10 @@ class CreateComic extends Component {
                         <Form className="create-comic-form" onSubmit={this.handleSubmit}>
                             <div className="create-comic-panel-container">
                                 <Slider {...props}>
-                                    {firstPanel}
-                                    {secondPanel}
-                                    {thirdPanel}
+                                    {this.props.comic.newComic.length ? 
+                                        this.props.comic.newComic.map((panel, i) => {
+                                            return <Panel comic={panel} key={i} />
+                                        }) : null}
                                     <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas}/>
                                 </Slider>
                             </div>
@@ -253,7 +283,8 @@ class CreateComic extends Component {
 CreateComic.propTypes = {
     CurrUser: PropTypes.object,
     comic: PropTypes.object,
-    createComic: PropTypes.func.isRequired
+    createComic: PropTypes.func.isRequired,
+    saveNewComic: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {createComic})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic, saveNewComic})(withRouter(CreateComic));

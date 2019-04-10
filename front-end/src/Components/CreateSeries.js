@@ -33,9 +33,16 @@ class CreateSeries extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state)
-        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
-        this.setState({genreList: []})
+        if (this.state.seriesName === '') {
+            alert('Please enter a name for the series.');
+        } else if (this.state.seriesDes === '') {
+            alert('Please enter a description for the series.');
+        } else {
+            console.log(this.state)
+            this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
+            this.setState({genreList: []})
+            this.props.history.push(`/view/series/${this.props.CurrUser.username}/${this.state.seriesName}`);
+        }
     }
 
     handleChange = (e) => {
@@ -60,20 +67,15 @@ class CreateSeries extends Component {
         return (
             <div className="create-series-container">
                  <NavigationBar />
-                 <div className="create-bottom-container">
                     <Form className="create-form" onSubmit={this.handleSubmit}>
-                        <div className="create-series-name-input">
-                            <Form.Control className="create-series-name-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
-                        </div>
-                        <div className="create-series-description">
-                            <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
-                        </div>
+                        <Form.Control className="form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
+                        <br />
+                        <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
+                        <br />
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">
-                                <table className="create-series-genre-table">
-                                    <h2>Genre: </h2>
-                                    <ComicSharingTable usernames={this.state.genreList} />
-                                </table>
+                                <h2>Genre: </h2>
+                                <div class="list-genre"><ComicSharingTable usernames={this.state.genreList} /></div>
                             </div>
                             <div className="create-series-genre-right">
                                 <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" onChange={this.handleChange} onKeyPress={this.handleAddUserEnter}/>
@@ -83,7 +85,6 @@ class CreateSeries extends Component {
                             <Button type="submit" variant="primary">Create Series</Button>
                         </div>
                     </Form>
-                 </div>  
                  <Footer />
             </div>
         );
