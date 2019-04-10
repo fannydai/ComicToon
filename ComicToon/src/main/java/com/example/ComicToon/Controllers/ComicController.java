@@ -27,7 +27,6 @@ public class ComicController{
 
 
     //Create Comic Series
-
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/create/series", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
@@ -38,8 +37,7 @@ public class ComicController{
         if (user == null){
             result.setResult("user does not exists");
             return result;
-        }
-        else{
+        } else{
             //create and save new series
             ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(), form.getDescription(), user.getId(), form.getPrivacy(), form.getGenre());
             ComicSeriesRepository.save(newComicSeries);
@@ -47,7 +45,6 @@ public class ComicController{
             user.getComicSeries().add(newComicSeries.getId());
             userRepository.save(user);
             result.setResult("success");
-            
         }
         return result;
     }
@@ -64,8 +61,7 @@ public class ComicController{
         if(candidates == null || owner == null){
             result.setResult("failure");
             return result;
-        }
-        else{
+        } else{
             for(ComicSeriesModel candidate: candidates){
                 if(candidate.getUserID().equals(owner.getId())){
                     ComicSeriesModel toDelete = candidate;
@@ -85,7 +81,6 @@ public class ComicController{
             }
             result.setResult("Deleted series & all enclosed comics");
         }
-
         return result;
     }
 
@@ -137,8 +132,7 @@ public class ComicController{
         if (user == null){
             result.setResult("user does not exists");
             return result;
-        }
-        else{
+        } else{
             ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
             ComicSeriesModel series = null;
             for(ComicSeriesModel s : seriesList){
@@ -171,14 +165,11 @@ public class ComicController{
                 series.getComics().add(newComic.getId());
                 ComicSeriesRepository.save(series);
                 result.setResult("success");
-            }
-            else{
+            } else{
                 result.setResult("comic series does not exists");
-            return result;
+                return result;
             }
         }
-
-
         return result;
     }
 
@@ -192,9 +183,7 @@ public class ComicController{
         UserModel findUser = userRepository.findByusername(form.getOwnerName());
         if(findComicList.isEmpty() || findUser == null){
             result.setResult("failed");
-        }
-        else{
-
+        } else{
             for(ComicModel r : findComicList){
                 if(r.getUserID().equals(findUser.getId())){
                     ComicSeriesModel series = ComicSeriesRepository.findByid(r.getComicSeriesID());
@@ -206,9 +195,6 @@ public class ComicController{
                 }
             }
         }
-
-
-
         return result;
     }
 
@@ -292,16 +278,16 @@ public class ComicController{
         return result;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/delComic", method = RequestMethod.POST, consumes = {"application/json"})
-    @ResponseBody
-    public DelComicResult deleteComic(@RequestBody DelComic form){
-        System.out.println("HERRRRRR");
-        comicRepository.deleteById(form.getID());
-        DelComicResult result = new DelComicResult();
-        result.setStatus("success");
-        return result;
-    }
+    // @CrossOrigin(origins = "http://localhost:3000")
+    // @RequestMapping(value = "/delComic", method = RequestMethod.POST, consumes = {"application/json"})
+    // @ResponseBody
+    // public DelComicResult deleteComic(@RequestBody DelComic form){
+    //     System.out.println("HERRRRRR");
+    //     comicRepository.deleteById(form.getID());
+    //     DelComicResult result = new DelComicResult();
+    //     result.setStatus("success");
+    //     return result;
+    // }
 
 
     //The "my" use cases are bellow
@@ -315,7 +301,7 @@ public class ComicController{
         UserModel user = userRepository.findByusername(form.getUsername());
         if(user == null){
             return result;
-        }else{
+        } else{
             for (String seriesID : user.getComicSeries()){
                 ComicSeriesModel series = ComicSeriesRepository.findByid(seriesID);
                 result.getComicSeries().add(series);
@@ -332,9 +318,9 @@ public class ComicController{
         SubscriptionResult result = new SubscriptionResult();
 
         UserModel user = userRepository.findByusername(form.getUsername());
-        if(user == null)
+        if(user == null) {
             return result;
-        else{
+        } else {
             user.getSubscriptions().add(form.getSeriesid());
             result.setResult("success");
         }
@@ -363,10 +349,11 @@ public class ComicController{
     @ResponseBody
     public RecentCreationsResult recent(@RequestBody ViewAllComicsForm form){
         List<ComicModel> comics = comicRepository.findAll();
-        RecentCreationsResult result = new RecentCreationsResult(comics);
-        // for(ComicModel comic : result.getComics()) {
-        //     System.out.println(comic.getDate());
-        // }
+        RecentCreationsResult result = new RecentCreationsResult();
+
+        for(ComicModel comic : comics) {
+            result.getComics().add(comicRepository.findByid(comic.getId()));
+        }
         return result;
     }
 
