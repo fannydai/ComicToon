@@ -31,7 +31,7 @@ class HomeContent extends Component {
 
     componentDidMount(){
         if(!this.props.match.params.username) {
-            this.props.history.goBack();
+            // this.props.history.goBack();
         }
 
         (async () => {
