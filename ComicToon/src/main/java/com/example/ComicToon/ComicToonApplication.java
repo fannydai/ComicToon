@@ -40,7 +40,9 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/delete/comic",
             "/view/comic",
             "/view/series",
-            "/subscriptions"
+            "/subscriptions",
+            "/subscribe",
+            "/view/allComics"
             )
         .permitAll()
         .and()
