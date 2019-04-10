@@ -18,7 +18,7 @@
 }
 
 /* First input */
-.form-control,
+.create-series-form-control,
 .create-series-description-input {
     width: 60%;
     min-width: 500px;

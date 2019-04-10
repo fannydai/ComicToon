@@ -68,7 +68,7 @@ class CreateSeries extends Component {
             <div className="create-series-container">
                  <NavigationBar />
                     <Form className="create-form" onSubmit={this.handleSubmit}>
-                        <Form.Control className="form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
+                        <Form.Control className="create-series-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
                         <br />
                         <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
                         <br />
