@@ -36,6 +36,15 @@
     width: 50%;
 }
 
+.create-series-description {
+    display: flex;
+    justify-content: center;
+}
+
+.create-series-description-input {
+    width: 50%;
+}
+
 /* Middle section */
 .create-series-genre-input {
     height: 40%;

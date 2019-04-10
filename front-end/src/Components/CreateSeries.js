@@ -33,9 +33,16 @@ class CreateSeries extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state)
-        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
-        this.setState({genreList: []})
+        if (this.state.seriesName === '') {
+            alert('Please enter a name for the series.');
+        } else if (this.state.seriesDes === '') {
+            alert('Please enter a description for the series.');
+        } else {
+            console.log(this.state)
+            this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
+            this.setState({genreList: []})
+            this.props.history.push(`/view/series/${this.props.CurrUser.username}/${this.state.seriesName}`);
+        }
     }
 
     handleChange = (e) => {
