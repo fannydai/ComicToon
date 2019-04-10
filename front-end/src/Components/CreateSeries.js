@@ -20,7 +20,8 @@ class CreateSeries extends Component {
         this.state = {
             seriesName: "",
             genre : "",
-            genreList: []
+            genreList: [],
+            seriesDes: ""
         }
     }
 
@@ -33,7 +34,8 @@ class CreateSeries extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state)
-        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.genreList, "private")
+        this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
+        this.setState({genreList: []})
     }
 
     handleChange = (e) => {
@@ -50,6 +52,10 @@ class CreateSeries extends Component {
         }
     }
 
+    handleSeriesDescription = event =>{
+        this.setState({ seriesDes: event.target.value });
+    }
+
     render() {
         return (
             <div className="create-series-container">
@@ -58,6 +64,9 @@ class CreateSeries extends Component {
                     <Form className="create-form" onSubmit={this.handleSubmit}>
                         <div className="create-series-name-input">
                             <Form.Control className="create-series-name-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
+                        </div>
+                        <div className="create-series-description">
+                            <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
                         </div>
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">

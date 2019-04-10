@@ -101,9 +101,12 @@ class CreateComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comic: this.props.comic.newComic
+                        comic: this.props.comic.newComic //obv not gonna work bc no username
                       })
                 });
+                let content = await res.json();
+                if(content.result === 'success') alert(`Comic '${this.state.comicName}' Created!!`)
+                else alert(`ERROR! Comic '${this.state.comicName}' NOT Created!!`)
             })();
         }
     }
@@ -122,6 +125,7 @@ class CreateComic extends Component {
 
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
+            event.preventDefault();
             console.log('PRESSED ENTER');
             let newUsers = this.state.userInput.split(' ');
             let newUsers2 = newUsers.filter(item => item !== "")
