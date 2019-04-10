@@ -42,7 +42,8 @@ class HomeContent extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                recents: this.props.match.params.comics
+                //   recents: this.props
+                // recents: this.props.match.params.result
               })
             });
             let content = await res.json();
