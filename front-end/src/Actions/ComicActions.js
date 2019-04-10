@@ -1,4 +1,4 @@
-import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA } from './Types';
+import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES } from './Types';
 
 // Don't call these functions yet, back-end is not set up
 export const getSubscriptions = (username) => (dispatch) => {
@@ -67,5 +67,12 @@ export const saveNewComic = (state) => (dispatch) => {
     dispatch({
         type: SAVE_NEW_COMIC_DATA,
         payload: { saveNewComic: state }
-    })
+    });
+}
+
+export const getAllSeries = (state) => (dispatch) => {
+    dispatch({
+        type: GET_ALL_SERIES,
+        payload: { allSeries: state }
+    });
 }

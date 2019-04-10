@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { getSubscriptions, getRecentCreations, getFavorites } from './../Actions/ComicActions';
+import { getSubscriptions, getRecentCreations, getFavorites, getAllSeries } from './../Actions/ComicActions';
 
 import Slider from "react-slick";
 
@@ -48,6 +48,24 @@ class HomeContent extends Component {
             let content = await res.json();
             console.log(content);
         })();      
+        // Get all user's series
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/series", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                username: this.props.CurrUser.username
+              })
+            });
+            let content = await res.json();
+            console.log(content);
+            if (content.comicSeries) {
+                this.props.getAllSeries(content.comicSeries);
+            }
+        })();  
     }
 
 
@@ -178,7 +196,8 @@ HomeContent.propTypes = {
     getSubscriptions: PropTypes.func.isRequired,
     getRecentCreations: PropTypes.func.isRequired,
     getFavorites: PropTypes.func.isRequired,
+    getAllSeries: PropTypes.func.isRequired,
     comic: PropTypes.object
 }
 
-export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites })(withRouter(HomeContent));
+export default connect(StateToProps, { getSubscriptions, getRecentCreations, getFavorites, getAllSeries })(withRouter(HomeContent));

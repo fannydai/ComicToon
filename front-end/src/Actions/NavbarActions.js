@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES } from './Types';
 
 export const createSeries = (userName, seriesName, description, genres, privacy) => (dispatch) => {
     (async () => {
@@ -17,6 +17,27 @@ export const createSeries = (userName, seriesName, description, genres, privacy)
                 type: CREATESERIES,
                 payload: { Series: seriesName }
             });
+            // Fetch update redux with all series
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/series", {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                  },
+                  body: JSON.stringify({
+                    username: userName
+                  })
+                });
+                let content = await res.json();
+                console.log(content);
+                if (content.comicSeries) {
+                    dispatch({
+                        type: GET_ALL_SERIES,
+                        payload: { allSeries: content.comicSeries }
+                    });
+                }
+            })();  
         }
         else{
             dispatch({

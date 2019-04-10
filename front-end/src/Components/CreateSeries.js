@@ -7,6 +7,7 @@ import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import './styles/CreateSeries.css';
 import { createSeries} from './../Actions/NavbarActions';
+import { getAllSeries } from './../Actions/ComicActions';
 import {withRouter} from 'react-router-dom'
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -40,7 +41,7 @@ class CreateSeries extends Component {
         } else {
             console.log(this.state)
             this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.description, this.state.genreList, "private")
-            this.setState({genreList: []})
+            this.setState({genreList: []});
             this.props.history.push(`/view/series/${this.props.CurrUser.username}/${this.state.seriesName}`);
         }
     }
@@ -93,8 +94,9 @@ class CreateSeries extends Component {
 
 CreateSeries.propTypes = {
     createSeries: PropTypes.func.isRequired,
+    getAllSeries: PropTypes.func.isRequired,
     UserSeries: PropTypes.string,
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, {createSeries})(withRouter(CreateSeries));
+export default connect(StateToProps, {createSeries, getAllSeries})(withRouter(CreateSeries));
