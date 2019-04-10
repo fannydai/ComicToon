@@ -8,9 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.Date;
 
 @RestController
@@ -118,7 +127,6 @@ public class ComicController{
 
 
     //Create Comic
-
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/create/comic", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
@@ -294,23 +302,6 @@ public class ComicController{
         return result;
     }
 
-    //View Subscriptions (list of subscriptions of a user -> not same as the subscriptions section of homepage)
-    @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/subscriptions", method = RequestMethod.POST, consumes = {"application/json"})
-    @ResponseBody
-    public ViewSubscriptionsResult viewSubscriptions(@RequestBody ViewSubscriptionsForm form){
-        ViewSubscriptionsResult result = new ViewSubscriptionsResult();
-        UserModel user = userRepository.findByusername(form.getUsername());
-        if(user==null){
-            return result;
-        }
-        for(String subscriptionsid : user.getSubscriptions()){
-            result.getSeries().add(ComicSeriesRepository.findByid(subscriptionsid));
-        }
-
-        return result;
-    }
-
     //Subscribe to series
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/subscribe", method = RequestMethod.POST, consumes = {"application/json"})
@@ -330,21 +321,32 @@ public class ComicController{
         return result;
     }
 
+    //View Subscriptions (list of subscriptions of a user -> not same as the subscriptions section of homepage)
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewSubscriptionsResult viewSubscriptions(@RequestBody ViewSubscriptionsForm form){
+        ViewSubscriptionsResult result = new ViewSubscriptionsResult();
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if(user==null){
+            return result;
+        }
+        for(String subscriptionsid : user.getSubscriptions()){
+            result.getSeries().add(ComicSeriesRepository.findByid(subscriptionsid));
+        }
+        return result;
+    }
 
     //View Recent Creations
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/subscriptions", method = RequestMethod.GET, consumes = {"application/json"})
+    @RequestMapping(value = "/welcomerecent", method = RequestMethod.GET, consumes = {"application/json"})
     @ResponseBody
-    public RecentCreationsResult recent(){
-        RecentCreationsResult result = new RecentCreationsResult();
-
+    public RecentCreationsResult recent(@RequestBody ViewSubscriptionsForm form){
         List<ComicModel> comics = comicRepository.findAll();
-        ArrayList<ComicModel> recent10 = new ArrayList<ComicModel>();
-
-        for(ComicModel comic : comics){
+        RecentCreationsResult result = new RecentCreationsResult(comics);
+        for(ComicModel comic : result.getComics()) {
             System.out.println(comic.getDate());
         }
-
         return result;
     }
 

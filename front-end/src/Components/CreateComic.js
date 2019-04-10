@@ -55,16 +55,7 @@ class CreateComic extends Component {
             });
             let content = await res.json();
             this.setState({UserSerieses: content.comicSeries, loading: false})
-        })();
-        
-    }
-
-    handleLeft() {
-
-    }
-
-    handleRight() {
-
+        })();   
     }
 
     renderUserSeries(){
