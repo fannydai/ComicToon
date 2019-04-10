@@ -5,6 +5,13 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewAllComics.css';
 import pusheen from './images/pusheen.png';
+import {withRouter} from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
+
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user
+});
 
 class ViewAllComics extends Component {
 
@@ -14,8 +21,21 @@ class ViewAllComics extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
     }
 
-    componentWillMount(){
-        //todo
+    componentDidMount(){
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/allComics", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicOwnerName: this.props.CurrUser.username
+                  })
+            });
+            let content = await res.json();
+            console.log(content)
+        })();
     }
 
     handleClick() {
@@ -34,56 +54,7 @@ class ViewAllComics extends Component {
                     <h1>My Comics</h1>
                 </div>
                 <div className="view-comics-bottom">
-                    <Card className="view-comics-card">
-                        <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
-                        <Card.Body>
-                            <Card.Title>Pusheen wants a cookie</Card.Title>
-                            <Card.Text>Artist: Pusheen</Card.Text>
-                            <Card.Text>Series: Animals</Card.Text>
-                            <Card.Text>Rate: +200</Card.Text>
-                            <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card className="view-comics-card">
-                        <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
-                        <Card.Body>
-                            <Card.Title>Pusheen wants a cookie</Card.Title>
-                            <Card.Text>Artist: Pusheen</Card.Text>
-                            <Card.Text>Series: Animals</Card.Text>
-                            <Card.Text>Rate: +200</Card.Text>
-                            <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card className="view-comics-card">
-                        <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
-                        <Card.Body>
-                            <Card.Title>Pusheen wants a cookie</Card.Title>
-                            <Card.Text>Artist: Pusheen</Card.Text>
-                            <Card.Text>Series: Animals</Card.Text>
-                            <Card.Text>Rate: +200</Card.Text>
-                            <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card className="view-comics-card">
-                        <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
-                        <Card.Body>
-                            <Card.Title>Pusheen wants a cookie</Card.Title>
-                            <Card.Text>Artist: Pusheen</Card.Text>
-                            <Card.Text>Series: Animals</Card.Text>
-                            <Card.Text>Rate: +200</Card.Text>
-                            <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card className="view-comics-card">
-                        <Card.Img variant="top" src={pusheen} onClick={this.handleClick} />
-                        <Card.Body>
-                            <Card.Title>Pusheen wants a cookie</Card.Title>
-                            <Card.Text>Artist: Pusheen</Card.Text>
-                            <Card.Text>Series: Animals</Card.Text>
-                            <Card.Text>Rate: +200</Card.Text>
-                            <Card.Text><button className="btn-block" onClick={this.handleUpdate}>Update</button></Card.Text>
-                        </Card.Body>
-                    </Card>
+
                 </div>
                 <Footer />
             </div>
@@ -91,4 +62,8 @@ class ViewAllComics extends Component {
     }
 }
 
-export default ViewAllComics;
+ViewAllComics.propTypes = {
+    CurrUser: PropTypes.object
+}
+
+export default connect(StateToProps, {})(withRouter(ViewAllComics));;

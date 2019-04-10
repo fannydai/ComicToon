@@ -109,19 +109,30 @@ public class ComicController{
     @ResponseBody
     public ViewComicSeriesResult viewComicSeries(@RequestBody ViewComicSeriesForm form){
         ViewComicSeriesResult result = new ViewComicSeriesResult();
+        result.setComics(new ArrayList<ComicModel>());
 
         ArrayList <ComicSeriesModel> candidates = ComicSeriesRepository.findByname(form.getComicSeriesName());
+        if (candidates.size() == 0) {
+            result.setResult("failure");
+            return result;
+        }
         UserModel owner = userRepository.findByusername(form.getOwnerName());
-
+        System.out.println("VIEWING SERIES");
+        System.out.println(form.getOwnerName());
+        System.out.println(owner.getId());
+        System.out.println(candidates.size());
         for (ComicSeriesModel candidate: candidates){
             if(candidate.getUserID().equals(owner.getId())){
                 for(String comicID : candidate.getComics()){
                     ComicModel comic = comicRepository.findByid(comicID);
-                    result.getComics().add(comic);
+                    if (comic != null) {
+                        result.getComics().add(comic);
+                    }
                 }
                 break;
             }
         }
+        result.setResult("success");
         return result;
     }
 
@@ -279,6 +290,19 @@ public class ComicController{
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/allComics", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewAllComicsResult viewAllComics(@RequestBody ViewAllComicsForm form){
+        ViewAllComicsResult result = new ViewAllComicsResult();
+        UserModel theUser = userRepository.findByusername(form.getComicOwnerName());
+        List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
+        for(ComicModel c: findComicList){
+            result.getComicList().add(c);         
+        }
+        return result;
+    }
+
 
     //The "my" use cases are bellow
 
@@ -288,7 +312,6 @@ public class ComicController{
     @ResponseBody
     public ViewMySeriesResult viewMySeries(@RequestBody ViewMySeriesForm form){
         ViewMySeriesResult result = new ViewMySeriesResult();
-
         UserModel user = userRepository.findByusername(form.getUsername());
         if(user == null){
             return result;
@@ -298,7 +321,6 @@ public class ComicController{
                 result.getComicSeries().add(series);
             }
         }
-
         return result;
     }
 
@@ -346,6 +368,21 @@ public class ComicController{
         RecentCreationsResult result = new RecentCreationsResult(comics);
         for(ComicModel comic : result.getComics()) {
             System.out.println(comic.getDate());
+        }
+        return result;
+    }
+
+    //Get a single panel
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/panel", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewPanelResult viewPanel(@RequestBody ViewPanelForm form){
+        System.out.println("GETTING A PANEL");
+        ViewPanelResult result = new ViewPanelResult();
+        System.out.println(form.getId());
+        PanelModel panel = panelRepository.findByid(form.getId());
+        if (panel != null) {
+            result.setPanel(panel);
         }
         return result;
     }
