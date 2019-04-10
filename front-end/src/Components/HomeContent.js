@@ -33,7 +33,7 @@ class HomeContent extends Component {
         if(!this.props.match.params.username) {
             // this.props.history.goBack();
         }
-
+        /*
         (async () => {
             const res = await fetch("http://localhost:8080/welcomerecent", {
               method: "POST",
@@ -48,7 +48,7 @@ class HomeContent extends Component {
             });
             let content = await res.json();
             console.log(content);
-        })();      
+        })();      */
         // Get all user's series
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {

@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {withRouter} from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -6,7 +9,12 @@ import NavigationBar from './NavigationBar';
 import './styles/ViewComic.css';
 import pusheen from './images/pusheen.png';
 import shoes from './images/shoes.png';
+import { viewComic } from './../Actions/NavbarActions';
 
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user,
+    comic: state.comic
+});
 class ViewComic extends Component {
 
     //<Comic src= {this.props.history.location.state.src}></Comic>
@@ -21,33 +29,12 @@ class ViewComic extends Component {
             panelIndex: 0
         }
     }
+
     componentDidMount() {
-        //const comicId = this.props.match.params.comicId;
-        //console.log("VIEW COMIC ID", comicId);
-        console.log(this.props.match.params);
         if (!this.props.match.params.username || !this.props.match.params.comicName) {
             this.props.history.goBack();
         }
-        (async () => {
-            const res = await fetch('http://localhost:8080/view/comic', {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    comicName: this.props.match.params.comicName,
-                    comicOwnerName: this.props.match.params.username
-                })
-            });
-            let content = await res.json();
-            console.log(content);
-            if (!content.comicName) {
-                alert('Could not find comic.'); // No comic/no permission
-            } else {
-                this.setState({ comicData: content });
-            }
-        })();
+        this.props.viewComic(this.props.match.params.username, this.props.match.params.comicName);
     }
 
     handleLeft = (event) => {
@@ -57,7 +44,7 @@ class ViewComic extends Component {
     }
 
     handleRight = (event) => {
-        if (this.state.comicData.panels && this.state.panelIndex + 4 < this.state.comicData.panels.length) {
+        if (this.props.comic.saveNewComic.panels && this.state.panelIndex + 4 < this.props.comic.saveNewComic.panels.length) {
             this.setState({ panelIndex: this.state.panelIndex + 1 });
         }
     }
@@ -74,6 +61,7 @@ class ViewComic extends Component {
     }
 
     render() {
+       const panels = this.props.comic.saveNewComic.panels;
         return (
             <div className="view-comic-container">
                 <NavigationBar />
@@ -85,10 +73,10 @@ class ViewComic extends Component {
                                     <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
                                 </div>
                                 <div className="view-comic-panel-container">
-                                    {this.state.comicData.panels && this.state.comicData.panels[this.state.panelIndex] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={this.state.comicData.panels[this.state.panelIndex].image} /></div> : null }
-                                    {this.state.comicData.panels && this.state.comicData.panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={this.state.comicData.panels[this.state.panelIndex + 1].image} /></div> : null }
-                                    {this.state.comicData.panels && this.state.comicData.panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={this.state.comicData.panels[this.state.panelIndex + 2].image} /></div> : null }
-                                    {this.state.comicData.panels && this.state.comicData.panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={this.state.comicData.panels[this.state.panelIndex + 3].image} /></div> : null }
+                                    {panels && panels[this.state.panelIndex] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex].image} /></div> : null}
+                                    {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} /></div> : null}
+                                    {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} /></div> : null}
+                                    {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} /></div> : null}
                                 </div>
                                 <div className="view-comic-navigate">
                                     <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
@@ -155,4 +143,10 @@ class ViewComic extends Component {
     }
 }
 
-export default ViewComic;
+ViewComic.propTypes = {
+    CurrUser: PropTypes.object,
+    comic: PropTypes.object,
+    viewComic: PropTypes.func.isRequired
+}
+
+export default connect(StateToProps, {viewComic})(withRouter(ViewComic));

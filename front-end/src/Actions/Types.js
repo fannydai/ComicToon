@@ -10,5 +10,6 @@ export const UPLOAD = 'UPLOAD';
 export const VIEWCOMIC = 'VIEWCOMIC';
 export const VIEWSERIES = 'VIEWSERIES';
 export const ADD_PANEL = 'ADD_PANEL';
+export const CLEAR_PANELS = 'CLEAR_PANELS';
 export const SAVE_NEW_COMIC_DATA = 'SAVE_NEW_COMIC_DATA';
 export const GET_ALL_SERIES = 'GET_ALL_SERIES';

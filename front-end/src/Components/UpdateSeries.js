@@ -1,20 +1,65 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
+import {withRouter} from 'react-router-dom'
 import { Button, Form } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/CreateSeries.css';
+import { getAllSeries } from './../Actions/ComicActions';
 
+
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user,
+    comic: state.comic
+});
 class UpdateSeries extends Component {
 
     constructor(props) {
         super(props);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
-    handleDelete() {
-        this.props.history.push('/view/series');
+    handleDelete = (event) => {
+        event.preventDefault();
+        (async () => {
+            const res = await fetch("http://localhost:8080/delete/series", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                seriesName: this.props.match.params.seriesName,
+                ownerName: this.props.match.params.username
+              })
+            });
+            let content = await res.json();
+            console.log(content);
+            if (content.result === 'failure') {
+                alert('Could not delete series.');
+            } else {
+                console.log('DELETED');
+                (async () => {
+                    const res = await fetch("http://localhost:8080/view/series", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                      },
+                      body: JSON.stringify({
+                        username: this.props.CurrUser.username
+                      })
+                    });
+                    let content = await res.json();
+                    console.log(content);
+                    if (content.comicSeries) {
+                        this.props.getAllSeries(content.comicSeries);
+                    }
+                })();
+                this.props.history.push('/view/series');
+            }
+        })();
     }
 
     handleUpdate() {
@@ -66,4 +111,10 @@ class UpdateSeries extends Component {
     }
 }
 
-export default UpdateSeries;
+UpdateSeries.propTypes = {
+    getAllSeries: PropTypes.func.isRequired,
+    comic: PropTypes.object,
+    CurrUser: PropTypes.object
+}
+
+export default connect(StateToProps, { getAllSeries })(withRouter(UpdateSeries));

@@ -82,11 +82,14 @@ class UpdateComic extends Component {
 
     renderUserSeries(){
         return (
-            this.state.series.map(item=>
+            this.state.series.map(item=> {
+                return item !== null ?
                 <div key={item.name}>
                     <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
-            )
+                :
+                null
+            })
         )
     }
 
@@ -99,6 +102,8 @@ class UpdateComic extends Component {
     }
     
     handleDelete = (event) => {
+        console.log(this.props.match.params.comicName);
+        console.log(this.props.match.params.username);
         (async () => {
             const res = await fetch('http://localhost:8080/delete/comic', {
                 method: "POST",

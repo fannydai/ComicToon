@@ -12,7 +12,7 @@ import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
 import {createComic} from '../Actions/NavbarActions'
-import { saveNewComic } from '../Actions/ComicActions';
+import { saveNewComic, clearPanels } from '../Actions/ComicActions';
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -39,9 +39,10 @@ class CreateComic extends Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         // Initialize values if comics is already being edited
         const savedData = this.props.comic.saveNewComic;
+        console.log(savedData);
         if (savedData.comicName) {
             this.setState({ comicName: savedData.comicName });
         }
@@ -115,7 +116,7 @@ class CreateComic extends Component {
             alert('Please enter a comic name.');
         } else if (this.state.comicDescription === '') {
             alert('Please enter a comic description.');
-        } else if (this.selected_series === '') {
+        } else if (this.state.selected_series === '') {
             alert('Please select a series.');
         } else if (this.props.comic.newComic.length === 0) {
             alert('Please create at least one panel.');
@@ -136,7 +137,9 @@ class CreateComic extends Component {
                 images
             )
             this.setState({sharedUsersList: []});
-            this.props.saveNewComic({}); // Clear the current state of the new comi from the storec
+            // Clear the panels and saved
+            this.props.clearPanels();
+            this.props.saveNewComic({});
             this.props.history.push({
                 pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
                 state: {
@@ -283,7 +286,8 @@ CreateComic.propTypes = {
     CurrUser: PropTypes.object,
     comic: PropTypes.object,
     createComic: PropTypes.func.isRequired,
-    saveNewComic: PropTypes.func.isRequired
+    saveNewComic: PropTypes.func.isRequired,
+    clearPanels: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {createComic, saveNewComic})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic, saveNewComic, clearPanels})(withRouter(CreateComic));
