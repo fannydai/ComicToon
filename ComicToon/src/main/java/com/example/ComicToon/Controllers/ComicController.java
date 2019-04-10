@@ -44,7 +44,7 @@ public class ComicController{
         }
         else{
             //create and save new series
-            ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(),form.getDescription(),user.getId(),form.getPrivacy(), form.getGenre());
+            ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(), form.getDescription(), user.getId(), form.getPrivacy(), form.getGenre());
             ComicSeriesRepository.save(newComicSeries);
             //add comicseries id -> user
             user.getComicSeries().add(newComicSeries.getId());
@@ -311,10 +311,42 @@ public class ComicController{
         return result;
     }
 
+    //Subscribe to series
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscribe", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public SubscriptionResult subscribe(@RequestBody SubscriptionForm form){
+        SubscriptionResult result = new SubscriptionResult();
+
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if(user == null)
+            return result;
+        else{
+            user.getSubscriptions().add(form.getSeriesid());
+            result.setResult("success");
+        }
+
+
+        return result;
+    }
+
+
     //View Recent Creations
-    //someone else do it due benchmark1
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscriptions", method = RequestMethod.GET, consumes = {"application/json"})
+    @ResponseBody
+    public RecentCreationsResult recent(){
+        RecentCreationsResult result = new RecentCreationsResult();
 
+        List<ComicModel> comics = comicRepository.findAll();
+        ArrayList<ComicModel> recent10 = new ArrayList<ComicModel>();
 
+        for(ComicModel comic : comics){
+            System.out.println(comic.getDate());
+        }
+
+        return result;
+    }
 
     //OTHERS (After benchmark 1)
 
