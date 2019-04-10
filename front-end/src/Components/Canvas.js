@@ -247,8 +247,8 @@ class Canvas extends Component {
         return (
             <div className="panel-container">
                 <NavigationBar />
-                <div class="panel">
-                    <div class="top-canvas">
+                <div className="panel">
+                    <div className="top-canvas">
                         <div className="canvas-tool-container">
                             <FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} />
                             <FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} />
