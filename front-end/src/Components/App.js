@@ -9,23 +9,18 @@ import Footer from './Footer';
 class App extends Component {
 
 	render() {
-		if (!window.localStorage.getItem('user')) {
-			return (				
-				<div className="App-unauth-container">
-					<div className="App-unauth">
-						<div className = "logo">
-							<Image className="logoimage" src={logo} fluid width="200" />
-						</div>
-						<Authentication />
-						<Footer/>
+		return (				
+			<div className="App-unauth-container">
+				<div className="App-unauth">
+					<div className = "logo">
+						<Image className="logoimage" src={logo} fluid width="200" />
 					</div>
+					<Authentication />
+					<Footer/>
 				</div>
-			);
-		} else {
-			return (
-				<HomeContent />
-			);
-		}
+			</div>
+		);
+		
 	}
 }
 

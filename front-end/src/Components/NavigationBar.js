@@ -34,7 +34,7 @@ class NavigationBar extends Component {
                 <Navbar.Toggle aria-controls="top-nav" />
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link onClick={this.handleGoToIndex}>Home</Nav.Link>
+                        <Nav.Link href="/">Home</Nav.Link>
                         <NavDropdown title="Comic">
                             <NavDropdown.Item onClick={this.handleGoToViewComic}>View My Comics</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToViewSeries}>View My Series</NavDropdown.Item>

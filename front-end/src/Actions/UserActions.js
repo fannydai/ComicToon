@@ -22,7 +22,6 @@ export const LoginUser = (email, pwd) => (dispatch) => {
                 });
             }  
             else { 
-                localStorage.setItem('user', content.username);
                 dispatch({
                     type: LOGIN_USER,
                     payload: {username: content.username, pwd: pwd, email: email, verified: false}
@@ -61,7 +60,6 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
             });
         }
         else {
-            localStorage.setItem('user', username);
             dispatch({
                 type: REGISTER_USER,
                 payload: {username: username, pwd: pwd, email: email, verified: false}
