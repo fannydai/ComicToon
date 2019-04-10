@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash,
     faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo,
-    faSearchPlus, faCheck, faCircle, faSquare, faCaretUp,
+    faSearchPlus, faCheck, faCircle, faSquare, faPlay,
     faSlash
 } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
@@ -29,11 +29,11 @@ import ViewSubs from './Components/ViewSubscriptions';
 import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
-import store from './Components/Store'
+import store from './Components/Store';
 
 library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash,
     faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, 
-    faFont, faUndo, faRedo, faSearchPlus, faCheck, faCircle, faSquare, faCaretUp, faSlash);
+    faFont, faUndo, faRedo, faSearchPlus, faCheck, faCircle, faSquare, faPlay, faSlash);
 
 ReactDOM.render(
     <Provider store={store}>
@@ -53,7 +53,7 @@ ReactDOM.render(
                 <Route exact path="/update" component={UpdateComic} /> 
                 <Route exact path="/canvas" component={Canvas} />  
                 <Route exact path="/subscriptions" component={ViewSubs} />
-                <Route exact path="/view/comic" component={ViewComic} />  
+                <Route path="/view/comic/:username/:comicName" component={ViewComic} />  
                 <Route exact path="/view/series/1" component={ViewSeries} />
                 <Route exact path="/update/comic" component={UpdateComic} />
                 <Route exact path="/update/series" component={UpdateSeries} />

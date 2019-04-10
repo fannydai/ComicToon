@@ -18,13 +18,16 @@ class Canvas extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = {            
             canRedo: false,
             canUndo: false,
             zooming: false,
             canvasState: null,
+
             brushColor: '#FF0000',
             lineWidth: 1,
+            stroke: '#FF0000',
+
             undo: [],
             redo: [],
             previousCanvas: null
@@ -33,8 +36,8 @@ class Canvas extends Component {
 
     componentDidMount() {
         this.canvas = new fabric.Canvas('canvas', {
-            height: window.innerHeight * 0.8,
-            width: window.innerWidth,
+            height: 600,
+            width: 600,
             isDrawingMode: false
         });
         this.canvas.on('object:added', (event) => {
@@ -46,32 +49,29 @@ class Canvas extends Component {
         this.pencilBrush = new fabric.PencilBrush(this.canvas);
         this.canvas.freeDrawingBrush.color = this.state.brushColor;
         //this.pencilBrush.width = 1;
-        this.canvas.freeDrawingBrush.width = 1;
+        // this.canvas.freeDrawingBrush.width = 1;
 
         // Scaling
-        /*
-        this.canvas.on('object:scaling', (e) => {
-            if (e.target.strokeWidthUnscaled && e.target.strokeWidth) {
-                e.target.strokeWidthUnscaled = e.target.strokeWidth;
-            }
-            if (e.target.strokeWidthUnscaled) {
-                e.target.strokeWidth = e.target.strokeWidthUnscaled  / e.target.scaleX; 
-            }
-        });*/
+        // this.canvas.on('object:scaling', (e) => {
+        //     if (e.target.strokeWidthUnscaled && e.target.strokeWidth) {
+        //         e.target.strokeWidthUnscaled = e.target.strokeWidth;
+        //     }
+        //     if (e.target.strokeWidthUnscaled) {
+        //         e.target.strokeWidth = e.target.strokeWidthUnscaled  / e.target.scaleX; 
+        //     }
+        // });
     }
 
     handlePencil = (event) => {
         event.preventDefault();
         this.pencilBrush.color = this.state.brushColor;
+        this.canvas.freeDrawingBrush.width = this.state.lineWidth;
         this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
-        this.canvas.freeDrawingBrush.width = 1;
     }
 
-    handlePaint = (event) => {
-        event.preventDefault();
-        this.pencilBrush.color = this.state.brushColor;
-        this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
-        this.canvas.freeDrawingBrush.width = 30;
+    handleChangeLineWidth = (event) => {
+        this.setState({ lineWidth: event.target.value });
+        this.canvas.freeDrawingBrush.width = event.target.value;
     }
     
     handleText = (event) => {
@@ -84,6 +84,19 @@ class Canvas extends Component {
         this.setState({ brushColor: event.target.value });
         // Change the brush color
         this.canvas.freeDrawingBrush.color = event.target.value;
+    }
+
+    handlePolygon = (event) => {
+        console.log('MAKING POLYGON');
+        const newPolygon = new fabric.Polygon([0, 0], {
+			opacity: 1,
+			selectable: false,
+			hasBorders: true,
+			fill: this.state.brushColor,
+			stroke: this.state.stroke,
+			strokeWidth: this.state.lineWidth,
+		});
+        this.canvas.add(newPolygon);
     }
 
     handleLine = (event) => {
@@ -225,14 +238,11 @@ class Canvas extends Component {
         this.props.history.push('/create/comic');
     }
 
-    handleChangeLineWidth = (event) => {
-        this.setState({ lineWidth: event.target.value });
-    }
-
     render() {
         return (
-            <div className="canvas2-container">
+            <div className="panel-container">
                 <NavigationBar />
+<<<<<<< HEAD
                 <div className="canvas-tool-container">
                     <FontAwesomeIcon className="icon-container" icon="pencil-alt" onClick={this.handlePencil} />
                     <FontAwesomeIcon className="icon-container" icon="paint-brush" onClick={this.handlePaint} />
@@ -254,9 +264,34 @@ class Canvas extends Component {
                 <div className="canvas-bottom-tool-container">
                     <div>
                         <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
+=======
+
+                <div class="panel">
+                    <div class="top-canvas">
+                        <div className="canvas-tool-container">
+                            <FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} />
+                            <FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} />
+                            <FontAwesomeIcon className="icon" icon="slash" onClick={this.handlePolygon} />
+                            <FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} />
+                            <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
+                            <FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} />
+                            <FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} />
+                            <FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} />
+                            <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoom} />
+                            <FontAwesomeIcon className="icon" icon="undo" onClick={this.handleUndo} />
+                            <FontAwesomeIcon className="icon" icon="redo" onClick={this.handleRedo} />
+                            <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
+                            <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
+                        </div>
+                        <canvas id='canvas'></canvas>
+                    </div>
+                    <div className="canvas-bottom-tool-container">
+                        <div for="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
+>>>>>>> 59704c10fe6f9f209e91a2789a00ba8b3392465a
                         <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
                     </div>
                 </div>
+                
             </div>
         );
     }

@@ -12,6 +12,7 @@ public class ComicModel{
     private String name;
     private String description;
     private String userID;
+    private String username;
     private String comicSeriesID;
     private ArrayList<String> panelsList;
     private ArrayList <String> commentsList;
@@ -61,6 +62,14 @@ public class ComicModel{
         this.userID = userID;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getComicSeriesID() {
         return this.comicSeriesID;
     }
@@ -102,10 +111,11 @@ public class ComicModel{
     }
 
 
-    public ComicModel(String name, String description, String userID, String comicSeriesID, String Date, ArrayList<String> sharedWith){
+    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith){
         this.name = name;
         this.description = description;
         this.userID = userID;
+        this.username = username;
         this.comicSeriesID = comicSeriesID;
         this.Date = Date;
         this.panelsList = new ArrayList<String>();
