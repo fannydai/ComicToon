@@ -100,19 +100,30 @@ public class ComicController{
     @ResponseBody
     public ViewComicSeriesResult viewComicSeries(@RequestBody ViewComicSeriesForm form){
         ViewComicSeriesResult result = new ViewComicSeriesResult();
+        result.setComics(new ArrayList<ComicModel>());
 
         ArrayList <ComicSeriesModel> candidates = ComicSeriesRepository.findByname(form.getComicSeriesName());
+        if (candidates.size() == 0) {
+            result.setResult("failure");
+            return result;
+        }
         UserModel owner = userRepository.findByusername(form.getOwnerName());
-
+        System.out.println("VIEWING SERIES");
+        System.out.println(form.getOwnerName());
+        System.out.println(owner.getId());
+        System.out.println(candidates.size());
         for (ComicSeriesModel candidate: candidates){
             if(candidate.getUserID().equals(owner.getId())){
                 for(String comicID : candidate.getComics()){
                     ComicModel comic = comicRepository.findByid(comicID);
-                    result.getComics().add(comic);
+                    if (comic != null) {
+                        result.getComics().add(comic);
+                    }
                 }
                 break;
             }
         }
+        result.setResult("success");
         return result;
     }
 
@@ -345,6 +356,21 @@ public class ComicController{
             System.out.println(comic.getDate());
         }
 
+        return result;
+    }
+
+    //Get a single panel
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/panel", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewPanelResult viewPanel(@RequestBody ViewPanelForm form){
+        System.out.println("GETTING A PANEL");
+        ViewPanelResult result = new ViewPanelResult();
+        System.out.println(form.getId());
+        PanelModel panel = panelRepository.findByid(form.getId());
+        if (panel != null) {
+            result.setPanel(panel);
+        }
         return result;
     }
 
