@@ -9,10 +9,6 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import Slider from 'react-slick';
 
-import shoes1 from './images/shoes-1.png';
-import shoes2 from './images/shoes-2.png';
-import shoes3 from './images/shoes-3.png';
-
 import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
@@ -92,8 +88,18 @@ class CreateComic extends Component {
             alert('Please enter a comic name.');
         } else if (this.state.comicDescription === '') {
             alert('Please enter a comic description.');
+        } else if (this.selected_series === '') {
+            alert('Please select a series.');
+        } else if (this.props.comic.newComic.length === 0) {
+            alert('Please create at least one panel.');
         } else {
             (async () => {
+                const canvases = [];
+                const images = [];
+                this.props.comic.newComic.forEach(c => {
+                    canvases.push(JSON.stringify(c.json));
+                    images.push(c.panel);
+                });
                 const res = await fetch("http://localhost:8080/create/comic", {
                     method: "POST",
                     headers: {
@@ -101,9 +107,27 @@ class CreateComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comic: this.props.comic.newComic
+                        username: this.props.CurrUser.username,
+                        description: this.state.comicDescription,
+                        name: this.state.comicName,
+                        series: this.state.selected_series,
+                        sharedWith: this.state.sharedUsersList,
+                        canvases: canvases,
+                        images: images
                       })
                 });
+                let content = await res.json();
+                console.log(content);
+                if(content.result === 'success') {
+                    alert(`Comic '${this.state.comicName}' Created!!`);
+                    this.props.history.push({
+                        pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
+                        state: {
+                            series: this.state.selected_series
+                        }
+                    });
+                }
+                else alert(`ERROR! Comic '${this.state.comicName}' NOT Created!!`)
             })();
         }
     }
@@ -122,6 +146,7 @@ class CreateComic extends Component {
 
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
+            event.preventDefault();
             console.log('PRESSED ENTER');
             let newUsers = this.state.userInput.split(' ');
             let newUsers2 = newUsers.filter(item => item !== "")

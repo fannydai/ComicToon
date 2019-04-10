@@ -44,7 +44,7 @@ public class ComicController{
         }
         else{
             //create and save new series
-            ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(),form.getDescription(),user.getId(),form.getPrivacy(), form.getGenre());
+            ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(), form.getDescription(), user.getId(), form.getPrivacy(), form.getGenre());
             ComicSeriesRepository.save(newComicSeries);
             //add comicseries id -> user
             user.getComicSeries().add(newComicSeries.getId());
@@ -138,10 +138,21 @@ public class ComicController{
                     series = s;
             }
             if(series!=null){
+                System.out.println(form.getUsername());
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();
-                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),series.getId(),strDate, form.getSharedWith());
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith());
+                // Create Panels for each and set references in comic
+                ArrayList<String> canvasList = form.getCanvases();
+                ArrayList<String> imageList = form.getImages();
+                ArrayList<String> panelRefs = new ArrayList<>();
+                for (int i = 0; i < canvasList.size(); i++) {
+                    PanelModel newPanel = new PanelModel(imageList.get(i), canvasList.get(i), newComic.getId());
+                    panelRepository.save(newPanel);
+                    panelRefs.add(newPanel.getId());
+                }
+                newComic.setPanelsList(panelRefs);
                 comicRepository.save(newComic);
 
                 //now add comic reference to user
@@ -151,7 +162,7 @@ public class ComicController{
                 //now add comic reference to comic series
                 series.getComics().add(newComic.getId());
                 ComicSeriesRepository.save(series);
-                result.setResult("Sucess");
+                result.setResult("success");
             }
             else{
                 result.setResult("comic series does not exists");
@@ -201,12 +212,16 @@ public class ComicController{
     @ResponseBody
     public ViewComicResult viewComic(@RequestBody ViewComicForm form){
         ViewComicResult result = new ViewComicResult();
+        System.out.println("VIEW COMIC");
         ArrayList<ComicModel> findComicList = comicRepository.findByname(form.getComicName());
         ComicModel findComic = null;
         for(ComicModel c: findComicList){
-            if(c.getUserID().equals(form.getComicOwnerName()))
+            System.out.println(c.getUsername());
+            System.out.println(form.getComicOwnerName());
+            if(c.getUsername().equals(form.getComicOwnerName()))
                 findComic = c;
         }
+        System.out.println(findComic);
         
         if(findComic!=null){
 
@@ -296,10 +311,42 @@ public class ComicController{
         return result;
     }
 
+    //Subscribe to series
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscribe", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public SubscriptionResult subscribe(@RequestBody SubscriptionForm form){
+        SubscriptionResult result = new SubscriptionResult();
+
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if(user == null)
+            return result;
+        else{
+            user.getSubscriptions().add(form.getSeriesid());
+            result.setResult("success");
+        }
+
+
+        return result;
+    }
+
+
     //View Recent Creations
-    //someone else do it due benchmark1
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/subscriptions", method = RequestMethod.GET, consumes = {"application/json"})
+    @ResponseBody
+    public RecentCreationsResult recent(){
+        RecentCreationsResult result = new RecentCreationsResult();
 
+        List<ComicModel> comics = comicRepository.findAll();
+        ArrayList<ComicModel> recent10 = new ArrayList<ComicModel>();
 
+        for(ComicModel comic : comics){
+            System.out.println(comic.getDate());
+        }
+
+        return result;
+    }
 
     //OTHERS (After benchmark 1)
 

@@ -1,6 +1,6 @@
 import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES } from './Types';
 
-export const createSeries = (userName, seriesName, genres, privacy) => (dispatch) => {
+export const createSeries = (userName, seriesName, description, genres, privacy) => (dispatch) => {
     (async () => {
         const res = await fetch("http://localhost:8080/create/series", {
             method: "POST",
@@ -8,7 +8,7 @@ export const createSeries = (userName, seriesName, genres, privacy) => (dispatch
                 Accept: "application/json",
                 "Content-Type": "application/json; charset=utf-8"
             },
-            body: JSON.stringify({ username: userName, name: seriesName, genre: genres, privacy: privacy })
+            body: JSON.stringify({ username: userName, name: seriesName, description: description, genre: genres, privacy: privacy })
         });
         let content = await res.json();
     

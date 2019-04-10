@@ -18,13 +18,16 @@ class Canvas extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = {            
             canRedo: false,
             canUndo: false,
             zooming: false,
             canvasState: null,
+
             brushColor: '#FF0000',
             lineWidth: 1,
+            stroke: '#FF0000',
+
             undo: [],
             redo: [],
             previousCanvas: null
@@ -49,15 +52,14 @@ class Canvas extends Component {
         // this.canvas.freeDrawingBrush.width = 1;
 
         // Scaling
-        /*
-        this.canvas.on('object:scaling', (e) => {
-            if (e.target.strokeWidthUnscaled && e.target.strokeWidth) {
-                e.target.strokeWidthUnscaled = e.target.strokeWidth;
-            }
-            if (e.target.strokeWidthUnscaled) {
-                e.target.strokeWidth = e.target.strokeWidthUnscaled  / e.target.scaleX; 
-            }
-        });*/
+        // this.canvas.on('object:scaling', (e) => {
+        //     if (e.target.strokeWidthUnscaled && e.target.strokeWidth) {
+        //         e.target.strokeWidthUnscaled = e.target.strokeWidth;
+        //     }
+        //     if (e.target.strokeWidthUnscaled) {
+        //         e.target.strokeWidth = e.target.strokeWidthUnscaled  / e.target.scaleX; 
+        //     }
+        // });
     }
 
     handlePencil = (event) => {
@@ -86,13 +88,14 @@ class Canvas extends Component {
 
     handlePolygon = (event) => {
         console.log('MAKING POLYGON');
-        const newPolygon = new fabric.Polygon({
-			// fill: $this.element.find("#fillPicker").spectrum('get').toHexString(),
-			// stroke: $this.element.find("#strokePicker").spectrum('get').toHexString(),
-            // strokeWidth: $this._thickness,
-            stroke: this.state.brushColor,
-            strokeWidth: this.state.lineWidth
-        });
+        const newPolygon = new fabric.Polygon([0, 0], {
+			opacity: 1,
+			selectable: false,
+			hasBorders: true,
+			fill: this.state.brushColor,
+			stroke: this.state.stroke,
+			strokeWidth: this.state.lineWidth,
+		});
         this.canvas.add(newPolygon);
     }
 

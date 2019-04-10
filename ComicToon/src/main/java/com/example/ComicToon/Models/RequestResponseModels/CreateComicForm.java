@@ -8,6 +8,8 @@ public class CreateComicForm {
     private String name;
     private String series;
     private ArrayList<String> sharedWith;
+    private ArrayList<String> canvases;
+    private ArrayList<String> images;
 
     public String getUsername() {
         return this.username;
@@ -57,4 +59,19 @@ public class CreateComicForm {
         this.series = series;
     }
 
+    public ArrayList<String> getCanvases() {
+        return this.canvases;
+    }
+
+    public void setCanvases(ArrayList<String> canvases) {
+        this.canvases = canvases;
+    }
+
+    public ArrayList<String> getImages() {
+        return this.images;
+    }
+
+    public void setImages(ArrayList<String> images) {
+        this.images = images;
+    }
 }

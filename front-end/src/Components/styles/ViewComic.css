@@ -42,6 +42,11 @@
     flex-grow: 1;
 }
 
+.view-comic-panel-inner {
+    height: 100%;
+    width: 25%;
+}
+
 .view-comic-panel-img {
     height: 100%;
     width: 100%;
