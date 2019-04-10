@@ -242,30 +242,6 @@ class Canvas extends Component {
         return (
             <div className="panel-container">
                 <NavigationBar />
-<<<<<<< HEAD
-                <div className="canvas-tool-container">
-                    <FontAwesomeIcon className="icon-container" icon="pencil-alt" onClick={this.handlePencil} />
-                    <FontAwesomeIcon className="icon-container" icon="paint-brush" onClick={this.handlePaint} />
-                    <FontAwesomeIcon className="icon-container" icon="font" onClick={this.handleText} />
-                    <FontAwesomeIcon className="icon-container" icon="slash" onClick={this.handleLine} />
-                    <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
-                    <FontAwesomeIcon className="icon-container" icon="circle" onClick={this.handleCircle} />
-                    <FontAwesomeIcon className="icon-container" icon="square" onClick={this.handleRectangle} />
-                    <FontAwesomeIcon className="icon-container" icon="caret-up" onClick={this.handleTriangle} />
-                    <FontAwesomeIcon className="icon-container" icon="search-plus" onClick={this.handleZoom} />
-                    <FontAwesomeIcon className="icon-container" icon="undo" onClick={this.handleUndo} />
-                    <FontAwesomeIcon className="icon-container" icon="redo" onClick={this.handleRedo} />
-                    <FontAwesomeIcon className="icon-container" icon="download" onClick={this.handleDownload} />
-                    <FontAwesomeIcon className="icon-container" icon="check" onClick={this.handleDone} />
-                </div>
-                <div className="canvas-bottom-container">
-                    <canvas id='canvas'></canvas>
-                </div>
-                <div className="canvas-bottom-tool-container">
-                    <div>
-                        <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
-=======
-
                 <div class="panel">
                     <div class="top-canvas">
                         <div className="canvas-tool-container">
@@ -287,11 +263,9 @@ class Canvas extends Component {
                     </div>
                     <div className="canvas-bottom-tool-container">
                         <div for="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
->>>>>>> 59704c10fe6f9f209e91a2789a00ba8b3392465a
                         <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
                     </div>
                 </div>
-                
             </div>
         );
     }
