@@ -8,14 +8,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    
 }
 
 /* Everything except the navbar */
 .create-comic-bottom {
     width: 90%;
-    background: rgba(245, 245, 245, 0.8);
+    background-color: whitesmoke;
     padding-top: 25px;
     padding-bottom: 25px;
+    //opacity: 1;
 }
 
 .create-comic-form {
