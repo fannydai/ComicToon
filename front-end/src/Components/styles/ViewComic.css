@@ -46,6 +46,7 @@
 .view-comic-panel-inner {
     height: 100%;
     width: 25%;
+    border: 1px solid black;
 }
 
 .view-comic-panel-img {
@@ -111,7 +112,6 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
 }
 
 .view-comic-comment {

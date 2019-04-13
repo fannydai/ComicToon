@@ -49,8 +49,8 @@ class CreateComic extends Component {
         if (savedData.userInput) {
             this.setState({ userInput: savedData.userInput });
         }
-        if (savedData.comicDescription) {
-            this.setState({ comicDescription: savedData.comicDescription });
+        if (savedData.description) {
+            this.setState({ comicDescription: savedData.description });
         }
         if (savedData.privacy) {
             this.setState({ privacy: savedData.privacy });
@@ -58,8 +58,8 @@ class CreateComic extends Component {
         if (savedData.UserSerieses) {
             this.setState({ UserSerieses: savedData.UserSerieses });
         }
-        if (savedData.selected_series) {
-            this.setState({ selected_series: savedData.selected_series });
+        if (savedData.seriesName) {
+            this.setState({ selected_series: savedData.seriesName });
         }
         if (savedData.sharedUsersList) {
             this.setState({ sharedUsersList: savedData.sharedUsersList });
@@ -81,6 +81,19 @@ class CreateComic extends Component {
         })();   
     }
 
+    componentWillUnmount() {
+        // In case they want to navigate out and back again
+        this.props.saveNewComic({
+            comicName: this.state.comicName,
+            description: this.state.comicDescription,
+            userInput: this.state.userInput,
+            privacy: this.state.privacy,
+            UserSerieses: this.state.UserSerieses,
+            seriesName: this.state.selected_series,
+            sharedUsersList: this.state.sharedUsersList
+        });
+    }
+
     renderUserSeries(){
         console.log(this.state.UserSerieses);
         return (
@@ -99,11 +112,11 @@ class CreateComic extends Component {
         // Save the current state to the store
         this.props.saveNewComic({
             comicName: this.state.comicName,
-            comicDescription: this.state.comicDescription,
+            description: this.state.comicDescription,
             userInput: this.state.userInput,
             privacy: this.state.privacy,
             UserSerieses: this.state.UserSerieses,
-            selected_series: this.state.selected_series,
+            seriesName: this.state.selected_series,
             sharedUsersList: this.state.sharedUsersList
         });
         this.props.history.push('/canvas');
@@ -111,6 +124,15 @@ class CreateComic extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        this.props.saveNewComic({
+            comicName: this.state.comicName,
+            description: this.state.comicDescription,
+            userInput: this.state.userInput,
+            privacy: this.state.privacy,
+            UserSerieses: this.state.UserSerieses,
+            seriesName: this.state.selected_series,
+            sharedUsersList: this.state.sharedUsersList
+        });
         console.log(this.state)
         if (this.state.comicName === '') {
             alert('Please enter a comic name.');
@@ -125,7 +147,7 @@ class CreateComic extends Component {
             const images = [];
             this.props.comic.newComic.forEach(c => {
                 canvases.push(JSON.stringify(c.json));
-                images.push(c.panel);
+                images.push(c.image);
             });
             this.props.createComic(
                 this.props.CurrUser.username, 
@@ -135,11 +157,8 @@ class CreateComic extends Component {
                 this.state.sharedUsersList,
                 canvases,
                 images
-            )
+            );
             this.setState({sharedUsersList: []});
-            // Clear the panels and saved
-            this.props.clearPanels();
-            this.props.saveNewComic({});
             this.props.history.push({
                 pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
                 state: {
@@ -220,11 +239,6 @@ class CreateComic extends Component {
                 }
             ]
         };
-        /*
-        const firstPanel = this.props.comic.newComic[0] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[0]} /> : null;
-        const secondPanel = this.props.comic.newComic[1] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[1]} /> : null;
-        const thirdPanel = this.props.comic.newComic[2] ? <Panel className="create-comic-panel-inner" comic={this.props.comic.newComic[2]} /> : null;
-        */
         if(this.state.loading) return (<h1>Loading ...</h1>)
         else{
             return (

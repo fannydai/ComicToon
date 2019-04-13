@@ -11,6 +11,7 @@ public class ViewComicResult {
     private String comicName;
     private String creatorName;
     private String seriesName;
+    private String description;
     private ArrayList<PanelModel> panels;
     private ArrayList<RatingModel> RatingsID;
     private ArrayList <CommentModel> commentsList;
@@ -44,6 +45,14 @@ public class ViewComicResult {
 
     public void setSeriesName(String seriesName) {
         this.seriesName = seriesName;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ArrayList<PanelModel> getPanels() {

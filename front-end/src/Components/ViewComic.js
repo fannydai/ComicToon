@@ -10,6 +10,7 @@ import './styles/ViewComic.css';
 import pusheen from './images/pusheen.png';
 import shoes from './images/shoes.png';
 import { viewComic } from './../Actions/NavbarActions';
+import { clearPanels, saveNewComic } from './../Actions/ComicActions';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -31,10 +32,21 @@ class ViewComic extends Component {
     }
 
     componentDidMount() {
+        console.log('COMIC', this.props.comic);
         if (!this.props.match.params.username || !this.props.match.params.comicName) {
             this.props.history.goBack();
         }
-        this.props.viewComic(this.props.match.params.username, this.props.match.params.comicName);
+        // Load comic only if this page is not redirected from create comic
+        if (!this.props.comic.saveNewComic.comicName) {
+            console.log('VIEW COMIC FETCHING DATA');
+            this.props.viewComic(this.props.match.params.username, this.props.match.params.comicName);
+        }
+    }
+
+    componentWillUnmount() {
+        // Clears panels and comic data (if it was loaded after creation)
+        this.props.clearPanels();
+        this.props.saveNewComic({});
     }
 
     handleLeft = (event) => {
@@ -45,6 +57,8 @@ class ViewComic extends Component {
 
     handleRight = (event) => {
         if (this.props.comic.saveNewComic.panels && this.state.panelIndex + 4 < this.props.comic.saveNewComic.panels.length) {
+            this.setState({ panelIndex: this.state.panelIndex + 1 });
+        } else if (this.props.comic.newComic.length && this.state.panelIndex + 4 < this.props.comic.newComic.length) {
             this.setState({ panelIndex: this.state.panelIndex + 1 });
         }
     }
@@ -61,7 +75,7 @@ class ViewComic extends Component {
     }
 
     render() {
-       const panels = this.props.comic.saveNewComic.panels;
+       const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         return (
             <div className="view-comic-container">
                 <NavigationBar />
@@ -94,16 +108,22 @@ class ViewComic extends Component {
                                     </div>
                                 </div>
                                 <div className="view-comic-second-row">
-                                    <div className="view-comic-second-left">
+                                    <div className="mr-auto">
                                         <h2>By: {this.props.match.params.username}</h2>
                                     </div>
                                     <div className="view-comic-second-middle">
-                                        <h2>Series: {this.state.comicData ? this.state.comicData.seriesName : null}</h2>
+                                        <h2>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                     </div>
                                     <div className="ml-auto">
                                         <Button>Subscribe</Button>
                                     </div>
                                 </div>
+                                <hr />
+                                <div className="view-comic-description">
+                                    <h1>Description</h1>
+                                    <p>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</p>
+                                </div>
+                                <hr />
                                 <Form className="view-comic-comment-form">
                                     <Form.Control as="textarea" rows="2" className="view-comic-comment-input" name="comicCommentInput" type="text" placeholder="Comment on this comic..." />
                                     <Button>Submit</Button>
@@ -146,7 +166,9 @@ class ViewComic extends Component {
 ViewComic.propTypes = {
     CurrUser: PropTypes.object,
     comic: PropTypes.object,
-    viewComic: PropTypes.func.isRequired
+    viewComic: PropTypes.func.isRequired,
+    clearPanels: PropTypes.func.isRequired,
+    saveNewComic: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {viewComic})(withRouter(ViewComic));
+export default connect(StateToProps, {viewComic, clearPanels, saveNewComic })(withRouter(ViewComic));

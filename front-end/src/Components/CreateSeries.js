@@ -76,7 +76,7 @@ class CreateSeries extends Component {
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">
                                 <h2>Genre: </h2>
-                                <div class="list-genre"><ComicSharingTable usernames={this.state.genreList} /></div>
+                                <div className="list-genre"><ComicSharingTable usernames={this.state.genreList} /></div>
                             </div>
                             <div className="create-series-genre-right">
                                 <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" onChange={this.handleChange} onKeyPress={this.handleAddUserEnter}/>

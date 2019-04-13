@@ -224,6 +224,7 @@ public class ComicController{
             ArrayList<PanelModel> panels = new ArrayList<PanelModel>();
 
             result.setComicName(findComic.getName());
+            result.setDescription(findComic.getDescription());
             result.setCreatorName(form.getComicOwnerName());
             result.setSeriesName(series.getName());
             for(String c: findComic.getCommentsList()){

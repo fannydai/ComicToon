@@ -55,10 +55,10 @@ export const getFavorites = (username) => (dispatch) => {
     })();
 }
 
-export const addPanel = (panel, json) => (dispatch) => {
+export const addPanel = (image, json) => (dispatch) => {
     dispatch({
         type: ADD_PANEL,
-        payload: { panel: panel, json: json}
+        payload: { image: image, json: json}
     });
 }
 
