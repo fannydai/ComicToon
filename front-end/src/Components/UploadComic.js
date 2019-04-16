@@ -11,9 +11,17 @@ class UploadComic extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
             image: null,
             json: null,
-            filename: null
+            filename: null,
+            comicName: '',
+            comicDescription: '',
+            privacy: 'Public',
+            series: '',
+            seriesList: [],
+            userInput: '',
+            sharedUsersList: []
         }
     }
 
@@ -21,6 +29,21 @@ class UploadComic extends Component {
         window.addEventListener('dragenter', this.onDragEnter, false);
         window.addEventListener('dragover', this.onDragOver, false);
         window.addEventListener('drop', this.onDrop, false);
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/series", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                username: localStorage.getItem('user')
+              })
+            });
+            let content = await res.json();
+            console.log(content);
+            this.setState({ seriesList: content.comicSeries, loading: false });
+        })();
     }
 
     onDragEnter = (event) => {
@@ -41,9 +64,8 @@ class UploadComic extends Component {
         this.onFileUpload(file);
     }
 
-
     onFileUpload = (file) => {
-        console.log(file);
+        console.log("SELECTED UPLOAD FILE INFO", file);
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = (() => {
@@ -62,6 +84,8 @@ class UploadComic extends Component {
                 }
             })();
             reader.readAsText(file);
+        } else {
+            alert('Sorry, only image and JSON files are allowed');
         }
     }
 
@@ -69,9 +93,68 @@ class UploadComic extends Component {
         this.setState({ image: null, json: null });
     }
 
+    handleComicName = (event) => {
+        this.setState({ comicName: event.target.value });
+    }
+
+    handleComicDescription = (event) => {
+        this.setState({ comicDescription: event.target.value });
+    }
+
+    handleAddUser = (event) => {
+        this.setState({ userInput: event.target.value });
+    }
+
+    handleAddUserEnter = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            console.log('PRESSED ENTER');
+            let newUsers = this.state.userInput.split(' ');
+            let newUsers2 = newUsers.filter(item => item !== "");
+            console.log('USERS TO ADD', newUsers2);
+            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2], userInput: '' }); 
+        }
+    }
+
+    handleDeleteShare = (index, event) => {
+        console.log(index);
+        console.log(event.target);
+        var copy = [...this.state.sharedUsersList];
+        if (index !== -1) {
+            copy.splice(index, 1);
+            this.setState({ sharedUsersList: copy });
+        }
+    }
+
+    handlePrivacy = (event) => {
+        this.setState({ privacy: event.target.value });
+    }
+
+    handleUserSeries = () => {
+        return (
+            this.state.seriesList.map(item=> {
+                return item !== null ?
+                <div key={item.name}>
+                    <Dropdown.Item name={item.name} onClick={this.handleChangeSeries}>{item.name}</Dropdown.Item>
+                </div>
+                :
+                null
+            })
+        );
+    }
+
+    handleChangeSeries = (event) => {
+        this.setState({ series: event.target.name });
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        //todo
+        console.log(this.state);
+        if (this.state.image === null && this.state.json === null) {
+            alert('Please upload an image or a JSON file');
+        } if (this.state.series === '') {
+            alert('Please select a series');
+        }
     }
 
     render() {
@@ -83,10 +166,17 @@ class UploadComic extends Component {
             : this.state.json ?
             <div style={{ display: "flex" }}>
                 <p>{this.state.filename}</p>
-                <button type="button" className="btn-danger" aria-label="Close"><span aria-hidden="true">X</span></button>
+                <button type="button" className="btn-danger" aria-label="Close" onClick={this.handleDelete}><span aria-hidden="true">X</span></button>
             </div>
             :
             <div><FontAwesomeIcon icon="cloud-upload-alt" size="7x" /><p style={{ textAlign: "center" }}>Drop file here</p></div>;
+        const trs = this.state.sharedUsersList.map((username, i) => {
+            return (
+                <tr key={i}><td>{username}</td><td><button className="btn-danger" onClick={(e) => this.handleDeleteShare(i, e)}>Delete</button></td></tr>
+            );
+        });
+        if (this.state.loading)
+            return <h1>Loading ...</h1>;
         return (
             <div className="upload-comic-container">
                 <NavigationBar />
@@ -96,42 +186,33 @@ class UploadComic extends Component {
                             {imgOrUpload}
                         </div>
                         <div className="upload-info">
-                            <Form.Control className="upload-name-input" type="text" placeholder="Type Comic Name..." />
-                            <br />
+                            <Form.Control required className="upload-name-input" type="text" placeholder="Type Comic Name..." value={this.state.comicName} onChange={this.handleComicName} />
+                            <div className="upload-comic-description">
+                                <Form.Control required className="create-comic-description-input" as="textarea" rows="3"  placeholder="Write a description of the comic" value={this.state.comicDescription} onChange={this.handleComicDescription} />
+                            </div>
                         </div>
                         <div className="upload-sharing">
                             <div className="upload-sharing-inner">
                                 <div className="upload-table-container">
                                     <table className="upload-sharing-table">
-                                    
                                         <tbody>
-                                            <tr><td><Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" /></td></tr>
-                                            <tr><td>User 1</td></tr>
-                                            <tr><td>User 2</td></tr>
-                                            <tr><td>User 3</td></tr>
-                                            <tr><td>User 4</td></tr>
-                                            <tr><td>UserWithALongUsernameThatDoes'tFit</td></tr>
-                                            <tr><td>User 6</td></tr>
-                                            <tr><td>User 7</td></tr>
-                                            <tr><td>User 8</td></tr>
-                                            <tr><td>User 9</td></tr>
+                                            <tr><td><Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} /></td></tr>
+                                            {trs}
                                         </tbody>
                                     </table>
                                 </div>
                                 <div className="upload-sharing-right">
-                                    <Form.Check type="radio" name="privacy" label="Public" defaultChecked />
-                                    <Form.Check type="radio" name="privacy" label="Private" />
+                                    <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
+                                    <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                     <br />
                                     <br />
                                     <br />
                                     <Dropdown className="upload-dropdown">
                                         <Dropdown.Toggle variant="outline-info">
-                                            Select Series
+                                            {this.state.series ? this.state.series : 'Select Series'}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item>XKCD</Dropdown.Item>
-                                            <Dropdown.Item>SMBC</Dropdown.Item>
-                                            <Dropdown.Item>Cyanide and Happiness</Dropdown.Item>
+                                            {this.handleUserSeries()}
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </div>
