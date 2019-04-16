@@ -26,16 +26,42 @@
     align-items: center;
 }
 
+.upload-preview-container {
+    height: 50%;
+    width: 50%;
+    position: relative;
+}
+
+.upload-preview-close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+    font-weight: bolder;
+}
+
+#upload-preview {
+    height: 100%;
+    width: 100%;
+}
+
 .upload-info {
+    width: 50vw;
     height: 20%;
+    margin: auto;
+    /*
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center;*/
 }
 
 .upload-name-input {
     /* width: 50%; */
+}
+
+.upload-comic-description {
+
 }
 
 .upload-dropdown {

@@ -26,3 +26,7 @@
     width: 18rem;
     margin-bottom: 5vh;
 }
+
+.view-series-card-title:hover {
+    cursor: pointer;
+}

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewAllComics.css';
-import pusheen from './images/pusheen.png';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
+import LoadingScreen from './LoadingScreen';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
@@ -26,6 +25,9 @@ class ViewAllComics extends Component {
     }
 
     componentDidMount(){
+        if (!localStorage.getItem('user')) {
+            this.props.history.push('/welcome');
+        }
         (async () => {
             const res = await fetch("http://localhost:8080/view/allComics", {
                 method: "POST",
@@ -34,7 +36,7 @@ class ViewAllComics extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                 },
                 body: JSON.stringify({
-                    comicOwnerName: this.props.CurrUser.username
+                    comicOwnerName: localStorage.getItem('user')
                   })
             });
             let content = await res.json();
@@ -45,10 +47,10 @@ class ViewAllComics extends Component {
     
     renderOne(panelList){
         return (
-            panelList.map(item=> {
+            panelList.map((item, i)=> {
                 return item !== null ?
-                <div key={item.id}>
-                    <img src={item.image} alt="can't load"></img>
+                <div className="view-comics-panel-container" key={item.id}>
+                    <img className="view-comics-panel-img" src={item.image} alt="can't load"></img>
                 </div>
                 :
                 null
@@ -66,7 +68,7 @@ class ViewAllComics extends Component {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
                 },
-                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
+                body: JSON.stringify({ comicName: e.target.name, ownerName: localStorage.getItem('user')})
             });
         })();
         alert(`Comic deleted!!`)
@@ -75,15 +77,21 @@ class ViewAllComics extends Component {
     }
 
     renderAll(){
+        // <button onClick={this.handleDel} name={item.comicName}>Delete?</button>
         console.log(this.state.allComics)
-        if(this.state.allComics != null && this.setState.allComics !== [])
+        if(this.state.allComics != null && this.state.allComics.length !== 0)
             return (
-                this.state.allComics.map(item=> {
+                this.state.allComics.map((item, i)=> {
                     return item !== null ?
-                    <div key={item.comicName}>
-                        <button onClick={this.handleDel} name={item.comicName}>Delete?</button>
-                        {this.renderOne(item.comicList)}
-                        <hr/>
+                    <div className="view-comics-strip-container" key={item.comicName}>
+                        <div className="view-comics-strip-top">
+                            <h3>{item.comicName}</h3>
+                            <button onClick={(e) => this.handleUpdate(item, e)}>Update</button>
+                        </div>
+                        <div className="view-comics-strip-bottom" onClick={(e) => this.handleClick(item, e)}>
+                            {this.renderOne(item.comicList)}
+                        </div>
+                        <hr style={{ height: "1vh", width: "100%" }} />
                     </div>
                     :
                     null
@@ -96,16 +104,19 @@ class ViewAllComics extends Component {
         }
     }
 
-    handleClick() {
-        this.props.history.push('/view/comic');
+    handleClick = (item, event) => {
+        console.log(item);
+        this.props.history.push(`/view/comic/${localStorage.getItem('user')}/${item.comicName}`);
     }
 
-    handleUpdate() {
-        this.props.history.push('/update/comic');
+    handleUpdate(item, event) {
+        this.props.history.push(`/update/comic/${localStorage.getItem('user')}/${item.comicName}`);
     }
 
     render() {
-        if(this.state.isLoading) return( <h1> Loading...</h1>)
+        if(this.state.isLoading) {
+            return <LoadingScreen />
+        }
         else{
             return (
                 <div className="view-comics-container">

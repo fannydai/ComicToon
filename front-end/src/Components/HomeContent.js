@@ -13,6 +13,7 @@ import Footer from './Footer';
 
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
+import LoadingScreen from './LoadingScreen';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
@@ -131,7 +132,9 @@ class HomeContent extends Component {
                 }
             ]
         };
-
+        if (this.state.isLoading) {
+            return <LoadingScreen />
+        }
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>

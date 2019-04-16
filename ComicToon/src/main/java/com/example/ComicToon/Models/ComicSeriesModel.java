@@ -16,6 +16,14 @@ public class ComicSeriesModel{
     private ArrayList<String> genre;
     private String privacy;
 
+    public ArrayList<String> getGenre() {
+        return this.genre;
+    }
+
+    public void setGenre(ArrayList<String> genre) {
+        this.genre = genre;
+    }
+
     public String getId() {
         return this.id;
     }
@@ -69,6 +77,7 @@ public class ComicSeriesModel{
     public void setPrivacy(String privacy) {
         this.privacy = privacy;
     }
+
 
     public ComicSeriesModel(String name, String description, String userID, String privacy, ArrayList<String> genre) {
         this.name = name;

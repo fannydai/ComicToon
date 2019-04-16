@@ -20,7 +20,10 @@ class LoginForm extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.user.username !== "") this.props.history.push('/home')  
+        if(nextProps.user.username !== "") {
+            this.props.history.push('/home');
+            localStorage.setItem('user', nextProps.user.username);
+        }
     }
 
     handleLogin = (e) => {
