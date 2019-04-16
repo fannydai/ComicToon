@@ -14,9 +14,6 @@ const StateToProps = (state) => ({ //application level state via redux
 });
 
 class NavigationBar extends Component {
-    constructor(props){
-        super(props);
-    }
 
     handleLogout() {localStorage.removeItem('user');}
     handleGoToCreateSeries = (e) => {this.props.history.push('/create/series')}
@@ -30,7 +27,7 @@ class NavigationBar extends Component {
     render() {
         return (
             <Navbar expand="sm">
-                <Navbar.Brand><Image className="logoimage" src={logo} fluid width="50" width="33" onClick={this.handleGoToHome}/></Navbar.Brand>
+                <Navbar.Brand><Image className="logoimage" src={logo} fluid width="33" onClick={this.handleGoToHome}/></Navbar.Brand>
                 <Navbar.Toggle aria-controls="top-nav" />
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">

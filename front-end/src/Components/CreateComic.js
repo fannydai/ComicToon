@@ -252,7 +252,7 @@ class CreateComic extends Component {
                                         this.props.comic.newComic.map((panel, i) => {
                                             return <Panel comic={panel} key={i} />
                                         }) : null}
-                                    <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas}/>
+                                    <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                                 </Slider>
                             </div>
                             <div className="create-comic-info">

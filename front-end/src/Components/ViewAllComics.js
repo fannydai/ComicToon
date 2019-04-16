@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewAllComics.css';
-import pusheen from './images/pusheen.png';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';

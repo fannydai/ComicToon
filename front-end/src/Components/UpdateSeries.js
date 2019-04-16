@@ -94,7 +94,7 @@ class UpdateSeries extends Component {
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="create-series-genre-right">
+                            <div className="create-series-genre-right">
                                 <Form.Control type="text" placeholder="Genre/Tags" />
                                 <Button type="submit" variant="success">Add</Button>
                             </div>

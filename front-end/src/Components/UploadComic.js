@@ -161,7 +161,7 @@ class UploadComic extends Component {
         const imgOrUpload = this.state.image ? 
             <div className="upload-preview-container">
                 <span className="upload-preview-close" onClick={this.handleDelete}>X</span>
-                <img id="upload-preview" src={this.state.image} /> 
+                <img id="upload-preview" src={this.state.image} alt="" /> 
             </div>
             : this.state.json ?
             <div style={{ display: "flex" }}>

@@ -7,7 +7,6 @@ import { Card } from 'react-bootstrap';
 import './styles/ViewAllSeries.css';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
-import pusheen from './images/pusheen.png';
 
 import { getAllSeries } from './../Actions/ComicActions';
 
@@ -58,8 +57,8 @@ class ViewAllSeries extends Component {
                 series ? 
                 <Card key={i} className="view-series-card">
                     <Card.Body>
-                        <Card.Title onClick={(e) => this.handleClick(series, e)}>{series.name}</Card.Title>
-                        <Card.Text>Artist: {this.props.CurrUser.username}</Card.Text>
+                        <Card.Title className="view-series-card-title" onClick={(e) => this.handleClick(series, e)}>{series.name}</Card.Title>
+                        <Card.Text>Artist: {localStorage.getItem('user')}</Card.Text>
                         <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(series, e)}>Update</button></Card.Text>
                     </Card.Body>
                 </Card>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import './styles/Welcome.css';
 
 class ForgotForm extends Component {

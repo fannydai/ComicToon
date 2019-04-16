@@ -145,13 +145,13 @@ class UpdateComic extends Component {
                             </div>
                             <div className="create-comic-panel-middle">
                                 <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes1} />
+                                    <img className="create-comic-img" src={shoes1} alt="" />
                                 </div>
                                 <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes2} />
+                                    <img className="create-comic-img" src={shoes2} alt="" />
                                 </div>
                                 <div className="create-comic-panel-inner">
-                                    <img className="create-comic-img" src={shoes3} />
+                                    <img className="create-comic-img" src={shoes3} alt="" />
                                 </div>
                                 <div className="create-comic-panel-plus">
                                     <FontAwesomeIcon icon="plus" size="2x" onClick={this.handleNavigateCanvas} />
