@@ -10,12 +10,10 @@
 }
 
 .view-comics-bottom {
-    min-height: 650px;
+    min-height: 100vh;
     width: 90%;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     padding-left: 2vw;
     padding-right: 2vw;
     background: rgba(245, 245, 245, 0.8);
@@ -33,4 +31,41 @@
 
 .card {
     margin: 10px;
+}
+
+.view-comics-strip-container {
+    height: 50vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comics-strip-container:hover {
+    cursor: pointer;
+}
+
+.view-comics-strip-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.view-comics-strip-bottom {
+    min-width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+.view-comics-panel-container {
+    height: 75%;
+    min-width: 25%;
+    max-width: 25%;
+    overflow-x: auto;
+}
+
+.view-comics-panel-img {
+    height: 100%;
+    width: 100%;
+    border: 1px solid black;
 }

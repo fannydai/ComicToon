@@ -9,6 +9,7 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 
 import { getAllSeries } from './../Actions/ComicActions';
+import LoadingScreen from './LoadingScreen';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -19,6 +20,9 @@ class ViewAllSeries extends Component {
     constructor(props) {
         super(props);
         console.log(this.props.comic);
+        this.state = {
+            isLoading: true
+        }
     }
 
     componentDidMount() {
@@ -38,6 +42,7 @@ class ViewAllSeries extends Component {
                 let content = await res.json();
                 if (content.comicSeries) {
                     this.props.getAllSeries(content.comicSeries);
+                    this.setState({ isLoading: false });
                 }
             })();  
         } 
@@ -65,6 +70,9 @@ class ViewAllSeries extends Component {
                 : null
             )
         }) : <h2>NO SERIES FOR THIS USER YET</h2>;
+        if (this.state.isLoading) {
+            return <LoadingScreen />
+        }
         return (
             <div className="view-series-container">
                 <NavigationBar />

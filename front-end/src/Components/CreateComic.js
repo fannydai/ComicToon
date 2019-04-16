@@ -13,6 +13,7 @@ import Panel from './Panel';
 import addPanel from './images/addPanel.png';
 import {createComic} from '../Actions/NavbarActions'
 import { saveNewComic, clearPanels } from '../Actions/ComicActions';
+import LoadingScreen from './LoadingScreen';
 
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -239,7 +240,9 @@ class CreateComic extends Component {
                 }
             ]
         };
-        if(this.state.loading) return (<h1>Loading ...</h1>)
+        if(this.state.loading) {
+            return <LoadingScreen />
+        }
         else{
             return (
                 <div className="create-comic-container">

@@ -3,6 +3,7 @@ import { Button, Dropdown, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
+import LoadingScreen from './LoadingScreen';
 import Footer from './Footer';
 import './styles/UploadComic.css';
 
@@ -11,7 +12,7 @@ class UploadComic extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
+            isLoading: true,
             image: null,
             json: null,
             filename: null,
@@ -42,7 +43,7 @@ class UploadComic extends Component {
             });
             let content = await res.json();
             console.log(content);
-            this.setState({ seriesList: content.comicSeries, loading: false });
+            this.setState({ seriesList: content.comicSeries, isLoading: false });
         })();
     }
 
@@ -176,7 +177,7 @@ class UploadComic extends Component {
             );
         });
         if (this.state.loading)
-            return <h1>Loading ...</h1>;
+            return <LoadingScreen />
         return (
             <div className="upload-comic-container">
                 <NavigationBar />
