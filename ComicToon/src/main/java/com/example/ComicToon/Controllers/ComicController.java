@@ -63,10 +63,18 @@ public class ComicController{
             return result;
         } else{
             for(ComicSeriesModel candidate: candidates){
+                System.out.println("in first loop..");
+                System.out.println(candidate);
+                System.out.println(owner);
                 if(candidate.getUserID().equals(owner.getId())){
                     ComicSeriesModel toDelete = candidate;
                     for(String c: toDelete.getComics()){
-                        ArrayList<ComicModel> candidates2 = comicRepository.findByname(c);
+                        System.out.println("in second loop..");
+                        System.out.println(c);
+                        ArrayList<ComicModel> candidates2 = new ArrayList<>();
+                        candidates2.add(comicRepository.findByid(c));
+                        System.out.println("before 3rd loop..");
+                        System.out.println(candidates2);
                         for(ComicModel d : candidates2){
                             if(d.getUserID().equals(owner.getId())){
                                 comicRepository.delete(d);
