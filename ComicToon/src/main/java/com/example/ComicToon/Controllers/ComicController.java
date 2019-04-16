@@ -395,11 +395,49 @@ public class ComicController{
         return result;
     }
 
-    //OTHERS (After benchmark 1)
-
-    //Subscribe To Comic
-
     //Rate Comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/comic/rate", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RateComicResult RateComic(@RequestBody RateComicForm form){
+        RateComicResult result = new RateComicResult();
+        ComicModel comic = comicRepository.findByid(form.getComicID());
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if (comic != null && user != null) {
+            
+            RatingModel newRating = new RatingModel(user.getId(), form.getRating(), comic.getId());
+            ratingRepository.save(newRating);
+            result.setResult("success");
+
+        }
+        return result;
+    }
+
+    //Get aggregate ratings for A comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/comic/rate/getRating", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public GetRatingResult getRatingComic(@RequestBody GetRatingForm form){
+        GetRatingResult result = new GetRatingResult();
+        ComicModel comic = comicRepository.findByid(form.getComicID());
+        if (comic != null) {
+            
+            ArrayList<String> ratingID = comic.getRatingsID();
+            int totalRating = 0;
+            for (String id: ratingID){
+                RatingModel rating = ratingRepository.findByid(id);
+                if(rating != null){
+                    totalRating += rating.getRating();
+                }
+            }
+        
+            result.setResult(totalRating);
+
+        }
+        return result;
+    }
+
+
 
     //Download Comic
 
