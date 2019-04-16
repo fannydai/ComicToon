@@ -9,6 +9,8 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import pusheen from './images/pusheen.png';
 
+import { getAllSeries } from './../Actions/ComicActions';
+
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
     comic: state.comic
@@ -20,8 +22,26 @@ class ViewAllSeries extends Component {
         console.log(this.props.comic);
     }
 
-    componentWillMount(){
-        //todo   
+    componentDidMount() {
+        // Fetch all series just in case
+        if (this.props.comic.allSeries.length === 0) {
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/series", {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                  },
+                  body: JSON.stringify({
+                    username: localStorage.getItem('user')
+                  })
+                });
+                let content = await res.json();
+                if (content.comicSeries) {
+                    this.props.getAllSeries(content.comicSeries);
+                }
+            })();  
+        } 
     }
 
     handleClick = (series, event) => {
@@ -66,4 +86,4 @@ ViewAllSeries.propTypes = {
     comic: PropTypes.object
 }
 
-export default connect(StateToProps, {})(withRouter(ViewAllSeries));
+export default connect(StateToProps, { getAllSeries })(withRouter(ViewAllSeries));
