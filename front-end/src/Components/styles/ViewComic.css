@@ -14,7 +14,7 @@
 }
 
 .view-comic-overlay {
-    background: rgba(245, 245, 245, 0.8);
+    background-color : whitesmoke;
     display: flex;
 }
 
@@ -41,6 +41,7 @@
     height: 100%;
     flex-grow: 1;
     display: flex;
+    background-color: white;
 }
 
 .view-comic-panel-inner {
