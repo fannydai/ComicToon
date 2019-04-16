@@ -48,12 +48,12 @@ class HomeContent extends Component {
         })();
     }
 
-    renderOne(panelList){
+    renderRecent(panelList){
         return (
             panelList.map(item=> {
                 return item !== null ?
                 <span key={item.id}>
-                    <img className="comic" src={item.image} alt="can't load"></img>
+                    <img className="comic" src={item.image} alt="comic"></img>
                 </span>
                 :
                 null
@@ -61,24 +61,18 @@ class HomeContent extends Component {
         )
     }
 
-    renderAll(){
+    renderRecents(){
         console.log(this.state.allComics)
-        if(this.state.allComics != null)
+        if(this.state.allComics != null) {
             return (
                 this.state.allComics.map(item=> {
                     return item !== null ?
-                    <div key={item.comicName}>
-                        {/* <button onClick={this.handleDel} name={item.comicID}>Delete?</button> */}
-                        {this.renderOne(item.comicList)}
-                        <hr/>
-                    </div>
+                    <span key={item.comicName}>
+                        {this.renderRecent(item.comicList)}
+                    </span>
                     :
                     null
                 })
-            )
-        else{
-            return(
-                <h2>NO COMICS CREATED</h2>
             )
         }
     }
@@ -106,7 +100,7 @@ class HomeContent extends Component {
             infinite: true,
             speed: 500,
             slidesToShow: 4,
-            slidesToScroll: 1,
+            slidesToScroll: 4,
             initialSlide: 0,
             centerMode: true,
             autoplay: true,
@@ -115,28 +109,25 @@ class HomeContent extends Component {
             pauseOnHover: true,
             responsive: [
                 {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: false
-                }
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3
+                    }
                 },
                 {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    initialSlide: 2
-                }
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
                 },
                 {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
                 }
             ]
         };
@@ -165,11 +156,12 @@ class HomeContent extends Component {
 
                 <div className="home-content-container">
                     <h2>Recent Creations</h2>
-                    {/* <Slider {...props}> */}
-                    <div>
-                        {this.renderAll()}
-                    </div>
-                    {/* </Slider> */}
+                    <Slider {...props}>
+                        {this.renderRecents()}
+                        {this.renderRecents()}
+                        {this.renderRecents()}
+                        {this.renderRecents()}
+                    </Slider>
                 </div>
 
                 <div className="home-content-container">

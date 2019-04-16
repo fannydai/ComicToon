@@ -21,36 +21,36 @@
 * [X] User Registration
 * [X] User Login
 * [X] User Logout
-* [] Create Comic Series
-* [] Create Comic
+* [ ] Create Comic Series
+* [ ] Create Comic
 * [X] Draw on Canvas
-* [] View Comic Series
-* [] Delete Comic Series
-* [] View Comic
-* [] View Own Comic Sereis
-* [] Delete Comic
+* [ ] View Comic Series
+* [ ] Delete Comic Series
+* [ ] View Comic
+* [ ] View Own Comic Sereis
+* [ ] Delete Comic
 
-* [] Upload Comic
-* [] Update Comic
-* [] Modify Comic Permissions
-* [] User Subscribe to Series
-* [] User Unsubscribe to Series
-* [] Update Comic Series
-* [] Rate Comic
-* [] View Subscriptions
-* [] View Recent Creations
+* [ ] Upload Comic
+* [ ] Update Comic
+* [ ] Modify Comic Permissions
+* [ ] User Subscribe to Series
+* [ ] User Unsubscribe to Series
+* [ ] Update Comic Series
+* [ ] Rate Comic
+* [ ] View Subscriptions
+* [ ] View Recent Creations
 
-* [] Comic Privacy Settings
-* [] Comment on Comic
-* [] Delete Comment
-* [] Download Comic
-* [] Search for Comic
-* [] Admin Deactivate Account
-* [] Admin Delete Series
-* [] Admin Delete Comic
-* [] Admin Delete Comment
-* [] User Reset Password
-* [] User Verify Account
+* [ ] Comic Privacy Settings
+* [ ] Comment on Comic
+* [ ] Delete Comment
+* [ ] Download Comic
+* [ ] Search for Comic
+* [ ] Admin Deactivate Account
+* [ ] Admin Delete Series
+* [ ] Admin Delete Comic
+* [ ] Admin Delete Comment
+* [ ] User Reset Password
+* [ ] User Verify Account
 * [X] About Page
 
 ### TO DO:
