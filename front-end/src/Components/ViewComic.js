@@ -27,7 +27,8 @@ class ViewComic extends Component {
         // console.log(this.props.history.location.state.src)
         this.state = {
             comicData: {},
-            panelIndex: 0
+            panelIndex: 0,
+            subbed: false
         }
     }
 
@@ -74,8 +75,19 @@ class ViewComic extends Component {
         }
     }
 
+    handleSubscribe = (event) => {
+        this.setState({ subbed: !this.state.subbed });
+    }
+
     render() {
-       const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
+        const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
+        const subButton = localStorage.getItem('user') !== this.props.match.params.username ? this.state.subbed ? 
+        <div className="ml-auto">
+            <Button onClick={this.handleSubscribe}>Unsubscribe</Button>
+        </div> :
+        <div className="ml-auto">
+            <Button onClick={this.handleSubscribe}>Subscribe</Button>
+        </div> : null;
         return (
             <div className="view-comic-container">
                 <NavigationBar />
@@ -114,9 +126,7 @@ class ViewComic extends Component {
                                     <div className="view-comic-second-middle">
                                         <h2>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                     </div>
-                                    <div className="ml-auto">
-                                        <Button>Subscribe</Button>
-                                    </div>
+                                    {subButton}
                                 </div>
                                 <hr />
                                 <div className="view-comic-description">
