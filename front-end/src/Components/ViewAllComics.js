@@ -26,6 +26,9 @@ class ViewAllComics extends Component {
     }
 
     componentDidMount(){
+        if (!localStorage.getItem('user')) {
+            this.props.history.push('/welcome');
+        }
         (async () => {
             const res = await fetch("http://localhost:8080/view/allComics", {
                 method: "POST",
@@ -34,7 +37,7 @@ class ViewAllComics extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                 },
                 body: JSON.stringify({
-                    comicOwnerName: this.props.CurrUser.username
+                    comicOwnerName: localStorage.getItem('user')
                   })
             });
             let content = await res.json();
@@ -66,7 +69,7 @@ class ViewAllComics extends Component {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
                 },
-                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
+                body: JSON.stringify({ comicName: e.target.name, ownerName: localStorage.getItem('user')})
             });
         })();
         alert(`Comic deleted!!`)
@@ -76,7 +79,7 @@ class ViewAllComics extends Component {
 
     renderAll(){
         console.log(this.state.allComics)
-        if(this.state.allComics != null && this.setState.allComics !== [])
+        if(this.state.allComics != null && this.state.allComics.length !== 0)
             return (
                 this.state.allComics.map(item=> {
                     return item !== null ?

@@ -25,11 +25,11 @@ class ViewAllSeries extends Component {
     }
 
     handleClick = (series, event) => {
-        this.props.history.push(`/view/series/${this.props.CurrUser.username}/${series.name}`);
+        this.props.history.push(`/view/series/${localStorage.getItem('user')}/${series.name}`);
     }
 
     handleUpdate = (series, event) => {
-        this.props.history.push(`/update/series/${this.props.CurrUser.username}/${series.name}`);
+        this.props.history.push(`/update/series/${localStorage.getItem('user')}/${series.name}`);
     }
     
     render() {
@@ -45,7 +45,7 @@ class ViewAllSeries extends Component {
                 </Card>
                 : null
             )
-        }) : null;
+        }) : <h2>NO SERIES FOR THIS USER YET</h2>;
         return (
             <div className="view-series-container">
                 <NavigationBar />

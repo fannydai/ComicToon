@@ -73,7 +73,7 @@ class CreateComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.username
+                username: localStorage.getItem('user')
               })
             });
             let content = await res.json();
@@ -150,7 +150,7 @@ class CreateComic extends Component {
                 images.push(c.image);
             });
             this.props.createComic(
-                this.props.CurrUser.username, 
+                localStorage.getItem('user'), 
                 this.state.comicDescription, 
                 this.state.comicName, 
                 this.state.selected_series,
@@ -160,7 +160,7 @@ class CreateComic extends Component {
             );
             this.setState({sharedUsersList: []});
             this.props.history.push({
-                pathname: `/view/comic/${this.props.CurrUser.username}/${this.state.comicName}`,
+                pathname: `/view/comic/${localStorage.getItem('user')}/${this.state.comicName}`,
                 state: {
                     series: this.state.selected_series
                 }
