@@ -198,6 +198,31 @@ public class ComicController{
         return result;
     }
 
+    //Upload Comic
+
+    //Update Comic
+
+
+    //Update Series
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/update/series", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public UpdateSeriesResult updateSeries(@RequestBody UpdateSeriesForm form){
+        UpdateSeriesResult result = new UpdateSeriesResult();
+
+        ComicSeriesModel series = ComicSeriesRepository.findByid(form.getSeriesID());
+
+        if(series!=null){
+            series.setName(form.getNew_Name());
+            series.setDescription(form.getNew_Description());
+            series.setPrivacy(form.getNew_Privacy());
+            series.setGenre(form.getNew_Genres());
+            result.setResult("success");
+        }
+
+        return result;
+    }
+
 
     //View Comic 
     //TODO SUGGESTION
