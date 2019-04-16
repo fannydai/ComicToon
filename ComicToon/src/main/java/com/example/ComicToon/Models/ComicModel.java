@@ -24,9 +24,9 @@ public class ComicModel{
     private ArrayList<String> RatingsID;
     //shared with userIDs
     private ArrayList<String> sharedWith;
+    private boolean editable;
 
-
-    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith){
+    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith, boolean editable){
         this.name = name;
         this.description = description;
         this.userID = userID;
@@ -37,7 +37,7 @@ public class ComicModel{
         this.commentsList = new ArrayList<String>();
         this.RatingsID = new ArrayList<String>();
         this.sharedWith = sharedWith;
-
+        this.editable = editable;
     }
 
     public String getDescription() {
@@ -126,6 +126,14 @@ public class ComicModel{
 
     public void setRatingsID(ArrayList<String> RatingsID) {
         this.RatingsID = RatingsID;
+    }
+
+    public boolean getEditable() {
+        return this.editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     // private final static String dateFormat = "EEE MMM dd HH:mm:ss yyyy";
