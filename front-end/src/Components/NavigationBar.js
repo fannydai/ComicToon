@@ -21,7 +21,7 @@ class NavigationBar extends Component {
     handleGoToCreateComic = (e) => {this.props.history.push('/create/comic')}
     handleGoToViewSeries = (e) =>{this.props.history.push('/view/series')}
     handleGoToViewComic = (e) =>{this.props.history.push('/view/comics')}
-    handleGoToHome = (e) => {this.props.history.push('/home')}
+    handleGoToHome = (e) => {this.props.history.push('/')}
     handleGoToIndex = (e) => {this.props.history.push('/')}
 
     render() {

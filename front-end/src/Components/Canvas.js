@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import { fabric } from 'fabric';
@@ -19,8 +18,11 @@ class Canvas extends Component {
     constructor(props) {
         super(props);
         this.state = {            
-            canRedo: false,
-            canUndo: false,
+            undo: [],
+            redo: [],
+            undoBtn: 'disable',
+            redoBtn: 'disable',
+            
             zooming: false,
             canvasState: null,
 
@@ -28,8 +30,6 @@ class Canvas extends Component {
             lineWidth: 1,
             stroke: '#FF0000',
 
-            undo: [],
-            redo: [],
             previousCanvas: null
         }
     }
@@ -63,7 +63,6 @@ class Canvas extends Component {
     }
 
     handlePencil = (event) => {
-        event.preventDefault();
         this.pencilBrush.color = this.state.brushColor;
         this.canvas.freeDrawingBrush.width = this.state.lineWidth;
         this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
@@ -75,7 +74,6 @@ class Canvas extends Component {
     }
     
     handleText = (event) => {
-        event.preventDefault();
         const newText = new fabric.Textbox('Lorum ipsum dolor sit amet', {
             left: 50,
             top: 50,
@@ -183,34 +181,35 @@ class Canvas extends Component {
         }
     }
 
+    // Not working will work on undo & redo later
     handleUndo = (event) => {
-        console.log('UNDO', this.state.undo);
-        console.log('PREVIOUS', this.state.previousCanvas);
-        const newRedo = [...this.state.redo, this.state.previousCanvas];
-        console.log('NEW REDO', newRedo);
-        this.setState({ redo: newRedo });
-        this.canvas.clear();
-        const newUndo = [...this.state.undo];
-        const lastElement = newUndo.pop();
-        this.canvas.loadFromJSON(lastElement, () => {
-            this.setState({ previousCanvas: lastElement });
-            this.setState({ undo: newUndo });
-        });
+        if(this.state.undo.length !== 0) {
+            this.state.redo.push(this.state.previousCanvas);
+            this.canvas.clear();
 
+            const lastElement = this.state.undo.pop();
+            this.canvas.loadFromJSON(lastElement, () => {
+                this.setState({ previousCanvas: lastElement });
+            });
+        }
+        if(this.state.undo.length == 0) {
+            this.setState({undoBtn: 'disable'});
+        }
     }
 
     handleRedo = (event) => {
-        console.log('REDO', this.state.redo);
-        console.log('PREVIOUS', this.state.previousCanvas);
-        const newUndo = [...this.state.undo, this.state.previousCanvas];
-        this.setState({ undo: newUndo });
-        this.canvas.clear();
-        const newRedo = [...this.state.redo];
-        const lastElement = newRedo.pop();
-        this.canvas.loadFromJSON(lastElement, () => {
-            this.setState({ previousCanvas: lastElement });
-            this.setState({ redo: newRedo });
-        });
+        if(this.state.redo.length !== 0) {
+            this.state.undo.push(this.state.previousCanvas);
+            this.canvas.clear();
+
+            const lastElement = this.state.redo.pop();
+            this.canvas.loadFromJSON(lastElement, () => {
+                this.setState({ previousCanvas: lastElement });
+            });
+        }
+        if(this.state.redo.length == 0) {
+            this.setState({redoBtn: 'disable'});
+        }
     }
 
     handleSave = (event) => {
@@ -258,8 +257,8 @@ class Canvas extends Component {
                             <FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} />
                             <FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} />
                             <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoom} />
-                            <FontAwesomeIcon className="icon" icon="undo" onClick={this.handleUndo} />
-                            <FontAwesomeIcon className="icon" icon="redo" onClick={this.handleRedo} />
+                            <FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/>
+                            <FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/>
                             <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
                             <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
                         </div>
