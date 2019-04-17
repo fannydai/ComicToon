@@ -292,21 +292,32 @@ public class ComicController{
         System.out.println("UPDATING COMIC");
         UserModel theUser = userRepository.findByusername(form.getUsername());
         ArrayList<ComicModel> the_model = comicRepository.findByUserID(theUser.getId());
-        System.out.println("there are # of comics:" + the_model.size());
+        System.out.println("there are # of comics under the user:" + the_model.size());
         for(ComicModel comic : the_model){
             if(comic.getName().equals(form.getOldName())){//found right one
                 System.out.println("FOUND THE RIGHT ONE");
                 if(form.getDescription() != null)
                     comic.setDescription(form.getDescription());
                 comic.setName(form.getName());
-                ArrayList<ComicSeriesModel> temp = ComicSeriesRepository.findByname(form.getSeries());
-                for(ComicSeriesModel t : temp){
-                    if(t.getName().equals(form.getName())){
-                        comic.setComicSeriesID(t.getId());
-                        break;
+                // Find the old series and remove the reference
+                ComicSeriesModel oldSeries = ComicSeriesRepository.findByid(comic.getComicSeriesID());
+                if (oldSeries.getName() != form.getSeries()) {
+                    ArrayList<String> oldSeriesComics = oldSeries.getComics();
+                    oldSeriesComics.remove(comic.getId());
+                    // oldSeries.setComics(oldSeriesComics);
+                    ComicSeriesRepository.save(oldSeries);
+                    // Replace the comic series reference in the comic
+                    ArrayList<ComicSeriesModel> temp = ComicSeriesRepository.findByname(form.getSeries());
+                    for (ComicSeriesModel t : temp) {
+                        if (t.getUserID().equals(theUser.getId())) {
+                            comic.setComicSeriesID(t.getId());
+                            ArrayList<String> newSeriesComics = t.getComics();
+                            newSeriesComics.add(comic.getId());
+                            ComicSeriesRepository.save(t);
+                            break;
+                        }
                     }
                 }
-                //comic.setPanelsList(form.getImages());
                 // Delete the old panels and create new ones
                 ArrayList<String> canvases = form.getCanvases();
                 ArrayList<String> images = form.getImages();

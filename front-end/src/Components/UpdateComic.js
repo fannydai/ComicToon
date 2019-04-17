@@ -230,6 +230,7 @@ class UpdateComic extends Component {
             if (content.result === 'failed') {
                 alert('Could not update comic');
             } else {
+                this.props.saveUpdateComic({});
                 this.props.history.push('/view/comics');
             }
         })();
