@@ -156,7 +156,6 @@ class CreateComic extends Component {
                 this.state.comicName, 
                 this.state.selected_series,
                 this.state.sharedUsersList,
-                this.state.privacy,
                 canvases,
                 images
             );

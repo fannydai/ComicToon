@@ -83,9 +83,8 @@ export const upload = () => (dispatch) => {
     // })();
 }
 
-export const createComic = (username, desc, comicName, seriesName, userList, privacy, canvases, images) => (dispatch) => {
+export const createComic = (username, desc, comicName, seriesName, userList, canvases, images) => (dispatch) => {
     (async () => {
-        console.log('sharedWITH', userList);
         const res = await fetch("http://localhost:8080/create/comic", {
             method: "POST",
             headers: {
@@ -98,7 +97,6 @@ export const createComic = (username, desc, comicName, seriesName, userList, pri
                 name: comicName,
                 series: seriesName,
                 sharedWith: userList,
-                privacy: privacy,
                 canvases: canvases,
                 images: images
               })

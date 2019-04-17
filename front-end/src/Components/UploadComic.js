@@ -118,7 +118,6 @@ class UploadComic extends Component {
     }
 
     handleDeleteShare = (index, event) => {
-        event.preventDefault();
         console.log(index);
         console.log(event.target);
         var copy = [...this.state.sharedUsersList];
@@ -154,34 +153,8 @@ class UploadComic extends Component {
         console.log(this.state);
         if (this.state.image === null && this.state.json === null) {
             alert('Please upload an image or a JSON file');
-        } else if (this.state.series === '') {
+        } if (this.state.series === '') {
             alert('Please select a series');
-        } else {
-            (async () => {
-                const res = await fetch("http://localhost:8080/upload", {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                  },
-                  body: JSON.stringify({
-                    username: localStorage.getItem('user'),
-                    description: this.state.comicDescription,
-                    name: this.state.comicName,
-                    series: this.state.series,
-                    privacy: this.state.privacy,
-                    canvas: this.state.json ? JSON.stringify(this.state.json) : '',
-                    image: this.state.image ? JSON.stringify(this.state.image) : '',
-                    sharedWith: this.state.sharedUsersList
-                  })
-                });
-                let content = await res.json();
-                if (content.result === 'success') {
-                    console.log('DONE UPLOAD');
-                } else {
-                    alert('Could not upload the comic');
-                }
-            })();
         }
     }
 

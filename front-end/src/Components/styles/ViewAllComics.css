@@ -3,7 +3,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
 }
 
 .view-comics-top {
@@ -17,7 +16,7 @@
     flex-direction: column;
     padding-left: 2vw;
     padding-right: 2vw;
-    background-color: rgba(245, 245, 245, 0.8);
+    background: rgba(245, 245, 245, 0.8);
     padding-top: 25px;
 }
 
@@ -39,8 +38,6 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding : 10px;
-
 }
 
 .view-comics-strip-container:hover {
@@ -58,7 +55,6 @@
     display: flex;
     flex-direction: row;
     overflow: auto;
-    background-color : whitesmoke;
 }
 
 .view-comics-panel-container {
@@ -66,7 +62,6 @@
     min-width: 25%;
     max-width: 25%;
     overflow-x: auto;
-    background-color : white;
 }
 
 .view-comics-panel-img {
