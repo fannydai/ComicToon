@@ -85,7 +85,8 @@ class HomeContent extends Component {
     }
 
     handleGoToComic = (event) => {
-        //console.log(event.target.src)
+        console.log("in view comic!!")
+        console.log(event.target.src)
         console.log(this.props);
         this.props.history.push({
             pathname: "/view/comic",

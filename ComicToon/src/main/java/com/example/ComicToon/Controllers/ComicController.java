@@ -5,6 +5,7 @@ import com.example.ComicToon.Models.ModelRepositories.*;
 import com.example.ComicToon.Models.RequestResponseModels.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -466,7 +467,7 @@ public class ComicController{
         if(user == null) {
             return result;
         } else {
-            user.getSubscriptions().add(form.getSeriesid());
+            user.getSubscriptions().add(form.getUsername());
             result.setResult("success");
         }
         return result;

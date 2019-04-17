@@ -130,7 +130,7 @@ public class UserModel{
         this.active = true;
         this.comics = new ArrayList<String>();
         this.comicSeries = new ArrayList<String>();
-        //this.subscriptions = new ArrayList();
+        this.subscriptions = new ArrayList<String>();
     }
 
 
