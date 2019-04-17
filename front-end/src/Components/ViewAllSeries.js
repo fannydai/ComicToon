@@ -55,7 +55,13 @@ class ViewAllSeries extends Component {
     }
 
     handleUpdate = (series, event) => {
-        this.props.history.push(`/update/series/${localStorage.getItem('user')}/${series.name}`);
+        console.log('SENDING THIS TO UPDATE', series);
+        this.props.history.push(`/update/series/${localStorage.getItem('user')}/${series.name}`, {
+            genre: series.genre,
+            addUserList: series.sharedWith,
+            privacy: series.privacy,
+            description: series.description
+        });
     }
     
     render() {

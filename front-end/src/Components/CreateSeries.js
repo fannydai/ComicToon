@@ -40,7 +40,7 @@ class CreateSeries extends Component {
             alert('Please enter a description for the series.');
         } else {
             console.log(this.state)
-            this.props.createSeries(localStorage.getItem('user'), this.state.seriesName, this.state.description, this.state.genreList, "private")
+            this.props.createSeries(localStorage.getItem('user'), this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private")
             // this.setState({genreList: []});
             this.props.history.push(`/view/series/${localStorage.getItem('user')}/${this.state.seriesName}`);
         }
@@ -56,7 +56,7 @@ class CreateSeries extends Component {
             event.preventDefault();
             let newGenres = this.state.genre.split(' ');
             let newGenres2 = newGenres.filter(item => item !== "")
-            this.setState({ genreList: [...this.state.genreList, ...newGenres2] }); 
+            this.setState({ genreList: [...this.state.genreList, ...newGenres2], genre: '' }); 
         }
     }
 
