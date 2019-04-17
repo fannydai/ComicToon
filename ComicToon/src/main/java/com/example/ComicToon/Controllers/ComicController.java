@@ -396,17 +396,19 @@ public class ComicController{
         return result;
     }
 
-    // @CrossOrigin(origins = "http://localhost:3000")
-    // @RequestMapping(value = "/delComic", method = RequestMethod.POST, consumes = {"application/json"})
-    // @ResponseBody
-    // public DelComicResult deleteComic(@RequestBody DelComic form){
-    //     System.out.println("HERRRRRR");
-    //     comicRepository.deleteById(form.getID());
-    //     DelComicResult result = new DelComicResult();
-    //     result.setStatus("success");
-    //     return result;
-    // }
-
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public SearchResult search(@RequestBody SearchForm form){
+        SearchResult result = new SearchResult();
+        UserModel user = userRepository.findByusername(form.getUsername());
+        ArrayList<ComicModel> comics = comicRepository.findByname(form.getComicName());
+        ArrayList<ComicSeriesModel> all_series = ComicSeriesRepository.findByname(form.getSeriesName());
+        result.setUser(user); 
+        result.setAll_comics(comics);
+        result.setAll_series(all_series);
+        return result;
+    }
 
     //The "my" use cases are bellow
 
