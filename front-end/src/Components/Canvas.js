@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
 import './styles/Canvas.css';
-import { addPanel } from '../Actions/ComicActions';
+import { addPanel, addUpdatePanel } from '../Actions/ComicActions';
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
@@ -239,8 +239,13 @@ class Canvas extends Component {
 
     handleDone = (event) => {
         this.setState({ redo: [] });
-        // Done with drawing, reroute back to create comic
-        this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
+        console.log(this.props.comic);
+        // Done with drawing, reroute back to create comic or update comic
+        if (this.props.location.state && this.props.location.state.previous === 'update') {
+            this.props.addUpdatePanel(this.canvas.toDataURL(), this.canvas.toJSON());
+        } else {
+            this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
+        }
         history(-1); //bo back bc used in update and create pages
     }
 
@@ -276,4 +281,4 @@ class Canvas extends Component {
     }
 }
 
-export default connect(StateToProps, { addPanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel, addUpdatePanel })(withRouter(Canvas));

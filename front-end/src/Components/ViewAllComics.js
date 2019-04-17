@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 import LoadingScreen from './LoadingScreen';
 
 const StateToProps = (state) => ({ //application level state via redux
-    CurrUser: state.user
+    CurrUser: state.user,
+    comic: state.comic
 });
 
 class ViewAllComics extends Component {
@@ -25,6 +26,7 @@ class ViewAllComics extends Component {
     }
 
     componentDidMount(){
+        console.log(this.props.comic);
         if (!localStorage.getItem('user')) {
             this.props.history.push('/welcome');
         }
@@ -135,7 +137,8 @@ class ViewAllComics extends Component {
 }
 
 ViewAllComics.propTypes = {
-    CurrUser: PropTypes.object
+    CurrUser: PropTypes.object,
+    comic: PropTypes.object
 }
 
 export default connect(StateToProps, {})(withRouter(ViewAllComics));

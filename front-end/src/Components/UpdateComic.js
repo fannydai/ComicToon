@@ -173,7 +173,7 @@ class UpdateComic extends Component {
     }
 
     handleNavigateCanvas = (event) => {
-        this.props.history.push('/canvas');
+        this.props.history.push('/canvas', { previous: 'update' });
     }
 
     handleSubmit = (event) => {

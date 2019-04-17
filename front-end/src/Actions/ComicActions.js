@@ -1,4 +1,4 @@
-import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, SAVE_UPDATE_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS } from './Types';
+import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, ADD_UPDATE_PANEL, SAVE_NEW_COMIC_DATA, SAVE_UPDATE_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS } from './Types';
 
 // Don't call these functions yet, back-end is not set up
 export const getSubscriptions = (username) => (dispatch) => {
@@ -58,6 +58,13 @@ export const getFavorites = (username) => (dispatch) => {
 export const addPanel = (image, json) => (dispatch) => {
     dispatch({
         type: ADD_PANEL,
+        payload: { image: image, json: json}
+    });
+}
+
+export const addUpdatePanel = (image, json) => (dispatch) => {
+    dispatch({
+        type: ADD_UPDATE_PANEL,
         payload: { image: image, json: json}
     });
 }
