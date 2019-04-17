@@ -1,0 +1,33 @@
+.view-one-series-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-one-series-heading {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.view-one-series-bottom {
+    background-color: rgba(245, 245, 245, 0.8);
+    width: 90%;
+}
+
+.view-one-series-comics {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+
+.view-one-series-card {
+    width: 18rem;
+    margin-bottom: 5vw;
+}

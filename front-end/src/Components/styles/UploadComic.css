@@ -1,0 +1,121 @@
+.upload-comic-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+/* Everything except the navbar */
+.upload-bottom-container {
+    width: 90%;
+    background-color: whitesmoke;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+/* .upload-form {
+    width: 100%;
+} */
+
+/* Where the user does the uploading */
+.upload-container {
+    height: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.upload-preview-container {
+    height: 50%;
+    width: 50%;
+    position: relative;
+}
+
+.upload-preview-close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+    font-weight: bolder;
+}
+
+#upload-preview {
+    height: 100%;
+    width: 100%;
+}
+
+.upload-info {
+    width: 50vw;
+    height: 20%;
+    margin: auto;
+    /*
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;*/
+}
+
+.upload-name-input {
+    /* width: 50%; */
+}
+
+.upload-comic-description {
+
+}
+
+.upload-dropdown {
+    width: 50%;
+}
+
+/* Make the dropdown fill the space */
+.upload-dropdown > button + div {
+    width: 100%;
+}
+
+/* Upload Sharing */
+.upload-sharing {
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.upload-sharing-inner {
+    height: 100%;
+    /* width: 50%; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.upload-table-container {
+    height: 100%;
+    width: 35%;
+    min-width: 520px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.upload-sharing-table {
+    height: 100%;
+    width: 60% !important;
+    min-width: 400px !important;
+}
+
+.upload-sharing-right {
+    padding-left: 10px;
+    width: 30%;
+}
+
+/* Bottom */
+.upload-submit {
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

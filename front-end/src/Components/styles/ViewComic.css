@@ -1,0 +1,146 @@
+.view-comic-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-comic-bottom {
+    height: 85%;
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.view-comic-overlay {
+    background-color : whitesmoke;
+    display: flex;
+}
+
+.view-comic-left {
+    height: 100%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comic-left-top {
+    height: 50%;
+    display: flex;
+}
+
+.view-comic-navigate {
+    height: 100%;
+    min-width: 2vw;
+    display: flex;
+    align-items: center;
+}
+
+.view-comic-panel-container {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    background-color: white;
+}
+
+.view-comic-panel-inner {
+    height: 100%;
+    width: 25%;
+    border: 1px solid black;
+}
+
+.view-comic-panel-img {
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+}
+
+.view-comic-left-bottom {
+    height: 50%;
+    
+    padding-left: 2vw;
+    padding-right: 2vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comic-title-row {
+    height: 20%;
+    display: flex;
+}
+
+.view-comic-button-row {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.view-comic-rating {
+    margin: 0;
+}
+
+.view-comic-second-row {
+    height: 20%;
+    width: 100%;
+    display: flex;
+}
+
+.view-comic-second-left {
+    width: 33%;
+}
+
+.view-comic-second-middle {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+}
+
+.view-comic-press-like {
+    color: green;
+}
+
+.view-comic-press-dislike {
+    color: red;
+}
+
+.view-comic-comment-input {
+    width: 100%;
+}
+
+.view-comic-comment-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comic-comment {
+    display: flex;
+    flex-direction: column;
+}
+
+.view-comic-comment-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.view-comic-right {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.view-comic-right-img-container {
+    width: 75%;
+    height: 20%;
+}
+
+.view-comic-right-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}

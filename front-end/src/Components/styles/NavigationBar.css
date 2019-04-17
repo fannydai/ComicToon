@@ -1,0 +1,25 @@
+nav > div > div:nth-child(2) {
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav {
+    background-color: white;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.navbar-search-form {
+    flex-grow: 1;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.navbar-search-input {
+    flex-grow: 1;
+}
+
+.logoimage {
+    padding: 0;
+    margin: 0;
+}

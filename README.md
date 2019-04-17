@@ -21,14 +21,14 @@
 * [X] User Registration
 * [X] User Login
 * [X] User Logout
-* [X] Create Comic Series
-* [X] Create Comic
+* [ ] Create Comic Series
+* [ ] Create Comic
 * [X] Draw on Canvas
-* [X] View Comic Series
-* [X] Delete Comic Series
-* [X] View Comic
-* [X] View Own Comic Sereis
-* [X] Delete Comic
+* [ ] View Comic Series
+* [ ] Delete Comic Series
+* [ ] View Comic
+* [ ] View Own Comic Sereis
+* [ ] Delete Comic
 
 * [ ] Upload Comic
 * [ ] Update Comic
@@ -54,7 +54,38 @@
 * [X] About Page
 
 ### TO DO:
-* [ ] Hash password with this library org.springframework.security.crypto.bcrypt.BCrypt
+* [] Hash password with this library org.springframework.security.crypto.bcrypt.BCrypt
+
+### TO DO FOR CANVAS:
+* [X] Pencil
+* [X] Text
+* [X] Line
+* [] Polygon
+* [X] Circle
+* [X] Rectangle
+* [X] Triangle
+* [] Image
+* [] Being able to drag the shape to make it rather than setting it a certain size at the top left
+
+* [] Brush Color (fill color)
+* [] Border Color
+* [] Background Color
+* [X] Line Width
+
+* [] Cut
+* [] Copy
+* [] Paste
+* [] Delete Shape
+* [] Clear Canvas
+
+* [X] Zoom In
+* [X] Zoom Out
+* [] Reset Zoom
+* [] grid
+* [X] Undo
+* [X] Redo
+* [X] Download
+* [X] Save
 
 ### Reference
 * https://www.marvel.com/comics?&options%5Boffset%5D=0&totalcount=12

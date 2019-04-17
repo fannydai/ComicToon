@@ -1,0 +1,131 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+/* Top level container */
+.create-comic-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+/* Everything except the navbar */
+.create-comic-bottom {
+    width: 90%;
+    background-color: whitesmoke;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.create-comic-form {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Where the user would click to create the comic */
+.create-comic-panel-container {
+    width: 90%;
+	justify-content: center;
+	align-items: center;
+}
+
+.create-comic-panel-middle {
+    height: 100%;
+    width: 50%;
+    display: flex;
+}
+
+.create-comic-panel-inner {
+    /*min-height: 25%;*/
+    height: 100%;
+    width: 25%;
+    border: 1px solid black;
+}
+
+.create-comic-panel-plus {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+}
+
+.create-comic-img {
+    width: 100%;
+}
+
+/* Comic name and series */
+.create-comic-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-comic-name-input {
+    width: 50%;
+}
+
+.create-comic-dropdown {
+    width: 50%;
+}
+
+.create-comic-dropdown > button + div {
+    width: 100%;
+}
+
+.create-comic-description {
+    width: 50%;
+}
+
+/* Comic sharing and privacy */
+.create-comic-sharing {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.create-comic-sharing-inner {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.create-comic-sharing-left {
+    width: 40%;
+    overflow: auto;
+}
+
+.create-comic-sharing-table {
+    width: 35%;
+}
+
+/* Submit section */
+.create-comic-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.update-comic-submit {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.panel {
+	height: 250px !important;
+	padding: 10px;
+}
+
+.slick-prev:before, .slick-next:before {
+    color: black;
+}
+
+.slick-track {
+    width: 100%;
+}

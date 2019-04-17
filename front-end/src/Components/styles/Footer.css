@@ -1,0 +1,29 @@
+.footer-container {
+    min-height: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px;
+    background: rgba(255, 255, 255, 0.5);
+
+    width: 100%;
+    bottom: 0 !important;
+
+    margin-top: 10px !important;
+    
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-paragraph {
+    margin-bottom: 0;
+}
+
+.footer-paragraph:hover {
+    color: #1d8eff;
+    text-decoration: underline;
+    cursor: pointer;
+}

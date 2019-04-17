@@ -1,0 +1,36 @@
+.forgot-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 25px;
+    background-color: white;
+}
+
+.paddedFormControl{
+    margin-bottom : 5px;
+}
+
+button {
+    border: 2px solid #1d8eff;
+    background-color: #69B4FF;
+    color: #F2F2F2;
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
+    margin: 5px;
+  
+    transition: 0.5s;
+  }
+  button:hover {
+    background-color: #F2F2F2;
+    color: #69B4FF;
+  }
+  button:after {
+    content: ' \00bb';
+    opacity: 0;
+    transition: 0.5s;
+  }
+  button:hover:after {
+    opacity: 1;
+    right: 0;
+  }
