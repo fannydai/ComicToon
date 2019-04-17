@@ -2,15 +2,15 @@ package com.example.ComicToon.Models.RequestResponseModels;
 
 import java.util.ArrayList;
 
-public class CreateComicForm {
+public class UploadComicForm {
     private String username;
     private String description;
     private String name;
     private String series;
     private String privacy;
+    private String canvas;
+    private String image;
     private ArrayList<String> sharedWith;
-    private ArrayList<String> canvases;
-    private ArrayList<String> images;
 
     public String getUsername() {
         return this.username;
@@ -50,7 +50,7 @@ public class CreateComicForm {
     public String getName(){
         return this.name;
     }
-    public void SetName(String name){
+    public void setName(String name){
         this.name = name;
     }
     public String getSeries(){
@@ -68,19 +68,20 @@ public class CreateComicForm {
         this.privacy = privacy;
     }
 
-    public ArrayList<String> getCanvases() {
-        return this.canvases;
+    public String getCanvas() {
+        return this.canvas;
     }
 
-    public void setCanvases(ArrayList<String> canvases) {
-        this.canvases = canvases;
+    public void setCanvas(String canvas) {
+        this.canvas = canvas;
     }
 
-    public ArrayList<String> getImages() {
-        return this.images;
+    public String getImage() {
+        return this.image;
     }
 
-    public void setImages(ArrayList<String> images) {
-        this.images = images;
+    public void setImage(String image) {
+        this.image = image;
     }
+
 }

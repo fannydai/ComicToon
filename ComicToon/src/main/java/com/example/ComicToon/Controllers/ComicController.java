@@ -63,10 +63,18 @@ public class ComicController{
             return result;
         } else{
             for(ComicSeriesModel candidate: candidates){
+                System.out.println("in first loop..");
+                System.out.println(candidate);
+                System.out.println(owner);
                 if(candidate.getUserID().equals(owner.getId())){
                     ComicSeriesModel toDelete = candidate;
                     for(String c: toDelete.getComics()){
-                        ArrayList<ComicModel> candidates2 = comicRepository.findByname(c);
+                        System.out.println("in second loop..");
+                        System.out.println(c);
+                        ArrayList<ComicModel> candidates2 = new ArrayList<>();
+                        candidates2.add(comicRepository.findByid(c));
+                        System.out.println("before 3rd loop..");
+                        System.out.println(candidates2);
                         for(ComicModel d : candidates2){
                             if(d.getUserID().equals(owner.getId())){
                                 comicRepository.delete(d);
@@ -144,7 +152,7 @@ public class ComicController{
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();
-                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith());
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith(), form.getPrivacy(), true);
                 // Create Panels for each and set references in comic
                 ArrayList<String> canvasList = form.getCanvases();
                 ArrayList<String> imageList = form.getImages();
@@ -199,6 +207,61 @@ public class ComicController{
     }
 
     //Upload Comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public UploadComicResult uploadComic(@RequestBody UploadComicForm form) {
+        UploadComicResult result = new UploadComicResult();
+        System.out.println(form.getUsername());
+        System.out.println(form.getDescription());
+        System.out.println(form.getName());
+        System.out.println(form.getSeries());
+        //System.out.println(form.getCanvas());
+        //System.out.println(form.getImage());
+        System.out.println(form.getSharedWith().size());
+        UserModel user = userRepository.findByusername(form.getUsername());
+        if (user == null){
+            result.setResult("user does not exists");
+            return result;
+        } else{
+            ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
+            ComicSeriesModel series = null;
+            for(ComicSeriesModel s : seriesList){
+                if(s.getUserID().equals(user.getId()))
+                    series = s;
+            }
+            if(series!=null){
+                System.out.println(form.getUsername());
+                //create and save new comic
+                Date date = new Date();
+                String strDate = date.toString();
+                String canvas = form.getCanvas();
+                String image = form.getImage();
+                boolean editable = canvas != "" ? true : false;
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith(), form.getPrivacy(), editable);
+                // Create the panel or json
+                PanelModel newPanel = new PanelModel(image, canvas, newComic.getId());
+                panelRepository.save(newPanel);
+                ArrayList<String> singlePanel = new ArrayList<>();
+                singlePanel.add(newPanel.getId());
+                newComic.setPanelsList(singlePanel);
+                comicRepository.save(newComic);
+
+                //now add comic reference to user
+                user.getComics().add(newComic.getId());
+                userRepository.save(user);
+
+                //now add comic reference to comic series
+                series.getComics().add(newComic.getId());
+                ComicSeriesRepository.save(series);
+                result.setResult("success");
+            } else{
+                result.setResult("comic series does not exists");
+                return result;
+            }
+        }
+        return result;
+    }
 
     //Update Comic
 
@@ -220,6 +283,35 @@ public class ComicController{
             result.setResult("success");
         }
 
+        return result;
+    }
+
+    //Update comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/update/comic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public CreateComicResult updateComic(@RequestBody CreateComicForm form){
+        CreateComicResult result = new CreateComicResult();
+        ArrayList<ComicModel> the_model = comicRepository.findByUserID(form.getUsername());
+        for(ComicModel comic : the_model){
+            if(comic.getName().equals(form.getName())){//found right one
+                if(form.getDescription() != null)
+                    comic.setDescription(form.getDescription());
+                comic.setName(form.getName());
+                ArrayList<ComicSeriesModel> temp = ComicSeriesRepository.findByname(form.getSeries());
+                for(ComicSeriesModel t : temp){
+                    if(t.getName().equals(form.getName())){
+                        comic.setComicSeriesID(t.getName());
+                        break;
+                    }
+                }
+                comic.setPanelsList(form.getImages());
+                comic.setSharedWith(form.getSharedWith());
+                comic.setDate(new Date().toString());
+                result.setResult("success");
+                break;
+            } 
+        }
         return result;
     }
 
@@ -252,6 +344,8 @@ public class ComicController{
             result.setDescription(findComic.getDescription());
             result.setCreatorName(form.getComicOwnerName());
             result.setSeriesName(series.getName());
+            result.setPrivacy(findComic.getPrivacy());
+            result.setSharedWith(findComic.getSharedWith());
             for(String c: findComic.getCommentsList()){
                 CommentModel findComment = commentRepository.findByid(c);
                 if(findComment!=null){
@@ -304,17 +398,19 @@ public class ComicController{
         return result;
     }
 
-    // @CrossOrigin(origins = "http://localhost:3000")
-    // @RequestMapping(value = "/delComic", method = RequestMethod.POST, consumes = {"application/json"})
-    // @ResponseBody
-    // public DelComicResult deleteComic(@RequestBody DelComic form){
-    //     System.out.println("HERRRRRR");
-    //     comicRepository.deleteById(form.getID());
-    //     DelComicResult result = new DelComicResult();
-    //     result.setStatus("success");
-    //     return result;
-    // }
-
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public SearchResult search(@RequestBody SearchForm form){
+        SearchResult result = new SearchResult();
+        UserModel user = userRepository.findByusername(form.getUsername());
+        ArrayList<ComicModel> comics = comicRepository.findByname(form.getComicName());
+        ArrayList<ComicSeriesModel> all_series = ComicSeriesRepository.findByname(form.getSeriesName());
+        result.setUser(user); 
+        result.setAll_comics(comics);
+        result.setAll_series(all_series);
+        return result;
+    }
 
     //The "my" use cases are bellow
 

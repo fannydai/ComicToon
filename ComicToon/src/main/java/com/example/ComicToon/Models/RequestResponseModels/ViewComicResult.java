@@ -12,10 +12,12 @@ public class ViewComicResult {
     private String creatorName;
     private String seriesName;
     private String description;
+    private String privacy;
     private ArrayList<PanelModel> panels;
     private ArrayList<RatingModel> RatingsID;
     private ArrayList <CommentModel> commentsList;
     private ArrayList<ComicModel> suggestions;
+    private ArrayList<String> sharedWith;
 
     public String getCreatorName() {
         return this.creatorName;
@@ -55,6 +57,14 @@ public class ViewComicResult {
         this.description = description;
     }
 
+    public String getPrivacy() {
+        return this.privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
+
     public ArrayList<PanelModel> getPanels() {
         return this.panels;
     }
@@ -85,5 +95,13 @@ public class ViewComicResult {
 
     public void setComicName(String comicName){
         this.comicName = comicName;
+    }
+
+    public ArrayList<String> getSharedWith() {
+        return this.sharedWith;
+    }
+
+    public void setSharedWith(ArrayList<String> sharedWith) {
+        this.sharedWith = sharedWith;
     }
 }

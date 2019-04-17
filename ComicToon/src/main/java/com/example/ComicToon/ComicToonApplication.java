@@ -45,7 +45,8 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/view/allComics",
             "/view/panel",
             "/welcomerecent",
-            "/delComic"
+            "/delComic",
+            "/upload"
             )
         .permitAll()
         .and()
