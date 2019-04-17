@@ -403,12 +403,17 @@ public class ComicController{
     @ResponseBody
     public SearchResult search(@RequestBody SearchForm form){
         SearchResult result = new SearchResult();
-        UserModel user = userRepository.findByusername(form.getUsername());
-        ArrayList<ComicModel> comics = comicRepository.findByname(form.getComicName());
-        ArrayList<ComicSeriesModel> all_series = ComicSeriesRepository.findByname(form.getSeriesName());
-        result.setUser(user); 
-        result.setAll_comics(comics);
-        result.setAll_series(all_series);
+
+        //search all 3 to see if any match
+        UserModel user = userRepository.findByusername(form.getQuery());
+        ArrayList<ComicModel> comics = comicRepository.findByname(form.getQuery());
+        ArrayList<ComicSeriesModel> all_series = ComicSeriesRepository.findByname(form.getQuery());
+        if(user != null)
+            result.setUser(user); 
+        if(comics != null)
+            result.setAll_comics(comics);
+        if(all_series != null)
+            result.setAll_series(all_series);
         return result;
     }
 

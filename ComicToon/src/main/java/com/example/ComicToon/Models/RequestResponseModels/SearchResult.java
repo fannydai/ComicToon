@@ -10,7 +10,6 @@ public class SearchResult {
     private UserModel user;
     private ArrayList<ComicSeriesModel> all_series;
     private ArrayList<ComicModel> all_comics;
-    private ArrayList<String> comments;
 
     public UserModel getUser() {
         return user;
@@ -34,14 +33,6 @@ public class SearchResult {
 
     public void setAll_comics(ArrayList<ComicModel> all_comics) {
         this.all_comics = all_comics;
-    }
-
-    public ArrayList<String> getComments() {
-        return comments;
-    }
-
-    public void setComments(ArrayList<String> comments) {
-        this.comments = comments;
     }
 
 }
