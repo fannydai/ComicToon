@@ -19,7 +19,6 @@ class ViewAllSeries extends Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.comic);
         this.state = {
             isLoading: true
         }
@@ -42,10 +41,13 @@ class ViewAllSeries extends Component {
                 let content = await res.json();
                 if (content.comicSeries) {
                     this.props.getAllSeries(content.comicSeries);
+                    console.log('LOADING IS FALSE');
                     this.setState({ isLoading: false });
                 }
             })();  
-        } 
+        } else {
+            this.setState({ isLoading: false });
+        }
     }
 
     handleClick = (series, event) => {
