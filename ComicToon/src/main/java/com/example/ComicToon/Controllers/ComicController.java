@@ -286,6 +286,35 @@ public class ComicController{
         return result;
     }
 
+    //Update comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/update/comic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public CreateComicResult updateComic(@RequestBody CreateComicForm form){
+        CreateComicResult result = new CreateComicResult();
+        ArrayList<ComicModel> the_model = comicRepository.findByUserID(form.getUsername());
+        for(ComicModel comic : the_model){
+            if(comic.getName().equals(form.getName())){//found right one
+                if(form.getDescription() != null)
+                    comic.setDescription(form.getDescription());
+                comic.setName(form.getName());
+                ArrayList<ComicSeriesModel> temp = ComicSeriesRepository.findByname(form.getSeries());
+                for(ComicSeriesModel t : temp){
+                    if(t.getName().equals(form.getName())){
+                        comic.setComicSeriesID(t.getName());
+                        break;
+                    }
+                }
+                comic.setPanelsList(form.getImages());
+                comic.setSharedWith(form.getSharedWith());
+                comic.setDate(new Date().toString());
+                result.setResult("success");
+                break;
+            } 
+        }
+        return result;
+    }
+
 
     //View Comic 
     //TODO SUGGESTION

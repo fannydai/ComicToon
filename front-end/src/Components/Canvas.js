@@ -13,6 +13,8 @@ const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
 });
 
+const history = require('browser-history')
+
 class Canvas extends Component {
 
     constructor(props) {
@@ -239,7 +241,7 @@ class Canvas extends Component {
         this.setState({ redo: [] });
         // Done with drawing, reroute back to create comic
         this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
-        this.props.history.push('/create/comic');
+        history(-1); //bo back bc used in update and create pages
     }
 
     render() {
