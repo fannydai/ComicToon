@@ -96,6 +96,9 @@ class UpdateComic extends Component {
                 if (this.state.comicPanels.length === 0) {
                     this.setState({ comicPanels: content.panels });
                 }
+                if (!this.props.comic.saveUpdateComic.privacy) {
+                    this.setState({ privacy: content.privacy });
+                }
             } else {
                 alert('Could not find comic');
                 this.props.history.goBack();
@@ -173,12 +176,63 @@ class UpdateComic extends Component {
     }
 
     handleNavigateCanvas = (event) => {
+        this.props.saveUpdateComic({
+            comicName: this.state.comicName,
+            description: this.state.comicDescription,
+            userInput: this.state.userInput,
+            privacy: this.state.privacy,
+            series: this.state.series,
+            seriesName: this.state.selected_series,
+            sharedUsersList: this.state.sharedUsersList,
+            comicPanels: this.state.comicPanels
+        });
         this.props.history.push('/canvas', { previous: 'update' });
+    }
+
+    handleDeleteShare = (index, event) => {
+        event.preventDefault();
+        var copy = [...this.state.sharedUsersList];
+        if (index !== -1) {
+            copy.splice(index, 1);
+            this.setState({ sharedUsersList: copy });
+        }
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
         console.log(this.state);
+        console.log(this.props.comic.saveUpdateComic);
+        const canvases = this.state.comicPanels.map(panel => panel.canvas);
+        const images = this.state.comicPanels.map(panel => panel.image);
+        console.log(canvases);
+        console.log(images);
+        (async () => {
+            const res = await fetch('http://localhost:8080/update/comic', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    username: this.props.match.params.username,
+                    description: this.state.comicDescription,
+                    oldName: this.props.match.params.comicName,
+                    name: this.state.comicName,
+                    series: this.state.selected_series,
+                    privacy: this.state.privacy,
+                    sharedWith: this.state.sharedUsersList,
+                    canvases: canvases,
+                    images: images
+                })
+            });
+            let content = res.json();
+            console.log(content);
+            if (content.result === 'failed') {
+                alert('Could not update comic');
+            } else {
+                this.props.history.push('/view/comics');
+            }
+        })();
     }
     
     handleDelete = (event) => {
@@ -285,7 +339,7 @@ class UpdateComic extends Component {
                             <div className="create-comic-sharing-inner">
                                 <div className="create-comic-sharing-left">
                                     <h2>Shared With</h2>
-                                    <ComicSharingTable usernames={this.state.sharedUsersList} />
+                                    <ComicSharingTable usernames={this.state.sharedUsersList} handleDeleteShare={this.handleDeleteShare} />
                                 </div>
                                 <div className="create-comic-sharing-right">
                                     <label>Add User: (Press 'Enter' to Add)</label>

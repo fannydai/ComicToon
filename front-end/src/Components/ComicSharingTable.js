@@ -8,7 +8,7 @@ class ComicSharingTable extends Component {
 
     render() {
         const trs = this.props.usernames.map((username, i) => {
-            return <tr key={i}><td>{username}</td></tr>
+            return <tr key={i}><td>{username}</td><td><button className="btn-danger" onClick={(e) => this.props.handleDeleteShare(i, e)}>Delete</button></td></tr>
         });
         return (
             <table className="create-comic-sharing-table">

@@ -263,9 +263,6 @@ public class ComicController{
         return result;
     }
 
-    //Update Comic
-
-
     //Update Series
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/update/series", method = RequestMethod.POST, consumes = {"application/json"})
@@ -290,24 +287,45 @@ public class ComicController{
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/update/comic", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public CreateComicResult updateComic(@RequestBody CreateComicForm form){
+    public CreateComicResult updateComic(@RequestBody UpdateComicForm form){
         CreateComicResult result = new CreateComicResult();
-        ArrayList<ComicModel> the_model = comicRepository.findByUserID(form.getUsername());
+        System.out.println("UPDATING COMIC");
+        UserModel theUser = userRepository.findByusername(form.getUsername());
+        ArrayList<ComicModel> the_model = comicRepository.findByUserID(theUser.getId());
+        System.out.println("there are # of comics:" + the_model.size());
         for(ComicModel comic : the_model){
-            if(comic.getName().equals(form.getName())){//found right one
+            if(comic.getName().equals(form.getOldName())){//found right one
+                System.out.println("FOUND THE RIGHT ONE");
                 if(form.getDescription() != null)
                     comic.setDescription(form.getDescription());
                 comic.setName(form.getName());
                 ArrayList<ComicSeriesModel> temp = ComicSeriesRepository.findByname(form.getSeries());
                 for(ComicSeriesModel t : temp){
                     if(t.getName().equals(form.getName())){
-                        comic.setComicSeriesID(t.getName());
+                        comic.setComicSeriesID(t.getId());
                         break;
                     }
                 }
-                comic.setPanelsList(form.getImages());
+                //comic.setPanelsList(form.getImages());
+                // Delete the old panels and create new ones
+                ArrayList<String> canvases = form.getCanvases();
+                ArrayList<String> images = form.getImages();
+                ArrayList<String> panelRefs = new ArrayList<>();
+                for (String panelID : comic.getPanelsList()) {
+                    panelRepository.deleteByid(panelID);
+                }
+                for (int i = 0; i < canvases.size(); i++) {
+                    PanelModel newPanel = new PanelModel(images.get(i), canvases.get(i), comic.getId());
+                    panelRepository.save(newPanel);
+                    panelRefs.add(newPanel.getId());
+                }
+                comic.setPanelsList(panelRefs);
+
                 comic.setSharedWith(form.getSharedWith());
                 comic.setDate(new Date().toString());
+                comic.setPrivacy(form.getPrivacy());
+
+                comicRepository.save(comic);
                 result.setResult("success");
                 break;
             } 

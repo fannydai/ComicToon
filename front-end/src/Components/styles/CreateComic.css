@@ -101,7 +101,7 @@
 }
 
 .create-comic-sharing-table {
-    width: 35%;
+    width: 100%;
 }
 
 /* Submit section */
@@ -120,6 +120,10 @@
 .panel {
 	height: 250px !important;
 	padding: 10px;
+}
+
+.panel:hover {
+    cursor: pointer;
 }
 
 .slick-prev:before, .slick-next:before {

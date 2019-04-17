@@ -49,8 +49,7 @@ ReactDOM.render(
                 <Route exact path="/verify" component={Verify} />
                 <Route exact path="/logout" component={App} />   
                 <Route exact path="/admin" component={Admin} /> 
-                <Route exact path="/about" component={About} /> 
-                <Route exact path="/update" component={UpdateComic} /> 
+                <Route exact path="/about" component={About} />
                 <Route exact path="/canvas" component={Canvas} />  
                 <Route exact path="/subscriptions" component={ViewSubs} />
                 <Route path="/view/comic/:username/:comicName" component={ViewComic} />  

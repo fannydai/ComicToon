@@ -35,7 +35,7 @@ export default function(state = initState, action) {
             }
         case ADD_UPDATE_PANEL:
             const updatedComic = state.saveUpdateComic;
-            updatedComic.comicPanels = [...updatedComic.comicPanels, { image: action.payload.image, canvas: action.payload.json }];
+            updatedComic.comicPanels = [...updatedComic.comicPanels, { image: action.payload.image, canvas: JSON.stringify(action.payload.json) }];
             return {
                 ...state,
                 saveUpdateComic: updatedComic
