@@ -152,7 +152,7 @@ public class ComicController{
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();
-                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith(), true);
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith(), form.getPrivacy(), true);
                 // Create Panels for each and set references in comic
                 ArrayList<String> canvasList = form.getCanvases();
                 ArrayList<String> imageList = form.getImages();
@@ -238,7 +238,7 @@ public class ComicController{
                 String canvas = form.getCanvas();
                 String image = form.getImage();
                 boolean editable = canvas != "" ? true : false;
-                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith(), editable);
+                ComicModel newComic = new ComicModel(form.getName(),form.getDescription(),user.getId(),form.getUsername(),series.getId(),strDate, form.getSharedWith(), form.getPrivacy(), editable);
                 // Create the panel or json
                 PanelModel newPanel = new PanelModel(image, canvas, newComic.getId());
                 panelRepository.save(newPanel);
@@ -315,6 +315,8 @@ public class ComicController{
             result.setDescription(findComic.getDescription());
             result.setCreatorName(form.getComicOwnerName());
             result.setSeriesName(series.getName());
+            result.setPrivacy(findComic.getPrivacy());
+            result.setSharedWith(findComic.getSharedWith());
             for(String c: findComic.getCommentsList()){
                 CommentModel findComment = commentRepository.findByid(c);
                 if(findComment!=null){

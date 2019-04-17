@@ -24,9 +24,10 @@ public class ComicModel{
     private ArrayList<String> RatingsID;
     //shared with userIDs
     private ArrayList<String> sharedWith;
+    private String privacy;
     private boolean editable;
 
-    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith, boolean editable){
+    public ComicModel(String name, String description, String userID, String username, String comicSeriesID, String Date, ArrayList<String> sharedWith, String privacy, boolean editable){
         this.name = name;
         this.description = description;
         this.userID = userID;
@@ -37,6 +38,7 @@ public class ComicModel{
         this.commentsList = new ArrayList<String>();
         this.RatingsID = new ArrayList<String>();
         this.sharedWith = sharedWith;
+        this.privacy = privacy;
         this.editable = editable;
     }
 
@@ -126,6 +128,14 @@ public class ComicModel{
 
     public void setRatingsID(ArrayList<String> RatingsID) {
         this.RatingsID = RatingsID;
+    }
+
+    public String getPrivacy() {
+        return this.privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
     }
 
     public boolean getEditable() {

@@ -169,6 +169,7 @@ class UploadComic extends Component {
                     description: this.state.comicDescription,
                     name: this.state.comicName,
                     series: this.state.series,
+                    privacy: this.state.privacy,
                     canvas: this.state.json ? JSON.stringify(this.state.json) : '',
                     image: this.state.image ? JSON.stringify(this.state.image) : '',
                     sharedWith: this.state.sharedUsersList

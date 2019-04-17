@@ -7,6 +7,7 @@ public class UploadComicForm {
     private String description;
     private String name;
     private String series;
+    private String privacy;
     private String canvas;
     private String image;
     private ArrayList<String> sharedWith;
@@ -57,6 +58,14 @@ public class UploadComicForm {
     }
     public void setSeries(String series){
         this.series = series;
+    }
+
+    public String getPrivacy() {
+        return this.privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
     }
 
     public String getCanvas() {

@@ -1,4 +1,4 @@
-import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS } from './../Actions/Types';
+import { GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA } from './../Actions/Types';
 
 const initState = {
     subscriptions: [],
@@ -6,6 +6,7 @@ const initState = {
     favorites: [],
     newComic: [],
     saveNewComic: {},
+    saveUpdateComic: {},
     allSeries: []
 }
 
@@ -13,66 +14,43 @@ export default function(state = initState, action) {
     switch(action.type) {
         case GET_SUBSCRIPTIONS:
             return {
-                subscriptions: action.payload.subscriptions,
-                recentCreations: state.recentCreations,
-                favorites: state.favorites,
-                newComic: state.newComic,
-                saveNewComic: state.saveNewComic,
-                allSeries: state.allSeries
+                ...state,
+                subscriptions: action.payload.subscriptions
             };
         case GET_RECENT_CREATIONS:
             return {
-                subscriptions: state.subscriptions,
-                recentCreations: action.payload.recentCreations,
-                favorites: state.favorites,
-                newComic: state.newComic,
-                saveNewComic: state.saveNewComic,
-                allSeries: state.allSeries
+                ...state,
+                recentCreations: action.payload.recentCreations
             };
         case GET_FAVORITES:
             return {
-                subscriptions: state.subscriptions,
-                recentCreations: state.recentCreations,
-                favorites: action.payload.favorites,
-                newComic: state.newComic,
-                saveNewComic: state.saveNewComic,
-                allSeries: state.allSeries
+                ...state,
+                favorites: action.payload.favorites
             };
         case ADD_PANEL:
             console.log(action.payload);
             return {
-                subscriptions: state.subscriptions,
-                recentCreations: state.recentCreations,
-                favorites: state.favorites,
-                newComic: [...state.newComic, action.payload],
-                saveNewComic: state.saveNewComic,
-                allSeries: state.allSeries
+                ...state,
+                newComic: [...state.newComic, action.payload]
             }
         case CLEAR_PANELS:
             return {
-                subscriptions: state.subscriptions,
-                recentCreations: state.recentCreations,
-                favorites: state.favorites,
-                newComic: [],
-                saveNewComic: state.saveNewComic,
-                allSeries: state.allSeries
+                ...state,
+                newComic: []
             }
         case SAVE_NEW_COMIC_DATA:
             return {
-                subscriptions: state.subscriptions,
-                recentCreations: state.recentCreations,
-                favorites: state.favorites,
-                newComic: state.newComic,
-                saveNewComic: action.payload.saveNewComic,
-                allSeries: state.allSeries
+                ...state,
+                saveNewComic: action.payload.saveNewComic
+            }
+        case SAVE_UPDATE_COMIC_DATA:
+            return {
+                ...state,
+                saveUpdateComic: action.payload.saveUpdateComic
             }
         case GET_ALL_SERIES:
             return {
-                subscriptions: state.subscriptions,
-                recentCreations: state.recentCreations,
-                favorites: state.favorites,
-                newComic: state.newComic,
-                saveNewComic: state.saveNewComic,
+                ...state,
                 allSeries: action.payload.allSeries
             }
         default:

@@ -7,6 +7,7 @@ public class CreateComicForm {
     private String description;
     private String name;
     private String series;
+    private String privacy;
     private ArrayList<String> sharedWith;
     private ArrayList<String> canvases;
     private ArrayList<String> images;
@@ -57,6 +58,14 @@ public class CreateComicForm {
     }
     public void setSeries(String series){
         this.series = series;
+    }
+
+    public String getPrivacy() {
+        return this.privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
     }
 
     public ArrayList<String> getCanvases() {
