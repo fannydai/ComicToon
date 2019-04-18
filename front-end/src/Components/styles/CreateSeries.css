@@ -80,3 +80,30 @@
     justify-content: space-evenly;
     align-items: center;
 }
+
+.update-series-bottom-container {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+}
+
+.update-series-genre-table {
+    width: 100%;
+}
+
+.update-series-genre-right {
+    height: 90%;
+    width: 40%;
+    top: 0;
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.update-series-table-container {
+    height: 90%;
+    width: 40%;
+    border-bottom: 1px solid black;
+    overflow-y: auto;
+    overflow-x: auto;
+}

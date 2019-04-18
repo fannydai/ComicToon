@@ -5,6 +5,7 @@ import com.example.ComicToon.Models.ModelRepositories.*;
 import com.example.ComicToon.Models.RequestResponseModels.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,11 +111,18 @@ public class ComicController{
         UserModel owner = userRepository.findByusername(form.getOwnerName());
         System.out.println("VIEWING SERIES");
         System.out.println(form.getOwnerName());
+        System.out.println(form.getViewerName());
         System.out.println(owner.getId());
         System.out.println(candidates.size());
         for (ComicSeriesModel candidate: candidates){
             System.out.println(candidate.getUserID());
             if(candidate.getUserID().equals(owner.getId())){
+                // Check permission
+                ArrayList<String> shared = candidate.getSharedWith();
+                if (!form.getOwnerName().equals(form.getViewerName()) && candidate.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
+                    result.setResult("failure");
+                    return result;
+                }
                 for(String comicID : candidate.getComics()){
                     ComicModel comic = comicRepository.findByid(comicID);
                     if (comic != null) {
@@ -271,12 +279,18 @@ public class ComicController{
         UpdateSeriesResult result = new UpdateSeriesResult();
 
         ComicSeriesModel series = ComicSeriesRepository.findByid(form.getSeriesID());
-
+        System.out.println("UPDATING SERIES");
+        System.out.println(form.getSeriesID());
+        System.out.println(form.getNew_Name());
+        System.out.println(form.getNew_Description());
+        System.out.println(form.getNew_Privacy());
         if(series!=null){
             series.setName(form.getNew_Name());
             series.setDescription(form.getNew_Description());
             series.setPrivacy(form.getNew_Privacy());
             series.setGenre(form.getNew_Genres());
+            series.setSharedWith(form.getNew_SharedWith());
+            ComicSeriesRepository.save(series);
             result.setResult("success");
         }
 
@@ -364,6 +378,11 @@ public class ComicController{
         System.out.println(findComic);
         
         if(findComic!=null){
+            // Check permissions
+            ArrayList<String> shared = findComic.getSharedWith();
+            if (!form.getComicOwnerName().equals(form.getViewerName()) && form.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
+                return result;
+            }
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
             ArrayList<CommentModel> comments = new ArrayList<CommentModel>();
             ArrayList<RatingModel> ratings = new ArrayList<RatingModel>();
@@ -477,8 +496,43 @@ public class ComicController{
         if(user == null) {
             return result;
         } else {
-            user.getSubscriptions().add(form.getSeriesid());
+            ArrayList<String> temp = user.getSubscriptions();
+            for(String str : temp){
+                if(str.equals(form.getSub())){ //already subbed to this user
+                    result.setResult("error");
+                    return result;
+                }
+            }
+            user.getSubscriptions().add(form.getSub());
+            userRepository.save(user);
             result.setResult("success");
+        }
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/unsubscribe", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public UnSubscriptionResult unsubscribe(@RequestBody UnSubscriptionForm form){
+        UnSubscriptionResult result = new UnSubscriptionResult();
+        UserModel user = userRepository.findByusername(form.getUsername());
+        System.out.println("user.. "+ form.getUsername());
+        System.out.println("to unsub.. " + form.getUnSub());
+        if(user == null) {
+            return result;
+        } else {
+            ArrayList<String> temp = user.getSubscriptions();
+            for(String str : temp){
+                System.out.println(str);
+                if(str.equals(form.getUnSub())){ 
+                    temp.remove(str);
+                    user.setSubscriptions(temp);
+                    userRepository.save(user);
+                    result.setResult("success");
+                    return result;
+                }
+            }
+            result.setResult("error"); //tryna unsub to someone they're not subbed to
         }
         return result;
     }

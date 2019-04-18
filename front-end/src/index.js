@@ -31,6 +31,8 @@ import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store';
+import Search from './Components/Search'
+import UserDashboard from './Components/UserDashboard'
 
 library.add(faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
@@ -60,6 +62,8 @@ ReactDOM.render(
                 <Route exact path="/update/comic/:username/:comicName" component={UpdateComic} />
                 <Route exact path="/update/series/:username/:seriesName" component={UpdateSeries} />
                 <Route exact path="/recents" component={ViewRecents} />
+                <Route exact path="/search" component={Search} />
+                <Route exact path="/dashboard" component={UserDashboard} />
                 <Redirect from="/" exact to="/welcome"/>
                 <Route path="*" component={Error404} />
             </Switch>

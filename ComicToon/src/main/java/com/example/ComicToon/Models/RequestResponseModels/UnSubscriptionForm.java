@@ -1,28 +1,28 @@
 package com.example.ComicToon.Models.RequestResponseModels;
 
-public class SubscriptionForm{
+public class UnSubscriptionForm{
     private String username;
-    private String sub;
+    private String unSub;
 
     /**
      * @return the username
      */
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     /**
      * @return the sub
      */
-    public String getSub() {
-        return sub;
+    public String getUnSub() {
+        return this.unSub;
     }
 
     /**
      * @param sub the sub to set
      */
-    public void setSub(String sub) {
-        this.sub = sub;
+    public void setUnSub(String unSub) {
+        this.unSub = unSub;
     }
 
     /**
@@ -31,5 +31,4 @@ public class SubscriptionForm{
     public void setUsername(String username) {
         this.username = username;
     }
-
 }

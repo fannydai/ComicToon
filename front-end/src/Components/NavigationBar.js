@@ -14,6 +14,17 @@ const StateToProps = (state) => ({ //application level state via redux
 });
 
 class NavigationBar extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            query: ""
+        }
+    }
+
+    handleChange = e => {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
+    }
 
     handleLogout() {localStorage.removeItem('user');}
     handleGoToCreateSeries = (e) => {this.props.history.push('/create/series')}
@@ -23,6 +34,15 @@ class NavigationBar extends Component {
     handleGoToViewComic = (e) =>{this.props.history.push('/view/comics')}
     handleGoToHome = (e) => {this.props.history.push('/')}
     handleGoToIndex = (e) => {this.props.history.push('/')}
+    handleSearch = (e) => {
+        e.preventDefault();
+        this.props.history.push({
+            pathname: '/search', 
+            state: {
+              query: this.state.query 
+            }
+        })
+    }
 
     render() {
         return (
@@ -40,9 +60,9 @@ class NavigationBar extends Component {
                             <NavDropdown.Item onClick={this.handleGoToCreateSeries}>Create Series</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                    <Form className="navbar-search-form" inline>
-                        <FormControl type="text" placeholder="Search" className="navbar-search-input mr-sm-2" />
-                        <Button variant="outline-success">Search</Button>
+                    <Form className="navbar-search-form" inline onSubmit={this.handleSearch}>
+                        <FormControl type="text" name="query" placeholder="Search" className="navbar-search-input mr-sm-2" onChange={this.handleChange} />
+                        <Button variant="outline-success" type="submit">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
                         <Nav.Link href="/logout" onClick={this.handleLogout}>Log Out</Nav.Link>

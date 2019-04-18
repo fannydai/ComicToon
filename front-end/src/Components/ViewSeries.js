@@ -26,13 +26,16 @@ class ViewSeries extends Component {
                 },
                 body: JSON.stringify({
                     comicSeriesName: this.props.match.params.seriesName,
-                    ownerName: this.props.match.params.username
+                    ownerName: this.props.match.params.username,
+                    viewerName: localStorage.getItem('user')
                 })
             });
             let content = await res.json();
+            console.log(localStorage.getItem('user'));
             console.log(content);
-            if (!content.result === 'success') {
-                alert('Could not find series.'); // No comic/no permission
+            if (content.result === "failure") {
+                //alert('Could not find series.'); // No comic/no permission
+                this.props.history.push('/notfound');
             } else {
                 this.setState({ comicData: content.comics });
                 for (const comic of content.comics) {
