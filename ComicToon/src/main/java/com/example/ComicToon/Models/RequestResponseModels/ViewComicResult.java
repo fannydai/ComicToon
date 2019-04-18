@@ -8,6 +8,7 @@ import com.example.ComicToon.Models.PanelModel;
 import com.example.ComicToon.Models.RatingModel;
 
 public class ViewComicResult {
+    private String comicID;
     private String comicName;
     private String creatorName;
     private String seriesName;
@@ -15,12 +16,26 @@ public class ViewComicResult {
     private String privacy;
     private ArrayList<PanelModel> panels;
     private ArrayList<RatingModel> RatingsID;
-    private ArrayList <CommentModel> commentsList;
+    private ArrayList<CommentModel> commentsList;
     private ArrayList<ComicModel> suggestions;
     private ArrayList<String> sharedWith;
 
     public String getCreatorName() {
         return this.creatorName;
+    }
+
+    /**
+     * @return the comicID
+     */
+    public String getComicID() {
+        return comicID;
+    }
+
+    /**
+     * @param comicID the comicID to set
+     */
+    public void setComicID(String comicID) {
+        this.comicID = comicID;
     }
 
     /**

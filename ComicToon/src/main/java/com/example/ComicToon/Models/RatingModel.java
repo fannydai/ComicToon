@@ -43,9 +43,9 @@ public class RatingModel{
         this.comicID = comicID;
     }
 
-    public RatingModel(String userID, int Rating, String ComicID){
+    public RatingModel(String userID, int Rating, String comicID){
         this.userID = userID;
         this.Rating = Rating;
-        this.comicID = ComicID;
+        this.comicID = comicID;
     }
 }

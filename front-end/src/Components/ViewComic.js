@@ -28,7 +28,8 @@ class ViewComic extends Component {
         this.state = {
             comicData: {},
             panelIndex: 0,
-            subbed: false
+            subbed: false,
+            rating: 0
         }
     }
 
@@ -42,6 +43,44 @@ class ViewComic extends Component {
             console.log('VIEW COMIC FETCHING DATA');
             this.props.viewComic(this.props.match.params.username, localStorage.getItem('user'), this.props.match.params.comicName);
         }
+        //this.updateRating();
+    }
+
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps);
+        (async () => {
+            const res = await fetch("http://localhost:8080/comic/rate/getRating", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicID: nextProps.comic.saveNewComic.comicID
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            this.setState({rating: content.result})
+        })();
+    }
+
+    updateRating(){
+        (async () => {
+            const res = await fetch("http://localhost:8080/comic/rate/getRating", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicID: this.props.comic.saveNewComic.comicID
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            this.setState({rating: content.result})
+        })();
     }
 
     componentWillUnmount() {
@@ -77,6 +116,56 @@ class ViewComic extends Component {
 
     handleSubscribe = (event) => {
         this.setState({ subbed: !this.state.subbed });
+    }
+
+    handleUpVote = () => {
+        if(this.state.didUpVote) alert("YOU JUST UPVOTED!!")
+        else{
+            (async () => {
+                const res = await fetch("http://localhost:8080/comic/rate", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: localStorage.getItem('user'),
+                        comicID: this.props.comic.saveNewComic.comicID,
+                        rating: 1
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                if(content.result !== "success") alert("you're trying to do multiple upvotes...")
+                else alert("You just up voted!");
+                this.updateRating();
+            })();
+        }
+    }
+
+    handleDownVote = () => {
+        if(this.state.didDownVote) alert("YOU JUST DOWNVOTED:((")
+        else{
+            (async () => {
+                const res = await fetch("http://localhost:8080/comic/rate", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: localStorage.getItem('user'),
+                        comicID: this.props.comic.saveNewComic.comicID,
+                        rating: -1
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                if(content.result !== "success") alert("you're trying to do multiple downvotes...")
+                else alert("You just down voted:(");
+                this.updateRating();
+            })();
+        }
     }
 
     render() {
@@ -121,7 +210,9 @@ class ViewComic extends Component {
                                         <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} />
                                         <FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" />
                                         <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" />
-                                        <p className="view-comic-rating">+20</p>
+                                        <p onClick={this.handleUpVote}>up</p> {/* temporarily using this bc thumbs up & down icon not working..*/}
+                                        <p onClick={this.handleDownVote}>down</p>
+                                        <p className="view-comic-rating">{this.state.rating}</p>
                                     </div>
                                 </div>
                                 <div className="view-comic-second-row">

@@ -415,6 +415,7 @@ public class ComicController{
             ArrayList<RatingModel> ratings = new ArrayList<RatingModel>();
             ArrayList<PanelModel> panels = new ArrayList<PanelModel>();
 
+            result.setComicID(findComic.getId());
             result.setComicName(findComic.getName());
             result.setDescription(findComic.getDescription());
             result.setCreatorName(form.getComicOwnerName());
@@ -640,11 +641,18 @@ public class ComicController{
         ComicModel comic = comicRepository.findByid(form.getComicID());
         UserModel user = userRepository.findByusername(form.getUsername());
         if (comic != null && user != null) {
-            
+            List<RatingModel> temp= ratingRepository.findAll();
+            for(RatingModel item: temp){
+                if(!item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
+                    temp.remove(item);
+                }
+            }
+            if(temp.size() != 0){
+                ratingRepository.delete(temp.get(0)); //deletes it so new one can replace
+            }
             RatingModel newRating = new RatingModel(user.getId(), form.getRating(), comic.getId());
             ratingRepository.save(newRating);
             result.setResult("success");
-
         }
         return result;
     }
@@ -655,21 +663,16 @@ public class ComicController{
     @ResponseBody
     public GetRatingResult getRatingComic(@RequestBody GetRatingForm form){
         GetRatingResult result = new GetRatingResult();
-        ComicModel comic = comicRepository.findByid(form.getComicID());
-        if (comic != null) {
-            
-            ArrayList<String> ratingID = comic.getRatingsID();
+        List<RatingModel> comic = ratingRepository.findBycomicID(form.getComicID());
+        if (comic.size() != 0) {
             int totalRating = 0;
-            for (String id: ratingID){
-                RatingModel rating = ratingRepository.findByid(id);
-                if(rating != null){
-                    totalRating += rating.getRating();
-                }
+            for(RatingModel item: comic){
+                totalRating += item.getRating();
             }
-        
             result.setResult(totalRating);
-
+            return result;
         }
+        result.setResult(0);
         return result;
     }
 

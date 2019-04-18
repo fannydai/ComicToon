@@ -291,8 +291,8 @@ class Canvas extends Component {
                     </div>
 
                     {/* MID BAR */}
-                    <div class="mid-canvas">
-                    <table class="side-bar">
+                    <div className="mid-canvas">
+                    <table className="side-bar">
                         <tbody>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} /></td>
