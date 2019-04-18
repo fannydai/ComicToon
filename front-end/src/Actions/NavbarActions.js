@@ -40,9 +40,10 @@ export const createSeries = (userName, seriesName, description, genres, privacy)
             })();  
         }
         else{
+            console.log(content.result);
             dispatch({
                 type: ERR,
-                payload: { Series: "" }
+                payload: { Series: content.result }
             });
         }
     })();
@@ -168,4 +169,15 @@ export const viewMyComic = () => (dispatch) => {
     //         payload: { favorites: content.favorites }
     //     });
     // })();
+}
+
+export const viewAllComics = (newComics) => (dispatch) => {
+    dispatch({
+        type: VIEWCOMIC,
+        payload: { comics: newComics }
+    });
+}
+
+export const updateComicPanel = (panel) => (dispatch) => {
+    // Call backend to update the panel and update User_Comic_View with it
 }

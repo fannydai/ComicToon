@@ -39,6 +39,15 @@ public class ComicController{
             result.setResult("user does not exists");
             return result;
         } else{
+            //Look for another one under the user
+            ArrayList<ComicSeriesModel> foundSeries = ComicSeriesRepository.findByname(form.getName());
+            for (ComicSeriesModel series : foundSeries) {
+                if (series.getUserID().equals(user.getId())) {
+                    System.out.println("FOUND DUPLICATE");
+                    result.setResult("You already have a series with this name!");
+                    return result;
+                }
+            }
             //create and save new series
             ComicSeriesModel newComicSeries = new ComicSeriesModel(form.getName(), form.getDescription(), user.getId(), form.getPrivacy(), form.getGenre());
             ComicSeriesRepository.save(newComicSeries);
@@ -120,7 +129,7 @@ public class ComicController{
                 // Check permission
                 ArrayList<String> shared = candidate.getSharedWith();
                 if (!form.getOwnerName().equals(form.getViewerName()) && candidate.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
-                    result.setResult("failure");
+                    result.setResult("error");
                     return result;
                 }
                 for(String comicID : candidate.getComics()){
@@ -380,7 +389,7 @@ public class ComicController{
         if(findComic!=null){
             // Check permissions
             ArrayList<String> shared = findComic.getSharedWith();
-            if (!form.getComicOwnerName().equals(form.getViewerName()) && form.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
+            if (!form.getComicOwnerName().equals(form.getViewerName()) && findComic.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
                 return result;
             }
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());

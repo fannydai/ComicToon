@@ -27,15 +27,20 @@ export default function(state = initState, action) {
                 //todo for milestone 2
             };
         case VIEWCOMIC:
+            //View all my comics
             return {
-                //todo
+                ...state,
+                User_Comic_View: action.payload.comics
             };
         case VIEWSERIES:
             return {
                 //todo
             };
         case ERR:
-            return state;
+            return {
+                ...state,
+                User_Series: action.payload.Series
+            }
         default:
             return state;
     }

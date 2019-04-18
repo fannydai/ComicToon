@@ -40,6 +40,13 @@ class Canvas extends Component {
             width: 600,
             isDrawingMode: false
         });
+        // Load Data if any
+        if (this.props.location.state) {
+            if (this.props.location.state.previous === 'fromjson') {
+                this.canvas.loadFromJSON(this.props.location.state.json);
+            }
+        }
+
         this.canvas.on('object:added', (event) => {
             this.handleSave(event);
         });

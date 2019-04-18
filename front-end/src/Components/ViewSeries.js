@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Card } from 'react-bootstrap';
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewSeries.css';
 import pusheen from './images/pusheen.png';
 
+const StateToProps = (state) => ({ //application level state via redux
+    UserSeries: state.NavBar.User_Series,
+    CurrUser: state.user
+});
 class ViewSeries extends Component {
 
     constructor(props) {
@@ -33,7 +40,7 @@ class ViewSeries extends Component {
             let content = await res.json();
             console.log(localStorage.getItem('user'));
             console.log(content);
-            if (content.result === "failure") {
+            if (content.result === "error") {
                 //alert('Could not find series.'); // No comic/no permission
                 this.props.history.push('/notfound');
             } else {
@@ -69,6 +76,14 @@ class ViewSeries extends Component {
     }
 
     render() {
+        /*
+        if (this.props.location.state && this.props.location.state.previous === 'create') {
+            console.log(this.props.UserSeries);
+            if (this.props.UserSeries !== '') {
+                alert(this.props.UserSeries);
+                this.props.history.goBack();
+            }
+        }*/
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
             return (
                 <Card key={i} className="view-one-series-card">
@@ -101,4 +116,10 @@ class ViewSeries extends Component {
     }
 }
 
-export default ViewSeries;
+// export default ViewSeries;
+ViewSeries.propTypes = {
+    UserSeries: PropTypes.string,
+    CurrUser: PropTypes.object
+}
+
+export default connect(StateToProps, { })(withRouter(ViewSeries));

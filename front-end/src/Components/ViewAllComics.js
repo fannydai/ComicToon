@@ -10,7 +10,7 @@ import LoadingScreen from './LoadingScreen';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
-    comic: state.comic
+    nav: state.NavBar,
 });
 
 class ViewAllComics extends Component {
@@ -26,33 +26,37 @@ class ViewAllComics extends Component {
     }
 
     componentDidMount(){
-        console.log(this.props.comic);
+        console.log(this.props.nav);
         if (!localStorage.getItem('user')) {
             this.props.history.push('/welcome');
         }
-        (async () => {
-            const res = await fetch("http://localhost:8080/view/allComics", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    comicOwnerName: localStorage.getItem('user')
-                  })
-            });
-            let content = await res.json();
-            console.log(content)
-            this.setState({allComics: content.bundleComicList, isLoading: false})
-        })();
+        if (this.props.nav.User_Comic_View.length) {
+
+        } else {
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/allComics", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        comicOwnerName: localStorage.getItem('user')
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({allComics: content.bundleComicList, isLoading: false})
+            })();
+        }
     }
     
     renderOne(panelList){
         return (
             panelList.map((item, i)=> {
                 return item !== null ?
-                <div className="view-comics-panel-container" key={item.id}>
-                    <img className="view-comics-panel-img" src={item.image} alt="can't load"></img>
+                <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, e)}>
+                    <img className="view-comics-panel-img" src={item.image} alt="Click and save to load image"></img>
                 </div>
                 :
                 null
@@ -78,6 +82,18 @@ class ViewAllComics extends Component {
         this.setState({allComics: newArr}, this.forceUpdate());
     }
 
+    handlePanelClick = (item, index, event) => {
+        console.log(this.props.comic);
+        console.log(item);
+        console.log(index);
+        console.log(event);
+        event.preventDefault();
+        // Editing from JSON
+        if (!item.image) {
+
+        }
+    }
+
     renderAll(){
         // <button onClick={this.handleDel} name={item.comicName}>Delete?</button>
         console.log(this.state.allComics)
@@ -87,10 +103,10 @@ class ViewAllComics extends Component {
                     return item !== null ?
                     <div className="view-comics-strip-container" key={item.comicName}>
                         <div className="view-comics-strip-top">
-                            <h3>{item.comicName}</h3>
+                            <h3 className="view-comics-h3" onClick={(e) => this.handleClick(item, e)}>{item.comicName}</h3>
                             <button onClick={(e) => this.handleUpdate(item, e)}>Update</button>
                         </div>
-                        <div className="view-comics-strip-bottom" onClick={(e) => this.handleClick(item, e)}>
+                        <div className="view-comics-strip-bottom">
                             {this.renderOne(item.comicList)}
                         </div>
                         <hr style={{ height: "1vh", width: "100%" }} />
@@ -138,7 +154,7 @@ class ViewAllComics extends Component {
 
 ViewAllComics.propTypes = {
     CurrUser: PropTypes.object,
-    comic: PropTypes.object
+    nav: PropTypes.object
 }
 
 export default connect(StateToProps, {})(withRouter(ViewAllComics));
