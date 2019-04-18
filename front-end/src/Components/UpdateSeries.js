@@ -19,6 +19,7 @@ class UpdateSeries extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
             seriesName: this.props.match.params.seriesName,
             seriesDescription: '',
             genre: '',
@@ -51,14 +52,14 @@ class UpdateSeries extends Component {
                 if (content) {
                     for (const series of content.comicSeries) {
                         if (series && series.name === this.props.match.params.seriesName) {
-                            this.setState({ seriesDescription: series.description, genreList: series.genre, addUserList: series.sharedWith, privacy: series.privacy });
+                            this.setState({ id: series.id, seriesDescription: series.description, genreList: series.genre, addUserList: series.sharedWith, privacy: series.privacy });
                             break;
                         }
                     }
                 }
             })();
         } else {
-            this.setState({ genreList: this.props.location.state.genre, 
+            this.setState({ id: this.props.location.state.id, genreList: this.props.location.state.genre, 
                 addUserList: this.props.location.state.addUserList, privacy: this.props.location.state.privacy, 
                 seriesDescription: this.props.location.state.description });
         }
@@ -96,6 +97,24 @@ class UpdateSeries extends Component {
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleAddGenreEnter = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            let newGenres = this.state.genre.split(' ');
+            newGenres = newGenres.filter(item => item !== "")
+            this.setState({ genreList: [...this.state.genreList, ...newGenres], genre: '' }); 
+        }
+    }
+
+    handleAddUserEnter = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            let newUsers = this.state.addUser.split(' ');
+            newUsers = newUsers.filter(item => item !== "")
+            this.setState({ addUserList: [...this.state.addUserList, ...newUsers], addUser: '' }); 
+        }
     }
 
     handleDelete = (event) => {
@@ -143,6 +162,28 @@ class UpdateSeries extends Component {
     handleUpdate = (event) => {
         event.preventDefault();
         console.log(this.state);
+        (async () => {
+            const res = await fetch("http://localhost:8080/update/series", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                seriesID: this.state.id,
+                new_Name: this.state.seriesName,
+                new_Description: this.state.seriesDescription,
+                new_Genres: this.state.genreList,
+                new_SharedWith: this.state.addUserList,
+                new_Privacy: this.state.privacy
+              })
+            });
+            let content = await res.json();
+            console.log(content);
+            if (content.result === 'success') {
+                this.props.history.push('/view/series', { previous: 'update' });
+            }
+        })();
         //this.props.history.push('/view/series');
     }
 
@@ -161,7 +202,7 @@ class UpdateSeries extends Component {
                         <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
                         <div className="create-series-genre-input">
                             <div className="update-series-table-container">
-                                <Form.Control type="text" placeholder="Genre/Tags" name="genre" value={this.state.genre} onChange={this.handleChange} />
+                                <Form.Control type="text" placeholder="Genre/Tags" name="genre" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddGenreEnter} />
                                 <table className="update-series-genre-table">
                                     <tbody>
                                         {this.renderGenre()}
@@ -169,7 +210,7 @@ class UpdateSeries extends Component {
                                 </table>
                             </div>
                             <div className="update-series-table-container">
-                                <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" name="addUser" value={this.state.addUser} onChange={this.handleChange} />
+                                <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" name="addUser" value={this.state.addUser} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} />
                                 <table className="update-series-genre-table">
                                     <tbody>
                                         {this.renderAddUserEnter()}

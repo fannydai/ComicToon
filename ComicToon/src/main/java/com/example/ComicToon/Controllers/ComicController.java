@@ -272,12 +272,18 @@ public class ComicController{
         UpdateSeriesResult result = new UpdateSeriesResult();
 
         ComicSeriesModel series = ComicSeriesRepository.findByid(form.getSeriesID());
-
+        System.out.println("UPDATING SERIES");
+        System.out.println(form.getSeriesID());
+        System.out.println(form.getNew_Name());
+        System.out.println(form.getNew_Description());
+        System.out.println(form.getNew_Privacy());
         if(series!=null){
             series.setName(form.getNew_Name());
             series.setDescription(form.getNew_Description());
             series.setPrivacy(form.getNew_Privacy());
             series.setGenre(form.getNew_Genres());
+            series.setSharedWith(form.getNew_SharedWith());
+            ComicSeriesRepository.save(series);
             result.setResult("success");
         }
 

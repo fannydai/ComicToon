@@ -25,8 +25,8 @@ class ViewAllSeries extends Component {
     }
 
     componentDidMount() {
-        // Fetch all series just in case
-        if (this.props.comic.allSeries.length === 0) {
+        // Fetch all series just in case or if coming from update series
+        if ((this.props.location.state && this.props.location.state.previous === 'update') || this.props.comic.allSeries.length === 0) {
             (async () => {
                 const res = await fetch("http://localhost:8080/view/series", {
                   method: "POST",
@@ -60,7 +60,8 @@ class ViewAllSeries extends Component {
             genre: series.genre,
             addUserList: series.sharedWith,
             privacy: series.privacy,
-            description: series.description
+            description: series.description,
+            id: series.id
         });
     }
     

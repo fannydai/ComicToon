@@ -63,6 +63,15 @@ class CreateSeries extends Component {
     handleSeriesDescription = event =>{
         this.setState({ seriesDes: event.target.value });
     }
+    
+    handleDeleteShare = (index, event) => {
+        event.preventDefault();
+        var copy = [...this.state.genreList];
+        if (index !== -1) {
+            copy.splice(index, 1);
+            this.setState({ genreList: copy });
+        }
+    }
 
     render() {
         return (
@@ -76,10 +85,10 @@ class CreateSeries extends Component {
                         <div className="create-series-genre-input">
                             <div className="create-series-table-container">
                                 <h2>Genre: </h2>
-                                <div className="list-genre"><ComicSharingTable usernames={this.state.genreList} /></div>
+                                <div className="list-genre"><ComicSharingTable usernames={this.state.genreList} handleDeleteShare={this.handleDeleteShare} /></div>
                             </div>
                             <div className="create-series-genre-right">
-                                <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" onChange={this.handleChange} onKeyPress={this.handleAddUserEnter}/>
+                                <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter}/>
                             </div>
                         </div>
                         <div className="create-series-bottom">

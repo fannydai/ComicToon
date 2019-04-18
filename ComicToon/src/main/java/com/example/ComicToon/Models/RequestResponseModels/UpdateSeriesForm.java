@@ -8,6 +8,7 @@ public class UpdateSeriesForm{
     private String new_Name;
     private String new_Description;
     private ArrayList<String> new_Genres;
+    private ArrayList<String> new_SharedWith;
     private String new_Privacy;
 
 
@@ -41,6 +42,14 @@ public class UpdateSeriesForm{
 
     public void setNew_Genres(ArrayList<String> new_Genres) {
         this.new_Genres = new_Genres;
+    }
+    
+    public ArrayList<String> getNew_SharedWith() {
+        return this.new_SharedWith;
+    }
+
+    public void setNew_SharedWith(ArrayList<String> new_SharedWith) {
+        this.new_SharedWith = new_SharedWith;
     }
 
     public String getNew_Privacy() {
