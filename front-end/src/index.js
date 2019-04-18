@@ -33,6 +33,7 @@ import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store';
 import Search from './Components/Search'
 import UserDashboard from './Components/UserDashboard'
+import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 library.add(faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,

@@ -9,6 +9,7 @@ import NavigationBar from './NavigationBar';
 import './styles/Canvas.css';
 import { addPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
+const history = require('browser-history')
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
@@ -257,7 +258,8 @@ class Canvas extends Component {
         } else {
             // Done with drawing, reroute back to create comic
             this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
-            this.props.history.push('/create/comic');
+            //this.props.history.push('/create/comic');
+            history(-1); //fix bug in update comic bc re routing to wrong page...
         }
     }
 
@@ -291,41 +293,43 @@ class Canvas extends Component {
                     {/* MID BAR */}
                     <div class="mid-canvas">
                     <table class="side-bar">
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} /></td>
-                            <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} /></td>
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="draw-polygon" /></td>
-                            <td><FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} /></td>
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} /></td>
-                            <td><FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} /></td> 
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
-                            <td><FontAwesomeIcon className="icon" icon="image" /></td> 
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="trash" /></td>
-                            <td><FontAwesomeIcon className="icon" icon="eraser" /></td> 
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/></td>
-                            <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/></td> 
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="arrows-alt" /></td>
-                            <td><FontAwesomeIcon className="icon" icon="eye-dropper" /></td> 
-                        </tr>
-                        <tr>
-                            <td><FontAwesomeIcon className="icon" icon="palette" /></td>
-                            <td><FontAwesomeIcon className="icon" icon="palette" /></td> 
-                        </tr>
-                        <tr>
-                            <td><input type="color" value={this.state.brushColor} onChange={this.handleColor} /></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} /></td>
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="draw-polygon" /></td>
+                                <td><FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} /></td>
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} /></td> 
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="image" /></td> 
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="trash" /></td>
+                                <td><FontAwesomeIcon className="icon" icon="eraser" /></td> 
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/></td>
+                                <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/></td> 
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="arrows-alt" /></td>
+                                <td><FontAwesomeIcon className="icon" icon="eye-dropper" /></td> 
+                            </tr>
+                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="palette" /></td>
+                                <td><FontAwesomeIcon className="icon" icon="palette" /></td> 
+                            </tr>
+                            <tr>
+                                <td><input type="color" value={this.state.brushColor} onChange={this.handleColor} /></td>
+                            </tr>
+                        </tbody>
                     </table>
                     <canvas id='canvas'></canvas>
                     </div>
