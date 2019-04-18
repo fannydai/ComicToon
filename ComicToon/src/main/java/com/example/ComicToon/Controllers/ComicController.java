@@ -119,7 +119,7 @@ public class ComicController{
             if(candidate.getUserID().equals(owner.getId())){
                 // Check permission
                 ArrayList<String> shared = candidate.getSharedWith();
-                if (!form.getOwnerName().equals(form.getViewerName()) && !shared.contains(form.getViewerName())) {
+                if (!form.getOwnerName().equals(form.getViewerName()) && candidate.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
                     result.setResult("failure");
                     return result;
                 }
@@ -380,7 +380,7 @@ public class ComicController{
         if(findComic!=null){
             // Check permissions
             ArrayList<String> shared = findComic.getSharedWith();
-            if (!form.getComicOwnerName().equals(form.getViewerName()) && !shared.contains(form.getViewerName())) {
+            if (!form.getComicOwnerName().equals(form.getViewerName()) && form.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
                 return result;
             }
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
