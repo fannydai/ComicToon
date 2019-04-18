@@ -367,6 +367,24 @@ public class ComicController{
         return result;
     }
 
+    // Update Panel
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/update/panel", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public UpdatePanelResult updatePanel(@RequestBody UpdatePanelForm form) {
+        UpdatePanelResult result = new UpdatePanelResult();
+        PanelModel panel = panelRepository.findByid(form.getId());
+        if (panel == null) {
+            result.setResult("failure");
+            return result;
+        }
+        panel.setCanvas(form.getCanvas());
+        panel.setImage(form.getImage());
+        panelRepository.save(panel);
+        result.setResult("success");
+        return result;
+    }
+
 
     //View Comic 
     //TODO SUGGESTION

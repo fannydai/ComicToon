@@ -8,6 +8,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import LoadingScreen from './LoadingScreen';
 
+import { viewAllComics } from './../Actions/NavbarActions';
+
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
     nav: state.NavBar,
@@ -51,11 +53,11 @@ class ViewAllComics extends Component {
         }
     }
     
-    renderOne(panelList){
+    renderOne(panelList, comicIndex){
         return (
             panelList.map((item, i)=> {
                 return item !== null ?
-                <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, e)}>
+                <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, comicIndex, e)}>
                     <img className="view-comics-panel-img" src={item.image} alt="Click and save to load image"></img>
                 </div>
                 :
@@ -82,15 +84,19 @@ class ViewAllComics extends Component {
         this.setState({allComics: newArr}, this.forceUpdate());
     }
 
-    handlePanelClick = (item, index, event) => {
+    handlePanelClick = (item, index, comicIndex, event) => {
         console.log(this.props.comic);
         console.log(item);
         console.log(index);
         console.log(event);
         event.preventDefault();
+        // Save the comics
+        if (this.state.allComics) {
+            this.props.viewAllComics(this.state.allComics);
+        }
         // Editing from JSON
         if (!item.image) {
-
+            this.props.history.push('/canvas', { previous: "fromjson", panel: item, panelIndex: index, comicIndex: comicIndex });
         }
     }
 
@@ -107,7 +113,7 @@ class ViewAllComics extends Component {
                             <button onClick={(e) => this.handleUpdate(item, e)}>Update</button>
                         </div>
                         <div className="view-comics-strip-bottom">
-                            {this.renderOne(item.comicList)}
+                            {this.renderOne(item.comicList, i)}
                         </div>
                         <hr style={{ height: "1vh", width: "100%" }} />
                     </div>
@@ -157,4 +163,4 @@ ViewAllComics.propTypes = {
     nav: PropTypes.object
 }
 
-export default connect(StateToProps, {})(withRouter(ViewAllComics));
+export default connect(StateToProps, { viewAllComics })(withRouter(ViewAllComics));

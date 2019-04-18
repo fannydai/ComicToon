@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavigationBar from './NavigationBar';
 import './styles/Canvas.css';
 import { addPanel } from '../Actions/ComicActions';
+import { updateComicPanel } from '../Actions/NavbarActions';
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
@@ -43,7 +44,12 @@ class Canvas extends Component {
         // Load Data if any
         if (this.props.location.state) {
             if (this.props.location.state.previous === 'fromjson') {
-                this.canvas.loadFromJSON(this.props.location.state.json);
+                console.log('FROM JSON');
+                this.canvas.loadFromJSON(JSON.parse(this.props.location.state.panel.canvas), () => {
+                    this.canvas.renderAll();
+                }, (o, object) => {
+                    console.log(o, object);
+                });
             }
         }
 
@@ -244,9 +250,15 @@ class Canvas extends Component {
 
     handleDone = (event) => {
         this.setState({ redo: [] });
-        // Done with drawing, reroute back to create comic
-        this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
-        this.props.history.push('/create/comic');
+        // If it is from JSON (from view comic) save the panel and return
+        if (this.props.location.state && this.props.location.state.previous === 'fromjson') {
+            this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
+                this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
+        } else {
+            // Done with drawing, reroute back to create comic
+            this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
+            this.props.history.push('/create/comic');
+        }
     }
 
     render() {
@@ -330,4 +342,4 @@ class Canvas extends Component {
     }
 }
 
-export default connect(StateToProps, { addPanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel, updateComicPanel })(withRouter(Canvas));

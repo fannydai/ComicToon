@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL } from './Types';
 
 export const createSeries = (userName, seriesName, description, genres, privacy) => (dispatch) => {
     (async () => {
@@ -178,6 +178,28 @@ export const viewAllComics = (newComics) => (dispatch) => {
     });
 }
 
-export const updateComicPanel = (panel) => (dispatch) => {
+export const updateComicPanel = (image, canvas, panel, panelIndex, comicIndex) => (dispatch) => {
     // Call backend to update the panel and update User_Comic_View with it
+    dispatch({
+        type: UPDATE_COMIC_PANEL,
+        payload: { image: image, canvas: canvas, panel: panel, panelIndex: panelIndex, comicIndex: comicIndex }
+    });
+    console.log(panel);
+    /*
+    (async () => {
+        const res = await fetch("http://localhost:8080/update/panel", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                id: panel.id,
+                image: image,
+                canvas: JSON.stringify(canvas)
+              })
+        });
+        let content = await res.json();
+        console.log(content)
+    })();*/
 }
