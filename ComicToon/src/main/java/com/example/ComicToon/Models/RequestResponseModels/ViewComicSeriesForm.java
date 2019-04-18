@@ -3,6 +3,7 @@ package com.example.ComicToon.Models.RequestResponseModels;
 public class ViewComicSeriesForm {
     private String comicSeriesName;
     private String OwnerName;
+    private String viewerName;
 
     /**
      * @return the comicSeriesName
@@ -30,6 +31,14 @@ public class ViewComicSeriesForm {
      */
     public void setComicSeriesName(String comicSeriesName) {
         this.comicSeriesName = comicSeriesName;
+    }
+    
+    public String getViewerName() {
+        return this.viewerName;
+    }
+
+    public void setViewerName(String viewerName) {
+        this.viewerName = viewerName;
     }
 
 }

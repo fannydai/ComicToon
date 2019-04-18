@@ -111,11 +111,18 @@ public class ComicController{
         UserModel owner = userRepository.findByusername(form.getOwnerName());
         System.out.println("VIEWING SERIES");
         System.out.println(form.getOwnerName());
+        System.out.println(form.getViewerName());
         System.out.println(owner.getId());
         System.out.println(candidates.size());
         for (ComicSeriesModel candidate: candidates){
             System.out.println(candidate.getUserID());
             if(candidate.getUserID().equals(owner.getId())){
+                // Check permission
+                ArrayList<String> shared = candidate.getSharedWith();
+                if (!form.getOwnerName().equals(form.getViewerName()) && !shared.contains(form.getViewerName())) {
+                    result.setResult("failure");
+                    return result;
+                }
                 for(String comicID : candidate.getComics()){
                     ComicModel comic = comicRepository.findByid(comicID);
                     if (comic != null) {
