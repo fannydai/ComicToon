@@ -7,13 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
 import './styles/Canvas.css';
-import { addPanel, addUpdatePanel } from '../Actions/ComicActions';
+import { addPanel } from '../Actions/ComicActions';
 
 const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
 });
-
-const history = require('browser-history')
 
 class Canvas extends Component {
 
@@ -239,14 +237,9 @@ class Canvas extends Component {
 
     handleDone = (event) => {
         this.setState({ redo: [] });
-        console.log(this.props.comic);
-        // Done with drawing, reroute back to create comic or update comic
-        if (this.props.location.state && this.props.location.state.previous === 'update') {
-            this.props.addUpdatePanel(this.canvas.toDataURL(), this.canvas.toJSON());
-        } else {
-            this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
-        }
-        history(-1); //bo back bc used in update and create pages
+        // Done with drawing, reroute back to create comic
+        this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
+        this.props.history.push('/create/comic');
     }
 
     render() {
@@ -254,31 +247,80 @@ class Canvas extends Component {
             <div className="panel-container">
                 <NavigationBar />
                 <div className="panel">
-                    <div className="top-canvas">
-                        <div className="canvas-tool-container">
-                            <FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} />
-                            <FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} />
-                            <FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} />
-                            <input type="color" value={this.state.brushColor} onChange={this.handleColor} />
-                            <FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} />
-                            <FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} />
-                            <FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} />
-                            <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoom} />
-                            <FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/>
-                            <FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/>
-                            <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
-                            <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
-                        </div>
-                        <canvas id='canvas'></canvas>
+
+                    {/* TOP BAR */}
+                    <div className="top-bar">
+                        <FontAwesomeIcon className="icon" icon="th" />
+
+                        <FontAwesomeIcon className="icon" icon="search-minus" />
+                        <FontAwesomeIcon className="icon" icon="search-plus" />
+                        <FontAwesomeIcon className="icon" icon="search" onClick={this.handleZoom}/>
+
+                        <FontAwesomeIcon className="icon" icon="clone" />
+                        <FontAwesomeIcon className="icon" icon="cut" />
+                        <FontAwesomeIcon className="icon" icon="paste" />
+
+                        <FontAwesomeIcon className="icon" icon="forward" />
+                        <FontAwesomeIcon className="icon" icon="step-forward" />
+                        <FontAwesomeIcon className="icon" icon="backward" />
+                        <FontAwesomeIcon className="icon" icon="step-backward" />
+                        
+                        <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
+                        <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
                     </div>
-                    <div className="canvas-bottom-tool-container">
+
+                    {/* MID BAR */}
+                    <div class="mid-canvas">
+                    <table class="side-bar">
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} /></td>
+                            <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} /></td>
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="draw-polygon" /></td>
+                            <td><FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} /></td>
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} /></td>
+                            <td><FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} /></td> 
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
+                            <td><FontAwesomeIcon className="icon" icon="image" /></td> 
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="trash" /></td>
+                            <td><FontAwesomeIcon className="icon" icon="eraser" /></td> 
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/></td>
+                            <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/></td> 
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="arrows-alt" /></td>
+                            <td><FontAwesomeIcon className="icon" icon="eye-dropper" /></td> 
+                        </tr>
+                        <tr>
+                            <td><FontAwesomeIcon className="icon" icon="palette" /></td>
+                            <td><FontAwesomeIcon className="icon" icon="palette" /></td> 
+                        </tr>
+                        <tr>
+                            <td><input type="color" value={this.state.brushColor} onChange={this.handleColor} /></td>
+                        </tr>
+                    </table>
+                    <canvas id='canvas'></canvas>
+                    </div>
+
+                    {/* BOTTOM BAR */}
+                    <div className="bottom-bar">
                         <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
                         <input type="range" min="1" max="100" id="lineWidthSlider" value={this.state.lineWidth} onChange={this.handleChangeLineWidth} />
                     </div>
+
                 </div>
             </div>
         );
     }
 }
 
-export default connect(StateToProps, { addPanel, addUpdatePanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel })(withRouter(Canvas));

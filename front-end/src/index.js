@@ -6,10 +6,11 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faDownload, faHistory, faTrash,
-    faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, faFont, faUndo, faRedo,
-    faSearchPlus, faCheck, faCircle, faSquare, faPlay,
-    faSlash
+import { faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
+    faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
+    faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
+    faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
+    faChevronLeft,faPaintBrush, faHandPointer
 } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import CreateSeries from './Components/CreateSeries';
@@ -31,9 +32,11 @@ import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store';
 
-library.add(faChevronLeft, faChevronRight, faCloudUploadAlt, faPlus, faThumbsUp, faThumbsDown, faDownload, faHistory, faTrash,
-    faPencilAlt, faPaintBrush, faPalette, faHandPointer, faEraser, faArrowsAlt, 
-    faFont, faUndo, faRedo, faSearchPlus, faCheck, faCircle, faSquare, faPlay, faSlash);
+library.add(faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
+    faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
+    faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
+    faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
+    faChevronLeft,faPaintBrush, faHandPointer);
 
 ReactDOM.render(
     <Provider store={store}>
