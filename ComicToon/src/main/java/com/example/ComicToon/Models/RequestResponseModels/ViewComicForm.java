@@ -3,6 +3,7 @@ package com.example.ComicToon.Models.RequestResponseModels;
 public class ViewComicForm {
     private String comicName;
     private String comicOwnerName;
+    private String viewerName;
 
     public String getComicName() {
         return this.comicName;
@@ -24,5 +25,13 @@ public class ViewComicForm {
 
     public void setComicName(String comicName) {
         this.comicName = comicName;
+    }
+
+    public String getViewerName() {
+        return this.viewerName;
+    }
+
+    public void setViewerName(String viewerName) {
+        this.viewerName = viewerName;
     }
 }

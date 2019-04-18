@@ -122,7 +122,7 @@ export const createComic = (username, desc, comicName, seriesName, userList, pri
     })();
 }
 
-export const viewComic = (username, comicName) => (dispatch) => {
+export const viewComic = (username, viewerName, comicName) => (dispatch) => {
     (async () => {
         const res = await fetch('http://localhost:8080/view/comic', {
             method: "POST",
@@ -132,18 +132,22 @@ export const viewComic = (username, comicName) => (dispatch) => {
             },
             body: JSON.stringify({
                 comicName: comicName,
-                comicOwnerName: username
+                comicOwnerName: username,
+                viewerName: viewerName
             })
         });
         let content = await res.json();
         console.log(content);
         if (!content.comicName) {
-            alert('Could not find comic.'); // No comic/no permission
+            dispatch({
+                type: SAVE_NEW_COMIC_DATA,
+                payload: { saveNewComic: { error: "No permission to see comic or does not exist." } }
+            });
         } else {
             dispatch({
                 type: SAVE_NEW_COMIC_DATA,
                 payload: { saveNewComic: content }
-            })
+            });
         }
     })();
 }

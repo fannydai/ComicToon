@@ -378,6 +378,11 @@ public class ComicController{
         System.out.println(findComic);
         
         if(findComic!=null){
+            // Check permissions
+            ArrayList<String> shared = findComic.getSharedWith();
+            if (!form.getComicOwnerName().equals(form.getViewerName()) && !shared.contains(form.getViewerName())) {
+                return result;
+            }
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
             ArrayList<CommentModel> comments = new ArrayList<CommentModel>();
             ArrayList<RatingModel> ratings = new ArrayList<RatingModel>();
