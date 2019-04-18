@@ -44,11 +44,11 @@ class UserDashboard extends Component {
         })(); 
     }
 
-    handleClick = (series, event) => {
+    handleClick = (series) => {
         this.props.history.push(`/view/series/${this.props.history.location.state.username}/${series.name}`);
     }
 
-    handleUpdate = (series, event) => {
+    handleUpdate = (series) => {
         this.props.history.push(`/update/series/${this.props.history.location.state.username}/${series.name}`);
     }
     
@@ -73,7 +73,7 @@ class UserDashboard extends Component {
             <div className="view-series-container">
                 <NavigationBar />
                 <div className="view-series-top">
-                    <h1>Your Series</h1>
+                    <h1>User Series</h1>
                 </div>
                 <div className="view-series-bottom">
                     {seriesCards}

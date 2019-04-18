@@ -59,11 +59,53 @@ class Search extends Component {
     }
 
     handleSubscribe = () => {
-        alert(`You are now subscribed to ${this.state.user.username}!!`)
+        if(localStorage.getItem("user") === this.state.user.username)
+            alert("YOU CAN'T SUBSCRIBE TO YOURSELF XD");
+        else{
+            (async () => {
+                const res = await fetch("http://localhost:8080/subscribe", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: localStorage.getItem("user"),
+                        sub: this.state.user.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                if(content.result === "error") alert("YOU'RE ALREADY SUBSCRIBED TO THIS USER!")
+                else alert(`You are now subscribed to ${this.state.user.username}!!`)
+            })(); 
+        }
     }
 
     handleUnSubscribe = () => {
-        alert(`You are now UNsubscribed to ${this.state.user.username}!!`)
+        if(localStorage.getItem("user") === this.state.user.username)
+            alert("YOU CAN'T UNSUBSCRIBE TO YOURSELF XD");
+        else{
+            console.log(this.state.user.username);
+            (async () => {
+                console.log(this.state.user.username);
+                const res = await fetch("http://localhost:8080/unsubscribe", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: localStorage.getItem("user"),
+                        unSub: this.state.user.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                if(content.result === "error") alert("YOU'RE NOT EVEN SUBSCRIBED TO THIS USER!")
+                else alert(`You are now unsubscribed to ${this.state.user.username}!!`)
+            })(); 
+        }
     }
 
     render() {

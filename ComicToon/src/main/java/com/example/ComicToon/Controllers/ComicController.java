@@ -478,8 +478,43 @@ public class ComicController{
         if(user == null) {
             return result;
         } else {
-            user.getSubscriptions().add(form.getUsername());
+            ArrayList<String> temp = user.getSubscriptions();
+            for(String str : temp){
+                if(str.equals(form.getSub())){ //already subbed to this user
+                    result.setResult("error");
+                    return result;
+                }
+            }
+            user.getSubscriptions().add(form.getSub());
+            userRepository.save(user);
             result.setResult("success");
+        }
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/unsubscribe", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public UnSubscriptionResult unsubscribe(@RequestBody UnSubscriptionForm form){
+        UnSubscriptionResult result = new UnSubscriptionResult();
+        UserModel user = userRepository.findByusername(form.getUsername());
+        System.out.println("user.. "+ form.getUsername());
+        System.out.println("to unsub.. " + form.getUnSub());
+        if(user == null) {
+            return result;
+        } else {
+            ArrayList<String> temp = user.getSubscriptions();
+            for(String str : temp){
+                System.out.println(str);
+                if(str.equals(form.getUnSub())){ 
+                    temp.remove(str);
+                    user.setSubscriptions(temp);
+                    userRepository.save(user);
+                    result.setResult("success");
+                    return result;
+                }
+            }
+            result.setResult("error"); //tryna unsub to someone they're not subbed to
         }
         return result;
     }
