@@ -40,7 +40,7 @@ class ViewComic extends Component {
         // Load comic only if this page is not redirected from create comic
         if (!this.props.comic.saveNewComic.comicName) {
             console.log('VIEW COMIC FETCHING DATA');
-            this.props.viewComic(this.props.match.params.username, this.props.match.params.comicName);
+            this.props.viewComic(this.props.match.params.username, localStorage.getItem('user'), this.props.match.params.comicName);
         }
     }
 
@@ -80,6 +80,11 @@ class ViewComic extends Component {
     }
 
     render() {
+        console.log(this.props.comic);
+        // Check permissions
+        if (this.props.comic.saveNewComic.error) {
+            this.props.history.push('/notfound');
+        }
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         const subButton = localStorage.getItem('user') !== this.props.match.params.username ? this.state.subbed ? 
         <div className="ml-auto">
