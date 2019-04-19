@@ -20,11 +20,19 @@ class UserDashboard extends Component {
         super(props);
         console.log(this.props.comic);
         this.state = {
-            isLoading: true
+            isLoading: true,
+            visible: true
         }
     }
 
     componentDidMount() {
+        if(this.props.history.location.state.username === this.props.CurrUser.username){
+            this.setState({visible: true})
+        }
+        else{
+            this.setState({visible: false})
+        }
+
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
                 method: "POST",
@@ -54,13 +62,18 @@ class UserDashboard extends Component {
     
     render() {
         const seriesCards = this.props.comic.userSeries.length ? this.props.comic.userSeries.map((series, i) => {
+            const BtnComp = () => {
+                return (
+                    <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(series, e)}>Update</button></Card.Text>
+                )
+            }
             return (
                 series ? 
                 <Card key={i} className="view-series-card">
                     <Card.Body>
                         <Card.Title className="view-series-card-title" onClick={(e) => this.handleClick(series, e)}>{series.name}</Card.Title>
                         <Card.Text>Artist: {this.props.history.location.state.username}</Card.Text>
-                        <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(series, e)}>Update</button></Card.Text>
+                        {this.state.visible ? <BtnComp /> : null}
                     </Card.Body>
                 </Card>
                 : null

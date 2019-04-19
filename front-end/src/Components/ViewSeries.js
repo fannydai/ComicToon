@@ -19,11 +19,20 @@ class ViewSeries extends Component {
         super(props);
         this.state = {
             comicData: [],
-            panels: []
+            panels: [],
+            visible: true
         }
     }
 
     componentDidMount() {
+        console.log(this.props.match.params.username)
+        console.log(localStorage.getItem("user"))
+        if(this.props.match.params.username !== localStorage.getItem('user')){
+            this.setState({visible: false})
+        }
+        else{
+            this.setState({visible: true})
+        }
         (async () => {
             const res = await fetch('http://localhost:8080/view/comic-series', {
                 method: "POST",
@@ -85,6 +94,11 @@ class ViewSeries extends Component {
             }
         }*/
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
+            const BtnComp = () => {
+                return (
+                    <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(comic, e)} >Update</button></Card.Text>
+                )
+            }
             return (
                 <Card key={i} className="view-one-series-card">
                     <Card.Img variant="top" src={this.state.panels[i]} />
@@ -93,7 +107,7 @@ class ViewSeries extends Component {
                         <Card.Text>Artist: {comic.username}</Card.Text>
                         <Card.Text>Series: {this.props.match.params.seriesName}</Card.Text>
                         <Card.Text>Rate: +200</Card.Text>
-                        <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(comic, e)}>Update</button></Card.Text>
+                        {this.state.visible ? <BtnComp /> : null}
                     </Card.Body>
                 </Card>
             );

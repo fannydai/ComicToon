@@ -29,7 +29,10 @@ class ViewComic extends Component {
             comicData: {},
             panelIndex: 0,
             subbed: false,
-            rating: 0
+            rating: 0,
+            didDownVote: false,
+            didUpVote: false
+
         }
     }
 
@@ -138,6 +141,7 @@ class ViewComic extends Component {
                 console.log(content)
                 if(content.result !== "success") alert("you're trying to do multiple upvotes...")
                 else alert("You just up voted!");
+                this.setState({didUpVote: !this.state.didUpVote, didDownVote: false})
                 this.updateRating();
             })();
         }
@@ -158,11 +162,12 @@ class ViewComic extends Component {
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: -1
                     })
-                });
+                }); 
                 let content = await res.json();
                 console.log(content)
                 if(content.result !== "success") alert("you're trying to do multiple downvotes...")
                 else alert("You just down voted:(");
+                this.setState({didUpVote: false, didDownVote: !this.state.didDownVote})
                 this.updateRating();
             })();
         }

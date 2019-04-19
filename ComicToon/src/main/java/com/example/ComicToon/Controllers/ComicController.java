@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.Iterator;
 
 @RestController
 public class ComicController{
@@ -642,13 +643,11 @@ public class ComicController{
         UserModel user = userRepository.findByusername(form.getUsername());
         if (comic != null && user != null) {
             List<RatingModel> temp= ratingRepository.findAll();
-            for(RatingModel item: temp){
-                if(!item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
-                    temp.remove(item);
+            for(Iterator<RatingModel> it = temp.iterator(); it.hasNext();){
+                RatingModel item = it.next();
+                if(item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
+                    ratingRepository.delete(item); //delete existing to replace
                 }
-            }
-            if(temp.size() != 0){
-                ratingRepository.delete(temp.get(0)); //deletes it so new one can replace
             }
             RatingModel newRating = new RatingModel(user.getId(), form.getRating(), comic.getId());
             ratingRepository.save(newRating);
