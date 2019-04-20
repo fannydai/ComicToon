@@ -32,9 +32,7 @@ class ViewAllComics extends Component {
         if (!localStorage.getItem('user')) {
             this.props.history.push('/welcome');
         }
-        if (this.props.nav.User_Comic_View.length) {
-
-        } else {
+         else {
             (async () => {
                 const res = await fetch("http://localhost:8080/view/allComics", {
                     method: "POST",
