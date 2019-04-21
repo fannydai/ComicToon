@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 
 import './styles/ViewAllSeries.css';
 import NavigationBar from './NavigationBar';
@@ -59,6 +59,11 @@ class UserDashboard extends Component {
     handleUpdate = (series) => {
         this.props.history.push(`/update/series/${this.props.history.location.state.username}/${series.name}`);
     }
+
+    handleReport = (e) => {
+        alert("Reported!!")
+        //todo
+    }
     
     render() {
         const seriesCards = this.props.comic.userSeries.length ? this.props.comic.userSeries.map((series, i) => {
@@ -74,6 +79,9 @@ class UserDashboard extends Component {
                         <Card.Title className="view-series-card-title" onClick={(e) => this.handleClick(series, e)}>{series.name}</Card.Title>
                         <Card.Text>Artist: {this.props.history.location.state.username}</Card.Text>
                         {this.state.visible ? <BtnComp /> : null}
+                        {!this.state.visible ? 
+                        <Button onClick={this.handleReport} variant="danger">Report Series</Button>
+                        : null}
                     </Card.Body>
                 </Card>
                 : null

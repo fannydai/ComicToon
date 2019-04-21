@@ -8,7 +8,6 @@ import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavigationBar from './NavigationBar';
 import './styles/ViewComic.css';
 import pusheen from './images/pusheen.png';
-import shoes from './images/shoes.png';
 import { viewComic } from './../Actions/NavbarActions';
 import { clearPanels, saveNewComic } from './../Actions/ComicActions';
 
@@ -198,10 +197,10 @@ class ViewComic extends Component {
                                     <FontAwesomeIcon icon="chevron-left" size="2x" onClick={this.handleLeft} />
                                 </div>
                                 <div className="view-comic-panel-container">
-                                    {panels && panels[this.state.panelIndex] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex].image} /></div> : null}
-                                    {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} /></div> : null}
-                                    {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} /></div> : null}
-                                    {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} /></div> : null}
+                                    {panels && panels[this.state.panelIndex] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex].image} alt="can't load"/></div> : null}
+                                    {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
+                                    {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
+                                    {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
                                 </div>
                                 <div className="view-comic-navigate">
                                     <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
@@ -213,10 +212,10 @@ class ViewComic extends Component {
                                     <div className="view-comic-button-row ml-auto">
                                         <FontAwesomeIcon icon="history" size="2x" />
                                         <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} />
-                                        <FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" />
-                                        <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" />
-                                        <p onClick={this.handleUpVote}>up</p> {/* temporarily using this bc thumbs up & down icon not working..*/}
-                                        <p onClick={this.handleDownVote}>down</p>
+                                        {/*<FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" />
+                                        <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" />*/}
+                                        <p onClick={this.handleUpVote}>Up-Vote</p> {/* temporarily using this bc thumbs up & down icon not working..*/}
+                                        <p onClick={this.handleDownVote}>Down-Vote</p>
                                         <p className="view-comic-rating">{this.state.rating}</p>
                                     </div>
                                 </div>
@@ -252,19 +251,19 @@ class ViewComic extends Component {
                         </div>
                         <div className="view-comic-right">
                             <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} />
+                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
                             </div>
                             <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} />
+                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
                             </div>
                             <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} />
+                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
                             </div>
                             <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} />
+                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
                             </div>
                             <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} />
+                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
                             </div>
                         </div>
                     </div>

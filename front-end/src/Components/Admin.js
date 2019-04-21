@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import './styles/Admin.css';
+import {withRouter} from 'react-router-dom'
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 
 class Admin extends Component {
     constructor(){
@@ -23,11 +26,10 @@ class Admin extends Component {
     render() {
         return (
             <div>
+                <NavigationBar />
+                <h1> ADMIN WELCOME </h1>
                 <div className="de-active">
-                    <Form className="search-deactivate" onSubmit={this.handleRequest}>
-                        <Form.Control name="toDeactivate" type="text" placeholder="Enter a username to deactive..." />
-                        <Button type="submit" variant="primary">Search!</Button>
-                    </Form>
+                    {/* suggested users will appear here*/}
                 </div>
                 <div className="del-series">
                     {/* suggested series of users will appear here*/}
@@ -38,9 +40,10 @@ class Admin extends Component {
                 <div className="del-comments">
                     {/* suggested comments of users will appear here*/}
                 </div>
+                <Footer />
             </div>
         );
     }
 }
 
-export default Admin;
+export default withRouter(Admin);

@@ -12,7 +12,6 @@ import { faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, f
     faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
     faChevronLeft,faPaintBrush, faHandPointer
 } from '@fortawesome/free-solid-svg-icons';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import CreateSeries from './Components/CreateSeries';
 import UploadComic from './Components/UploadComic';
 import ViewAllComics from './Components/ViewAllComics';
@@ -33,7 +32,6 @@ import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store';
 import Search from './Components/Search'
 import UserDashboard from './Components/UserDashboard'
-import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 library.add(faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
@@ -45,6 +43,7 @@ ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
             <Switch>
+                <Route exact path="/admin" component={Admin} />
                 <Route exact path="/welcome" component={App} />
                 <Route exact path="/create/series" component={CreateSeries} />
                 <Route exact path="/create/comic" component={CreateComic} />
@@ -53,8 +52,7 @@ ReactDOM.render(
                 <Route exact path="/upload" component={UploadComic} />
                 <Route exact path="/home" component={HomeContent} />
                 <Route exact path="/verify" component={Verify} />
-                <Route exact path="/logout" component={App} />   
-                <Route exact path="/admin" component={Admin} /> 
+                <Route exact path="/logout" component={App} />    
                 <Route exact path="/about" component={About} />
                 <Route exact path="/canvas" component={Canvas} />  
                 <Route exact path="/subscriptions" component={ViewSubs} />

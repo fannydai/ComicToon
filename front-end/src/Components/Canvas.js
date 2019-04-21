@@ -323,7 +323,7 @@ class Canvas extends Component {
                 this.setState({ previousCanvas: lastElement });
             });
         }
-        if(this.state.undo.length == 0) {
+        if(this.state.undo.length === 0) {
             this.setState({undoBtn: 'disable'});
         }
     }
@@ -338,7 +338,7 @@ class Canvas extends Component {
                 this.setState({ previousCanvas: lastElement });
             });
         }
-        if(this.state.redo.length == 0) {
+        if(this.state.redo.length === 0) {
             this.setState({redoBtn: 'disable'});
         }
     }

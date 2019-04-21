@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 import {withRouter} from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux'
+
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user
+});
 
 class Search extends Component {
 
@@ -10,11 +16,14 @@ class Search extends Component {
         this.state = {
             user: null,
             seriess: [],
-            comics: []
+            comics: [],
+            visible: true
         }
     }
 
     componentDidMount(){
+        if(this.props.history.location.state.query === this.props.CurrUser.username) this.setState({visible: false})
+        else this.setState({visible: true})
        console.log(this.props.history.location.state.query);
        (async () => {
             const res = await fetch("http://localhost:8080/search", {
@@ -33,12 +42,22 @@ class Search extends Component {
         })();   
     }
 
+    handleReport = (e) =>{
+        alert("Reported!");
+        //todo
+    }
+
     renderUser() {
         console.log(this.state.user)
         return (
             <div>
-                <button onClick={this.handleSubscribe}>Subscribe</button>
-                <button onClick={this.handleUnSubscribe}>UnSubscribe</button>
+                {this.state.visible ?
+                <div>
+                    <button onClick={this.handleSubscribe}>Subscribe</button>
+                    <button onClick={this.handleUnSubscribe}>UnSubscribe</button>
+                    <Button onClick={this.handleReport} variant="danger">Report User</Button>
+                </div>
+                 : null}
                 <div onClick={this.handleSeeUserStuff}>
                     <h4>{this.state.user.username}</h4>
                     <h4>Total Series: {this.state.user.comicSeries.length} </h4>
@@ -59,53 +78,45 @@ class Search extends Component {
     }
 
     handleSubscribe = () => {
-        if(localStorage.getItem("user") === this.state.user.username)
-            alert("YOU CAN'T SUBSCRIBE TO YOURSELF XD");
-        else{
-            (async () => {
-                const res = await fetch("http://localhost:8080/subscribe", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json; charset=utf-8"
-                    },
-                    body: JSON.stringify({
-                        username: localStorage.getItem("user"),
-                        sub: this.state.user.username
-                    })
-                });
-                let content = await res.json();
-                console.log(content)
-                if(content.result === "error") alert("YOU'RE ALREADY SUBSCRIBED TO THIS USER!")
-                else alert(`You are now subscribed to ${this.state.user.username}!!`)
-            })(); 
-        }
+        (async () => {
+            const res = await fetch("http://localhost:8080/subscribe", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    username: localStorage.getItem("user"),
+                    sub: this.state.user.username
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            if(content.result === "error") alert("YOU'RE ALREADY SUBSCRIBED TO THIS USER!")
+            else alert(`You are now subscribed to ${this.state.user.username}!!`)
+        })(); 
     }
 
     handleUnSubscribe = () => {
-        if(localStorage.getItem("user") === this.state.user.username)
-            alert("YOU CAN'T UNSUBSCRIBE TO YOURSELF XD");
-        else{
+        console.log(this.state.user.username);
+        (async () => {
             console.log(this.state.user.username);
-            (async () => {
-                console.log(this.state.user.username);
-                const res = await fetch("http://localhost:8080/unsubscribe", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json; charset=utf-8"
-                    },
-                    body: JSON.stringify({
-                        username: localStorage.getItem("user"),
-                        unSub: this.state.user.username
-                    })
-                });
-                let content = await res.json();
-                console.log(content)
-                if(content.result === "error") alert("YOU'RE NOT EVEN SUBSCRIBED TO THIS USER!")
-                else alert(`You are now unsubscribed to ${this.state.user.username}!!`)
-            })(); 
-        }
+            const res = await fetch("http://localhost:8080/unsubscribe", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    username: localStorage.getItem("user"),
+                    unSub: this.state.user.username
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            if(content.result === "error") alert("YOU'RE NOT EVEN SUBSCRIBED TO THIS USER!")
+            else alert(`You are now unsubscribed to ${this.state.user.username}!!`)
+        })(); 
     }
 
     render() {
@@ -130,4 +141,4 @@ class Search extends Component {
     }
 }
 
-export default withRouter(Search);
+export default connect(StateToProps, {})(withRouter(Search));

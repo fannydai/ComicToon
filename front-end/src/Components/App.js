@@ -4,12 +4,18 @@ import './styles/App.css';
 import Authentication from './Authentication';
 import HomeContent from './HomeContent';
 import logo from './images/logo.jpg';
+import Admin from './Admin'
 
 import Footer from './Footer';
 class App extends Component {
 
 	render() {
-		if (localStorage.getItem('user')) {
+		if (localStorage.getItem('user') === "admin") {
+			return (
+				<Admin />
+			);
+		}
+		else if (localStorage.getItem('user')) {
 			return (
 				<HomeContent />
 			);
@@ -25,7 +31,6 @@ class App extends Component {
 				</div>
 			</div>
 		);
-		
 	}
 }
 

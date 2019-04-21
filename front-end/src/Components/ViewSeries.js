@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
@@ -7,7 +7,6 @@ import {withRouter} from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewSeries.css';
-import pusheen from './images/pusheen.png';
 
 const StateToProps = (state) => ({ //application level state via redux
     UserSeries: state.NavBar.User_Series,
@@ -99,6 +98,11 @@ class ViewSeries extends Component {
         this.props.history.push(`/update/comic/${comic.username}/${comic.name}`);
     }
 
+    handleReport = (e) => {
+        alert("Reported!!")
+        //todo
+    }
+
     render() {
         
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
@@ -116,6 +120,9 @@ class ViewSeries extends Component {
                         <Card.Text>Series: {this.props.match.params.seriesName}</Card.Text>
                         <Card.Text> Rating: {this.state.ratings[i]}</Card.Text>
                         {this.state.visible ? <BtnComp /> : null}
+                        {!this.state.visible ? 
+                        <Button onClick={this.handleReport} variant="danger">Report Comic</Button>
+                        : null}
                     </Card.Body>
                 </Card>
             );
