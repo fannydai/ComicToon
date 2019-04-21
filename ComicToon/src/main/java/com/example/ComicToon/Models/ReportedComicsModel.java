@@ -82,8 +82,7 @@ public class ReportedComicsModel {
         this.reason = reason;
     }
 
-    public ReportedComicsModel(String id, String name, String username, String userID, String reason){
-        this.id = id;
+    public ReportedComicsModel(String name, String username, String userID, String reason){
         this.name = name;
         this.username = username;
         this.userID = userID;

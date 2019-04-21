@@ -67,8 +67,7 @@ public class ReportedCommentsModel {
         this.username = username;
     }
 
-    public ReportedCommentsModel(String id, String userID, String username, String reason) {
-        this.id = id;
+    public ReportedCommentsModel(String userID, String username, String reason) {
         this.userID = userID;
         this.username = username;
         this.reason = reason;

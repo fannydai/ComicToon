@@ -82,8 +82,7 @@ public class ReportedSeriesModel {
         this.username = username;
     }
 
-    public ReportedSeriesModel(String id, String name, String userID, String username, String reason) {
-        this.id = id;
+    public ReportedSeriesModel(String name, String userID, String username, String reason) {
         this.name = name;
         this.userID = userID;
         this.username = username;
