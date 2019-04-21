@@ -7,8 +7,9 @@ public class ReportedCommentsModel {
     @Id
     public String id;
     @Field()
-    private String userID;
-    private String username;
+    private String commentID; //comment to be reported
+    private String userID; //person who reported it
+    private String username; //person who reported it
     private String reason;
 
     /**
@@ -67,9 +68,24 @@ public class ReportedCommentsModel {
         this.username = username;
     }
 
-    public ReportedCommentsModel(String userID, String username, String reason) {
+    public ReportedCommentsModel(String commentID, String userID, String username, String reason) {
+        this.commentID = commentID;
         this.userID = userID;
         this.username = username;
         this.reason = reason;
+    }
+
+    /**
+     * @return the commentID
+     */
+    public String getCommentID() {
+        return commentID;
+    }
+
+    /**
+     * @param commentID the commentID to set
+     */
+    public void setCommentID(String commentID) {
+        this.commentID = commentID;
     }
 }

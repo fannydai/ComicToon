@@ -7,9 +7,9 @@ public class ReportedComicsModel {
     @Id
     public String id;
     @Field()
-    private String name;
-    private String userID;
-    private String username;
+    private String comicID; //comic reported
+    private String userID; //person who reported it
+    private String username; //person who reported it
     private String reason;
 
     /**
@@ -24,20 +24,6 @@ public class ReportedComicsModel {
      */
     public void setId(String id) {
         this.id = id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -82,10 +68,24 @@ public class ReportedComicsModel {
         this.reason = reason;
     }
 
-    public ReportedComicsModel(String name, String username, String userID, String reason){
-        this.name = name;
+    public ReportedComicsModel(String comicID, String username, String userID, String reason){
+        this.comicID = comicID;
         this.username = username;
         this.userID = userID;
         this.reason = reason;
+    }
+
+    /**
+     * @return the comicID
+     */
+    public String getComicID() {
+        return comicID;
+    }
+
+    /**
+     * @param comicID the comicID to set
+     */
+    public void setComicID(String comicID) {
+        this.comicID = comicID;
     }
 }

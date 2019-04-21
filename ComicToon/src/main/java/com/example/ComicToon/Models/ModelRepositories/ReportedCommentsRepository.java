@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ReportedCommentsRepository extends MongoRepository<ReportedCommentsModel, String>{
     public ReportedCommentsModel findByid(String id);
-    public ReportedCommentsModel findByuserID(String userID);
-    public ReportedCommentsModel findByusername(String username);
+    public ReportedCommentsModel findByuserID(String userID); //person who reported
+    public ReportedCommentsModel findByusername(String username); // same^^
     public List<ReportedCommentsModel> findAll();
 }

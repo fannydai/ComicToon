@@ -7,8 +7,8 @@ public class ReportedUsersModel {
     @Id
     public String id;
     @Field()
-    private String userID;
-    private String username;
+    private String userID; //person who's reporting
+    private String username; //person getting reported
     private String reason;
 
     /**

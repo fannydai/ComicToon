@@ -7,9 +7,9 @@ public class ReportedSeriesModel {
     @Id
     public String id;
     @Field()
-    private String name;
-    private String userID;
-    private String username;
+    private String seriesID; //series to be reported
+    private String userID; //person who's reporting
+    private String username; //person who's reporting
     private String reason;
 
     /**
@@ -24,20 +24,6 @@ public class ReportedSeriesModel {
      */
     public void setId(String id) {
         this.id = id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -82,10 +68,24 @@ public class ReportedSeriesModel {
         this.username = username;
     }
 
-    public ReportedSeriesModel(String name, String userID, String username, String reason) {
-        this.name = name;
+    public ReportedSeriesModel(String seriesID, String userID, String username, String reason) {
+        this.seriesID = seriesID;
         this.userID = userID;
         this.username = username;
         this.reason = reason;
+    }
+
+    /**
+     * @return the seriesID
+     */
+    public String getSeriesID() {
+        return seriesID;
+    }
+
+    /**
+     * @param seriesID the seriesID to set
+     */
+    public void setSeriesID(String seriesID) {
+        this.seriesID = seriesID;
     }
 }
