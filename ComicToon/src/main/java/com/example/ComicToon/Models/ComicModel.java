@@ -2,12 +2,7 @@ package com.example.ComicToon.Models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Locale;
-import java.text.SimpleDateFormat;
 
 public class ComicModel{
     @Id
@@ -145,19 +140,4 @@ public class ComicModel{
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
-
-    // private final static String dateFormat = "EEE MMM dd HH:mm:ss yyyy";
-    // private final static Comparator<String> dateComp = new Comparator<String>() {
-    //     public int compare(String s1, String s2) {
-    //         Date d1 = null;
-    //         Date d2 = null;
-    //         try {
-    //             d1 = new SimpleDateFormat( dateFormat,Locale.ENGLISH ).parse(s1);
-    //             d2 = new SimpleDateFormat( dateFormat,Locale.ENGLISH ).parse(s2);
-    //         } catch (ParseException e) {
-    //             //HANDLE THIS EXCEPTION
-    //         }
-    //         return -1 * d1.compareTo(d2);
-    //     }
-    // };
 }
