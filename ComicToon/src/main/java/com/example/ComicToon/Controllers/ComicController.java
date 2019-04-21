@@ -480,17 +480,31 @@ public class ComicController{
     @ResponseBody
     public SearchResult search(@RequestBody SearchForm form){
         SearchResult result = new SearchResult();
-
-        //search all 3 to see if any match
-        UserModel user = userRepository.findByusername(form.getQuery());
-        ArrayList<ComicModel> comics = comicRepository.findByname(form.getQuery());
-        ArrayList<ComicSeriesModel> all_series = ComicSeriesRepository.findByname(form.getQuery());
-        if(user != null)
-            result.setUser(user); 
-        if(comics != null)
-            result.setAll_comics(comics);
-        if(all_series != null)
-            result.setAll_series(all_series);
+        //search all 3 to see if any username, comic anme, or series name match search query
+        List<UserModel> allUsers = userRepository.findAll();
+        ArrayList<UserModel> matchedUsers = new ArrayList<>();
+        for(UserModel u: allUsers){
+            if(u.getUsername().contains(form.getQuery())){
+                matchedUsers.add(u);
+            }
+        }
+        List<ComicSeriesModel> allseries = ComicSeriesRepository.findAll();
+        ArrayList<ComicSeriesModel> matchedSeries = new ArrayList<>();
+        for( ComicSeriesModel c : allseries){
+            if(c.getName().contains(form.getQuery())){
+                matchedSeries.add(c);
+            }
+        }
+        List<ComicModel> allComics = comicRepository.findAll();
+        ArrayList<ComicModel> matchedComics = new ArrayList<>();
+        for(ComicModel x: allComics){
+            if(x.getName().contains(form.getQuery())){
+                matchedComics.add(x);
+            }
+        }
+        result.setUsers(matchedUsers);
+        result.setAll_series(matchedSeries);
+        result.setAll_comics(matchedComics);
         return result;
     }
 
