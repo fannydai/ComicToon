@@ -8,6 +8,7 @@ public class ReportedCommentsModel {
     public String id;
     @Field()
     private String userID;
+    private String username;
     private String reason;
 
     /**
@@ -52,9 +53,24 @@ public class ReportedCommentsModel {
         this.reason = reason;
     }
 
-    public ReportedCommentsModel(String id, String userID, String reason) {
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public ReportedCommentsModel(String id, String userID, String username, String reason) {
         this.id = id;
         this.userID = userID;
+        this.username = username;
         this.reason = reason;
-    }   
+    }
 }
