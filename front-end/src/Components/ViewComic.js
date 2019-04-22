@@ -30,8 +30,9 @@ class ViewComic extends Component {
             subbed: false,
             rating: 0,
             didDownVote: false,
-            didUpVote: false
-
+            didUpVote: false,
+            comment: '',
+            comments: [],
         }
     }
 
@@ -50,6 +51,8 @@ class ViewComic extends Component {
 
     componentWillReceiveProps(nextProps){
         console.log(nextProps);
+        // Set the new comments
+        this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
         (async () => {
             const res = await fetch("http://localhost:8080/comic/rate/getRating", {
                 method: "POST",
@@ -172,6 +175,77 @@ class ViewComic extends Component {
         }
     }
 
+    handleComment = (event) => {
+        event.preventDefault();
+        console.log('COMMENTING');
+        // Adds comment on backend, updates comments with this one and fetches the comments again
+        this.setState({ comments: [...this.state.comments, { username: localStorage.getItem('user'), content: this.state.comment }] });
+        (async () => {
+            const res = await fetch("http://localhost:8080/comment", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicOwner: this.props.match.params.username,
+                    comicName: this.props.match.params.comicName,
+                    commenterName: localStorage.getItem('user'),
+                    content: this.state.comment
+                })
+            });
+            let content = await res.json();
+            console.log(content);
+            if(content.status !== "success") {
+                alert('Your comment could not be posted');
+                // Remove the comment that was appended in the beginning
+                var copy = [...this.state.comments];
+                copy.splice(copy.length - 1, 1);
+                this.setState({ comments: copy });
+            }
+            // Reload the comments in case of change
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/comic", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        comicName: this.props.match.params.comicName,
+                        comicOwnerName: this.props.match.params.username,
+                        viewerName: localStorage.getItem('user')
+                    })
+                });
+                let content = await res.json();
+                console.log(content);
+                // Update comments if successful
+                if (content.commentsList) {
+                    this.setState({ comments: content.commentsList, comment: '' });
+                }
+            })();
+        })();
+    }
+
+    renderComments = () => {
+        return this.state.comments.map((comment, index) => {
+            return (
+                <div className="view-comic-comment" key={index}>
+                    <div className="view-comic-comment-info">
+                        <p>{ comment.username }</p>
+                        <FontAwesomeIcon icon="trash" />
+                    </div>
+                    <p>{ comment.content }</p>
+                </div>
+            );
+        });
+    }
+
+    handleChange = (event) => {
+        event.preventDefault();
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
     render() {
         console.log(this.props.comic);
         // Check permissions
@@ -235,8 +309,8 @@ class ViewComic extends Component {
                                 </div>
                                 <hr />
                                 <Form className="view-comic-comment-form">
-                                    <Form.Control as="textarea" rows="2" className="view-comic-comment-input" name="comicCommentInput" type="text" placeholder="Comment on this comic..." />
-                                    <Button>Submit</Button>
+                                    <Form.Control as="textarea" rows="2" className="view-comic-comment-input" name="comment" type="text" placeholder="Comment on this comic..." value={this.state.comment} onChange={this.handleChange} />
+                                    <Button onClick={this.handleComment}>Submit</Button>
                                 </Form>
                                 <div className="view-comic-comment-container">
                                     <div className="view-comic-comment">
@@ -246,6 +320,7 @@ class ViewComic extends Component {
                                         </div>
                                         <p>This comic was great! Please post more.</p>
                                     </div>
+                                    {this.renderComments()}
                                 </div>
                             </div>
                         </div>
