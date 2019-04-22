@@ -753,6 +753,24 @@ public class ComicController{
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/deactivate", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeactivateResult deactivate(@RequestBody Deactivate form){
+        DeactivateResult result = new DeactivateResult();
+        UserModel temp = userRepository.findByid(form.getUserID());
+        temp.setActive(false); //deactivate
+        userRepository.save(temp);
+        List<ReportedUsersModel> badBoi = reportedUsersRepo.findByreportedUserID(form.getUserID()); 
+        
+        //remove all instances of deactivated user reports from reported users collections
+        for(ReportedUsersModel x: badBoi){
+            reportedUsersRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
     //Download Comic
 
     //Comment on Comic

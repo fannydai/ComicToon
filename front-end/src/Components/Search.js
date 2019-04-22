@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 import {withRouter} from 'react-router-dom';
-import { Card, Button, Alert } from 'react-bootstrap';
+import { Card, Button} from 'react-bootstrap';
 import { connect } from 'react-redux'
 
 const StateToProps = (state) => ({ //application level state via redux

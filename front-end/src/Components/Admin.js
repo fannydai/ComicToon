@@ -14,6 +14,10 @@ class Admin extends Component {
         }
     }
 
+    componentDidMount(){
+        //fill page with reported users, comics, series, and comments
+    }
+
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
