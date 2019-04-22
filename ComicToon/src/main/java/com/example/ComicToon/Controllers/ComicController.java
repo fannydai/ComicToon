@@ -773,6 +773,46 @@ public class ComicController{
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveComic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeComic(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        List<ReportedComicsModel> temp = reportedComicsRepo.findBycomicID(form.getId());
+        for(ReportedComicsModel x : temp){
+            reportedComicsRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveSeries", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeSeries(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        List<ReportedSeriesModel> temp = reportedSeriesRepo.findByseriesID(form.getId());
+        for(ReportedSeriesModel x : temp){
+            reportedSeriesRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveComment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeComment(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        List<ReportedCommentsModel> temp = reportedCommentsRepo.findBycommentID(form.getId());
+        for(ReportedCommentsModel x : temp){
+            reportedCommentsRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+
     /*
         * goes through each of the reported models
         * gets the id of whatever that was reported and the # of times it was reported
@@ -866,4 +906,6 @@ public class ComicController{
         result.setStatus("success");
         return result;
     }
+
+
 }
