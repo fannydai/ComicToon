@@ -778,7 +778,7 @@ public class ComicController{
         * gets the id of whatever that was reported and the # of times it was reported
     */
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/adminData", method = RequestMethod.POST, consumes = {"application/json"})
+    @RequestMapping(value = "/adminData", method = RequestMethod.GET, consumes = {"application/json"})
     @ResponseBody
     public AdminDataResult getAdminData(){
         AdminDataResult result = new AdminDataResult();
