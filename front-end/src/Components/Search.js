@@ -40,6 +40,7 @@ class Search extends Component {
                 console.log(this.state);
                 if(this.state.comics.length){
                     this.state.comics.forEach(com=> {
+                        console.log(com.id)
                         this.getRating(com.id);
                     })
                 }
@@ -55,11 +56,14 @@ class Search extends Component {
             alert("You can't report yourself...")
         }
         else{
-            console.log("reported id.. ",reportedID);
-            console.log("reporting id.. ", reportingID);
-            console.log("report type.. ", type);
-            //todo: make request
-            alert("Reported!");
+            this.props.history.push({
+                pathname: '/report', 
+                state: {
+                  reportingID: reportingID,
+                  reportedID: reportedID,
+                  type: type
+                }
+            }) 
         }
     }
 

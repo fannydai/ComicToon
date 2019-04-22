@@ -60,9 +60,20 @@ class UserDashboard extends Component {
         this.props.history.push(`/update/series/${this.props.history.location.state.username}/${series.name}`);
     }
 
-    handleReport = (e) => {
-        alert("Reported!!")
-        //todo
+    handleReport = (e, reportedID, reportingID, type) => {
+        if(e.target.name === "admin"){
+            alert("You can't report an admin")
+        }
+        else{
+            this.props.history.push({
+                pathname: '/report', 
+                state: {
+                  reportingID: reportingID,
+                  reportedID: reportedID,
+                  type: type
+                }
+            }) 
+        }
     }
     
     render() {
@@ -80,7 +91,7 @@ class UserDashboard extends Component {
                         <Card.Text>Artist: {this.props.history.location.state.username}</Card.Text>
                         {this.state.visible ? <BtnComp /> : null}
                         {!this.state.visible ? 
-                        <Button onClick={this.handleReport} variant="danger">Report Series</Button>
+                        <Button name={this.props.history.location.state.username} onClick={(e) =>{this.handleReport(e,series.id,this.props.CurrUser.id, "series")}} variant="danger">Report Series</Button>
                         : null}
                     </Card.Body>
                 </Card>

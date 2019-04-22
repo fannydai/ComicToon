@@ -32,6 +32,7 @@ import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store';
 import Search from './Components/Search'
 import UserDashboard from './Components/UserDashboard'
+import ReportComponent from './Components/ReportComponent';
 
 library.add(faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
@@ -63,6 +64,7 @@ ReactDOM.render(
                 <Route exact path="/recents" component={ViewRecents} />
                 <Route exact path="/search" component={Search} />
                 <Route exact path="/dashboard" component={UserDashboard} />
+                <Route exact path="/report" component={ReportComponent} />
                 <Redirect from="/" exact to="/welcome"/>
                 <Route path="*" component={Error404} />
             </Switch>

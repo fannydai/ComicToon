@@ -98,9 +98,20 @@ class ViewSeries extends Component {
         this.props.history.push(`/update/comic/${comic.username}/${comic.name}`);
     }
 
-    handleReport = (e) => {
-        alert("Reported!!")
-        //todo
+    handleReport = (e, reportedID, reportingID, type) => {
+        if(e.target.name === "admin"){
+            alert("You can't report an admin")
+        }
+        else{
+            this.props.history.push({
+                pathname: '/report', 
+                state: {
+                  reportingID: reportingID,
+                  reportedID: reportedID,
+                  type: type
+                }
+            }) 
+        }  
     }
 
     render() {
@@ -121,7 +132,7 @@ class ViewSeries extends Component {
                         <Card.Text> Rating: {this.state.ratings[i]}</Card.Text>
                         {this.state.visible ? <BtnComp /> : null}
                         {!this.state.visible ? 
-                        <Button onClick={this.handleReport} variant="danger">Report Comic</Button>
+                        <Button name={comic.username} onClick={(e)=>{this.handleReport(e,comic.id,this.props.CurrUser.id,"comic")}} variant="danger">Report Comic</Button>
                         : null}
                     </Card.Body>
                 </Card>
