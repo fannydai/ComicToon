@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
+import { faCloudUploadAlt, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
@@ -34,7 +34,7 @@ import Search from './Components/Search'
 import UserDashboard from './Components/UserDashboard'
 import ReportComponent from './Components/ReportComponent';
 
-library.add(faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
+library.add(faCloudUploadAlt, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
