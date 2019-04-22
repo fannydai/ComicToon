@@ -72,6 +72,7 @@ public class UserRestController {
                 result.setStatus("success");
                 result.setUsername(findUser.getUsername());
                 result.setId(findUser.getId());
+                result.setActive(findUser.getActive());
             }
             else{
                 result.setStatus("Incorrect Login Details");

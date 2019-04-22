@@ -781,6 +781,16 @@ public class ComicController{
     @ResponseBody
     public RemoveResult removeComic(@RequestBody RemoveForm form){
         RemoveResult result = new RemoveResult();
+        ComicModel toDel = comicRepository.findByid(form.getId());
+        if(toDel == null){
+            result.setStatus("err");
+            return result;
+        }
+        ComicSeriesModel series = ComicSeriesRepository.findByid(toDel.getComicSeriesID());
+        series.getComics().remove(form.getId());
+        ComicSeriesRepository.save(series);
+        comicRepository.delete(toDel);
+
         List<ReportedComicsModel> temp = reportedComicsRepo.findBycomicID(form.getId());
         if(temp.size() == 0){
             result.setStatus("comics don't exist");

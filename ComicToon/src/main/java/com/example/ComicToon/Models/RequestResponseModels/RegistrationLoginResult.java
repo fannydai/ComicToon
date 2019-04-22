@@ -4,6 +4,7 @@ public class RegistrationLoginResult{
     private String status;
     private String username;
     private String id;
+    private boolean active;
 
     public String getstatus() {
         return status;
@@ -30,5 +31,19 @@ public class RegistrationLoginResult{
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return the active
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
