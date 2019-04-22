@@ -484,21 +484,21 @@ public class ComicController{
         List<UserModel> allUsers = userRepository.findAll();
         ArrayList<UserModel> matchedUsers = new ArrayList<>();
         for(UserModel u: allUsers){
-            if(u.getUsername().contains(form.getQuery())){
+            if(u.getUsername().contains(form.getQuery()) || form.getQuery().contains(u.getUsername())){
                 matchedUsers.add(u);
             }
         }
         List<ComicSeriesModel> allseries = ComicSeriesRepository.findAll();
         ArrayList<ComicSeriesModel> matchedSeries = new ArrayList<>();
         for( ComicSeriesModel c : allseries){
-            if(c.getName().contains(form.getQuery())){
+            if(c.getName().contains(form.getQuery()) || form.getQuery().contains(c.getName())){
                 matchedSeries.add(c);
             }
         }
         List<ComicModel> allComics = comicRepository.findAll();
         ArrayList<ComicModel> matchedComics = new ArrayList<>();
         for(ComicModel x: allComics){
-            if(x.getName().contains(form.getQuery())){
+            if(x.getName().contains(form.getQuery()) || form.getQuery().contains(x.getName())){
                 matchedComics.add(x);
             }
         }
