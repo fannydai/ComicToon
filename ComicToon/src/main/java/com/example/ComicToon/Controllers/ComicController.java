@@ -417,6 +417,7 @@ public class ComicController{
             // Check permissions
             ArrayList<String> shared = findComic.getSharedWith();
             if (!form.getComicOwnerName().equals(form.getViewerName()) && findComic.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
+                System.out.println("View comic without permission");
                 return result;
             }
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
