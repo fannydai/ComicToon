@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 
 @RestController
@@ -768,6 +769,66 @@ public class ComicController{
             reportedUsersRepo.delete(x);
         }
         result.setStatus("success");
+        return result;
+    }
+
+    /*
+        * goes through each of the reported models
+        * gets the id of whatever that was reported and the # of times it was reported
+    */
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminData", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public AdminDataResult getAdminData(){
+        AdminDataResult result = new AdminDataResult();
+        HashMap<String, Integer> allUserData = new HashMap<>();
+        List<ReportedUsersModel> allUsers = reportedUsersRepo.findAll();
+        for(ReportedUsersModel x: allUsers){
+            if(allUserData.containsKey(x.getReportedUserID())){
+                allUserData.put(x.getReportedUserID(), allUserData.get(x.getReportedUserID())+1); //update frequency if present
+            }
+            else{
+                allUserData.put(x.getReportedUserID(), 1);
+            }
+        }
+
+        HashMap<String, Integer> allSeriesData = new HashMap<>();
+        List<ReportedSeriesModel> allSeries = reportedSeriesRepo.findAll();
+        for(ReportedSeriesModel x: allSeries){
+            if(allSeriesData.containsKey(x.getSeriesID())){
+                allSeriesData.put(x.getSeriesID(), allSeriesData.get(x.getSeriesID())+1); //update frequency if present
+            }
+            else{
+                allSeriesData.put(x.getSeriesID(), 1);
+            }
+        }
+
+        HashMap<String, Integer> allComicsData = new HashMap<>();
+        List<ReportedComicsModel> allComics = reportedComicsRepo.findAll();
+        for(ReportedComicsModel x: allComics){
+            if(allComicsData.containsKey(x.getComicID())){
+                allComicsData.put(x.getComicID(), allComicsData.get(x.getComicID())+1); //update frequency if present
+            }
+            else{
+                allComicsData.put(x.getComicID(), 1);
+            }
+        }
+
+        HashMap<String, Integer> allCommentsData = new HashMap<>();
+        List<ReportedCommentsModel> allComents = reportedCommentsRepo.findAll();
+        for(ReportedCommentsModel x: allComents){
+            if(allCommentsData.containsKey(x.getCommentID())){
+                allCommentsData.put(x.getCommentID(), allCommentsData.get(x.getCommentID())+1); //update frequency if present
+            }
+            else{
+                allComicsData.put(x.getCommentID(), 1);
+            }
+        }
+
+        result.setUsers(allUserData);
+        result.setSeries(allSeriesData);
+        result.setComics(allComicsData);
+        result.setComments(allCommentsData);
         return result;
     }
 
