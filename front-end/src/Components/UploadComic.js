@@ -42,7 +42,7 @@ class UploadComic extends Component {
               })
             });
             let content = await res.json();
-            console.log(content);
+            console.log("GOT ALL SERIES FOR UPLOAD COMIC", content);
             this.setState({ seriesList: content.comicSeries, isLoading: false });
         })();
     }
@@ -171,13 +171,14 @@ class UploadComic extends Component {
                     series: this.state.series,
                     privacy: this.state.privacy,
                     canvas: this.state.json ? JSON.stringify(this.state.json) : '',
-                    image: this.state.image ? JSON.stringify(this.state.image) : '',
+                    image: this.state.image ? this.state.image : '',
                     sharedWith: this.state.sharedUsersList
                   })
                 });
                 let content = await res.json();
                 if (content.result === 'success') {
                     console.log('DONE UPLOAD');
+                    this.props.history.push('/view/comics');
                 } else {
                     alert('Could not upload the comic');
                 }
