@@ -775,4 +775,34 @@ public class ComicController{
     //Download Comic
 
     //Comment on Comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/comment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public CommentResult comment(@RequestBody CommentForm form) {
+        CommentResult result = new CommentResult();
+        UserModel owner = userRepository.findByusername(form.getComicOwner());
+        UserModel commenter = userRepository.findByusername(form.getCommenterName());
+        // Get the comic
+        ComicModel targetComic = null;
+        ArrayList<ComicModel> userComics = comicRepository.findByUserID(owner.getId());
+        for (ComicModel comic : userComics) {
+            if (comic.getName().equals(form.getComicName())) {
+                targetComic = comic;
+                break;
+            }
+        }
+        if (targetComic == null) {
+            result.setStatus("failure");
+            return result;
+        }
+        CommentModel newComment = new CommentModel(commenter.getId(), form.getContent(), (new Date()).toString());
+        // Save the comment and add it to the list of comments on the comic
+        commentRepository.save(newComment);
+        ArrayList<String> commentsList = targetComic.getCommentsList();
+        commentsList.add(newComment.getId());
+        comicRepository.save(targetComic);
+
+        result.setStatus("success");
+        return result;
+    }
 }
