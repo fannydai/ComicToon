@@ -23,6 +23,7 @@ export default function(state = initState, action){
                 username: action.payload.username,
                 id: action.payload.id,
                 pwd: action.payload.pwd,
+                active: true,
                 email: action.payload.email,
                 isValidated: action.payload.verified
             };

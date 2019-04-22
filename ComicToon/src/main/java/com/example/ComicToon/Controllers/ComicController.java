@@ -808,6 +808,16 @@ public class ComicController{
     @ResponseBody
     public RemoveResult removeSeries(@RequestBody RemoveForm form){
         RemoveResult result = new RemoveResult();
+        ComicSeriesModel toDel = ComicSeriesRepository.findByid(form.getId());
+        if(toDel == null){
+            result.setStatus("err");
+            return result;
+        }
+        for(String comicID: toDel.getComics()){
+            ComicModel toDelComic = comicRepository.findByid(comicID);
+            comicRepository.delete(toDelComic);
+        }
+        ComicSeriesRepository.delete(toDel);
         List<ReportedSeriesModel> temp = reportedSeriesRepo.findByseriesID(form.getId());
         if(temp.size() == 0){
             result.setStatus("series don't exist");

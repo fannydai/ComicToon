@@ -103,7 +103,24 @@ class Admin extends Component {
         })();
     }
 
-    deleteSeries = (e) => {
+    deleteSeries = (e) => { //adminRemoveSeries
+        (async () => {
+            const res = await fetch("http://localhost:8080/adminRemoveSeries", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    id: e.target.name
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            if(content.status === "success") {alert("DELETED SERIES AND ITS COMICS!!");}
+            else{alert("SERIES NOT FOUND");}
+            this.componentDidMount();
+        })();
         
     }
 
