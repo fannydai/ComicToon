@@ -9,7 +9,6 @@ public class ReportedCommentsModel {
     @Field()
     private String commentID; //comment to be reported
     private String userID; //person who reported it
-    private String username; //person who reported it
     private String reason;
 
     /**
@@ -54,24 +53,9 @@ public class ReportedCommentsModel {
         this.reason = reason;
     }
 
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public ReportedCommentsModel(String commentID, String userID, String username, String reason) {
+    public ReportedCommentsModel(String commentID, String userID, String reason) {
         this.commentID = commentID;
         this.userID = userID;
-        this.username = username;
         this.reason = reason;
     }
 

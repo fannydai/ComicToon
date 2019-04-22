@@ -9,6 +9,7 @@ import com.example.ComicToon.Models.UserModel;
 public class SearchResult {
     private ArrayList<UserModel> users;
     private ArrayList<ComicSeriesModel> all_series;
+    private ArrayList<String> seriesOwners;
     private ArrayList<ComicModel> all_comics;
 
     public ArrayList<ComicSeriesModel> getAll_series() {
@@ -39,6 +40,20 @@ public class SearchResult {
      */
     public void setUsers(ArrayList<UserModel> users) {
         this.users = users;
+    }
+
+    /**
+     * @return the seriesOwners
+     */
+    public ArrayList<String> getSeriesOwners() {
+        return seriesOwners;
+    }
+
+    /**
+     * @param seriesOwners the seriesOwners to set
+     */
+    public void setSeriesOwners(ArrayList<String> seriesOwners) {
+        this.seriesOwners = seriesOwners;
     }
 
 }

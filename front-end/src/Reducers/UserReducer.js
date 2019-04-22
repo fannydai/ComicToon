@@ -12,6 +12,7 @@ export default function(state = initState, action){
         case LOGIN_USER:
             return {
                 username: action.payload.username,
+                id: action.payload.id,
                 pwd: action.payload.pwd,
                 email: action.payload.email,
                 isValidated: action.payload.verified
@@ -19,6 +20,7 @@ export default function(state = initState, action){
         case REGISTER_USER:
             return{
                 username: action.payload.username,
+                id: action.payload.id,
                 pwd: action.payload.pwd,
                 email: action.payload.email,
                 isValidated: action.payload.verified

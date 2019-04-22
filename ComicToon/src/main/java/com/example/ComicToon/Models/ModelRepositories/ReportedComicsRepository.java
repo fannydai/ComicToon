@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ReportedComicsRepository extends MongoRepository<ReportedComicsModel, String>{
     public ReportedComicsModel findByid(String id);
-    public ReportedComicsModel findByuserID(String userID); //person who reported it
-    public ReportedComicsModel findByusername(String username); //person who reported it
+    public List<ReportedComicsModel> findByuserID(String userID); //person who's reporting
     public List<ReportedComicsModel> findAll();
 }

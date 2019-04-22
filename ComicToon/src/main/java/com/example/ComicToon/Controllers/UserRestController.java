@@ -39,8 +39,10 @@ public class UserRestController {
         if(userRepository.findByusername(form.getUsername()) == null && userRepository.findByemail(form.getEmail())==null){
             UserModel user = new UserModel(form.getEmail(),form.getUsername(), form.getPassword(),"Regular");
             userRepository.save(user);
+            UserModel newUser = userRepository.findByusername(user.getUsername());
             result.setStatus("success");
             result.setUsername(user.getUsername());
+            result.setId(newUser.getId());
         }
         else if(userRepository.findByusername(form.getUsername()) == null && userRepository.findByemail(form.getEmail())!=null){
             result.setStatus("Email Already Exists");
@@ -69,6 +71,7 @@ public class UserRestController {
             if(findUser.getPassword().equals(form.getPassword())){
                 result.setStatus("success");
                 result.setUsername(findUser.getUsername());
+                result.setId(findUser.getId());
             }
             else{
                 result.setStatus("Incorrect Login Details");

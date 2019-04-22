@@ -26,6 +26,14 @@ public class ComicController{
     private CommentRepository commentRepository;
     @Autowired
     private RatingRepository ratingRepository;
+    @Autowired
+    private ReportedUsersRepository reportedUsersRepo;
+    @Autowired
+    private ReportedComicsRepository reportedComicsRepo;
+    @Autowired
+    private ReportedSeriesRepository reportedSeriesRepo;
+    @Autowired
+    private ReportedCommentsRepository reportedCommentsRepo;
 
 
     //Create Comic Series
@@ -490,9 +498,11 @@ public class ComicController{
         }
         List<ComicSeriesModel> allseries = ComicSeriesRepository.findAll();
         ArrayList<ComicSeriesModel> matchedSeries = new ArrayList<>();
+        ArrayList<String> seriesOwners = new ArrayList<>();
         for( ComicSeriesModel c : allseries){
             if(c.getName().contains(form.getQuery()) || form.getQuery().contains(c.getName())){
                 matchedSeries.add(c);
+                seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
             }
         }
         List<ComicModel> allComics = comicRepository.findAll();
@@ -504,6 +514,7 @@ public class ComicController{
         }
         result.setUsers(matchedUsers);
         result.setAll_series(matchedSeries);
+        result.setSeriesOwners(seriesOwners);
         result.setAll_comics(matchedComics);
         return result;
     }
@@ -689,7 +700,58 @@ public class ComicController{
         return result;
     }
 
-
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/report", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ReportResult report(@RequestBody ReportForm form){
+        ReportResult result = new ReportResult();
+        if(form.getType().equals("user")){
+            List<ReportedUsersModel> temp = reportedUsersRepo.findByuserID(form.getReportingID());
+            for(ReportedUsersModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getReportedUserID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this user");
+                    return result;
+                } 
+            } 
+            ReportedUsersModel newReport = new ReportedUsersModel(form.getReportingID(), form.getReportedID(), form.getReason());
+            reportedUsersRepo.save(newReport);
+        }
+        else if(form.getType().equals("comic")){
+            List<ReportedComicsModel> temp = reportedComicsRepo.findByuserID(form.getReportingID());
+            for(ReportedComicsModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getComicID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this comic");
+                    return result;
+                }
+            }
+            ReportedComicsModel newReport = new ReportedComicsModel(form.getReportedID(), form.getReportingID(), form.getReason());
+            reportedComicsRepo.save(newReport);
+        }
+        else if(form.getType().equals("series")){
+            List<ReportedSeriesModel> temp= reportedSeriesRepo.findByuserID(form.getReportingID());
+            for(ReportedSeriesModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getSeriesID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this series");
+                    return result;
+                }
+            }
+            ReportedSeriesModel newReport = new ReportedSeriesModel(form.getReportedID(), form.getReportingID(), form.getReason());
+            reportedSeriesRepo.save(newReport);
+        }
+        else if(form.getType().equals("comment")){
+            List<ReportedCommentsModel> temp = reportedCommentsRepo.findByuserID(form.getReportingID());
+            for(ReportedCommentsModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getCommentID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this comment");
+                    return result;
+                }
+            }
+            ReportedCommentsModel newReport = new ReportedCommentsModel(form.getReportedID(), form.getReportingID(), form.getReason());
+            reportedCommentsRepo.save(newReport);
+        }
+        result.setStatus("success");
+        return result;
+    }
 
     //Download Comic
 

@@ -9,7 +9,6 @@ public class ReportedComicsModel {
     @Field()
     private String comicID; //comic reported
     private String userID; //person who reported it
-    private String username; //person who reported it
     private String reason;
 
     /**
@@ -41,20 +40,6 @@ public class ReportedComicsModel {
     }
 
     /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
      * @return the reason
      */
     public String getReason() {
@@ -68,9 +53,8 @@ public class ReportedComicsModel {
         this.reason = reason;
     }
 
-    public ReportedComicsModel(String comicID, String username, String userID, String reason){
+    public ReportedComicsModel(String comicID, String userID, String reason){
         this.comicID = comicID;
-        this.username = username;
         this.userID = userID;
         this.reason = reason;
     }

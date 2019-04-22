@@ -8,7 +8,7 @@ public class ReportedUsersModel {
     public String id;
     @Field()
     private String userID; //person who's reporting
-    private String username; //person getting reported
+    private String reportedUserID; //person getting reported
     private String reason;
 
     /**
@@ -40,20 +40,6 @@ public class ReportedUsersModel {
     }
 
     /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
      * @return the reason
      */
     public String getReason() {
@@ -67,9 +53,23 @@ public class ReportedUsersModel {
         this.reason = reason;
     }
 
-    public ReportedUsersModel(String userID, String username, String reason) {
+    public ReportedUsersModel(String userID, String reportedUserID, String reason) {
         this.userID = userID;
-        this.username= username;
+        this.reportedUserID= reportedUserID;
         this.reason = reason;
+    }
+
+    /**
+     * @return the reportedUserID
+     */
+    public String getReportedUserID() {
+        return reportedUserID;
+    }
+
+    /**
+     * @param reportedUserID the reportedUserID to set
+     */
+    public void setReportedUserID(String reportedUserID) {
+        this.reportedUserID = reportedUserID;
     }
 }

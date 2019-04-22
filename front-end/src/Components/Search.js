@@ -17,7 +17,8 @@ class Search extends Component {
             users: [],
             seriess: [],
             seriesOwners: [],
-            comics: []
+            comics: [],
+            ratings: []
         }
     }
 
@@ -35,12 +36,18 @@ class Search extends Component {
             });
             let content = await res.json();
             console.log(content)
-            this.setState({users: content.users, seriess: content.all_series, seriesOwners: content.seriesOwners, comics: content.all_comics})
+            this.setState({comics: content.all_comics, users: content.users, seriess: content.all_series, seriesOwners: content.seriesOwners}, () => {
+                console.log(this.state);
+                if(this.state.comics.length){
+                    this.state.comics.forEach(com=> {
+                        this.getRating(com.id);
+                    })
+                }
+            })
         })();   
     }
 
-    handleReport = (e) =>{
-        e.preventDefault();
+    handleReport = (e, reportedID, reportingID, type) =>{
         if(e.target.name === "admin"){
             alert("You can't report an admin...");
         }
@@ -48,9 +55,12 @@ class Search extends Component {
             alert("You can't report yourself...")
         }
         else{
+            console.log("reported id.. ",reportedID);
+            console.log("reporting id.. ", reportingID);
+            console.log("report type.. ", type);
+            //todo: make request
             alert("Reported!");
         }
-        //todo
     }
 
     handleSeeUserStuff = (name) => {
@@ -115,30 +125,35 @@ class Search extends Component {
         }
     }
 
-    handleReportSeries = (e) => {
-        e.persist();
-        alert("Series Reported!")
-    }
-
     handleViewSeries = (username, seriesName) => {
-        alert("works!!");
-    }
-
-    handleReportComic = (e) => {
-        e.persist();
-        alert("works!!");
+        this.props.history.push(`/view/series/${username}/${seriesName}`);
     }
 
     handleViewComic = (username, comic) => {
-        alert("works!!");
+        this.props.history.push(`/view/comic/${username}/${comic}`);
     }
 
     getRating = (id) => {
-        console.log("getting rating..");
+        (async () => {
+            const res = await fetch("http://localhost:8080/comic/rate/getRating", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    comicID: id
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            this.setState({ratings: [...this.state.ratings, content.result]})
+        })();
     }
 
     render() {
         /*variant="primary"*/
+        console.log(this.state.ratings);
         const matchedUsers = this.state.users.length ? this.state.users.map(usr => {
             return (
                 usr ?
@@ -149,7 +164,7 @@ class Search extends Component {
                         <Card.Text>Total Comics: {usr.comics.length}</Card.Text>
                         <Button name={usr.username} onClick={this.handleSubscribe} variant="primary">Subscribe</Button>
                         <Button name={usr.username} onClick={this.handleUnSubscribe} variant="primary">UnSubscribe</Button>
-                        <Button name={usr.username} onClick={this.handleReport} variant="danger">Report User</Button>
+                        <Button name={usr.username} onClick={(e) => {this.handleReport(e, usr.id, this.props.CurrUser.id, "user")}} variant="danger">Report User</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -162,21 +177,21 @@ class Search extends Component {
                     <Card.Body>
                         <Card.Title  onClick={() => {this.handleViewSeries(this.state.seriesOwners[i], ser.name )}}>Series Name: {ser.name} (click here to see more details)</Card.Title>
                         <Card.Text>Artist: {this.state.seriesOwners[i]}</Card.Text>
-                        <Button name={ser.username} onClick={this.handleReportSeries} variant="danger">Report Series</Button>
+                        <Button name={ser.username} onClick={(e) => {this.handleReport(e, ser.id, this.props.CurrUser.id, "series")}} variant="danger">Report Series</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
         }) : <h3> NO SERIES FOUND</h3>
-        const matchedComics = this.state.comics.length ? this.state.comics.map(com => {
+        const matchedComics = this.state.comics.length ? this.state.comics.map((com, i)=> {
             return (
                 com ?
                 <Card key={com.id}>
                     <Card.Body>
                         <Card.Title onClick={() => {this.handleViewComic(com.username, com.name)}}>Comic Name: {com.name} (click here to see more details)</Card.Title>
                         <Card.Text>Artist: {com.username}</Card.Text>
-                        <Card.Text>Rating: {this.getRating(com.id)}</Card.Text>
-                        <Button name={com.name} onClick={this.handleReportComic} variant="danger">Report Comic</Button>
+                        <Card.Text>Rating: {this.state.ratings[i]}</Card.Text>
+                        <Button name={com.name} onClick={(e) => {this.handleReport(e, com.id, this.props.CurrUser.id, "comic")}} variant="danger">Report Comic</Button>
                     </Card.Body>
                 </Card>
                 : null
