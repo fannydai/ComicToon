@@ -856,7 +856,7 @@ public class ComicController{
             result.setStatus("failure");
             return result;
         }
-        CommentModel newComment = new CommentModel(commenter.getId(), form.getContent(), (new Date()).toString());
+        CommentModel newComment = new CommentModel(commenter.getId(), commenter.getUsername(), form.getContent(), (new Date()).toString());
         // Save the comment and add it to the list of comments on the comic
         commentRepository.save(newComment);
         ArrayList<String> commentsList = targetComic.getCommentsList();
@@ -864,6 +864,38 @@ public class ComicController{
         comicRepository.save(targetComic);
 
         result.setStatus("success");
+        return result;
+    }
+
+    // Get comments for a comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/getComments", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public GetCommentsResult getComments(@RequestBody GetCommentsForm form) {
+        GetCommentsResult result = new GetCommentsResult();
+        UserModel owner = userRepository.findByusername(form.getComicOwner());
+        ComicModel targetComic = null;
+        ArrayList<ComicModel> userComics = comicRepository.findByUserID(owner.getId());
+        for (ComicModel comic : userComics) {
+            if (comic.getName().equals(form.getComicName())) {
+                targetComic = comic;
+                break;
+            }
+        }
+        if (targetComic == null) {
+            result.setStatus("failure");
+            return result;
+        }
+        // Get all the comments
+        ArrayList<CommentModel> comments = new ArrayList<>();
+        for (String commentId : targetComic.getCommentsList()) {
+            CommentModel comment = commentRepository.findByid(commentId);
+            if (comment != null) {
+                comments.add(comment);
+            }
+        }
+        result.setStatus("success");
+        result.setComments(comments);
         return result;
     }
 }

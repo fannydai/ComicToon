@@ -9,6 +9,7 @@ public class CommentModel{
     public String id;
     @Field()
     private String userID;
+    private String username;
     private String content;
     private String Date;
 
@@ -28,6 +29,14 @@ public class CommentModel{
         this.userID = userID;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getContent() {
         return this.content;
     }
@@ -44,8 +53,9 @@ public class CommentModel{
         this.Date = Date;
     }
 
-    public CommentModel(String userID, String content, String Date){
+    public CommentModel(String userID, String username, String content, String Date){
         this.userID = userID;
+        this.username = username;
         this.content = content;
         this.Date = Date;
     }
