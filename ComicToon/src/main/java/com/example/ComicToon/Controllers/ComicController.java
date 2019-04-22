@@ -764,7 +764,10 @@ public class ComicController{
         temp.setActive(false); //deactivate
         userRepository.save(temp);
         List<ReportedUsersModel> badBoi = reportedUsersRepo.findByreportedUserID(form.getUserID()); 
-        
+        if(badBoi.size() == 0){
+            result.setStatus("user doesn't exist");
+            return result;
+        }
         //remove all instances of deactivated user reports from reported users collections
         for(ReportedUsersModel x: badBoi){
             reportedUsersRepo.delete(x);
@@ -779,6 +782,10 @@ public class ComicController{
     public RemoveResult removeComic(@RequestBody RemoveForm form){
         RemoveResult result = new RemoveResult();
         List<ReportedComicsModel> temp = reportedComicsRepo.findBycomicID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("comics don't exist");
+            return result;
+        }
         for(ReportedComicsModel x : temp){
             reportedComicsRepo.delete(x);
         }
@@ -792,6 +799,10 @@ public class ComicController{
     public RemoveResult removeSeries(@RequestBody RemoveForm form){
         RemoveResult result = new RemoveResult();
         List<ReportedSeriesModel> temp = reportedSeriesRepo.findByseriesID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("series don't exist");
+            return result;
+        }
         for(ReportedSeriesModel x : temp){
             reportedSeriesRepo.delete(x);
         }
@@ -805,6 +816,10 @@ public class ComicController{
     public RemoveResult removeComment(@RequestBody RemoveForm form){
         RemoveResult result = new RemoveResult();
         List<ReportedCommentsModel> temp = reportedCommentsRepo.findBycommentID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("comments don't exist");
+            return result;
+        }
         for(ReportedCommentsModel x : temp){
             reportedCommentsRepo.delete(x);
         }
