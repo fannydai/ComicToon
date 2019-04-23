@@ -80,6 +80,11 @@ public class UserRestController {
         
         UserModel findUser = userRepository.findByemail(form.getEmail());
         if(findUser !=null){
+            // Check if verified
+            if (!findUser.getVerified()) {
+                result.setStatus("User is not verified!");
+                return result;
+            }
             if(findUser.getPassword().equals(form.getPassword())){
                 result.setStatus("success");
                 result.setUsername(findUser.getUsername());
