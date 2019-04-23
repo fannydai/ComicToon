@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class ColorButton extends React.Component {
     constructor(props){
         super(props);    
-      }
+    }
 
     state = {
         displayColorPicker: false,
@@ -41,7 +41,7 @@ class ColorButton extends React.Component {
         const popover = {
             position: 'absolute',
             zIndex: '2',
-            background: this.state.color,
+            background: this.state.color
         }
         const cover = {
         position: 'fixed',

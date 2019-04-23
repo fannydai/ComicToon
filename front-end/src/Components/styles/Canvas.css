@@ -63,3 +63,7 @@
     color: #C0C0C0;
     cursor: not-allowed;
 }
+
+#textform {
+    width: 1000px;
+}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {Dropdown, DropdownButton} from 'react-bootstrap';
+import {Dropdown, DropdownButton, Form} from 'react-bootstrap';
 import NumericInput from 'react-numeric-input';
 // import { ItemDirective, ItemsDirective, ToolbarComponent } from '@syncfusion/ej2-react-navigations';
 
 import { fabric } from 'fabric';
-// import { CrayonBrush } from './fabric-brush.js';
+// import { CrayonBrush, InkBrush, MarkerBrush } from 'fabric-brush';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
@@ -28,7 +28,7 @@ class Canvas extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {            
+        this.state = {    
             undo: [],
             redo: [],
             undoBtn: 'disable',
@@ -39,7 +39,7 @@ class Canvas extends Component {
 
             brushColor: '#000',
             lineWidth: 1,
-            stroke: '#FF0000',
+            stroke: '#000',
 
             previousCanvas: null
         }
@@ -84,20 +84,20 @@ class Canvas extends Component {
     }
 
     handlePencilCrayon = (event) => {
-        // this.pencilBrush = new fabric.CrayonBrush(this.canvas);
-        // this.pencilBrush.density = 200;
-        // this.pencilBrush.dotWidth = 1;
-        // this.pencil();
+        this.pencilBrush = new fabric.CrayonBrush(this.canvas);
+        this.pencilBrush.density = 200;
+        this.pencilBrush.dotWidth = 1;
+        this.pencil();
     }
 
     handlePencilInk = (event) => {
-        // this.pencilBrush = new fabric.InkBrush(this.canvas);
-        // this.pencil();
+        this.pencilBrush = new fabric.InkBrush(this.canvas);
+        this.pencil();
     }
 
     handlePencilMarker = (event) => {
-        // this.pencilBrush = new fabric.MarkerBrush(this.canvas);
-        // this.pencil();
+        this.pencilBrush = new fabric.MarkerBrush(this.canvas);
+        this.pencil();
     }
 
     handlePencilCircle = (event) => {
@@ -195,18 +195,16 @@ class Canvas extends Component {
             return patternCanvas;
         };
     }
-
-    handleLineWidth = (value) => {
-        this.setState({ lineWidth: value });
-        this.canvas.freeDrawingBrush.width = value;
-    }
     
     handleText = (event) => {
         const newText = new fabric.Textbox('Lorum ipsum dolor sit amet', {
             left: 50,
             top: 50,
             width: 150,
-            fontSize: 20
+            fontSize: 20,
+            fill: this.state.brushColor,
+			stroke: this.state.stroke,
+			strokeWidth: this.state.lineWidth,
         });
         this.canvas.add(newText).setActiveObject(newText);
     }
@@ -228,8 +226,9 @@ class Canvas extends Component {
         console.log('MAKING LINE');
         console.log(this.state.lineWidth);
         const newLine = new fabric.Line([0, 0, 50, 50], {
-            stroke: this.state.brushColor,
-            strokeWidth: this.state.lineWidth
+            fill: this.state.brushColor,
+			stroke: this.state.stroke,
+			strokeWidth: this.state.lineWidth,
         });
         this.canvas.add(newLine);
     }
@@ -239,7 +238,10 @@ class Canvas extends Component {
         const newCircle = new fabric.Circle({
             radius: 20,
             left: 50,
-            top: 50
+            top: 50,
+            fill: this.state.brushColor,
+			stroke: this.state.stroke,
+            strokeWidth: this.state.lineWidth
         });
         this.canvas.add(newCircle);
     }
@@ -250,7 +252,10 @@ class Canvas extends Component {
             left: 50,
             top: 50,
             height: 20,
-            width: 20
+            width: 20,
+            fill: this.state.brushColor,
+			stroke: this.state.stroke,
+			strokeWidth: this.state.lineWidth,
         });
         this.canvas.add(newRect);
     }
@@ -261,9 +266,28 @@ class Canvas extends Component {
             left: 50,
             top: 50,
             height: 20,
-            width: 20
+            width: 20,
+            fill: this.state.brushColor,
+			stroke: this.state.stroke,
+			strokeWidth: this.state.lineWidth
         });
         this.canvas.add(newTriangle);
+    }
+
+    handleImage = () => {
+        this.refs.fileUploader.click();
+        var imgObj = new Image();   
+        imgObj.src = window.URL.createObjectURL(input.files[0]);
+        console.log(imgObj.src);
+
+        // const newImage = new fabric.Image(imgObj, {
+        //     left: 50,
+        //     top: 50,
+        //     stroke: this.state.stroke,
+		// 	strokeWidth: this.state.lineWidth
+        // });
+        // this.canvas.add(newImage);
+        // this.canvas.renderAll();
     }
 
     handleClearCanvas = (event) => {
@@ -272,7 +296,22 @@ class Canvas extends Component {
 
     handleFillColor = (color) => {
         this.setState({ brushColor: color });
-        this.canvas.freeDrawingBrush.color = this.state.brushColor;
+        this.canvas.freeDrawingBrush.color = color;
+    }
+
+    handleLineWidth = (value) => {
+        this.setState({ lineWidth: value });
+        this.canvas.freeDrawingBrush.width = value;
+    }
+
+    handleStrokeColor = (color) => {
+        this.setState({ stroke: color });
+        this.canvas.freeDrawingBrush.stroke = color;
+    }
+
+    handleBGColor = (color) => {
+        this.canvas.backgroundColor = color;
+        this.canvas.renderAll();
     }
 
     handleZoom = (event) => {
@@ -366,6 +405,14 @@ class Canvas extends Component {
         a.click();
     }
 
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(this.input.value);
+        this.canvas.loadFromJSON(this.input.value , () => {
+            this.canvas.renderAll();
+        });
+    }
+
     handleDone = (event) => {
         this.setState({ redo: [] });
         // If it is from JSON (from view comic) save the panel and return
@@ -424,7 +471,8 @@ class Canvas extends Component {
                             </tr>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
-                                <td><FontAwesomeIcon className="icon" icon="image" /></td> 
+                                <td><input type="file" id="file" ref="fileUploader" accept="image/*" style={{display: "none"}}/>
+                                <FontAwesomeIcon className="icon" icon="image" onClick={this.handleImage}/></td>
                             </tr>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="trash" /></td>
@@ -440,10 +488,10 @@ class Canvas extends Component {
                             </tr>
                             <tr>
                                 <td><ColorButton changeColor={this.handleFillColor}/></td>
-                                <td><ColorButton/></td>
+                                <td><ColorButton changeColor={this.handleStrokeColor}/></td>
                             </tr>
                             <tr>
-                                {/* <td><input type="color" value={this.state.brushColor} onChange={this.handleColor} /></td> */}
+                                <td><ColorButton changeColor={this.handleBGColor}/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -466,14 +514,17 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handlePencilSpray}>Spray</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilCircle}>Circle</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilPattern}>Pattern</Dropdown.Item>
-                            
+
                             {/* <Dropdown.Item onClick={this.handlePencilHline}>H Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilVline}>V Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilSquare}>Square</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item> */}
                         </DropdownButton>
                     </div>
-
+                    <Form onSubmit={this.handleSubmit}>
+                        <textarea id="textform" ref={(input) => this.input = input}></textarea>
+                        <input type="submit" value="Import JSON"></input>
+                    </Form>
                 </div>
             </div>
         );
