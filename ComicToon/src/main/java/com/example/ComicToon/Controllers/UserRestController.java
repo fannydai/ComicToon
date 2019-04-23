@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import java.util.Random;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,10 @@ public class UserRestController {
                 helper.setSubject("ComicToon Forgot Password Reset");
                 sender.send(message);
                 result.setResult("Success");
-                findUser.setKey("key");
+                Random rand = new Random(); 
+                String key = ""+rand.nextInt(999999999)+""; 
+                findUser.setKey(key);
+                result.setKey(key);
             }catch(Exception e){
                 result.setResult("Error in sending email");
             }
