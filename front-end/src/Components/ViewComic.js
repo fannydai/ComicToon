@@ -42,7 +42,7 @@ class ViewComic extends Component {
             this.props.history.goBack();
         }
         // Load comic only if this page is not redirected from create comic
-        if (!this.props.comic.saveNewComic.comicName) {
+        if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
             console.log('VIEW COMIC FETCHING DATA');
             this.props.viewComic(this.props.match.params.username, localStorage.getItem('user'), this.props.match.params.comicName);
         }
@@ -344,13 +344,6 @@ class ViewComic extends Component {
                                     <Button onClick={this.handleComment}>Submit</Button>
                                 </Form>
                                 <div className="view-comic-comment-container">
-                                    <div className="view-comic-comment">
-                                        <div className="view-comic-comment-info">
-                                        <p>Joel</p>
-                                        <FontAwesomeIcon icon="trash" />
-                                        </div>
-                                        <p>This comic was great! Please post more.</p>
-                                    </div>
                                     {this.renderComments()}
                                 </div>
                             </div>
