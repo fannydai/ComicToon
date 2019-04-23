@@ -18,14 +18,14 @@ export const LoginUser = (email, pwd) => (dispatch) => {
                 alert("INCORRECT EMAIL OR PASSWORD!!");
                 dispatch({
                     type: ERR,
-                    payload: {username: "", id: "", pwd: "", email: ""}
+                    payload: {username: "", id: "", active: "", pwd: "", email: ""}
                 });
             }  
             else { 
                 console.log(content);
                 dispatch({
                     type: LOGIN_USER,
-                    payload: {username: content.username, id: content.id, pwd: pwd, email: email}
+                    payload: {username: content.username, id: content.id, active: content.active, pwd: pwd, email: email}
                 });
             }
     })();

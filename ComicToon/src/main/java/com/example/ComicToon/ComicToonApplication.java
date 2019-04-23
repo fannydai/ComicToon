@@ -56,6 +56,9 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/report",
             "/deactivate",
             "/adminData",
+            "/adminRemoveComic",
+            "/adminRemoveSeries",
+            "/adminRemoveComment",
             "/comment"
             )
         .permitAll()

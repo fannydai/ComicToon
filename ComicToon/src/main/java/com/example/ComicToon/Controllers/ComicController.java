@@ -764,7 +764,10 @@ public class ComicController{
         temp.setActive(false); //deactivate
         userRepository.save(temp);
         List<ReportedUsersModel> badBoi = reportedUsersRepo.findByreportedUserID(form.getUserID()); 
-        
+        if(badBoi.size() == 0){
+            result.setStatus("user doesn't exist");
+            return result;
+        }
         //remove all instances of deactivated user reports from reported users collections
         for(ReportedUsersModel x: badBoi){
             reportedUsersRepo.delete(x);
@@ -773,12 +776,84 @@ public class ComicController{
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveComic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeComic(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        ComicModel toDel = comicRepository.findByid(form.getId());
+        if(toDel == null){
+            result.setStatus("err");
+            return result;
+        }
+        ComicSeriesModel series = ComicSeriesRepository.findByid(toDel.getComicSeriesID());
+        series.getComics().remove(form.getId());
+        ComicSeriesRepository.save(series);
+        comicRepository.delete(toDel);
+
+        List<ReportedComicsModel> temp = reportedComicsRepo.findBycomicID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("comics don't exist");
+            return result;
+        }
+        for(ReportedComicsModel x : temp){
+            reportedComicsRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveSeries", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeSeries(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        ComicSeriesModel toDel = ComicSeriesRepository.findByid(form.getId());
+        if(toDel == null){
+            result.setStatus("err");
+            return result;
+        }
+        for(String comicID: toDel.getComics()){
+            ComicModel toDelComic = comicRepository.findByid(comicID);
+            comicRepository.delete(toDelComic);
+        }
+        ComicSeriesRepository.delete(toDel);
+        List<ReportedSeriesModel> temp = reportedSeriesRepo.findByseriesID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("series don't exist");
+            return result;
+        }
+        for(ReportedSeriesModel x : temp){
+            reportedSeriesRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveComment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeComment(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        List<ReportedCommentsModel> temp = reportedCommentsRepo.findBycommentID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("comments don't exist");
+            return result;
+        }
+        for(ReportedCommentsModel x : temp){
+            reportedCommentsRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+
     /*
         * goes through each of the reported models
         * gets the id of whatever that was reported and the # of times it was reported
     */
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/adminData", method = RequestMethod.POST, consumes = {"application/json"})
+    @RequestMapping(value = "/adminData", method = RequestMethod.GET, consumes = {"application/json"})
     @ResponseBody
     public AdminDataResult getAdminData(){
         AdminDataResult result = new AdminDataResult();
