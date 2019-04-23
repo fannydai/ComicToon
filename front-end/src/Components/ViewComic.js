@@ -233,12 +233,37 @@ class ViewComic extends Component {
                 <div className="view-comic-comment" key={index}>
                     <div className="view-comic-comment-info">
                         <p>{ comment.username }</p>
-                        <FontAwesomeIcon icon="trash" />
+                        <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} />
                     </div>
                     <p>{ comment.content }</p>
                 </div>
             );
         });
+    }
+
+    handleDeleteComment = (comment, index, event) => {
+        event.preventDefault();
+        console.log("DELETING COMMENT");
+        (async () => {
+            const res = await fetch("http://localhost:8080/delete/comment", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    commentID: comment.id,
+                    comicID: comment.comicID
+                })
+            }); 
+            let content = await res.json();
+            console.log(content)
+            if(content.result !== "success") alert("you're trying to do multiple downvotes...")
+            else alert("You just down voted:(");
+            this.setState({didUpVote: false, didDownVote: !this.state.didDownVote})
+            this.updateRating();
+        })();
+
     }
 
     handleChange = (event) => {

@@ -857,6 +857,7 @@ public class ComicController{
             return result;
         }
         CommentModel newComment = new CommentModel(commenter.getId(), commenter.getUsername(), form.getContent(), (new Date()).toString());
+        newComment.setComicID(targetComic.getId());
         // Save the comment and add it to the list of comments on the comic
         commentRepository.save(newComment);
         ArrayList<String> commentsList = targetComic.getCommentsList();
@@ -896,6 +897,24 @@ public class ComicController{
         }
         result.setStatus("success");
         result.setComments(comments);
+        return result;
+    }
+
+    // Delete a comment by ID
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/delete/comment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeleteCommentResult deleteComment(@RequestBody DeleteCommentForm form) {
+        DeleteCommentResult result = new DeleteCommentResult();
+        CommentModel comment = commentRepository.findByid(form.getCommentID());
+        ComicModel comic = comicRepository.findByid(form.getComicID());
+        // Delete the reference in the comic
+        ArrayList<String> commentsList = comic.getCommentsList();
+        commentsList.remove(form.getCommentID());
+        comicRepository.save(comic);
+        // Delete the comment
+        commentRepository.delete(comment);
+        result.setStatus("success");
         return result;
     }
 }

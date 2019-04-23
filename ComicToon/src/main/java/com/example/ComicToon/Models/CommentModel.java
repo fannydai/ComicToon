@@ -11,6 +11,7 @@ public class CommentModel{
     private String userID;
     private String username;
     private String content;
+    private String comicID;
     private String Date;
 
     public String getId() {
@@ -43,6 +44,14 @@ public class CommentModel{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getComicID() {
+        return this.comicID;
+    }
+
+    public void setComicID(String comicID) {
+        this.comicID = comicID;
     }
 
     public String getDate() {
