@@ -229,11 +229,13 @@ class ViewComic extends Component {
 
     renderComments = () => {
         return this.state.comments.map((comment, index) => {
+            const deleteButton = comment.username === localStorage.getItem('user') ? 
+                <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
             return (
                 <div className="view-comic-comment" key={index}>
                     <div className="view-comic-comment-info">
                         <p>{ comment.username }</p>
-                        <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} />
+                        {deleteButton}
                     </div>
                     <p>{ comment.content }</p>
                 </div>
@@ -258,10 +260,14 @@ class ViewComic extends Component {
             }); 
             let content = await res.json();
             console.log(content)
-            if(content.result !== "success") alert("you're trying to do multiple downvotes...")
-            else alert("You just down voted:(");
-            this.setState({didUpVote: false, didDownVote: !this.state.didDownVote})
-            this.updateRating();
+            if(content.result !== "success") {
+                // Delete from state
+                const copy = [...this.state.comments];
+                copy.splice(index, 1);
+                this.setState({ comments: copy });
+            } else {
+                alert("Could not delete comment");
+            }
         })();
 
     }

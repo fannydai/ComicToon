@@ -34,8 +34,8 @@ class HomeContent extends Component {
     
 
     componentDidMount(){
-        if(!this.props.CurrUser.active) {this.props.history.push('*');}
-        else if(this.props.CurrUser.username === "admin"){
+        //if(!this.props.CurrUser.active) {this.props.history.push('*');}
+        if(this.props.CurrUser.username === "admin"){
             this.props.history.push('/admin')
         }
         else{
