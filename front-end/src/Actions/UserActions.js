@@ -18,13 +18,14 @@ export const LoginUser = (email, pwd) => (dispatch) => {
                 alert("INCORRECT EMAIL OR PASSWORD!!");
                 dispatch({
                     type: ERR,
-                    payload: {username: "", pwd: "", email: "", verified: false}
+                    payload: {username: "", id: "", active: "", pwd: "", email: ""}
                 });
             }  
             else { 
+                console.log(content);
                 dispatch({
                     type: LOGIN_USER,
-                    payload: {username: content.username, pwd: pwd, email: email, verified: false}
+                    payload: {username: content.username, id: content.id, active: content.active, pwd: pwd, email: email}
                 });
             }
     })();
@@ -49,20 +50,20 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
             alert("EMAIL EXISTS ALREADY!!");
             dispatch({
                 type: ERR,
-                payload: {username: "", pwd: "", email: "", verified: false}
+                payload: {username: "", id: "", pwd: "", email: "", verified: false}
             });
         }
         else if(content.status === "Username Already Exists"){ 
             alert("USERNAME EXISTS ALREADY!!");
             dispatch({
                 type: ERR,
-                payload: {username: "", pwd: "", email: "", verified: false}
+                payload: {username: "", id: "", pwd: "", email: "", verified: false}
             });
         }
         else {
             dispatch({
                 type: REGISTER_USER,
-                payload: {username: username, pwd: pwd, email: email, verified: false}
+                payload: {username: username, id: content.id, pwd: pwd, email: email, verified: false}
             });
         }
     })();

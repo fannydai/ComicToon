@@ -14,11 +14,13 @@ public class UserModel{
     private String password;
     private String userType;
     private boolean verified;
+    private String verificationKey;
     private String key;
     private boolean active;
     private ArrayList<String> comics;
     private ArrayList<String> comicSeries;
     private ArrayList<String> subscriptions;
+    private boolean isAdmin;
 
     public String getId() {
         return this.id;
@@ -82,6 +84,14 @@ public class UserModel{
         this.verified = verified;
     }
 
+    public String getVerificationKey() {
+        return this.verificationKey;
+    }
+
+    public void setVerificationKey(String verificationKey) {
+        this.verificationKey = verificationKey;
+    }
+
     public String getKey() {
         return this.key;
     }
@@ -126,18 +136,40 @@ public class UserModel{
         this.password = password;
         this.userType = userType;
         this.verified = false;
+        this.verificationKey = "key";
         this.key = "key";
         this.active = true;
+        this.isAdmin = false;
         this.comics = new ArrayList<String>();
         this.comicSeries = new ArrayList<String>();
         this.subscriptions = new ArrayList<String>();
     }
 
-
     //Class methods
     @Override
     public String toString() {
         return String.format("User[id = %s, username = %s, password = %s]",id,username,password);
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the isAdmin
+     */
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    /**
+     * @param isAdmin the isAdmin to set
+     */
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     //Getters and Setters

@@ -31,22 +31,30 @@ class HomeContent extends Component {
         }
     }
 
+    
+
     componentDidMount(){
-        (async () => {
-            const res = await fetch("http://localhost:8080/welcomerecent", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    comicOwnerName: this.props.CurrUser.username
-                })
-            });
-            let content = await res.json();
-            console.log(content)
-            this.setState({allComics: content.bundleComicList, isLoading: false})
-        })();
+        //if(!this.props.CurrUser.active) {this.props.history.push('*');}
+        if(this.props.CurrUser.username === "admin"){
+            this.props.history.push('/admin')
+        }
+        else{
+            (async () => {
+                const res = await fetch("http://localhost:8080/welcomerecent", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        comicOwnerName: this.props.CurrUser.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({allComics: content.bundleComicList, isLoading: false})
+            })();
+        }
     }
 
     renderRecent(panelList){
@@ -143,18 +151,18 @@ class HomeContent extends Component {
                 <div className="home-content-container">
                     <h2>Subscriptions</h2>
                     <Slider {...props}>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
                     </Slider>
                 </div>
 
@@ -171,18 +179,18 @@ class HomeContent extends Component {
                 <div className="home-content-container">
                     <h2>Favorites</h2>
                     <Slider {...props}>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic}/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic}/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
                     </Slider>
                 </div>
 

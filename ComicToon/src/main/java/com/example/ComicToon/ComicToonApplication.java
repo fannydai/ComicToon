@@ -32,7 +32,8 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/login", 
             "/forgot", 
             "/forgotVerification", 
-            "/forgotChangePassword", 
+            "/forgotChangePassword",
+            "/verifyAccount",
             "/create/series",
             "/delete/series",
             "/view/comic-series",
@@ -52,7 +53,16 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/search",
             "/unsubscribe",
             "/comic/rate",
-            "/comic/rate/getRating"
+            "/comic/rate/getRating",
+            "/report",
+            "/deactivate",
+            "/adminData",
+            "/adminRemoveComic",
+            "/adminRemoveSeries",
+            "/adminRemoveComment",
+            "/comment",
+            "/getComments",
+            "/delete/comment"
             )
         .permitAll()
         .and()

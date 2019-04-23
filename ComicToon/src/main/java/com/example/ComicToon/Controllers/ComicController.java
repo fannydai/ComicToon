@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 @RestController
 public class ComicController{
@@ -25,6 +27,14 @@ public class ComicController{
     private CommentRepository commentRepository;
     @Autowired
     private RatingRepository ratingRepository;
+    @Autowired
+    private ReportedUsersRepository reportedUsersRepo;
+    @Autowired
+    private ReportedComicsRepository reportedComicsRepo;
+    @Autowired
+    private ReportedSeriesRepository reportedSeriesRepo;
+    @Autowired
+    private ReportedCommentsRepository reportedCommentsRepo;
 
 
     //Create Comic Series
@@ -408,6 +418,7 @@ public class ComicController{
             // Check permissions
             ArrayList<String> shared = findComic.getSharedWith();
             if (!form.getComicOwnerName().equals(form.getViewerName()) && findComic.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
+                System.out.println("View comic without permission");
                 return result;
             }
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
@@ -479,17 +490,34 @@ public class ComicController{
     @ResponseBody
     public SearchResult search(@RequestBody SearchForm form){
         SearchResult result = new SearchResult();
-
-        //search all 3 to see if any match
-        UserModel user = userRepository.findByusername(form.getQuery());
-        ArrayList<ComicModel> comics = comicRepository.findByname(form.getQuery());
-        ArrayList<ComicSeriesModel> all_series = ComicSeriesRepository.findByname(form.getQuery());
-        if(user != null)
-            result.setUser(user); 
-        if(comics != null)
-            result.setAll_comics(comics);
-        if(all_series != null)
-            result.setAll_series(all_series);
+        //search all 3 to see if any username, comic anme, or series name match search query
+        List<UserModel> allUsers = userRepository.findAll();
+        ArrayList<UserModel> matchedUsers = new ArrayList<>();
+        for(UserModel u: allUsers){
+            if(u.getUsername().contains(form.getQuery()) || form.getQuery().contains(u.getUsername())){
+                matchedUsers.add(u);
+            }
+        }
+        List<ComicSeriesModel> allseries = ComicSeriesRepository.findAll();
+        ArrayList<ComicSeriesModel> matchedSeries = new ArrayList<>();
+        ArrayList<String> seriesOwners = new ArrayList<>();
+        for( ComicSeriesModel c : allseries){
+            if(c.getName().contains(form.getQuery()) || form.getQuery().contains(c.getName())){
+                matchedSeries.add(c);
+                seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
+            }
+        }
+        List<ComicModel> allComics = comicRepository.findAll();
+        ArrayList<ComicModel> matchedComics = new ArrayList<>();
+        for(ComicModel x: allComics){
+            if(x.getName().contains(form.getQuery()) || form.getQuery().contains(x.getName())){
+                matchedComics.add(x);
+            }
+        }
+        result.setUsers(matchedUsers);
+        result.setAll_series(matchedSeries);
+        result.setSeriesOwners(seriesOwners);
+        result.setAll_comics(matchedComics);
         return result;
     }
 
@@ -642,13 +670,11 @@ public class ComicController{
         UserModel user = userRepository.findByusername(form.getUsername());
         if (comic != null && user != null) {
             List<RatingModel> temp= ratingRepository.findAll();
-            for(RatingModel item: temp){
-                if(!item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
-                    temp.remove(item);
+            for(Iterator<RatingModel> it = temp.iterator(); it.hasNext();){
+                RatingModel item = it.next();
+                if(item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
+                    ratingRepository.delete(item); //delete existing to replace
                 }
-            }
-            if(temp.size() != 0){
-                ratingRepository.delete(temp.get(0)); //deletes it so new one can replace
             }
             RatingModel newRating = new RatingModel(user.getId(), form.getRating(), comic.getId());
             ratingRepository.save(newRating);
@@ -676,9 +702,294 @@ public class ComicController{
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/report", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ReportResult report(@RequestBody ReportForm form){
+        ReportResult result = new ReportResult();
+        if(form.getType().equals("user")){
+            List<ReportedUsersModel> temp = reportedUsersRepo.findByuserID(form.getReportingID());
+            for(ReportedUsersModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getReportedUserID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this user");
+                    return result;
+                } 
+            } 
+            ReportedUsersModel newReport = new ReportedUsersModel(form.getReportingID(), form.getReportedID(), form.getReason());
+            reportedUsersRepo.save(newReport);
+        }
+        else if(form.getType().equals("comic")){
+            List<ReportedComicsModel> temp = reportedComicsRepo.findByuserID(form.getReportingID());
+            for(ReportedComicsModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getComicID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this comic");
+                    return result;
+                }
+            }
+            ReportedComicsModel newReport = new ReportedComicsModel(form.getReportedID(), form.getReportingID(), form.getReason());
+            reportedComicsRepo.save(newReport);
+        }
+        else if(form.getType().equals("series")){
+            List<ReportedSeriesModel> temp= reportedSeriesRepo.findByuserID(form.getReportingID());
+            for(ReportedSeriesModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getSeriesID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this series");
+                    return result;
+                }
+            }
+            ReportedSeriesModel newReport = new ReportedSeriesModel(form.getReportedID(), form.getReportingID(), form.getReason());
+            reportedSeriesRepo.save(newReport);
+        }
+        else if(form.getType().equals("comment")){
+            List<ReportedCommentsModel> temp = reportedCommentsRepo.findByuserID(form.getReportingID());
+            for(ReportedCommentsModel x: temp){
+                if(x.getUserID().equals(form.getReportingID()) && x.getCommentID().equals(form.getReportedID())){
+                    result.setStatus("you already reported this comment");
+                    return result;
+                }
+            }
+            ReportedCommentsModel newReport = new ReportedCommentsModel(form.getReportedID(), form.getReportingID(), form.getReason());
+            reportedCommentsRepo.save(newReport);
+        }
+        result.setStatus("success");
+        return result;
+    }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/deactivate", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeactivateResult deactivate(@RequestBody Deactivate form){
+        DeactivateResult result = new DeactivateResult();
+        UserModel temp = userRepository.findByid(form.getUserID());
+        temp.setActive(false); //deactivate
+        userRepository.save(temp);
+        List<ReportedUsersModel> badBoi = reportedUsersRepo.findByreportedUserID(form.getUserID()); 
+        if(badBoi.size() == 0){
+            result.setStatus("user doesn't exist");
+            return result;
+        }
+        //remove all instances of deactivated user reports from reported users collections
+        for(ReportedUsersModel x: badBoi){
+            reportedUsersRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveComic", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeComic(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        ComicModel toDel = comicRepository.findByid(form.getId());
+        if(toDel == null){
+            result.setStatus("err");
+            return result;
+        }
+        ComicSeriesModel series = ComicSeriesRepository.findByid(toDel.getComicSeriesID());
+        series.getComics().remove(form.getId());
+        ComicSeriesRepository.save(series);
+        comicRepository.delete(toDel);
+
+        List<ReportedComicsModel> temp = reportedComicsRepo.findBycomicID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("comics don't exist");
+            return result;
+        }
+        for(ReportedComicsModel x : temp){
+            reportedComicsRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveSeries", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeSeries(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        ComicSeriesModel toDel = ComicSeriesRepository.findByid(form.getId());
+        if(toDel == null){
+            result.setStatus("err");
+            return result;
+        }
+        for(String comicID: toDel.getComics()){
+            ComicModel toDelComic = comicRepository.findByid(comicID);
+            comicRepository.delete(toDelComic);
+        }
+        ComicSeriesRepository.delete(toDel);
+        List<ReportedSeriesModel> temp = reportedSeriesRepo.findByseriesID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("series don't exist");
+            return result;
+        }
+        for(ReportedSeriesModel x : temp){
+            reportedSeriesRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminRemoveComment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public RemoveResult removeComment(@RequestBody RemoveForm form){
+        RemoveResult result = new RemoveResult();
+        List<ReportedCommentsModel> temp = reportedCommentsRepo.findBycommentID(form.getId());
+        if(temp.size() == 0){
+            result.setStatus("comments don't exist");
+            return result;
+        }
+        for(ReportedCommentsModel x : temp){
+            reportedCommentsRepo.delete(x);
+        }
+        result.setStatus("success");
+        return result;
+    }
+
+
+    /*
+        * goes through each of the reported models
+        * gets the id of whatever that was reported and the # of times it was reported
+    */
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/adminData", method = RequestMethod.GET, consumes = {"application/json"})
+    @ResponseBody
+    public AdminDataResult getAdminData(){
+        AdminDataResult result = new AdminDataResult();
+        HashMap<String, Integer> allUserData = new HashMap<>();
+        List<ReportedUsersModel> allUsers = reportedUsersRepo.findAll();
+        for(ReportedUsersModel x: allUsers){
+            if(allUserData.containsKey(x.getReportedUserID())){
+                allUserData.put(x.getReportedUserID(), allUserData.get(x.getReportedUserID())+1); //update frequency if present
+            }
+            else{
+                allUserData.put(x.getReportedUserID(), 1);
+            }
+        }
+
+        HashMap<String, Integer> allSeriesData = new HashMap<>();
+        List<ReportedSeriesModel> allSeries = reportedSeriesRepo.findAll();
+        for(ReportedSeriesModel x: allSeries){
+            if(allSeriesData.containsKey(x.getSeriesID())){
+                allSeriesData.put(x.getSeriesID(), allSeriesData.get(x.getSeriesID())+1); //update frequency if present
+            }
+            else{
+                allSeriesData.put(x.getSeriesID(), 1);
+            }
+        }
+
+        HashMap<String, Integer> allComicsData = new HashMap<>();
+        List<ReportedComicsModel> allComics = reportedComicsRepo.findAll();
+        for(ReportedComicsModel x: allComics){
+            if(allComicsData.containsKey(x.getComicID())){
+                allComicsData.put(x.getComicID(), allComicsData.get(x.getComicID())+1); //update frequency if present
+            }
+            else{
+                allComicsData.put(x.getComicID(), 1);
+            }
+        }
+
+        HashMap<String, Integer> allCommentsData = new HashMap<>();
+        List<ReportedCommentsModel> allComents = reportedCommentsRepo.findAll();
+        for(ReportedCommentsModel x: allComents){
+            if(allCommentsData.containsKey(x.getCommentID())){
+                allCommentsData.put(x.getCommentID(), allCommentsData.get(x.getCommentID())+1); //update frequency if present
+            }
+            else{
+                allComicsData.put(x.getCommentID(), 1);
+            }
+        }
+
+        result.setUsers(allUserData);
+        result.setSeries(allSeriesData);
+        result.setComics(allComicsData);
+        result.setComments(allCommentsData);
+        return result;
+    }
 
     //Download Comic
 
     //Comment on Comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/comment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public CommentResult comment(@RequestBody CommentForm form) {
+        CommentResult result = new CommentResult();
+        UserModel owner = userRepository.findByusername(form.getComicOwner());
+        UserModel commenter = userRepository.findByusername(form.getCommenterName());
+        // Get the comic
+        ComicModel targetComic = null;
+        ArrayList<ComicModel> userComics = comicRepository.findByUserID(owner.getId());
+        for (ComicModel comic : userComics) {
+            if (comic.getName().equals(form.getComicName())) {
+                targetComic = comic;
+                break;
+            }
+        }
+        if (targetComic == null) {
+            result.setStatus("failure");
+            return result;
+        }
+        CommentModel newComment = new CommentModel(commenter.getId(), commenter.getUsername(), form.getContent(), (new Date()).toString());
+        newComment.setComicID(targetComic.getId());
+        // Save the comment and add it to the list of comments on the comic
+        commentRepository.save(newComment);
+        ArrayList<String> commentsList = targetComic.getCommentsList();
+        commentsList.add(newComment.getId());
+        comicRepository.save(targetComic);
+
+        result.setStatus("success");
+        return result;
+    }
+
+    // Get comments for a comic
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/getComments", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public GetCommentsResult getComments(@RequestBody GetCommentsForm form) {
+        GetCommentsResult result = new GetCommentsResult();
+        UserModel owner = userRepository.findByusername(form.getComicOwner());
+        ComicModel targetComic = null;
+        ArrayList<ComicModel> userComics = comicRepository.findByUserID(owner.getId());
+        for (ComicModel comic : userComics) {
+            if (comic.getName().equals(form.getComicName())) {
+                targetComic = comic;
+                break;
+            }
+        }
+        if (targetComic == null) {
+            result.setStatus("failure");
+            return result;
+        }
+        // Get all the comments
+        ArrayList<CommentModel> comments = new ArrayList<>();
+        for (String commentId : targetComic.getCommentsList()) {
+            CommentModel comment = commentRepository.findByid(commentId);
+            if (comment != null) {
+                comments.add(comment);
+            }
+        }
+        result.setStatus("success");
+        result.setComments(comments);
+        return result;
+    }
+
+    // Delete a comment by ID
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/delete/comment", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeleteCommentResult deleteComment(@RequestBody DeleteCommentForm form) {
+        DeleteCommentResult result = new DeleteCommentResult();
+        CommentModel comment = commentRepository.findByid(form.getCommentID());
+        ComicModel comic = comicRepository.findByid(form.getComicID());
+        // Delete the reference in the comic
+        ArrayList<String> commentsList = comic.getCommentsList();
+        commentsList.remove(form.getCommentID());
+        comicRepository.save(comic);
+        // Delete the comment
+        commentRepository.delete(comment);
+        result.setStatus("success");
+        return result;
+    }
 }

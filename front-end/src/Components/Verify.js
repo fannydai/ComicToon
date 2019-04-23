@@ -3,8 +3,8 @@ import { Button, Form } from 'react-bootstrap';
 import './styles/VerifyForm.css';
 
 class Verify extends Component {
-    constructor(){
-        super()
+    constructor(props) {
+        super(props);
         this.state = {
             email: "",
             key: ""
@@ -18,8 +18,28 @@ class Verify extends Component {
 
     handleRequest = (e) => {
         e.preventDefault()
-        console.log(this.state.email)
-        console.log(this.state.key)
+        console.log(this.state.email);
+        console.log(this.state.key);
+        (async () => {
+            const res = await fetch("http://localhost:8080/verifyAccount", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({ 
+                    email: this.state.email,
+                    key: this.state.key
+                })
+            });
+            let content = await res.json();
+            console.log("VERIFICAION RESULT", content);
+            if (content.result === "success") {
+                this.props.history.push("/");
+            } else {
+                alert(content.result);
+            }
+        })();
     }
 
     render() {
@@ -28,8 +48,8 @@ class Verify extends Component {
 				<div className="verify">
                     <h1>Verify Your Account!</h1>
                     <Form className="verify-form" onSubmit={this.handleRequest}>
-                        <Form.Control name="email" type="email" onChange={this.handleChange} placeholder="Enter your email..." />
-                        <Form.Control name="key" type="key" onChange={this.handleChange} placeholder="Enter the key found in your email... " />
+                        <Form.Control required name="email" type="email" onChange={this.handleChange} placeholder="Enter your email..." />
+                        <Form.Control required name="key" type="key" onChange={this.handleChange} placeholder="Enter the key found in your email... " />
                         <Button type="submit" variant="primary">Verify!</Button>
                     </Form>
 				</div>

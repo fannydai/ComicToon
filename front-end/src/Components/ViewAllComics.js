@@ -32,9 +32,7 @@ class ViewAllComics extends Component {
         if (!localStorage.getItem('user')) {
             this.props.history.push('/welcome');
         }
-        if (this.props.nav.User_Comic_View.length) {
-
-        } else {
+         else {
             (async () => {
                 const res = await fetch("http://localhost:8080/view/allComics", {
                     method: "POST",
@@ -58,7 +56,7 @@ class ViewAllComics extends Component {
             panelList.map((item, i)=> {
                 return item !== null ?
                 <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, comicIndex, e)}>
-                    <img className="view-comics-panel-img" src={item.image} alt="Click and save to load image"></img>
+                    <img className="view-comics-panel-img" src={item.image} alt="can't load"></img>
                 </div>
                 :
                 null

@@ -7,17 +7,10 @@ import com.example.ComicToon.Models.ComicSeriesModel;
 import com.example.ComicToon.Models.UserModel;
 
 public class SearchResult {
-    private UserModel user;
+    private ArrayList<UserModel> users;
     private ArrayList<ComicSeriesModel> all_series;
+    private ArrayList<String> seriesOwners;
     private ArrayList<ComicModel> all_comics;
-
-    public UserModel getUser() {
-        return user;
-    }
-
-    public void setUser(UserModel user) {
-        this.user = user;
-    }
 
     public ArrayList<ComicSeriesModel> getAll_series() {
         return all_series;
@@ -33,6 +26,34 @@ public class SearchResult {
 
     public void setAll_comics(ArrayList<ComicModel> all_comics) {
         this.all_comics = all_comics;
+    }
+
+    /**
+     * @return the users
+     */
+    public ArrayList<UserModel> getUsers() {
+        return users;
+    }
+
+    /**
+     * @param user the users to set
+     */
+    public void setUsers(ArrayList<UserModel> users) {
+        this.users = users;
+    }
+
+    /**
+     * @return the seriesOwners
+     */
+    public ArrayList<String> getSeriesOwners() {
+        return seriesOwners;
+    }
+
+    /**
+     * @param seriesOwners the seriesOwners to set
+     */
+    public void setSeriesOwners(ArrayList<String> seriesOwners) {
+        this.seriesOwners = seriesOwners;
     }
 
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
@@ -7,7 +7,6 @@ import {withRouter} from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewSeries.css';
-import pusheen from './images/pusheen.png';
 
 const StateToProps = (state) => ({ //application level state via redux
     UserSeries: state.NavBar.User_Series,
@@ -19,11 +18,21 @@ class ViewSeries extends Component {
         super(props);
         this.state = {
             comicData: [],
-            panels: []
+            panels: [],
+            visible: true,
+            ratings: []
         }
     }
 
     componentDidMount() {
+        console.log(this.props.match.params.username)
+        console.log(localStorage.getItem("user"))
+        if(this.props.match.params.username !== localStorage.getItem('user')){
+            this.setState({visible: false})
+        }
+        else{
+            this.setState({visible: true})
+        }
         (async () => {
             const res = await fetch('http://localhost:8080/view/comic-series', {
                 method: "POST",
@@ -46,6 +55,7 @@ class ViewSeries extends Component {
             } else {
                 this.setState({ comicData: content.comics });
                 for (const comic of content.comics) {
+                    console.log(comic)
                     // Get the panel for each comic in the series
                     const pan = await fetch('http://localhost:8080/view/panel', {
                         method: "POST",
@@ -61,6 +71,19 @@ class ViewSeries extends Component {
                     if (pan.panel) {
                         this.setState({ panels: [...this.state.panels, pan.panel] });
                     }
+
+                    const res = await fetch('http://localhost:8080/comic/rate/getRating', {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        body: JSON.stringify({
+                            comicID: comic.id
+                        })
+                    });
+                    let content = await res.json();
+                    this.setState({ratings: [...this.state.ratings, content.result]})
                 }
             }
         })();
@@ -75,16 +98,30 @@ class ViewSeries extends Component {
         this.props.history.push(`/update/comic/${comic.username}/${comic.name}`);
     }
 
+    handleReport = (e, reportedID, reportingID, type) => {
+        if(e.target.name === "admin"){
+            alert("You can't report an admin")
+        }
+        else{
+            this.props.history.push({
+                pathname: '/report', 
+                state: {
+                  reportingID: reportingID,
+                  reportedID: reportedID,
+                  type: type
+                }
+            }) 
+        }  
+    }
+
     render() {
-        /*
-        if (this.props.location.state && this.props.location.state.previous === 'create') {
-            console.log(this.props.UserSeries);
-            if (this.props.UserSeries !== '') {
-                alert(this.props.UserSeries);
-                this.props.history.goBack();
-            }
-        }*/
+        
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
+            const BtnComp = () => {
+                return (
+                    <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(comic, e)} >Update</button></Card.Text>
+                )
+            }
             return (
                 <Card key={i} className="view-one-series-card">
                     <Card.Img variant="top" src={this.state.panels[i]} />
@@ -92,8 +129,11 @@ class ViewSeries extends Component {
                         <Card.Title onClick={(e) => this.handleClick(comic, e)}>{comic.name}</Card.Title>
                         <Card.Text>Artist: {comic.username}</Card.Text>
                         <Card.Text>Series: {this.props.match.params.seriesName}</Card.Text>
-                        <Card.Text>Rate: +200</Card.Text>
-                        <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(comic, e)}>Update</button></Card.Text>
+                        <Card.Text> Rating: {this.state.ratings[i]}</Card.Text>
+                        {this.state.visible ? <BtnComp /> : null}
+                        {!this.state.visible ? 
+                        <Button name={comic.username} onClick={(e)=>{this.handleReport(e,comic.id,this.props.CurrUser.id,"comic")}} variant="danger">Report Comic</Button>
+                        : null}
                     </Card.Body>
                 </Card>
             );

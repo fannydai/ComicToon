@@ -3,7 +3,6 @@ import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { Button, Dropdown, Form } from 'react-bootstrap';
-import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Slider from 'react-slick';
 
 import NavigationBar from './NavigationBar';
@@ -13,9 +12,6 @@ import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import addPanel from './images/addPanel.png';
 import { saveUpdateComic } from './../Actions/ComicActions';
-import shoes1 from './images/shoes-1.png';
-import shoes2 from './images/shoes-2.png';
-import shoes3 from './images/shoes-3.png';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -77,7 +73,8 @@ class UpdateComic extends Component {
                 },
                 body: JSON.stringify({
                     comicName: this.props.match.params.comicName,
-                    comicOwnerName: this.props.match.params.username
+                    comicOwnerName: this.props.match.params.username,
+                    viewerName: localStorage.getItem('user')
                 })
             });
             let content = await res.json();
