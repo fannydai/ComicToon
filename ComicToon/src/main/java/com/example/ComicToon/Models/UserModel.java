@@ -14,6 +14,7 @@ public class UserModel{
     private String password;
     private String userType;
     private boolean verified;
+    private String verificationKey;
     private String key;
     private boolean active;
     private ArrayList<String> comics;
@@ -83,6 +84,14 @@ public class UserModel{
         this.verified = verified;
     }
 
+    public String getVerificationKey() {
+        return this.verificationKey;
+    }
+
+    public void setVerificationKey(String verificationKey) {
+        this.verificationKey = verificationKey;
+    }
+
     public String getKey() {
         return this.key;
     }
@@ -127,6 +136,7 @@ public class UserModel{
         this.password = password;
         this.userType = userType;
         this.verified = false;
+        this.verificationKey = "key";
         this.key = "key";
         this.active = true;
         this.isAdmin = false;

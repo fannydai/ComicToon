@@ -40,9 +40,21 @@ public class UserRestController {
             UserModel user = new UserModel(form.getEmail(),form.getUsername(), form.getPassword(),"Regular");
             userRepository.save(user);
             UserModel newUser = userRepository.findByusername(user.getUsername());
-            result.setStatus("success");
+            // result.setStatus("success");
             result.setUsername(user.getUsername());
             result.setId(newUser.getId());
+            // Send verification email
+            try{
+                MimeMessage message = sender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message);
+                helper.setTo(form.getEmail());
+                helper.setText("Your verification key is:" + user.getVerificationKey());
+                helper.setSubject("ComicToon Verify Account");
+                sender.send(message);
+                result.setStatus("success");
+            } catch(Exception e){
+                result.setStatus("Error in sending email");
+            }
         }
         else if(userRepository.findByusername(form.getUsername()) == null && userRepository.findByemail(form.getEmail())!=null){
             result.setStatus("Email Already Exists");
@@ -150,6 +162,27 @@ public class UserRestController {
             result.setResult("failure");
         }
 
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/verifyAccount", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public VerifyAccountResult verifyAccount(@RequestBody VerifyAccountForm form) {
+        VerifyAccountResult result = new VerifyAccountResult();
+        UserModel findUser = userRepository.findByemail(form.getEmail());
+        if (findUser != null) {
+            String verificationKey = findUser.getVerificationKey();
+            if (verificationKey.equals(form.getKey())) {
+                findUser.setVerified(true);
+                userRepository.save(findUser);
+                result.setResult("success");
+            } else {
+                result.setResult("Invalid verification key");
+            }
+        } else {
+            result.setResult("Email does not exist");
+        }
         return result;
     }
 
