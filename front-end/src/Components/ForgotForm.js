@@ -40,9 +40,9 @@ class ForgotForm extends Component {
                     });
                     let content = await res.json();
                     console.log(content)
-                    this.setState({key: content.key})
+                    if(content.result === "success"){alert("Successfully Changed Password!!")}
+                    else{alert("YOU AREN'T REGISTERED YET")}
                 })();
-
             }
         }
     }
