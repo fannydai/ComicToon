@@ -274,17 +274,21 @@ class Canvas extends Component {
         this.canvas.add(newTriangle);
     }
 
-    handleImage = () => {
+    handleImage = (event) => {
         this.refs.fileUploader.click();
-        var imgObj = new Image();   
-        imgObj.src = window.URL.createObjectURL(input.files[0]);
-        console.log(imgObj.src);
-
-        // const newImage = new fabric.Image(imgObj, {
+        // this.refs.fileUploader.onLoad = function () {
+        //     console.log("AAAA");
+        // }
+        
+        // var imgObj = new Image();   
+        // imgObj.src = event.target.file;
+        // console.log(imgObj.src);
+        
+        // const newImage = new fabric.Image(document.getElementById("file").value, {
         //     left: 50,
         //     top: 50,
         //     stroke: this.state.stroke,
-		// 	strokeWidth: this.state.lineWidth
+        //     strokeWidth: this.state.lineWidth
         // });
         // this.canvas.add(newImage);
         // this.canvas.renderAll();
@@ -471,7 +475,7 @@ class Canvas extends Component {
                             </tr>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
-                                <td><input type="file" id="file" ref="fileUploader" accept="image/*" style={{display: "none"}}/>
+                                <td><input type="file" id="file" ref="fileUploader" accept="image/*" style={{display: "none"}} />
                                 <FontAwesomeIcon className="icon" icon="image" onClick={this.handleImage}/></td>
                             </tr>
                             <tr>
