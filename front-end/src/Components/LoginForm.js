@@ -20,9 +20,13 @@ class LoginForm extends Component {
     }
 
     componentWillReceiveProps(nextProps){
+        console.log(nextProps);
         if(nextProps.user.username !== "") {
             this.props.history.push('/home');
             localStorage.setItem('user', nextProps.user.username);
+        }
+        else if(!nextProps.user.verified){
+            this.props.history.push('/verify');
         }
     }
 
@@ -40,11 +44,11 @@ class LoginForm extends Component {
         return (
             <Form className="welcome" onSubmit={this.handleLogin}>
                 <div className="bubbletext">
-                    <Form.Control id="email" type="email" name="email" className ="paddedFormControl textbox" placeholder="Enter your email..." onChange={this.handleChange}/>
+                    <Form.Control required id="email" type="email" name="email" className ="paddedFormControl textbox" placeholder="Enter your email..." onChange={this.handleChange}/>
                 </div>
                 <br />
                 <div className="bubbletext">
-                    <Form.Control id="pwd" type="password" name="pwd" className ="paddedFormControl textbox" placeholder="Enter your password..." onChange={this.handleChange}/>
+                    <Form.Control required id="pwd" type="password" name="pwd" className ="paddedFormControl textbox" placeholder="Enter your password..." onChange={this.handleChange}/>
                 </div>
                 <br />
                 <button type="submit" className = "paddedFormControl">Login</button>

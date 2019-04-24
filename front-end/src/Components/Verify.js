@@ -35,6 +35,7 @@ class Verify extends Component {
             let content = await res.json();
             console.log("VERIFICAION RESULT", content);
             if (content.result === "success") {
+                alert("YOU ARE NOW VERIFIED! LOGIN NOW")
                 this.props.history.push("/");
             } else {
                 alert(content.result);

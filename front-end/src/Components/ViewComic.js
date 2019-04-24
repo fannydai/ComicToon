@@ -227,15 +227,25 @@ class ViewComic extends Component {
         })();
     }
 
+    handleReportComment = (reportedID, reportingID, type) => {
+        alert("reported!!")
+        console.log("reported... ", reportedID)
+        console.log("reporter... ", reportingID)
+        console.log(type)
+    }
+
     renderComments = () => {
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === localStorage.getItem('user') ? 
                 <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
+            const reportButton = comment.username !== localStorage.getItem('user') ? 
+                <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
             return (
                 <div className="view-comic-comment" key={index}>
                     <div className="view-comic-comment-info">
                         <p>{ comment.username }</p>
                         {deleteButton}
+                        {reportButton}
                     </div>
                     <p>{ comment.content }</p>
                 </div>

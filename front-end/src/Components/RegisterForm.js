@@ -22,7 +22,15 @@ class RegisterForm extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.user.username !== "") this.props.history.push('/home') 
+        console.log(nextProps);
+        if(nextProps.user.username !== "" && !nextProps.user.isValidated) {
+            // Go to verify
+            console.log('VERIFY');
+            this.props.history.push('/verify');
+        }
+        else{
+            console.log("heye")
+        }
     }
 
     handleSubmit = (e) => {
@@ -41,16 +49,16 @@ class RegisterForm extends Component {
         return (
             <Form className="welcome" onSubmit={this.handleSubmit}>
                 <div className="bubbletext">
-                    <Form.Control type="email" className = "paddedFormControl textbox" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
+                    <Form.Control required type="email" className = "paddedFormControl textbox" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
                 </div>
                 <div className="bubbletext">
-                    <Form.Control type="text" className = "paddedFormControl textbox" name= "username" placeholder="Choose a username..." onChange={this.handleChange} />
+                    <Form.Control required type="text" className = "paddedFormControl textbox" name= "username" placeholder="Choose a username..." onChange={this.handleChange} />
                 </div>
                 <div className="bubbletext">
-                    <Form.Control type="password" className = "paddedFormControl textbox" name= "pwd" placeholder="Create a password..." onChange={this.handleChange} />
+                    <Form.Control required type="password" className = "paddedFormControl textbox" name= "pwd" placeholder="Create a password..." onChange={this.handleChange} />
                 </div>
                 <div className="bubbletext">
-                    <Form.Control type="password" className = "paddedFormControl textbox" name="confirm" placeholder="Confirm password..." onChange={this.handleChange}/>
+                    <Form.Control required type="password" className = "paddedFormControl textbox" name="confirm" placeholder="Confirm password..." onChange={this.handleChange}/>
                 </div>
                 <button type="submit" className = "paddedFormControl" variant="primary">Register</button>
             </Form>
