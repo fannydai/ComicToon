@@ -72,6 +72,8 @@ class ViewAllSeries extends Component {
                 <Card key={i} className="view-series-card">
                     <Card.Body>
                         <Card.Title className="view-series-card-title" onClick={(e) => this.handleClick(series, e)}>{series.name}</Card.Title>
+                        <Card.Text>{series.description}</Card.Text>
+                        <Card.Text>Genres: {series.genre.join(', ')}</Card.Text>
                         <Card.Text>Artist: {localStorage.getItem('user')}</Card.Text>
                         <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(series, e)}>Update</button></Card.Text>
                     </Card.Body>
