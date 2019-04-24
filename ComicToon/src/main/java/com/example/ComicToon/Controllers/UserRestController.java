@@ -82,19 +82,19 @@ public class UserRestController {
         UserModel findUser = userRepository.findByemail(form.getEmail());
         if(findUser !=null){
             // Check if verified
-            if (!findUser.getVerified()) {
+            if(!findUser.getPassword().equals(form.getPassword())){
+                result.setStatus("Incorrect Login Details");
+                result.setUsername("");
+            }
+            else if (!findUser.getVerified()) {
                 result.setStatus("User is not verified!");
                 return result;
             }
-            if(findUser.getPassword().equals(form.getPassword())){
+            else if(findUser.getPassword().equals(form.getPassword())){
                 result.setStatus("success");
                 result.setUsername(findUser.getUsername());
                 result.setId(findUser.getId());
                 result.setActive(findUser.getActive());
-            }
-            else{
-                result.setStatus("Incorrect Login Details");
-                result.setUsername("");
             }
         }
         else{
@@ -119,8 +119,7 @@ public class UserRestController {
                 helper.setSubject("ComicToon Forgot Password Reset");
                 sender.send(message);
                 result.setResult("Success");
-                Random rand = new Random(); 
-                String key = ""+rand.nextInt(999999999)+""; 
+                String key = "key";
                 findUser.setKey(key);
                 result.setKey(key);
             }catch(Exception e){
