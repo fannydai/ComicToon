@@ -330,10 +330,10 @@ class ViewComic extends Component {
                                     <div className="view-comic-button-row ml-auto">
                                         <FontAwesomeIcon icon="history" size="2x" />
                                         <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} />
-                                        {/*<FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" />
-                                        <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" />*/}
-                                        <p onClick={this.handleUpVote}>Up-Vote</p> {/* temporarily using this bc thumbs up & down icon not working..*/}
-                                        <p onClick={this.handleDownVote}>Down-Vote</p>
+                                        {!this.state.didUpVote ? <FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" onClick={this.handleUpVote} /> 
+                                            : <FontAwesomeIcon className="icon-cog view-comic-press-like" icon='thumbs-up' size="2x" onClick={this.handleUpVote} />}
+                                        {!this.state.didDownVote ? <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" onClick={this.handleDownVote} /> 
+                                            : <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon='thumbs-down' size="2x" onClick={this.handleDownVote} />}
                                         <p className="view-comic-rating">{this.state.rating}</p>
                                     </div>
                                 </div>
