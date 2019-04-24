@@ -28,3 +28,8 @@ h2 {
 .slick-prev:before, .slick-next:before {
     color: black;
 }
+
+.hometext{
+	color: white;
+	text-align: left!important;
+}

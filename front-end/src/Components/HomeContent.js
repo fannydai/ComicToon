@@ -149,7 +149,7 @@ class HomeContent extends Component {
                 <NavigationBar history={this.props.history}/>
 
                 <div className="home-content-container">
-                    <h2>Subscriptions</h2>
+                    <h2 className = "hometext"> Subscriptions</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
                         <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
@@ -167,7 +167,7 @@ class HomeContent extends Component {
                 </div>
 
                 <div className="home-content-container">
-                    <h2>Recent Creations</h2>
+                    <h2 className = "hometext">Recent Creations</h2>
                     <Slider {...props}>
                         {this.renderRecents()}
                         {this.renderRecents()}
@@ -177,7 +177,7 @@ class HomeContent extends Component {
                 </div>
 
                 <div className="home-content-container">
-                    <h2>Favorites</h2>
+                    <h2 className = "hometext"> Favorites</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
                         <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
