@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewAllComics.css';
-import {withRouter} from 'react-router-dom'
-import { connect } from 'react-redux'
+import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import LoadingScreen from './LoadingScreen';
 
@@ -29,7 +29,7 @@ class ViewAllComics extends Component {
 
     componentDidMount(){
         console.log(this.props.nav);
-        if (!localStorage.getItem('user')) {
+        if (!this.props.CurrUser.username) {
             this.props.history.push('/welcome');
         }
          else {
@@ -41,7 +41,7 @@ class ViewAllComics extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comicOwnerName: localStorage.getItem('user')
+                        comicOwnerName: this.props.CurrUser.username
                     })
                 });
                 let content = await res.json();
@@ -74,7 +74,7 @@ class ViewAllComics extends Component {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
                 },
-                body: JSON.stringify({ comicName: e.target.name, ownerName: localStorage.getItem('user')})
+                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
             });
         })();
         alert(`Comic deleted!!`)
@@ -128,11 +128,11 @@ class ViewAllComics extends Component {
 
     handleClick = (item, event) => {
         console.log(item);
-        this.props.history.push(`/view/comic/${localStorage.getItem('user')}/${item.comicName}`);
+        this.props.history.push(`/view/comic/${this.props.CurrUser.username}/${item.comicName}`);
     }
 
     handleUpdate(item, event) {
-        this.props.history.push(`/update/comic/${localStorage.getItem('user')}/${item.comicName}`);
+        this.props.history.push(`/update/comic/${this.props.CurrUser.username}/${item.comicName}`);
     }
 
     render() {

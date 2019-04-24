@@ -7,7 +7,8 @@ import { fabric } from 'fabric';
 // import { CrayonBrush, InkBrush, MarkerBrush } from 'fabric-brush';
 
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -21,7 +22,7 @@ import { updateComicPanel } from '../Actions/NavbarActions';
 const history = require('browser-history')
 
 const StateToProps = (state) => ({ //application level state via redux
-    comic: state.comic
+    CurrUser: state.user
 });
 
 class Canvas extends Component {
@@ -428,7 +429,7 @@ class Canvas extends Component {
             this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
             // If from update comic -> go back with state
             if (this.props.location.state && this.props.location.state.previous === 'update') {
-                this.props.history.push(`/update/comic/${localStorage.getItem('user')}/${this.props.location.state.comic}`, { previous: 'canvas' });
+                this.props.history.push(`/update/comic/${this.props.CurrUser.username}/${this.props.location.state.comic}`, { previous: 'canvas' });
             }
             //this.props.history.push('/create/comic');
             else {
@@ -539,6 +540,10 @@ class Canvas extends Component {
             </div>
         );
     }
+}
+
+Canvas.propTypes = {
+    CurrUser: PropTypes.object
 }
 
 export default connect(StateToProps, { addPanel, updateComicPanel })(withRouter(Canvas));

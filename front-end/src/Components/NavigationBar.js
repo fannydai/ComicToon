@@ -26,7 +26,7 @@ class NavigationBar extends Component {
         this.setState({ [name]: value });
     }
 
-    handleLogout() {localStorage.removeItem('user'); localStorage.removeItem('state');}
+    handleLogout() { localStorage.removeItem('state'); }
     handleGoToCreateSeries = (e) => {this.props.history.push('/create/series')}
     handleGoToUpload = (e) => {this.props.history.push('/upload')}
     handleGoToCreateComic = (e) => {this.props.history.push('/create/comic')}

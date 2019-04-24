@@ -26,8 +26,7 @@ class ViewSeries extends Component {
 
     componentDidMount() {
         console.log(this.props.match.params.username)
-        console.log(localStorage.getItem("user"))
-        if(this.props.match.params.username !== localStorage.getItem('user')){
+        if(this.props.match.params.username !== this.props.CurrUser.username){
             this.setState({visible: false})
         }
         else{
@@ -43,12 +42,10 @@ class ViewSeries extends Component {
                 body: JSON.stringify({
                     comicSeriesName: this.props.match.params.seriesName,
                     ownerName: this.props.match.params.username,
-                    viewerName: localStorage.getItem('user')
+                    viewerName: this.props.CurrUser.username
                 })
             });
             let content = await res.json();
-            console.log(localStorage.getItem('user'));
-            console.log(content);
             if (content.result === "error") {
                 //alert('Could not find series.'); // No comic/no permission
                 this.props.history.push('/notfound');

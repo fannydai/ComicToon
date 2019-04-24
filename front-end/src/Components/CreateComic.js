@@ -74,7 +74,7 @@ class CreateComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: localStorage.getItem('user')
+                username: this.props.CurrUser.username
               })
             });
             let content = await res.json();
@@ -151,7 +151,7 @@ class CreateComic extends Component {
                 images.push(c.image);
             });
             this.props.createComic(
-                localStorage.getItem('user'), 
+                this.props.CurrUser.username, 
                 this.state.comicDescription, 
                 this.state.comicName, 
                 this.state.selected_series,

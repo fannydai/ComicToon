@@ -83,7 +83,7 @@ class UpdateComic extends Component {
                 body: JSON.stringify({
                     comicName: this.props.match.params.comicName,
                     comicOwnerName: this.props.match.params.username,
-                    viewerName: localStorage.getItem('user')
+                    viewerName: this.props.CurrUser.username
                 })
             });
             let content = await res.json();

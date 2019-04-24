@@ -44,7 +44,7 @@ class ViewComic extends Component {
         // Load comic only if this page is not redirected from create comic
         if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
             console.log('VIEW COMIC FETCHING DATA');
-            this.props.viewComic(this.props.match.params.username, localStorage.getItem('user'), this.props.match.params.comicName);
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName);
         }
         //this.updateRating();
     }
@@ -136,7 +136,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: localStorage.getItem('user'),
+                        username: this.props.CurrUser.username,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
                     })
@@ -162,7 +162,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: localStorage.getItem('user'),
+                        username: this.props.CurrUser.username,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: -1
                     })
@@ -181,7 +181,7 @@ class ViewComic extends Component {
         event.preventDefault();
         console.log('COMMENTING');
         // Adds comment on backend, updates comments with this one and fetches the comments again
-        this.setState({ comments: [...this.state.comments, { username: localStorage.getItem('user'), content: this.state.comment }] });
+        this.setState({ comments: [...this.state.comments, { username: this.props.CurrUser.username, content: this.state.comment }] });
         (async () => {
             const res = await fetch("http://localhost:8080/comment", {
                 method: "POST",
@@ -192,7 +192,7 @@ class ViewComic extends Component {
                 body: JSON.stringify({
                     comicOwner: this.props.match.params.username,
                     comicName: this.props.match.params.comicName,
-                    commenterName: localStorage.getItem('user'),
+                    commenterName: this.props.CurrUser.username,
                     content: this.state.comment
                 })
             });
@@ -216,7 +216,7 @@ class ViewComic extends Component {
                     body: JSON.stringify({
                         comicName: this.props.match.params.comicName,
                         comicOwnerName: this.props.match.params.username,
-                        viewerName: localStorage.getItem('user')
+                        viewerName: this.props.CurrUser.username
                     })
                 });
                 let content = await res.json();
@@ -239,9 +239,9 @@ class ViewComic extends Component {
     renderComments = () => {
         console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
-            const deleteButton = comment.username === localStorage.getItem('user') ? 
+            const deleteButton = comment.username === this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
-            const reportButton = comment.username !== localStorage.getItem('user') ? 
+            const reportButton = comment.username !== this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
             return (
                 <div className="view-comic-comment" key={index}>
@@ -297,7 +297,7 @@ class ViewComic extends Component {
             this.props.history.push('/notfound');
         }
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
-        const subButton = localStorage.getItem('user') !== this.props.match.params.username ? this.state.subbed ? 
+        const subButton = this.props.CurrUser.username !== this.props.match.params.username ? this.state.subbed ? 
         <div className="ml-auto">
             <Button onClick={this.handleSubscribe}>Unsubscribe</Button>
         </div> :
