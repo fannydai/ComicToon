@@ -158,15 +158,17 @@ class CreateComic extends Component {
                 this.state.sharedUsersList,
                 this.state.privacy,
                 canvases,
-                images
+                images,
+                this.props.history
             );
-            this.setState({sharedUsersList: []});
+            // this.setState({sharedUsersList: []});
+            /*
             this.props.history.push({
                 pathname: `/view/comic/${localStorage.getItem('user')}/${this.state.comicName}`,
                 state: {
                     series: this.state.selected_series
                 }
-            });
+            });*/
         }
     }
 

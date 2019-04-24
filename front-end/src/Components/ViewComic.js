@@ -52,7 +52,9 @@ class ViewComic extends Component {
     componentWillReceiveProps(nextProps){
         console.log(nextProps);
         // Set the new comments
-        this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
+        if (nextProps.comic.saveNewComic.commentsList) {
+            this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
+        }
         (async () => {
             const res = await fetch("http://localhost:8080/comic/rate/getRating", {
                 method: "POST",
@@ -235,6 +237,7 @@ class ViewComic extends Component {
     }
 
     renderComments = () => {
+        console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === localStorage.getItem('user') ? 
                 <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;

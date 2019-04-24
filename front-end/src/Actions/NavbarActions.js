@@ -84,7 +84,7 @@ export const upload = () => (dispatch) => {
     // })();
 }
 
-export const createComic = (username, desc, comicName, seriesName, userList, privacy, canvases, images) => (dispatch) => {
+export const createComic = (username, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
     (async () => {
         console.log('sharedWITH', userList);
         const res = await fetch("http://localhost:8080/create/comic", {
@@ -111,14 +111,22 @@ export const createComic = (username, desc, comicName, seriesName, userList, pri
                 type: CREATECOMIC,
                 payload: { Comic: comicName }
             });
-            alert(`Comic '${comicName}' Created!!`)
+            // Navigate only if successful
+            history.push({
+                pathname: `/view/comic/${localStorage.getItem('user')}/${comicName}`,
+                state: {
+                    series: seriesName
+                }
+            });
+            //alert(`Comic '${comicName}' Created!!`)
         }
         else {
             dispatch({
                 type: ERR,
                 payload: { Comic: "" }
             });
-            alert(`ERROR! Comic '${comicName}' NOT Created!!`)
+            //alert(`ERROR! Comic '${comicName}' NOT Created!!`)
+            alert(content.result);
         }
     })();
 }
