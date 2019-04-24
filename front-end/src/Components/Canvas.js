@@ -426,8 +426,14 @@ class Canvas extends Component {
         } else {
             // Done with drawing, reroute back to create comic
             this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
+            // If from update comic -> go back with state
+            if (this.props.location.state && this.props.location.state.previous === 'update') {
+                this.props.history.push(`/update/comic/${localStorage.getItem('user')}/${this.props.location.state.comic}`, { previous: 'canvas' });
+            }
             //this.props.history.push('/create/comic');
-            history(-1); //fix bug in update comic bc re routing to wrong page...
+            else {
+                history(-1); //fix bug in update comic bc re routing to wrong page...
+            }
         }
     }
 
