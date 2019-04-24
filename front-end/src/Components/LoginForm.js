@@ -25,6 +25,9 @@ class LoginForm extends Component {
             this.props.history.push('/home');
             localStorage.setItem('user', nextProps.user.username);
         }
+        else if(!nextProps.user.verified){
+            this.props.history.push('/verify');
+        }
     }
 
     handleLogin = (e) => {

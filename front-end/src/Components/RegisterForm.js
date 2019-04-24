@@ -23,10 +23,13 @@ class RegisterForm extends Component {
 
     componentWillReceiveProps(nextProps){
         console.log(nextProps);
-        if(nextProps.user.username !== "") {
+        if(nextProps.user.username !== "" && !nextProps.user.isValidated) {
             // Go to verify
             console.log('VERIFY');
             this.props.history.push('/verify');
+        }
+        else{
+            console.log("heye")
         }
     }
 
