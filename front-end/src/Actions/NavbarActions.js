@@ -1,6 +1,6 @@
 import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL } from './Types';
 
-export const createSeries = (userName, seriesName, description, genres, privacy) => (dispatch) => {
+export const createSeries = (userName, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
         const res = await fetch("http://localhost:8080/create/series", {
             method: "POST",
@@ -37,7 +37,8 @@ export const createSeries = (userName, seriesName, description, genres, privacy)
                         payload: { allSeries: content.comicSeries }
                     });
                 }
-            })();  
+            })();
+            history.push(`/view/series/${localStorage.getItem('user')}/${seriesName}`, { previous: 'create' });
         }
         else{
             console.log(content.result);
@@ -45,6 +46,7 @@ export const createSeries = (userName, seriesName, description, genres, privacy)
                 type: ERR,
                 payload: { Series: content.result }
             });
+            alert(content.result);
         }
     })();
 }

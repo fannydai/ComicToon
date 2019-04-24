@@ -26,11 +26,12 @@ class CreateSeries extends Component {
         }
     }
 
+    /*
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
         if(nextProps.UserSeries !== this.props.UserSeries && nextProps.UserSeries !== "" && this.state.genreList != null) alert(`Series "${this.state.seriesName}" Created!!`)
         else alert(`Series "${this.state.seriesName}" NOT Created... Error`) //on error
-    }
+    }*/
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -40,9 +41,9 @@ class CreateSeries extends Component {
             alert('Please enter a description for the series.');
         } else {
             console.log(this.state)
-            this.props.createSeries(localStorage.getItem('user'), this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private")
+            this.props.createSeries(localStorage.getItem('user'), this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private", this.props.history);
             // this.setState({genreList: []});
-            this.props.history.push(`/view/series/${localStorage.getItem('user')}/${this.state.seriesName}`, { previous: 'create' });
+            // this.props.history.push(`/view/series/${localStorage.getItem('user')}/${this.state.seriesName}`, { previous: 'create' });
         }
     }
 
