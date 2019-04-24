@@ -33,3 +33,9 @@ h2 {
 	color: white;
 	text-align: left!important;
 }
+
+.comic{
+	background-color: white !important;
+	border: 20px solid #607d8b
+	;
+}

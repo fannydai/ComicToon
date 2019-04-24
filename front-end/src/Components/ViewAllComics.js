@@ -144,7 +144,7 @@ class ViewAllComics extends Component {
                 <div className="view-comics-container">
                     <NavigationBar />
                     <div className="view-comics-top">
-                        <h1>My Comics</h1>
+                        <h1 className = "hometext">My Comics</h1>
                     </div>
                     <div className="view-comics-bottom">
                         {this.renderAll()}

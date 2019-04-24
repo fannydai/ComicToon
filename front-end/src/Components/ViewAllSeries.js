@@ -88,7 +88,7 @@ class ViewAllSeries extends Component {
             <div className="view-series-container">
                 <NavigationBar />
                 <div className="view-series-top">
-                    <h1>Your Series</h1>
+                    <h1 className = "hometext">Your Series</h1>
                 </div>
                 <div className="view-series-bottom">
                     {seriesCards}
