@@ -122,9 +122,7 @@ public class UserRestController {
                 helper.setSubject("ComicToon Forgot Password Reset");
                 sender.send(message);
                 result.setResult("Success");
-                String key = "key";
-                findUser.setKey(key);
-                result.setKey(key);
+                result.setKey(findUser.getKey());
             }catch(Exception e){
                 result.setResult("Error in sending email");
             }
