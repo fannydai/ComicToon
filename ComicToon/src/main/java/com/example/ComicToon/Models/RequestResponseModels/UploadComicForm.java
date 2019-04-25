@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class UploadComicForm {
     private String username;
+    private String token;
     private String description;
     private String name;
     private String series;
@@ -84,4 +85,11 @@ public class UploadComicForm {
         this.image = image;
     }
 
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

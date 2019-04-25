@@ -256,6 +256,8 @@ public class ComicController{
     @ResponseBody
     public UploadComicResult uploadComic(@RequestBody UploadComicForm form) {
         UploadComicResult result = new UploadComicResult();
+        System.out.println("UPLOAD COMIC");
+        System.out.println(form.getToken());
         System.out.println(form.getUsername());
         System.out.println(form.getDescription());
         System.out.println(form.getName());
@@ -263,9 +265,10 @@ public class ComicController{
         //System.out.println(form.getCanvas());
         //System.out.println(form.getImage());
         System.out.println(form.getSharedWith().size());
-        UserModel user = userRepository.findBytoken(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getToken());
         if (user == null){
-            result.setResult("user does not exists");
+            System.out.println("TOKEN IS INVALID");
+            result.setResult("token is invalid");
             return result;
         } else{
             ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
