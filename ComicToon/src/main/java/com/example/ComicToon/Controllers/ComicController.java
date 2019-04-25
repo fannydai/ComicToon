@@ -849,7 +849,12 @@ public class ComicController{
             result.setStatus("comments don't exist");
             return result;
         }
-        for(ReportedCommentsModel x : temp){
+        CommentModel toDel = commentRepository.findByid(form.getId());
+        ComicModel delCom = comicRepository.findByid(toDel.getComicID());
+        delCom.getCommentsList().remove(form.getId()); //delete to comment from the comic's comment list
+        comicRepository.save(delCom);
+        commentRepository.delete(toDel); //delete the comment
+        for(ReportedCommentsModel x : temp){ //delete instances of that comment bc it's already delete in comment model
             reportedCommentsRepo.delete(x);
         }
         result.setStatus("success");
@@ -906,7 +911,7 @@ public class ComicController{
                 allCommentsData.put(x.getCommentID(), allCommentsData.get(x.getCommentID())+1); //update frequency if present
             }
             else{
-                allComicsData.put(x.getCommentID(), 1);
+                allCommentsData.put(x.getCommentID(), 1);
             }
         }
 
