@@ -17,6 +17,7 @@
     "browser-history": "^1.0.1",
     "fabric": "^2.7.0",
     "fabric-brush": "git+https://github.com/tennisonchan/fabric-brush.git",
+    "jszip": "^3.2.1",
     "react": "^16.8.5",
     "react-bootstrap": "^1.0.0-beta.6",
     "react-color": "^2.17.0",
