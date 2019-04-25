@@ -230,10 +230,14 @@ class ViewComic extends Component {
     }
 
     handleReportComment = (reportedID, reportingID, type) => {
-        alert("reported!!")
-        console.log("reported... ", reportedID)
-        console.log("reporter... ", reportingID)
-        console.log(type)
+        this.props.history.push({
+            pathname: '/report', 
+            state: {
+              reportingID: reportingID,
+              reportedID: reportedID,
+              type: type
+            }
+        }) 
     }
 
     renderComments = () => {
@@ -242,7 +246,7 @@ class ViewComic extends Component {
             const deleteButton = comment.username === localStorage.getItem('user') ? 
                 <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
             const reportButton = comment.username !== localStorage.getItem('user') ? 
-                <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
+                <p onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >REPORT</p> : null;
             return (
                 <div className="view-comic-comment" key={index}>
                     <div className="view-comic-comment-info">

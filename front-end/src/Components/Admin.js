@@ -120,13 +120,27 @@ class Admin extends Component {
             if(content.status === "success") {alert("DELETED SERIES AND ITS COMICS!!");}
             else{alert("SERIES NOT FOUND");}
             this.componentDidMount();
-        })();
-        
+        })(); 
     }
 
     deleteComment = (e) => {
-        alert("comment deleted!")
-        //todo
+        (async () => {
+            const res = await fetch("http://localhost:8080/adminRemoveComment", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    id: e.target.name
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            if(content.status === "success") {alert("DELETED COMMENT!!");}
+            else{alert("COMMENT NOT FOUND");}
+            this.componentDidMount();
+        })();
     }
 
     render() {
