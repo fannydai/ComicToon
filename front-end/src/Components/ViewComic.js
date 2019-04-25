@@ -44,7 +44,7 @@ class ViewComic extends Component {
         // Load comic only if this page is not redirected from create comic
         if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
             console.log('VIEW COMIC FETCHING DATA');
-            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName);
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
         }
         //this.updateRating();
     }
@@ -136,7 +136,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.username,
+                        username: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
                     })
@@ -162,7 +162,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.username,
+                        username: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: -1
                     })
@@ -181,7 +181,7 @@ class ViewComic extends Component {
         event.preventDefault();
         console.log('COMMENTING');
         // Adds comment on backend, updates comments with this one and fetches the comments again
-        this.setState({ comments: [...this.state.comments, { username: this.props.CurrUser.username, content: this.state.comment }] });
+        this.setState({ comments: [...this.state.comments, { username: this.props.CurrUser.token, content: this.state.comment }] });
         (async () => {
             const res = await fetch("http://localhost:8080/comment", {
                 method: "POST",
@@ -192,7 +192,7 @@ class ViewComic extends Component {
                 body: JSON.stringify({
                     comicOwner: this.props.match.params.username,
                     comicName: this.props.match.params.comicName,
-                    commenterName: this.props.CurrUser.username,
+                    commenterName: this.props.CurrUser.token,
                     content: this.state.comment
                 })
             });
@@ -216,7 +216,7 @@ class ViewComic extends Component {
                     body: JSON.stringify({
                         comicName: this.props.match.params.comicName,
                         comicOwnerName: this.props.match.params.username,
-                        viewerName: this.props.CurrUser.username
+                        viewerName: this.props.CurrUser.token
                     })
                 });
                 let content = await res.json();
