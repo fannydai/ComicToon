@@ -52,17 +52,18 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
             })
         });
         let content = await res.json();
+        console.log(content);
         if (content.status !== "success") {
             alert(content.status);
             dispatch({
                 type: ERR,
-                payload: {username: "", id: "", pwd: "", email: "", verified: false}
+                payload: {username: "", id: "", token: "", email: "", verified: false}
             });
         }
         else {
             dispatch({
                 type: REGISTER_USER,
-                payload: {username: username, id: content.id, pwd: pwd, email: email, verified: false}
+                payload: {username: username, id: content.id, token: content.token, email: email, verified: false}
             });
         }
     })();

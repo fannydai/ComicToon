@@ -220,7 +220,7 @@ class UpdateComic extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                 },
                 body: JSON.stringify({
-                    username: this.props.match.params.username,
+                    username: this.props.CurrUser.token,
                     description: this.state.comicDescription,
                     oldName: this.props.match.params.comicName,
                     name: this.state.comicName,
@@ -255,7 +255,7 @@ class UpdateComic extends Component {
                 },
                 body: JSON.stringify({
                     comicName: this.props.match.params.comicName,
-                    ownerName: this.props.match.params.username
+                    ownerName: this.props.CurrUser.token
                 })
             });
             let content = res.json();

@@ -22,7 +22,7 @@ export default function(state = initState, action){
             return{
                 username: action.payload.username,
                 id: action.payload.id,
-                username: action.payload.token,
+                token: action.payload.token,
                 active: true,
                 email: action.payload.email,
                 isValidated: action.payload.verified

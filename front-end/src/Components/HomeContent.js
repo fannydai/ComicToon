@@ -35,7 +35,7 @@ class HomeContent extends Component {
 
     componentDidMount(){
         if(!this.props.CurrUser.active) {this.props.history.push('*');}
-        else if (!this.props.CurrUser.isValidated) {
+        else if (!this.props.CurrUser.token) {
             this.props.history.push('/verify');
         }
         else if(this.props.CurrUser.username === "admin"){

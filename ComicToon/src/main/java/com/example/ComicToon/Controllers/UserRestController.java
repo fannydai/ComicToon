@@ -44,7 +44,8 @@ public class UserRestController {
             userRepository.save(user);
             UserModel newUser = userRepository.findByusername(user.getUsername());
             // result.setStatus("success");
-            result.setUsername(user.getToken());
+            result.setUsername(newUser.getUsername());
+            result.setToken(newUser.getToken());
             result.setId(newUser.getId());
             // Send verification email
             try{
@@ -95,7 +96,9 @@ public class UserRestController {
             }
             else if(findUser.getPassword().equals(form.getPassword())){
                 result.setStatus("success");
-                result.setUsername(findUser.getToken());
+                result.setUsername(findUser.getUsername());
+                result.setUsername(findUser.getUsername());
+                result.setToken(findUser.getToken());
                 result.setId(findUser.getId());
                 result.setActive(findUser.getActive());
             }

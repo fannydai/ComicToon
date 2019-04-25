@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class CreateComicForm {
     private String username;
+    private String token;
     private String description;
     private String name;
     private String series;
@@ -14,6 +15,14 @@ public class CreateComicForm {
 
     public String getUsername() {
         return this.username;
+    }
+
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**

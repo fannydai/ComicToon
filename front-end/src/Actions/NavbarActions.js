@@ -86,7 +86,7 @@ export const upload = () => (dispatch) => {
     // })();
 }
 
-export const createComic = (username, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
+export const createComic = (username, token, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
     (async () => {
         console.log('sharedWITH', userList);
         const res = await fetch("http://localhost:8080/create/comic", {
@@ -97,6 +97,7 @@ export const createComic = (username, desc, comicName, seriesName, userList, pri
             },
             body: JSON.stringify({
                 username: username,
+                token: token,
                 description: desc,
                 name: comicName,
                 series: seriesName,

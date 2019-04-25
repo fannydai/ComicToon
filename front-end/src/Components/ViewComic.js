@@ -181,7 +181,7 @@ class ViewComic extends Component {
         event.preventDefault();
         console.log('COMMENTING');
         // Adds comment on backend, updates comments with this one and fetches the comments again
-        this.setState({ comments: [...this.state.comments, { username: this.props.CurrUser.token, content: this.state.comment }] });
+        this.setState({ comments: [...this.state.comments, { username: this.props.CurrUser.username, content: this.state.comment }] });
         (async () => {
             const res = await fetch("http://localhost:8080/comment", {
                 method: "POST",

@@ -128,7 +128,7 @@ class UpdateSeries extends Component {
               },
               body: JSON.stringify({
                 seriesName: this.props.match.params.seriesName,
-                ownerName: this.props.match.params.username
+                ownerName: this.props.CurrUser.token
               })
             });
             let content = await res.json();

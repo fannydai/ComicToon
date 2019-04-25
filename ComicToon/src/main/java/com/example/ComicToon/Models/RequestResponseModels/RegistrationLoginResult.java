@@ -3,6 +3,7 @@ package com.example.ComicToon.Models.RequestResponseModels;
 public class RegistrationLoginResult{
     private String status;
     private String username;
+    private String token;
     private String id;
     private boolean active;
 
@@ -17,6 +18,14 @@ public class RegistrationLoginResult{
     }
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**
