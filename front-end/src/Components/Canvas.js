@@ -275,8 +275,27 @@ class Canvas extends Component {
         this.canvas.add(newTriangle);
     }
 
-    handleImage = (event) => {
+    handleSelectFile = (event) => {
         this.refs.fileUploader.click();
+    }
+
+    handleImage = (event) => {
+        //this.refs.fileUploader.click();
+        console.log(event.target);
+        console.log(event.target.files);
+        const file = event.target.files[0];
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (() => {
+                return (e) => {
+                    console.log(e.target.result);
+                    this.setState({ changethisproperty: e.target.result });
+                };
+            })();
+            reader.readAsDataURL(file);
+        } else {
+            alert('Upload images only!');
+        }
         // this.refs.fileUploader.onLoad = function () {
         //     console.log("AAAA");
         // }
@@ -482,8 +501,8 @@ class Canvas extends Component {
                             </tr>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
-                                <td><input type="file" id="file" ref="fileUploader" accept="image/*" style={{display: "none"}} />
-                                <FontAwesomeIcon className="icon" icon="image" onClick={this.handleImage}/></td>
+                                <td><input type="file" id="file" ref="fileUploader" accept="image/*" style={{display: "none"}} onChange={this.handleImage} />
+                                <FontAwesomeIcon className="icon" icon="image" onClick={this.handleSelectFile} /></td>
                             </tr>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="trash" /></td>
