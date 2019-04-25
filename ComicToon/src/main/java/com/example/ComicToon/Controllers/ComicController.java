@@ -43,7 +43,7 @@ public class ComicController{
     @ResponseBody
     public CreateComicSeriesResult createComicSeries(@RequestBody CreateComicSeriesForm form){
         CreateComicSeriesResult result = new CreateComicSeriesResult();
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getUsername());
         System.out.println(user);
         if (user == null){
             result.setResult("user does not exists");
@@ -77,7 +77,7 @@ public class ComicController{
         DeleteComicSeriesResult result = new DeleteComicSeriesResult();
 
         ArrayList<ComicSeriesModel> candidates = ComicSeriesRepository.findByname(form.getSeriesName());
-        UserModel owner = userRepository.findByusername(form.getOwnerName());
+        UserModel owner = userRepository.findBytoken(form.getOwnerName());
         if(candidates == null || owner == null){
             result.setResult("failure");
             return result;
@@ -128,6 +128,11 @@ public class ComicController{
             return result;
         }
         UserModel owner = userRepository.findByusername(form.getOwnerName());
+        UserModel viewer = userRepository.findBytoken(form.getViewerName());
+        if (viewer == null) {
+            result.setResult("failure");
+            return result;
+        }
         System.out.println("VIEWING SERIES");
         System.out.println(form.getOwnerName());
         System.out.println(form.getViewerName());
@@ -138,7 +143,7 @@ public class ComicController{
             if(candidate.getUserID().equals(owner.getId())){
                 // Check permission
                 ArrayList<String> shared = candidate.getSharedWith();
-                if (!form.getOwnerName().equals(form.getViewerName()) && candidate.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
+                if (!form.getOwnerName().equals(viewer.getUsername()) && candidate.getPrivacy().equals("Private") && !shared.contains(viewer.getUsername())) {
                     result.setResult("error");
                     return result;
                 }
@@ -163,9 +168,12 @@ public class ComicController{
     public CreateComicResult createComic(@RequestBody CreateComicForm form){
         CreateComicResult result = new CreateComicResult();
 
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getToken());
         if (user == null){
             result.setResult("user does not exists");
+            return result;
+        } else if (!user.getToken().equals(form.getToken())) {
+            result.setResult("invalid token");
             return result;
         } else{
             ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
@@ -224,7 +232,7 @@ public class ComicController{
     public DeleteComicResult deleteComic(@RequestBody DeleteComicForm form){
         DeleteComicResult result = new DeleteComicResult();
         ArrayList<ComicModel> findComicList = comicRepository.findByname(form.getComicName());
-        UserModel findUser = userRepository.findByusername(form.getOwnerName());
+        UserModel findUser = userRepository.findBytoken(form.getOwnerName());
         if(findComicList.isEmpty() || findUser == null){
             result.setResult("failed");
         } else{
@@ -248,6 +256,8 @@ public class ComicController{
     @ResponseBody
     public UploadComicResult uploadComic(@RequestBody UploadComicForm form) {
         UploadComicResult result = new UploadComicResult();
+        System.out.println("UPLOAD COMIC");
+        System.out.println(form.getToken());
         System.out.println(form.getUsername());
         System.out.println(form.getDescription());
         System.out.println(form.getName());
@@ -255,9 +265,10 @@ public class ComicController{
         //System.out.println(form.getCanvas());
         //System.out.println(form.getImage());
         System.out.println(form.getSharedWith().size());
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getToken());
         if (user == null){
-            result.setResult("user does not exists");
+            System.out.println("TOKEN IS INVALID");
+            result.setResult("token is invalid");
             return result;
         } else{
             ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
@@ -332,7 +343,7 @@ public class ComicController{
     public CreateComicResult updateComic(@RequestBody UpdateComicForm form){
         CreateComicResult result = new CreateComicResult();
         System.out.println("UPDATING COMIC");
-        UserModel theUser = userRepository.findByusername(form.getUsername());
+        UserModel theUser = userRepository.findBytoken(form.getUsername());
         ArrayList<ComicModel> the_model = comicRepository.findByUserID(theUser.getId());
         System.out.println("there are # of comics under the user:" + the_model.size());
         for(ComicModel comic : the_model){
@@ -426,10 +437,11 @@ public class ComicController{
         if(findComic!=null){
             // Check permissions
             ArrayList<String> shared = findComic.getSharedWith();
+            /*
             if (!form.getComicOwnerName().equals(form.getViewerName()) && findComic.getPrivacy().equals("Private") && !shared.contains(form.getViewerName())) {
                 System.out.println("View comic without permission");
                 return result;
-            }
+            }*/
             ComicSeriesModel series = ComicSeriesRepository.findByid(findComic.getComicSeriesID());
             ArrayList<CommentModel> comments = new ArrayList<CommentModel>();
             ArrayList<RatingModel> ratings = new ArrayList<RatingModel>();
@@ -476,7 +488,7 @@ public class ComicController{
     @ResponseBody
     public BundleViewAllComics viewAllComics(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
-        UserModel theUser = userRepository.findByusername(form.getComicOwnerName());
+        UserModel theUser = userRepository.findBytoken(form.getComicOwnerName());
         List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
@@ -538,7 +550,7 @@ public class ComicController{
     @ResponseBody
     public ViewMySeriesResult viewMySeries(@RequestBody ViewMySeriesForm form){
         ViewMySeriesResult result = new ViewMySeriesResult();
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getUsername());
         if(user == null){
             return result;
         } else{
@@ -557,7 +569,7 @@ public class ComicController{
     public SubscriptionResult subscribe(@RequestBody SubscriptionForm form){
         SubscriptionResult result = new SubscriptionResult();
 
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getUsername());
         if(user == null) {
             return result;
         } else {
@@ -580,7 +592,7 @@ public class ComicController{
     @ResponseBody
     public UnSubscriptionResult unsubscribe(@RequestBody UnSubscriptionForm form){
         UnSubscriptionResult result = new UnSubscriptionResult();
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getUsername());
         System.out.println("user.. "+ form.getUsername());
         System.out.println("to unsub.. " + form.getUnSub());
         if(user == null) {
@@ -608,7 +620,7 @@ public class ComicController{
     @ResponseBody
     public ViewSubscriptionsResult viewSubscriptions(@RequestBody ViewSubscriptionsForm form){
         ViewSubscriptionsResult result = new ViewSubscriptionsResult();
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getUsername());
         if(user==null){
             return result;
         }
@@ -676,7 +688,7 @@ public class ComicController{
     public RateComicResult RateComic(@RequestBody RateComicForm form){
         RateComicResult result = new RateComicResult();
         ComicModel comic = comicRepository.findByid(form.getComicID());
-        UserModel user = userRepository.findByusername(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getUsername());
         if (comic != null && user != null) {
             List<RatingModel> temp= ratingRepository.findAll();
             for(Iterator<RatingModel> it = temp.iterator(); it.hasNext();){
@@ -849,7 +861,12 @@ public class ComicController{
             result.setStatus("comments don't exist");
             return result;
         }
-        for(ReportedCommentsModel x : temp){
+        CommentModel toDel = commentRepository.findByid(form.getId());
+        ComicModel delCom = comicRepository.findByid(toDel.getComicID());
+        delCom.getCommentsList().remove(form.getId()); //delete to comment from the comic's comment list
+        comicRepository.save(delCom);
+        commentRepository.delete(toDel); //delete the comment
+        for(ReportedCommentsModel x : temp){ //delete instances of that comment bc it's already delete in comment model
             reportedCommentsRepo.delete(x);
         }
         result.setStatus("success");
@@ -906,7 +923,7 @@ public class ComicController{
                 allCommentsData.put(x.getCommentID(), allCommentsData.get(x.getCommentID())+1); //update frequency if present
             }
             else{
-                allComicsData.put(x.getCommentID(), 1);
+                allCommentsData.put(x.getCommentID(), 1);
             }
         }
 
@@ -926,7 +943,7 @@ public class ComicController{
     public CommentResult comment(@RequestBody CommentForm form) {
         CommentResult result = new CommentResult();
         UserModel owner = userRepository.findByusername(form.getComicOwner());
-        UserModel commenter = userRepository.findByusername(form.getCommenterName());
+        UserModel commenter = userRepository.findBytoken(form.getCommenterName());
         // Get the comic
         ComicModel targetComic = null;
         ArrayList<ComicModel> userComics = comicRepository.findByUserID(owner.getId());

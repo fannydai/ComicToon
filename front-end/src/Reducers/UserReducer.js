@@ -1,10 +1,10 @@
-import {LOGIN_USER, REGISTER_USER, ERR} from '../Actions/Types';
+import {VERIFY, LOGIN_USER, REGISTER_USER, ERR} from '../Actions/Types';
 
 const initState = {
     username: "",
-    pwd: "",
+    token: "",
     email: "",
-    isValidated: false //for third benchmark
+    isValidated: false
 }
 
 export default function(state = initState, action){
@@ -14,7 +14,7 @@ export default function(state = initState, action){
                 username: action.payload.username,
                 id: action.payload.id,
                 active: action.payload.active,
-                pwd: action.payload.pwd,
+                token: action.payload.token,
                 email: action.payload.email,
                 isValidated: action.payload.verified
             };
@@ -22,10 +22,15 @@ export default function(state = initState, action){
             return{
                 username: action.payload.username,
                 id: action.payload.id,
-                pwd: action.payload.pwd,
+                token: action.payload.token,
                 active: true,
                 email: action.payload.email,
                 isValidated: action.payload.verified
+            };
+        case VERIFY:
+            return{
+                ...state,
+                isValidated: action.payload.isValidated
             };
         case ERR:
             return state

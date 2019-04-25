@@ -45,7 +45,7 @@ class UploadComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.username
+                username: this.props.CurrUser.token
               })
             });
             let content = await res.json();
@@ -173,6 +173,7 @@ class UploadComic extends Component {
                   },
                   body: JSON.stringify({
                     username: this.props.CurrUser.username,
+                    token: this.props.CurrUser.token,
                     description: this.state.comicDescription,
                     name: this.state.comicName,
                     series: this.state.series,

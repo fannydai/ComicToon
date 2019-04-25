@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { Button, Card, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import JSZip from 'jszip';
 
 import NavigationBar from './NavigationBar';
 import './styles/ViewComic.css';
@@ -44,7 +45,7 @@ class ViewComic extends Component {
         // Load comic only if this page is not redirected from create comic
         if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
             console.log('VIEW COMIC FETCHING DATA');
-            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName);
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
         }
         //this.updateRating();
     }
@@ -111,13 +112,27 @@ class ViewComic extends Component {
     }
 
     handleDownload = (event) => {
-        if (this.state.comicData.panels) {
-            const a = document.createElement('a');
-            this.state.comicData.panels.forEach((panel, i) => {
-                a.href = panel.image;
-                a.download = `image${i+1}.png`;
-                a.click();
-            });
+        const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
+        if (panels.length) {
+            const zip =new JSZip();
+            for (var i = 0; i < panels.length; i++) {
+                // Look for the type of file
+                const image = panels[i].image;
+                const beginning = image.indexOf('/');
+                const end = image.indexOf(';');
+                const type = image.substring(beginning + 1, end);
+                const base64String = image.replace("data:image/png;base64,", "");
+                zip.file(`image${i+1}.${type}`, base64String, { base64: true });
+            }
+            const link = document.createElement('a');
+            link.download = 'comic';
+            zip.generateAsync({type: "base64"}).then((base64) => {
+                // window.location = "data:application/zip;base64," + base64;
+                link.href = "data:application/zip;base64," + base64;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
         }
     }
 
@@ -136,7 +151,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.username,
+                        username: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
                     })
@@ -162,7 +177,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.username,
+                        username: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: -1
                     })
@@ -192,7 +207,7 @@ class ViewComic extends Component {
                 body: JSON.stringify({
                     comicOwner: this.props.match.params.username,
                     comicName: this.props.match.params.comicName,
-                    commenterName: this.props.CurrUser.username,
+                    commenterName: this.props.CurrUser.token,
                     content: this.state.comment
                 })
             });
@@ -216,7 +231,7 @@ class ViewComic extends Component {
                     body: JSON.stringify({
                         comicName: this.props.match.params.comicName,
                         comicOwnerName: this.props.match.params.username,
-                        viewerName: this.props.CurrUser.username
+                        viewerName: this.props.CurrUser.token
                     })
                 });
                 let content = await res.json();
@@ -230,10 +245,14 @@ class ViewComic extends Component {
     }
 
     handleReportComment = (reportedID, reportingID, type) => {
-        alert("reported!!")
-        console.log("reported... ", reportedID)
-        console.log("reporter... ", reportingID)
-        console.log(type)
+        this.props.history.push({
+            pathname: '/report', 
+            state: {
+              reportingID: reportingID,
+              reportedID: reportedID,
+              type: type
+            }
+        }) 
     }
 
     renderComments = () => {
@@ -252,13 +271,15 @@ class ViewComic extends Component {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
             const reportButton = comment.username !== this.props.CurrUser.username ? 
-                <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
+                <p onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >REPORT</p> : null;
             return (
-                <Card>
+                <Card key={index}>
                     <Card.Body>
                         <Card.Title>{ comment.username }</Card.Title>
-                        <Card.Subtitle class="mb-2 text-muted">{ comment.date }</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted">{ comment.date }</Card.Subtitle>
                         <Card.Text>{ comment.content }</Card.Text>
+                        <Card.Text>{deleteButton}</Card.Text>
+                        <Card.Text>{reportButton}</Card.Text>
                     </Card.Body>
                 </Card>
             );

@@ -42,7 +42,7 @@ class ViewSeries extends Component {
                 body: JSON.stringify({
                     comicSeriesName: this.props.match.params.seriesName,
                     ownerName: this.props.match.params.username,
-                    viewerName: this.props.CurrUser.username
+                    viewerName: this.props.CurrUser.token
                 })
             });
             let content = await res.json();

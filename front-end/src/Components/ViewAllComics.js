@@ -30,7 +30,7 @@ class ViewAllComics extends Component {
 
     componentDidMount(){
         console.log(this.props.nav);
-        if (!this.props.CurrUser.username) {
+        if (!this.props.CurrUser.token) {
             this.props.history.push('/welcome');
         }
          else {
@@ -42,7 +42,7 @@ class ViewAllComics extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comicOwnerName: this.props.CurrUser.username
+                        comicOwnerName: this.props.CurrUser.token
                     })
                 });
                 let content = await res.json();
@@ -65,8 +65,6 @@ class ViewAllComics extends Component {
         )
     }
     handleDel = (e) => {
-        console.log(e.target.name);
-        console.log(this.props.CurrUser.username);
         e.persist();
         (async () => {
             fetch("http://localhost:8080/delete/comic", {
@@ -75,7 +73,7 @@ class ViewAllComics extends Component {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
                 },
-                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
+                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.token})
             });
         })();
         alert(`Comic deleted!!`)

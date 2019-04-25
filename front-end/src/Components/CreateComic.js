@@ -74,7 +74,7 @@ class CreateComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.username
+                username: this.props.CurrUser.token
               })
             });
             let content = await res.json();
@@ -151,7 +151,8 @@ class CreateComic extends Component {
                 images.push(c.image);
             });
             this.props.createComic(
-                this.props.CurrUser.username, 
+                this.props.CurrUser.username,
+                this.props.CurrUser.token, 
                 this.state.comicDescription, 
                 this.state.comicName, 
                 this.state.selected_series,
@@ -197,6 +198,12 @@ class CreateComic extends Component {
 
     handlePrivacy = (event) => {
         this.setState({ privacy: event.target.value });
+    }
+
+    handleDeleteShare = (index, event) => {
+        const copy = [...this.state.sharedUsersList];
+        copy.splice(index, 1);
+        this.setState({ sharedUsersList: copy });
     }
 
     handleChange = e => {
@@ -280,7 +287,7 @@ class CreateComic extends Component {
                                 <div className="create-comic-sharing-inner">
                                     <div className="create-comic-sharing-left">
                                         <h2>Shared With</h2>
-                                        <ComicSharingTable usernames={this.state.sharedUsersList} />
+                                        <ComicSharingTable usernames={this.state.sharedUsersList} handleDeleteShare={this.handleDeleteShare} />
                                     </div>
                                     <div className="create-comic-sharing-right">
                                         <label>Add User: (Press 'Enter' to Add)</label>

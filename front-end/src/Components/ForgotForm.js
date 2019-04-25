@@ -72,6 +72,7 @@ class ForgotForm extends Component {
                 let content = await res.json();
                 console.log(content)
                 this.setState({key: content.key})
+                alert("EMAIL HAS BEEN SENT!!")
             })();
         } 
     }

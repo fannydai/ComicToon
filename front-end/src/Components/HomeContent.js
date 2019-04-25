@@ -35,6 +35,9 @@ class HomeContent extends Component {
 
     componentDidMount(){
         if(!this.props.CurrUser.active) {this.props.history.push('*');}
+        else if (!this.props.CurrUser.token) {
+            this.props.history.push('/verify');
+        }
         else if(this.props.CurrUser.username === "admin"){
             this.props.history.push('/admin')
         }
@@ -47,7 +50,7 @@ class HomeContent extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comicOwnerName: this.props.CurrUser.username
+                        comicOwnerName: this.props.CurrUser.token
                     })
                 });
                 let content = await res.json();
