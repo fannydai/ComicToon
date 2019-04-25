@@ -1,6 +1,6 @@
 import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL } from './Types';
 
-export const createSeries = (userName, seriesName, description, genres, privacy) => (dispatch) => {
+export const createSeries = (userName, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
         const res = await fetch("http://localhost:8080/create/series", {
             method: "POST",
@@ -37,7 +37,8 @@ export const createSeries = (userName, seriesName, description, genres, privacy)
                         payload: { allSeries: content.comicSeries }
                     });
                 }
-            })();  
+            })();
+            history.push(`/view/series`);
         }
         else{
             console.log(content.result);
@@ -45,6 +46,7 @@ export const createSeries = (userName, seriesName, description, genres, privacy)
                 type: ERR,
                 payload: { Series: content.result }
             });
+            alert(content.result);
         }
     })();
 }
@@ -84,7 +86,7 @@ export const upload = () => (dispatch) => {
     // })();
 }
 
-export const createComic = (username, desc, comicName, seriesName, userList, privacy, canvases, images) => (dispatch) => {
+export const createComic = (username, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
     (async () => {
         console.log('sharedWITH', userList);
         const res = await fetch("http://localhost:8080/create/comic", {
@@ -111,14 +113,22 @@ export const createComic = (username, desc, comicName, seriesName, userList, pri
                 type: CREATECOMIC,
                 payload: { Comic: comicName }
             });
-            alert(`Comic '${comicName}' Created!!`)
+            // Navigate only if successful
+            history.push({
+                pathname: `/view/comic/${username}/${comicName}`,
+                state: {
+                    series: seriesName
+                }
+            });
+            //alert(`Comic '${comicName}' Created!!`)
         }
         else {
             dispatch({
                 type: ERR,
                 payload: { Comic: "" }
             });
-            alert(`ERROR! Comic '${comicName}' NOT Created!!`)
+            //alert(`ERROR! Comic '${comicName}' NOT Created!!`)
+            alert(content.result);
         }
     })();
 }

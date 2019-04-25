@@ -7,7 +7,9 @@
     min-height: 400px;
 }
 body {
-    background-image: url("../images/background.png");
+    /*background-image: url("../images/background.png");*/
+    /*background-image: url("../images/bg.jpg");*/
+    background-color : rgb(61, 78, 93) !important;
 }
 
 .paddedFormControl {

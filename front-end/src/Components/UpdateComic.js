@@ -11,7 +11,7 @@ import Panel from './Panel';
 import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import addPanel from './images/addPanel.png';
-import { saveUpdateComic } from './../Actions/ComicActions';
+import { saveUpdateComic, clearPanels } from './../Actions/ComicActions';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -36,31 +36,40 @@ class UpdateComic extends Component {
 
     componentDidMount() {
         console.log(this.props.comic);
+        console.log(this.props.location);
         // Load saved data if any
-        const savedData = this.props.comic.saveUpdateComic;
-        if (savedData.comicName) {
-            this.setState({ comicName: savedData.comicName });
-        }
-        if (savedData.userInput) {
-            this.setState({ userInput: savedData.userInput });
-        }
-        if (savedData.description) {
-            this.setState({ comicDescription: savedData.description });
-        }
-        if (savedData.privacy) {
-            this.setState({ privacy: savedData.privacy });
-        }
-        if (savedData.series) {
-            this.setState({ series: savedData.series });
-        }
-        if (savedData.seriesName) {
-            this.setState({ selected_series: savedData.seriesName });
-        }
-        if (savedData.sharedUsersList) {
-            this.setState({ sharedUsersList: savedData.sharedUsersList });
-        }
-        if (savedData.comicPanels) {
-            this.setState({ comicPanels: savedData.comicPanels });
+        if (this.props.location.state && this.props.location.state.previous === 'canvas') {
+            const savedData = this.props.comic.saveUpdateComic;
+            if (savedData.comicName) {
+                this.setState({ comicName: savedData.comicName });
+            }
+            if (savedData.userInput) {
+                this.setState({ userInput: savedData.userInput });
+            }
+            if (savedData.description) {
+                this.setState({ comicDescription: savedData.description });
+            }
+            if (savedData.privacy) {
+                this.setState({ privacy: savedData.privacy });
+            }
+            if (savedData.series) {
+                this.setState({ series: savedData.series });
+            }
+            if (savedData.seriesName) {
+                this.setState({ selected_series: savedData.seriesName });
+            }
+            if (savedData.sharedUsersList) {
+                this.setState({ sharedUsersList: savedData.sharedUsersList });
+            }
+            if (savedData.comicPanels) {
+                // Potentially add a new panel if any
+                if (this.props.comic.newComic.length) {
+                    this.setState({ comicPanels: [...savedData.comicPanels, ...this.props.comic.newComic]});
+                    this.props.clearPanels();
+                } else {
+                    this.setState({ comicPanels: savedData.comicPanels });
+                }
+            }
         }
 
         (async () => {
@@ -74,7 +83,7 @@ class UpdateComic extends Component {
                 body: JSON.stringify({
                     comicName: this.props.match.params.comicName,
                     comicOwnerName: this.props.match.params.username,
-                    viewerName: localStorage.getItem('user')
+                    viewerName: this.props.CurrUser.username
                 })
             });
             let content = await res.json();
@@ -183,7 +192,7 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
-        this.props.history.push('/canvas', { previous: 'update' });
+        this.props.history.push('/canvas', { previous: 'update', comic: this.props.match.params.comicName });
     }
 
     handleDeleteShare = (index, event) => {
@@ -364,4 +373,4 @@ UpdateComic.propTypes = {
     comic: PropTypes.object
 }
 
-export default connect(StateToProps, { saveUpdateComic })(withRouter(UpdateComic));
+export default connect(StateToProps, { saveUpdateComic, clearPanels })(withRouter(UpdateComic));

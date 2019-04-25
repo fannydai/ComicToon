@@ -176,6 +176,15 @@ public class ComicController{
             }
             if(series!=null){
                 System.out.println(form.getUsername());
+                // Make sure there is no comic by this name under this series
+                ArrayList<ComicModel> check = comicRepository.findByUserID(user.getId());
+                for (ComicModel c : check) {
+                    if (c.getName().equals(form.getName()) && c.getComicSeriesID().equals(series.getId())) {
+                        result.setResult("You already have a comic with that name under this series");
+                        return result;
+                    }
+                }
+
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();

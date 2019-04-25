@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
@@ -44,7 +44,7 @@ class ViewComic extends Component {
         // Load comic only if this page is not redirected from create comic
         if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
             console.log('VIEW COMIC FETCHING DATA');
-            this.props.viewComic(this.props.match.params.username, localStorage.getItem('user'), this.props.match.params.comicName);
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName);
         }
         //this.updateRating();
     }
@@ -52,7 +52,9 @@ class ViewComic extends Component {
     componentWillReceiveProps(nextProps){
         console.log(nextProps);
         // Set the new comments
-        this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
+        if (nextProps.comic.saveNewComic.commentsList) {
+            this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
+        }
         (async () => {
             const res = await fetch("http://localhost:8080/comic/rate/getRating", {
                 method: "POST",
@@ -101,9 +103,9 @@ class ViewComic extends Component {
     }
 
     handleRight = (event) => {
-        if (this.props.comic.saveNewComic.panels && this.state.panelIndex + 4 < this.props.comic.saveNewComic.panels.length) {
+        if (this.props.comic.saveNewComic.panels && this.state.panelIndex + 1 < this.props.comic.saveNewComic.panels.length) {
             this.setState({ panelIndex: this.state.panelIndex + 1 });
-        } else if (this.props.comic.newComic.length && this.state.panelIndex + 4 < this.props.comic.newComic.length) {
+        } else if (this.props.comic.newComic.length && this.state.panelIndex + 1 < this.props.comic.newComic.length) {
             this.setState({ panelIndex: this.state.panelIndex + 1 });
         }
     }
@@ -134,7 +136,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: localStorage.getItem('user'),
+                        username: this.props.CurrUser.username,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
                     })
@@ -160,7 +162,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: localStorage.getItem('user'),
+                        username: this.props.CurrUser.username,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: -1
                     })
@@ -179,7 +181,7 @@ class ViewComic extends Component {
         event.preventDefault();
         console.log('COMMENTING');
         // Adds comment on backend, updates comments with this one and fetches the comments again
-        this.setState({ comments: [...this.state.comments, { username: localStorage.getItem('user'), content: this.state.comment }] });
+        this.setState({ comments: [...this.state.comments, { username: this.props.CurrUser.username, content: this.state.comment }] });
         (async () => {
             const res = await fetch("http://localhost:8080/comment", {
                 method: "POST",
@@ -190,7 +192,7 @@ class ViewComic extends Component {
                 body: JSON.stringify({
                     comicOwner: this.props.match.params.username,
                     comicName: this.props.match.params.comicName,
-                    commenterName: localStorage.getItem('user'),
+                    commenterName: this.props.CurrUser.username,
                     content: this.state.comment
                 })
             });
@@ -214,7 +216,7 @@ class ViewComic extends Component {
                     body: JSON.stringify({
                         comicName: this.props.match.params.comicName,
                         comicOwnerName: this.props.match.params.username,
-                        viewerName: localStorage.getItem('user')
+                        viewerName: this.props.CurrUser.username
                     })
                 });
                 let content = await res.json();
@@ -235,20 +237,30 @@ class ViewComic extends Component {
     }
 
     renderComments = () => {
-        return this.state.comments.map((comment, index) => {
-            const deleteButton = comment.username === localStorage.getItem('user') ? 
-                <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
-            const reportButton = comment.username !== localStorage.getItem('user') ? 
-                <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
-            return (
-                <div className="view-comic-comment" key={index}>
+        /*
+        <div className="view-comic-comment" key={index}>
                     <div className="view-comic-comment-info">
-                        <p>{ comment.username }</p>
+                        <p><span style={{ fontWeight: "bold", fontSize: "large" }}>{ comment.username }</span><span style={{ fontSize: "small" }}> on { comment.date }</span></p>
                         {deleteButton}
                         {reportButton}
                     </div>
-                    <p>{ comment.content }</p>
+                    <p style={{ fontWeight: "400"}}>{ comment.content }</p>
                 </div>
+                */
+        console.log("MAKING SURE THE STATE EXISTS", this.state);
+        return this.state.comments.map((comment, index) => {
+            const deleteButton = comment.username === this.props.CurrUser.username ? 
+                <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
+            const reportButton = comment.username !== this.props.CurrUser.username ? 
+                <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
+            return (
+                <Card>
+                    <Card.Body>
+                        <Card.Title>{ comment.username }</Card.Title>
+                        <Card.Subtitle class="mb-2 text-muted">{ comment.date }</Card.Subtitle>
+                        <Card.Text>{ comment.content }</Card.Text>
+                    </Card.Body>
+                </Card>
             );
         });
     }
@@ -282,6 +294,14 @@ class ViewComic extends Component {
 
     }
 
+    handleSeries = (event) => {
+        const seriesName = this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null;
+        const creatorName = this.props.comic.saveNewComic.creatorName ? this.props.comic.saveNewComic.creatorName : null;
+        if (seriesName && creatorName) {
+            this.props.history.push(`/view/series/${creatorName}/${seriesName}`);
+        }
+    }
+
     handleChange = (event) => {
         event.preventDefault();
         this.setState({ [event.target.name]: event.target.value });
@@ -289,12 +309,17 @@ class ViewComic extends Component {
 
     render() {
         console.log(this.props.comic);
+        /*
+        {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
+        {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
+        {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
+        */
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
             this.props.history.push('/notfound');
         }
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
-        const subButton = localStorage.getItem('user') !== this.props.match.params.username ? this.state.subbed ? 
+        const subButton = this.props.CurrUser.username !== this.props.match.params.username ? this.state.subbed ? 
         <div className="ml-auto">
             <Button onClick={this.handleSubscribe}>Unsubscribe</Button>
         </div> :
@@ -313,9 +338,6 @@ class ViewComic extends Component {
                                 </div>
                                 <div className="view-comic-panel-container">
                                     {panels && panels[this.state.panelIndex] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex].image} alt="can't load"/></div> : null}
-                                    {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
-                                    {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
-                                    {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
                                 </div>
                                 <div className="view-comic-navigate">
                                     <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
@@ -327,10 +349,10 @@ class ViewComic extends Component {
                                     <div className="view-comic-button-row ml-auto">
                                         <FontAwesomeIcon icon="history" size="2x" />
                                         <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} />
-                                        {/*<FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" />
-                                        <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" />*/}
-                                        <p onClick={this.handleUpVote}>Up-Vote</p> {/* temporarily using this bc thumbs up & down icon not working..*/}
-                                        <p onClick={this.handleDownVote}>Down-Vote</p>
+                                        {!this.state.didUpVote ? <FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" onClick={this.handleUpVote} /> 
+                                            : <FontAwesomeIcon className="icon-cog view-comic-press-like" icon='thumbs-up' size="2x" onClick={this.handleUpVote} />}
+                                        {!this.state.didDownVote ? <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" onClick={this.handleDownVote} /> 
+                                            : <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon='thumbs-down' size="2x" onClick={this.handleDownVote} />}
                                         <p className="view-comic-rating">{this.state.rating}</p>
                                     </div>
                                 </div>
@@ -339,7 +361,7 @@ class ViewComic extends Component {
                                         <h2>By: {this.props.match.params.username}</h2>
                                     </div>
                                     <div className="view-comic-second-middle">
-                                        <h2>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
+                                        <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                     </div>
                                     {subButton}
                                 </div>

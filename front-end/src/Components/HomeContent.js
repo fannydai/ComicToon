@@ -58,8 +58,8 @@ class HomeContent extends Component {
     }
 
     renderRecent(panelList){
-        return (
-            panelList.map(item=> {
+        /*
+        panelList.map(item=> {
                 return item !== null ?
                 <span key={item.id}>
                     <img className="comic" src={item.image} alt="comic"></img>
@@ -67,6 +67,10 @@ class HomeContent extends Component {
                 :
                 null
             })
+        */
+        const filtered = panelList.filter(item => item !== null);
+        return (
+            filtered[0] ? <span key={filtered[0].id}><img className="comic" src={filtered[0].image} alt="comic" /></span> : null
         )
     }
 
@@ -149,7 +153,7 @@ class HomeContent extends Component {
                 <NavigationBar history={this.props.history}/>
 
                 <div className="home-content-container">
-                    <h2>Subscriptions</h2>
+                    <h2 className = "hometext"> Subscriptions</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
                         <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
@@ -167,7 +171,7 @@ class HomeContent extends Component {
                 </div>
 
                 <div className="home-content-container">
-                    <h2>Recent Creations</h2>
+                    <h2 className = "hometext">Recent Creations</h2>
                     <Slider {...props}>
                         {this.renderRecents()}
                         {this.renderRecents()}
@@ -177,7 +181,7 @@ class HomeContent extends Component {
                 </div>
 
                 <div className="home-content-container">
-                    <h2>Favorites</h2>
+                    <h2 className = "hometext"> Favorites</h2>
                     <Slider {...props}>
                         <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
                         <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>

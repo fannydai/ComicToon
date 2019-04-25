@@ -14,6 +14,7 @@ export const LoginUser = (email, pwd) => (dispatch) => {
             })
         });
             let content = await res.json();
+            console.log(content);
             if(content.status === "Incorrect Login Details") { 
                 alert("INCORRECT EMAIL OR PASSWORD!!");
                 dispatch({

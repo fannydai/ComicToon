@@ -6,7 +6,7 @@
 }
 
 .view-comic-bottom {
-    height: 85%;
+    min-height: 85%;
     display: flex;
     justify-content: center;
     padding-top: 25px;
@@ -46,7 +46,7 @@
 
 .view-comic-panel-inner {
     height: 100%;
-    width: 25%;
+    width: 100%;
     border: 1px solid black;
 }
 
@@ -97,6 +97,10 @@
     justify-content: center;
 }
 
+.view-comic-series-h2:hover {
+    cursor: pointer;
+}
+
 .view-comic-press-like {
     color: green;
 }
@@ -107,6 +111,11 @@
 
 .view-comic-comment-input {
     width: 100%;
+}
+
+.view-comic-comment-form {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .view-comic-comment-container {

@@ -23,7 +23,7 @@ class LoginForm extends Component {
         console.log(nextProps);
         if(nextProps.user.username !== "") {
             this.props.history.push('/home');
-            localStorage.setItem('user', nextProps.user.username);
+            // localStorage.setItem('user', nextProps.user.username);
         }
         else if(!nextProps.user.verified){
             this.props.history.push('/verify');

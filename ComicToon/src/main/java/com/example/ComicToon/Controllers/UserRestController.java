@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.mail.internet.MimeMessage;
+import java.util.UUID;
+
 
 @RestController
 public class UserRestController {
@@ -54,6 +56,7 @@ public class UserRestController {
                 sender.send(message);
                 result.setStatus("success");
             } catch(Exception e){
+                System.out.println(e.getStackTrace().toString());
                 result.setStatus("Error in sending email");
             }
         }
@@ -115,7 +118,7 @@ public class UserRestController {
                 MimeMessage message = sender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message);
                 helper.setTo(findUser.getEmail());
-                helper.setText("Your password reset code is :" + "key");
+                helper.setText("Your password reset code is :" + findUser.getKey());
                 helper.setSubject("ComicToon Forgot Password Reset");
                 sender.send(message);
                 result.setResult("Success");
@@ -163,6 +166,7 @@ public class UserRestController {
 
         if(findUser!=null){
             findUser.setPassword(form.getPassword());
+            findUser.setKey(UUID.randomUUID().toString());
             userRepository.save(findUser);
             result.setResult("success");
         }
