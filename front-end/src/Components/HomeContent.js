@@ -55,7 +55,12 @@ class HomeContent extends Component {
                 });
                 let content = await res.json();
                 console.log(content)
-                this.setState({allComics: content.bundleComicList, isLoading: false})
+                if (content.result === "success") {
+                    this.setState({allComics: content.bundleComicList, isLoading: false})
+                } else {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                }
             })();
         }
     }

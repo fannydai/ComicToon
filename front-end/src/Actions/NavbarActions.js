@@ -1,6 +1,6 @@
 import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL } from './Types';
 
-export const createSeries = (userName, seriesName, description, genres, privacy, history) => (dispatch) => {
+export const createSeries = (token, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
         const res = await fetch("http://localhost:8080/create/series", {
             method: "POST",
@@ -8,10 +8,10 @@ export const createSeries = (userName, seriesName, description, genres, privacy,
                 Accept: "application/json",
                 "Content-Type": "application/json; charset=utf-8"
             },
-            body: JSON.stringify({ username: userName, name: seriesName, description: description, genre: genres, privacy: privacy })
+            body: JSON.stringify({ username: token, name: seriesName, description: description, genre: genres, privacy: privacy })
         });
         let content = await res.json();
-    
+        console.log("CREATE SERIES RESULT", content);
         if(content.result === "success"){
             dispatch({
                 type: CREATESERIES,
@@ -26,7 +26,7 @@ export const createSeries = (userName, seriesName, description, genres, privacy,
                     "Content-Type": "application/json; charset=utf-8"
                   },
                   body: JSON.stringify({
-                    username: userName
+                    username: token
                   })
                 });
                 let content = await res.json();
@@ -39,9 +39,10 @@ export const createSeries = (userName, seriesName, description, genres, privacy,
                 }
             })();
             history.push(`/view/series`);
-        }
-        else{
-            console.log(content.result);
+        } else if (content.result === "tokenerror") {
+            localStorage.removeItem("state");
+            history.push('/');
+        } else{
             dispatch({
                 type: ERR,
                 payload: { Series: content.result }

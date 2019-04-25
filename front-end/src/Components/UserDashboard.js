@@ -34,18 +34,22 @@ class UserDashboard extends Component {
         }
 
         (async () => {
-            const res = await fetch("http://localhost:8080/view/series", {
+            const res = await fetch("http://localhost:8080/view/series-viewable", {
                 method: "POST",
                 headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json; charset=utf-8"
                 },
                 body: JSON.stringify({
+                    token: this.props.CurrUser.token,
                     username: this.props.history.location.state.username
                 })
             });
             let content = await res.json();
-            if (content.comicSeries) {
+            if (content.result === "tokenerror") {
+                localStorage.removeItem("state");
+                this.props.history.push("/");
+            } else if (content.comicSeries) {
                 this.props.getUserSeries(content.comicSeries);
                 this.setState({ isLoading: false });
             }

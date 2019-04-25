@@ -199,6 +199,20 @@ public class UserRestController {
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/checkToken", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public VerifyAccountResult checkToken(@RequestBody CheckTokenForm form) {
+        VerifyAccountResult result = new VerifyAccountResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if (user == null || !user.getUsername().equals(form.getUsername())) {
+            result.setResult("tokenerror");
+        } else {
+            result.setResult("success");
+        }
+        return result;
+    }
+
 
     public List<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();

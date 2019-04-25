@@ -46,7 +46,7 @@ public class ComicController{
         UserModel user = userRepository.findBytoken(form.getUsername());
         System.out.println(user);
         if (user == null){
-            result.setResult("user does not exists");
+            result.setResult("tokenerror");
             return result;
         } else{
             //Look for another one under the user
@@ -157,6 +157,30 @@ public class ComicController{
             }
         }
         result.setResult("success");
+        return result;
+    }
+
+    // View series with permission or is public
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/series-viewable", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewMySeriesResult viewSeriesViewable(@RequestBody ViewMySeriesForm form) {
+        ViewMySeriesResult result = new ViewMySeriesResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if (user == null) {
+            result.setResult("tokenerror");
+            return result;
+        }
+        UserModel owner = userRepository.findByusername(form.getUsername());
+        List<ComicSeriesModel> series = ComicSeriesRepository.findAll();
+        ArrayList<ComicSeriesModel> allowed = new ArrayList<>();
+        for (ComicSeriesModel s : series) {
+            if (s.getUserID().equals(user.getId()) || s.getPrivacy().equals("Public") || (s.getUserID().equals(owner.getId()) && s.getSharedWith().contains(user.getUsername()))) {
+                allowed.add(s);
+            }
+        }
+        result.setResult("success");
+        result.setComics(allowed);
         return result;
     }
 
@@ -550,8 +574,9 @@ public class ComicController{
     @ResponseBody
     public ViewMySeriesResult viewMySeries(@RequestBody ViewMySeriesForm form){
         ViewMySeriesResult result = new ViewMySeriesResult();
-        UserModel user = userRepository.findBytoken(form.getUsername());
-        if(user == null){
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if (user == null || !user.getUsername().equals(form.getUsername())) {
+            result.setResult("tokenerror");
             return result;
         } else{
             for (String seriesID : user.getComicSeries()){
@@ -649,6 +674,12 @@ public class ComicController{
     @ResponseBody
     public BundleViewAllComics recent(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
+        UserModel user = userRepository.findBytoken(form.getComicOwnerName());
+        // Check if token is valid
+        if (user == null) {
+            result.setResult("tokenerror");
+            return result;
+        }
         List<ComicModel> findComicList = comicRepository.findAll();
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
@@ -663,6 +694,7 @@ public class ComicController{
                 result.getBundleComicList().add(pans);
             }
         }
+        result.setResult("success");
         return result;
     }
 

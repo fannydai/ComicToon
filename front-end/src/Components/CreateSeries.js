@@ -7,7 +7,6 @@ import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import './styles/CreateSeries.css';
 import { createSeries} from './../Actions/NavbarActions';
-import { getAllSeries } from './../Actions/ComicActions';
 import {withRouter} from 'react-router-dom'
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -26,12 +25,27 @@ class CreateSeries extends Component {
         }
     }
 
-    /*
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps)
-        if(nextProps.UserSeries !== this.props.UserSeries && nextProps.UserSeries !== "" && this.state.genreList != null) alert(`Series "${this.state.seriesName}" Created!!`)
-        else alert(`Series "${this.state.seriesName}" NOT Created... Error`) //on error
-    }*/
+    componentDidMount() {
+        // Make sure token is correct
+        (async () => {
+            const res = await fetch("http://localhost:8080/checkToken", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+              },
+              body: JSON.stringify({
+                token: this.props.CurrUser.token,
+                username: this.props.CurrUser.username
+              })
+            });
+            let content = await res.json();
+            if (content.result === "tokenerror") {
+                localStorage.removeItem("state");
+                this.props.history.push("/");
+            }
+        })(); 
+    }
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -42,8 +56,6 @@ class CreateSeries extends Component {
         } else {
             console.log(this.state)
             this.props.createSeries(this.props.CurrUser.token, this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private", this.props.history);
-            // this.setState({genreList: []});
-            // this.props.history.push(`/view/series/${localStorage.getItem('user')}/${this.state.seriesName}`, { previous: 'create' });
         }
     }
 
@@ -104,9 +116,8 @@ class CreateSeries extends Component {
 
 CreateSeries.propTypes = {
     createSeries: PropTypes.func.isRequired,
-    getAllSeries: PropTypes.func.isRequired,
     UserSeries: PropTypes.string,
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, {createSeries, getAllSeries})(withRouter(CreateSeries));
+export default connect(StateToProps, {createSeries})(withRouter(CreateSeries));
