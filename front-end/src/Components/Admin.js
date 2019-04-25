@@ -169,7 +169,7 @@ class Admin extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO COMCICS FOUND</h3>
+        }) : <h3> NO COMICS FOUND</h3>
         const badSeries = this.state.seriesKeys.length ? this.state.seriesKeys.map((item, i) => {
             return (
                 item ?

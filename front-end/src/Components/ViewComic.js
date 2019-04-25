@@ -136,7 +136,8 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.token,
+                        username: this.props.CurrUser.username,
+                        token: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
                     })
@@ -162,7 +163,8 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.token,
+                        username: this.props.CurrUser.username,
+                        token: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: -1
                     })

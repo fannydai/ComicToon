@@ -688,7 +688,11 @@ public class ComicController{
     public RateComicResult RateComic(@RequestBody RateComicForm form){
         RateComicResult result = new RateComicResult();
         ComicModel comic = comicRepository.findByid(form.getComicID());
-        UserModel user = userRepository.findBytoken(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if(!user.getToken().equals(form.getToken())){
+            result.setResult("invalid token");
+            return result;
+        }
         if (comic != null && user != null) {
             List<RatingModel> temp= ratingRepository.findAll();
             for(Iterator<RatingModel> it = temp.iterator(); it.hasNext();){
