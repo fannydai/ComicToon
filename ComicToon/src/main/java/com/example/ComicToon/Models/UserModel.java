@@ -11,6 +11,7 @@ public class UserModel{
     @Field()
     private String email;
     private String username;
+    private String token;
     private String password;
     private String userType;
     private boolean verified;
@@ -24,6 +25,20 @@ public class UserModel{
 
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * @return the token
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * @param token the token to set
+     */
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**
@@ -140,6 +155,7 @@ public class UserModel{
         this.verified = false;
         this.verificationKey = UUID.randomUUID().toString();
         this.key = UUID.randomUUID().toString();
+        this.token = UUID.randomUUID().toString();
         this.active = true;
         this.isAdmin = false;
         this.comics = new ArrayList<String>();
