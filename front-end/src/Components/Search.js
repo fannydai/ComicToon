@@ -91,7 +91,7 @@ class Search extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: localStorage.getItem("user"),
+                        username: this.props.CurrUser.username,
                         sub: e.target.name
                     })
                 });
@@ -117,7 +117,7 @@ class Search extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: localStorage.getItem("user"),
+                        username: this.props.CurrUser.username,
                         unSub: e.target.name
                     })
                 });

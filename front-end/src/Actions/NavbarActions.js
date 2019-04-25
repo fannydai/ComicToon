@@ -38,7 +38,7 @@ export const createSeries = (userName, seriesName, description, genres, privacy,
                     });
                 }
             })();
-            history.push(`/view/series/${localStorage.getItem('user')}/${seriesName}`, { previous: 'create' });
+            history.push(`/view/series`);
         }
         else{
             console.log(content.result);
@@ -115,7 +115,7 @@ export const createComic = (username, desc, comicName, seriesName, userList, pri
             });
             // Navigate only if successful
             history.push({
-                pathname: `/view/comic/${localStorage.getItem('user')}/${comicName}`,
+                pathname: `/view/comic/${username}/${comicName}`,
                 state: {
                     series: seriesName
                 }

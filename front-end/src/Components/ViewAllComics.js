@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/ViewAllComics.css';
-import {withRouter} from 'react-router-dom'
-import { connect } from 'react-redux'
+import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import LoadingScreen from './LoadingScreen';
 
@@ -29,7 +30,7 @@ class ViewAllComics extends Component {
 
     componentDidMount(){
         console.log(this.props.nav);
-        if (!localStorage.getItem('user')) {
+        if (!this.props.CurrUser.username) {
             this.props.history.push('/welcome');
         }
          else {
@@ -41,7 +42,7 @@ class ViewAllComics extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comicOwnerName: localStorage.getItem('user')
+                        comicOwnerName: this.props.CurrUser.username
                     })
                 });
                 let content = await res.json();
@@ -74,7 +75,7 @@ class ViewAllComics extends Component {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
                 },
-                body: JSON.stringify({ comicName: e.target.name, ownerName: localStorage.getItem('user')})
+                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.username})
             });
         })();
         alert(`Comic deleted!!`)
@@ -108,7 +109,7 @@ class ViewAllComics extends Component {
                     <div className="view-comics-strip-container" key={item.comicName}>
                         <div className="view-comics-strip-top">
                             <h3 className="view-comics-h3" onClick={(e) => this.handleClick(item, e)}>{item.comicName}</h3>
-                            <button onClick={(e) => this.handleUpdate(item, e)}>Update</button>
+                            <Button onClick={(e) => this.handleUpdate(item, e)}>Update</Button>
                         </div>
                         <div className="view-comics-strip-bottom">
                             {this.renderOne(item.comicList, i)}
@@ -128,11 +129,11 @@ class ViewAllComics extends Component {
 
     handleClick = (item, event) => {
         console.log(item);
-        this.props.history.push(`/view/comic/${localStorage.getItem('user')}/${item.comicName}`);
+        this.props.history.push(`/view/comic/${this.props.CurrUser.username}/${item.comicName}`);
     }
 
     handleUpdate(item, event) {
-        this.props.history.push(`/update/comic/${localStorage.getItem('user')}/${item.comicName}`);
+        this.props.history.push(`/update/comic/${this.props.CurrUser.username}/${item.comicName}`);
     }
 
     render() {
@@ -144,7 +145,7 @@ class ViewAllComics extends Component {
                 <div className="view-comics-container">
                     <NavigationBar />
                     <div className="view-comics-top">
-                        <h1>My Comics</h1>
+                        <h1 className = "hometext">My Comics</h1>
                     </div>
                     <div className="view-comics-bottom">
                         {this.renderAll()}

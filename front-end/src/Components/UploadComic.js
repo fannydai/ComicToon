@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import NavigationBar from './NavigationBar';
 import LoadingScreen from './LoadingScreen';
 import Footer from './Footer';
 import './styles/UploadComic.css';
+
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user
+});
 
 class UploadComic extends Component {
 
@@ -38,7 +45,7 @@ class UploadComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: localStorage.getItem('user')
+                username: this.props.CurrUser.username
               })
             });
             let content = await res.json();
@@ -165,7 +172,7 @@ class UploadComic extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                   },
                   body: JSON.stringify({
-                    username: localStorage.getItem('user'),
+                    username: this.props.CurrUser.username,
                     description: this.state.comicDescription,
                     name: this.state.comicName,
                     series: this.state.series,
@@ -258,4 +265,8 @@ class UploadComic extends Component {
     }
 }
 
-export default UploadComic;
+UploadComic.propTypes = {
+    CurrUser: PropTypes.object
+}
+
+export default connect(StateToProps, { })(withRouter(UploadComic));

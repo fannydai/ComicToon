@@ -2,7 +2,7 @@ package com.example.ComicToon.Models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
-
+import java.util.UUID;
 import java.util.ArrayList;
 
 public class UserModel{
@@ -131,13 +131,15 @@ public class UserModel{
 
 
     public UserModel(String email,String username, String password, String userType){
+
+
         this.email = email;
         this.username = username;
         this.password = password;
         this.userType = userType;
         this.verified = false;
-        this.verificationKey = "key";
-        this.key = "key";
+        this.verificationKey = UUID.randomUUID().toString();
+        this.key = UUID.randomUUID().toString();
         this.active = true;
         this.isAdmin = false;
         this.comics = new ArrayList<String>();

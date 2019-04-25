@@ -35,7 +35,7 @@ class ViewAllSeries extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                   },
                   body: JSON.stringify({
-                    username: localStorage.getItem('user')
+                    username: this.props.CurrUser.username
                   })
                 });
                 let content = await res.json();
@@ -51,12 +51,12 @@ class ViewAllSeries extends Component {
     }
 
     handleClick = (series, event) => {
-        this.props.history.push(`/view/series/${localStorage.getItem('user')}/${series.name}`);
+        this.props.history.push(`/view/series/${this.props.CurrUser.username}/${series.name}`);
     }
 
     handleUpdate = (series, event) => {
         console.log('SENDING THIS TO UPDATE', series);
-        this.props.history.push(`/update/series/${localStorage.getItem('user')}/${series.name}`, {
+        this.props.history.push(`/update/series/${this.props.CurrUser.username}/${series.name}`, {
             genre: series.genre,
             addUserList: series.sharedWith,
             privacy: series.privacy,
@@ -74,7 +74,7 @@ class ViewAllSeries extends Component {
                         <Card.Title className="view-series-card-title" onClick={(e) => this.handleClick(series, e)}>{series.name}</Card.Title>
                         <Card.Text>{series.description}</Card.Text>
                         <Card.Text>Genres: {series.genre.join(', ')}</Card.Text>
-                        <Card.Text>Artist: {localStorage.getItem('user')}</Card.Text>
+                        <Card.Text>Artist: {this.props.CurrUser.username}</Card.Text>
                         <Card.Text><button className="btn-block" onClick={(e) => this.handleUpdate(series, e)}>Update</button></Card.Text>
                     </Card.Body>
                 </Card>
@@ -88,7 +88,7 @@ class ViewAllSeries extends Component {
             <div className="view-series-container">
                 <NavigationBar />
                 <div className="view-series-top">
-                    <h1>Your Series</h1>
+                    <h1 className = "hometext">Your Series</h1>
                 </div>
                 <div className="view-series-bottom">
                     {seriesCards}

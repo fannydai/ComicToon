@@ -41,7 +41,7 @@ class CreateSeries extends Component {
             alert('Please enter a description for the series.');
         } else {
             console.log(this.state)
-            this.props.createSeries(localStorage.getItem('user'), this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private", this.props.history);
+            this.props.createSeries(this.props.CurrUser.username, this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private", this.props.history);
             // this.setState({genreList: []});
             // this.props.history.push(`/view/series/${localStorage.getItem('user')}/${this.state.seriesName}`, { previous: 'create' });
         }

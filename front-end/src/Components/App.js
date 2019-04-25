@@ -10,15 +10,8 @@ import Footer from './Footer';
 class App extends Component {
 
 	render() {
-		if (localStorage.getItem('user') === "admin") {
-			return (
-				<Admin />
-			);
-		}
-		else if (localStorage.getItem('user')) {
-			return (
-				<HomeContent />
-			);
+		if (localStorage.getItem('state')) {
+			return <HomeContent />
 		}
 		return (				
 			<div className="App-unauth-container">
