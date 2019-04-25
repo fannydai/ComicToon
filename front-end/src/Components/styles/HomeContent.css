@@ -28,3 +28,14 @@ h2 {
 .slick-prev:before, .slick-next:before {
     color: black;
 }
+
+.hometext{
+	color: white;
+	text-align: left!important;
+}
+
+.comic{
+	background-color: white !important;
+	border: 20px solid #607d8b
+	;
+}
