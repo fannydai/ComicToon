@@ -729,7 +729,8 @@ public class ComicController{
             List<RatingModel> temp= ratingRepository.findAll();
             for(Iterator<RatingModel> it = temp.iterator(); it.hasNext();){
                 RatingModel item = it.next();
-                if(item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
+                if(item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())
+                && item.getComicID().equals(form.getComicID())){
                     ratingRepository.delete(item); //delete existing to replace
                 }
             }

@@ -74,7 +74,8 @@ class CreateComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.token
+                username: this.props.CurrUser.username,
+                token: this.props.CurrUser.token
               })
             });
             let content = await res.json();
@@ -101,7 +102,7 @@ class CreateComic extends Component {
             this.state.UserSerieses.map(item=> {
                 return item !== null ?
                 <div key={item.name}>
-                    <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
+                    <Dropdown.Item name={item.name} onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
                 :
                 null
