@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import './styles/VerifyForm.css';
+import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { verifyUser } from './../Actions/UserActions';
+
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user,
+});
 
 class Verify extends Component {
     constructor(props) {
@@ -35,7 +42,8 @@ class Verify extends Component {
             let content = await res.json();
             console.log("VERIFICAION RESULT", content);
             if (content.result === "success") {
-                alert("YOU ARE NOW VERIFIED! LOGIN NOW")
+                alert("YOU ARE NOW VERIFIED!")
+                this.props.verifyUser(true);
                 this.props.history.push("/");
             } else {
                 alert(content.result);
@@ -59,4 +67,4 @@ class Verify extends Component {
     }
 }
 
-export default Verify;
+export default connect(StateToProps, {verifyUser})(withRouter(Verify));

@@ -1,4 +1,4 @@
-import {LOGIN_USER, REGISTER_USER, ERR} from '../Actions/Types';
+import {VERIFY, LOGIN_USER, REGISTER_USER, ERR} from '../Actions/Types';
 
 const initState = {
     username: "",
@@ -26,6 +26,11 @@ export default function(state = initState, action){
                 active: true,
                 email: action.payload.email,
                 isValidated: action.payload.verified
+            };
+        case VERIFY:
+            return{
+                ...state,
+                isValidated: action.payload.isValidated
             };
         case ERR:
             return state

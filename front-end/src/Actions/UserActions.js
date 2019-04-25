@@ -1,4 +1,4 @@
-import {LOGIN_USER, REGISTER_USER, ERR} from './Types';
+import {VERIFY, LOGIN_USER, REGISTER_USER, ERR} from './Types';
 
 export const LoginUser = (email, pwd) => (dispatch) => {
     (async () => {
@@ -67,4 +67,11 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
             });
         }
     })();
+}
+
+export const verifyUser = (state) => (dispatch) => {
+    dispatch({
+        type: VERIFY,
+        payload: { isValidated: state }
+    });
 }
