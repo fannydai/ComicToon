@@ -58,8 +58,8 @@ class HomeContent extends Component {
     }
 
     renderRecent(panelList){
-        return (
-            panelList.map(item=> {
+        /*
+        panelList.map(item=> {
                 return item !== null ?
                 <span key={item.id}>
                     <img className="comic" src={item.image} alt="comic"></img>
@@ -67,6 +67,10 @@ class HomeContent extends Component {
                 :
                 null
             })
+        */
+        const filtered = panelList.filter(item => item !== null);
+        return (
+            filtered[0] ? <span key={filtered[0].id}><img className="comic" src={filtered[0].image} alt="comic" /></span> : null
         )
     }
 

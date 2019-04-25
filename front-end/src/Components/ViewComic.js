@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
@@ -103,9 +103,9 @@ class ViewComic extends Component {
     }
 
     handleRight = (event) => {
-        if (this.props.comic.saveNewComic.panels && this.state.panelIndex + 4 < this.props.comic.saveNewComic.panels.length) {
+        if (this.props.comic.saveNewComic.panels && this.state.panelIndex + 1 < this.props.comic.saveNewComic.panels.length) {
             this.setState({ panelIndex: this.state.panelIndex + 1 });
-        } else if (this.props.comic.newComic.length && this.state.panelIndex + 4 < this.props.comic.newComic.length) {
+        } else if (this.props.comic.newComic.length && this.state.panelIndex + 1 < this.props.comic.newComic.length) {
             this.setState({ panelIndex: this.state.panelIndex + 1 });
         }
     }
@@ -237,6 +237,16 @@ class ViewComic extends Component {
     }
 
     renderComments = () => {
+        /*
+        <div className="view-comic-comment" key={index}>
+                    <div className="view-comic-comment-info">
+                        <p><span style={{ fontWeight: "bold", fontSize: "large" }}>{ comment.username }</span><span style={{ fontSize: "small" }}> on { comment.date }</span></p>
+                        {deleteButton}
+                        {reportButton}
+                    </div>
+                    <p style={{ fontWeight: "400"}}>{ comment.content }</p>
+                </div>
+                */
         console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
@@ -244,14 +254,13 @@ class ViewComic extends Component {
             const reportButton = comment.username !== this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="flag" onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} /> : null;
             return (
-                <div className="view-comic-comment" key={index}>
-                    <div className="view-comic-comment-info">
-                        <p>{ comment.username }</p>
-                        {deleteButton}
-                        {reportButton}
-                    </div>
-                    <p>{ comment.content }</p>
-                </div>
+                <Card>
+                    <Card.Body>
+                        <Card.Title>{ comment.username }</Card.Title>
+                        <Card.Subtitle class="mb-2 text-muted">{ comment.date }</Card.Subtitle>
+                        <Card.Text>{ comment.content }</Card.Text>
+                    </Card.Body>
+                </Card>
             );
         });
     }
@@ -285,6 +294,14 @@ class ViewComic extends Component {
 
     }
 
+    handleSeries = (event) => {
+        const seriesName = this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null;
+        const creatorName = this.props.comic.saveNewComic.creatorName ? this.props.comic.saveNewComic.creatorName : null;
+        if (seriesName && creatorName) {
+            this.props.history.push(`/view/series/${creatorName}/${seriesName}`);
+        }
+    }
+
     handleChange = (event) => {
         event.preventDefault();
         this.setState({ [event.target.name]: event.target.value });
@@ -292,6 +309,11 @@ class ViewComic extends Component {
 
     render() {
         console.log(this.props.comic);
+        /*
+        {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
+        {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
+        {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
+        */
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
             this.props.history.push('/notfound');
@@ -316,9 +338,6 @@ class ViewComic extends Component {
                                 </div>
                                 <div className="view-comic-panel-container">
                                     {panels && panels[this.state.panelIndex] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex].image} alt="can't load"/></div> : null}
-                                    {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
-                                    {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
-                                    {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
                                 </div>
                                 <div className="view-comic-navigate">
                                     <FontAwesomeIcon icon="chevron-right" size="2x" onClick={this.handleRight} />
@@ -342,7 +361,7 @@ class ViewComic extends Component {
                                         <h2>By: {this.props.match.params.username}</h2>
                                     </div>
                                     <div className="view-comic-second-middle">
-                                        <h2>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
+                                        <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                     </div>
                                     {subButton}
                                 </div>
