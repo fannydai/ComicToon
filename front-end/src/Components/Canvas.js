@@ -289,7 +289,15 @@ class Canvas extends Component {
             reader.onload = (() => {
                 return (e) => {
                     console.log(e.target.result);
-                    this.setState({ changethisproperty: e.target.result });
+                    fabric.Image.fromURL(e.target.result, (image) => {
+                        this.canvas.add(image);
+                        this.canvas.renderAll();
+                    }, {
+                        left: 50,
+                        top: 50,
+                        stroke: this.state.stroke,
+                        strokeWidth: this.state.lineWidth
+                    });
                 };
             })();
             reader.readAsDataURL(file);
