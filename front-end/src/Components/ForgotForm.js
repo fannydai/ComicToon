@@ -41,7 +41,7 @@ class ForgotForm extends Component {
                     let content = await res.json();
                     console.log(content)
                     if(content.result === "success"){alert("Successfully Changed Password!!")}
-                    else{alert("YOU AREN'T REGISTERED YET")}
+                    else{alert("ERROR, SOMETHING IS WRONG..")}
                 })();
             }
         }

@@ -931,6 +931,12 @@ public class ComicController{
             }
         }
 
+        ArrayList<UserModel> userConent = new ArrayList<>(); //actual content for admin
+        for(String key: allUserData.keySet()){
+            UserModel badUser = userRepository.findByid(key);
+            userConent.add(badUser);
+        }
+
         HashMap<String, Integer> allSeriesData = new HashMap<>();
         List<ReportedSeriesModel> allSeries = reportedSeriesRepo.findAll();
         for(ReportedSeriesModel x: allSeries){
@@ -940,6 +946,15 @@ public class ComicController{
             else{
                 allSeriesData.put(x.getSeriesID(), 1);
             }
+        }
+
+        ArrayList<ComicSeriesModel> seriesContent = new ArrayList<>();
+        ArrayList<String> owners = new ArrayList<>();
+        for(String key: allSeriesData.keySet()){
+            ComicSeriesModel badSeries = ComicSeriesRepository.findByid(key);
+            seriesContent.add(badSeries);
+            UserModel seriesOwner = userRepository.findByid(badSeries.getUserID());
+            owners.add(seriesOwner.getUsername()); 
         }
 
         HashMap<String, Integer> allComicsData = new HashMap<>();
@@ -953,6 +968,13 @@ public class ComicController{
             }
         }
 
+        ArrayList<ComicModel> comicContent = new ArrayList<>();
+        for(String key: allComicsData.keySet()){
+            ComicModel badComic = comicRepository.findByid(key);
+            comicContent.add(badComic);
+        }
+
+
         HashMap<String, Integer> allCommentsData = new HashMap<>();
         List<ReportedCommentsModel> allComents = reportedCommentsRepo.findAll();
         for(ReportedCommentsModel x: allComents){
@@ -964,10 +986,22 @@ public class ComicController{
             }
         }
 
+        ArrayList<CommentModel> commentContent = new ArrayList<>();
+        for(String key: allCommentsData.keySet()){
+            CommentModel badCommment = commentRepository.findByid(key);
+            commentContent.add(badCommment);
+        }
+
+
         result.setUsers(allUserData);
         result.setSeries(allSeriesData);
         result.setComics(allComicsData);
         result.setComments(allCommentsData);
+        result.setUserContent(userConent);
+        result.setSeriesContent(seriesContent);
+        result.setComicConent(comicContent);
+        result.setCommentContent(commentContent);
+        result.setSeriesOwners(owners);
         return result;
     }
 

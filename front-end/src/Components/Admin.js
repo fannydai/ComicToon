@@ -16,7 +16,12 @@ class Admin extends Component {
             seriesKeys: [],
             seriesValues: [],
             commentsKeys: [],
-            commentsValues: []
+            commentsValues: [],
+            users: [],
+            comics: [],
+            series: [],
+            comments: [],
+            owners: []
         }
     }
 
@@ -48,7 +53,12 @@ class Admin extends Component {
                 seriesKeys: k_series,
                 seriesValues: v_series,
                 commentsKeys: k_comments,
-                commentsValues: v_comments
+                commentsValues: v_comments,
+                users: content.userContent,
+                comics: content.comicConent,
+                series: content.seriesContent,
+                comments: content.commentContent,
+                owners: content.seriesOwners
             });
         })();  
     }
@@ -64,6 +74,7 @@ class Admin extends Component {
     }
 
     deactivateUser = (e) =>{
+        console.log(e.target);
         (async () => {
             const res = await fetch("http://localhost:8080/deactivate", {
                 method: "POST",
@@ -143,6 +154,24 @@ class Admin extends Component {
         })();
     }
 
+    handleSeeUser = (name) => {
+        console.log(name)
+        this.props.history.push({
+            pathname: '/dashboard', 
+            state: {
+            username: name
+            }
+        })
+    }
+
+    handleSeeSeries = (username, seriesName) => {
+        this.props.history.push(`/view/series/${username}/${seriesName}`);
+    }
+
+    handleSeeComic = (username, comicName) => {
+        this.props.history.push(`/view/comic/${username}/${comicName}`);
+    }
+
     render() {
         const badUsers = this.state.usersKeys.length ? this.state.usersKeys.map((item, i) => {
             return (
@@ -152,6 +181,7 @@ class Admin extends Component {
                         <Card.Title>User ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.usersValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deactivateUser} variant="danger">Deactivate User</Button>
+                        <Button name={item} onClick={() => {this.handleSeeUser(this.state.users[i].username)}} variant="primary">See User Details</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -165,6 +195,7 @@ class Admin extends Component {
                         <Card.Title>Comic ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.comicsValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteComic} variant="danger">Delete Comic</Button>
+                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name)}} variant="primary">See Comic Details</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -178,6 +209,7 @@ class Admin extends Component {
                         <Card.Title>Series ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.seriesValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteSeries} variant="danger">Delete Series</Button>
+                        <Button name={item} onClick={() => {this.handleSeeSeries(this.state.owners[i], this.state.series[i].name)}} variant="primary">See Series Details</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -190,6 +222,8 @@ class Admin extends Component {
                     <Card.Body>
                         <Card.Title>Comment ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.commentsValues[i]}</Card.Text>
+                        <Card.Text>Ower of Comment: {this.state.comments[i].username}</Card.Text>
+                        <Card.Text>Content of Comment: "{this.state.comments[i].content}"</Card.Text>
                         <Button name={item} onClick={this.deleteComment} variant="danger">Delete Comment</Button>
                     </Card.Body>
                 </Card>
@@ -209,10 +243,12 @@ class Admin extends Component {
                     <h3>Reported Series: </h3>
                     {badSeries}
                 </div>
+                <hr/>
                 <div className="del-comics">
                     <h3>Reported Comics: </h3>
                     {badComics}
                 </div>
+                <hr/>
                 <div className="del-comments">
                     <h3>Reported Comments: </h3>
                     {badComments}
