@@ -110,6 +110,7 @@ class UpdateComic extends Component {
                 this.props.history.goBack();
             }
         })();
+   
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
               method: "POST",
@@ -118,13 +119,13 @@ class UpdateComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.match.params.username
+                username: this.props.CurrUser.username,
+                token: this.props.CurrUser.token
               })
             });
             let content = await res.json();
-            console.log(content);
-            this.setState({ series: content.comicSeries })
-        })();
+            this.setState({series: content.comicSeries})
+        })();   
     }   
     
     componentWillUnmount() {
