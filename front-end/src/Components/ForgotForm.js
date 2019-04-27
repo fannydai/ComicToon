@@ -35,7 +35,7 @@ class ForgotForm extends Component {
                         },
                         body: JSON.stringify({
                             username: this.state.username,
-                            password: this.state.password
+                            password: this.state.pwNew
                         })
                     });
                     let content = await res.json();

@@ -31,8 +31,6 @@ class HomeContent extends Component {
         }
     }
 
-    
-
     componentDidMount(){
         if(!this.props.CurrUser.active) {this.props.history.push('*');}
         else if (!this.props.CurrUser.token || !this.props.CurrUser.isValidated) {
