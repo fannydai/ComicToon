@@ -36,9 +36,10 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
                         type: GET_ALL_SERIES,
                         payload: { allSeries: content.comicSeries }
                     });
+                    history.push(`/view/series`);
                 }
             })();
-            history.push(`/view/series`);
+            // history.push(`/view/series`); //async bug here
         } else if (content.result === "tokenerror") {
             localStorage.removeItem("state");
             history.push('/');

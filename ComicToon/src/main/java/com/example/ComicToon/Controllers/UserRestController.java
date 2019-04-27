@@ -52,7 +52,7 @@ public class UserRestController {
                 MimeMessage message = sender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message);
                 helper.setTo(form.getEmail());
-                helper.setText("Your verification key is:" + user.getVerificationKey());
+                helper.setText("Your verification key is: " + user.getVerificationKey());
                 helper.setSubject("ComicToon Verify Account");
                 sender.send(message);
                 result.setStatus("success");
@@ -121,7 +121,7 @@ public class UserRestController {
                 MimeMessage message = sender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message);
                 helper.setTo(findUser.getEmail());
-                helper.setText("Your password reset code is :" + findUser.getKey());
+                helper.setText("Your password reset code is: " + findUser.getKey());
                 helper.setSubject("ComicToon Forgot Password Reset");
                 sender.send(message);
                 result.setResult("Success");
