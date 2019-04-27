@@ -141,7 +141,10 @@ class ViewComic extends Component {
     }
 
     handleUpVote = () => {
-        if(this.state.didUpVote) alert("YOU JUST UPVOTED!!")
+        if(this.props.match.params.username === this.props.CurrUser.username){
+            alert("you can't upvote your own comic...")
+        }
+        else if(this.state.didUpVote) alert("YOU JUST UPVOTED!!")
         else{
             (async () => {
                 const res = await fetch("http://localhost:8080/comic/rate", {
@@ -168,7 +171,10 @@ class ViewComic extends Component {
     }
 
     handleDownVote = () => {
-        if(this.state.didDownVote) alert("YOU JUST DOWNVOTED:((")
+        if(this.props.match.params.username === this.props.CurrUser.username){
+            alert("you can't downvote your own comic...")
+        }
+        else if(this.state.didDownVote) alert("YOU JUST DOWNVOTED:((")
         else{
             (async () => {
                 const res = await fetch("http://localhost:8080/comic/rate", {
