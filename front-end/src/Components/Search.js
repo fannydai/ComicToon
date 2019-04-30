@@ -22,6 +22,37 @@ class Search extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        // Update search if query changes
+        if (nextProps.location.state.query !== this.props.location.state.query) {
+            (async () => {
+                const res = await fetch("http://localhost:8080/search", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: this.props.CurrUser.username,
+                        token: this.props.CurrUser.token,
+                        query: this.props.history.location.state.query
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({comics: content.all_comics, users: content.users, seriess: content.all_series, seriesOwners: content.seriesOwners}, () => {
+                    console.log(this.state);
+                    if(this.state.comics.length){
+                        this.state.comics.forEach(com=> {
+                            console.log(com.id)
+                            this.getRating(com.id);
+                        })
+                    }
+                })
+            })();
+        }
+    }
+
     componentDidMount(){
        (async () => {
             const res = await fetch("http://localhost:8080/search", {
