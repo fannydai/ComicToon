@@ -64,20 +64,14 @@ class HomeContent extends Component {
     }
 
     renderRecent(panelList){
-        /*
-        panelList.map(item=> {
-                return item !== null ?
-                <span key={item.id}>
-                    <img className="comic" src={item.image} alt="comic"></img>
-                </span>
-                :
-                null
-            })
-        */
         const filtered = panelList.filter(item => item !== null);
         return (
             filtered[0] ? <span key={filtered[0].id}><img className="comic" src={filtered[0].image} alt="comic" /></span> : null
         )
+    }
+
+    handleViewRecent = (comicName, username) => {
+        this.props.history.push(`/view/comic/${username}/${comicName}`);
     }
 
     renderRecents(){
@@ -86,7 +80,7 @@ class HomeContent extends Component {
             return (
                 this.state.allComics.map(item=> {
                     return item !== null ?
-                    <span key={item.comicName}>
+                    <span key={item.comicName} onClick={() => {this.handleViewRecent(item.comicName, item.username)}}>
                         {this.renderRecent(item.comicList)}
                     </span>
                     :

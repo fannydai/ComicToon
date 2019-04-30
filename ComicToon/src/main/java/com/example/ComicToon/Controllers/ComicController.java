@@ -697,6 +697,7 @@ public class ComicController{
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 pans.setComicName(temp.getName());
                 pans.setComicID(temp.getId());
+                pans.setUsername(temp.getUsername());
                 for(int j=0; j<temp.getPanelsList().size(); j++){
                     PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
                     pans.getComicList().add(real);
