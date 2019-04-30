@@ -45,7 +45,8 @@ class UploadComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.token
+                token: this.props.CurrUser.token,
+                username: this.props.CurrUser.username
               })
             });
             let content = await res.json();
