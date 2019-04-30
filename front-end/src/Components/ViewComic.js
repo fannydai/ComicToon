@@ -123,6 +123,10 @@ class ViewComic extends Component {
                 const type = image.substring(beginning + 1, end);
                 const base64String = image.replace("data:image/png;base64,", "");
                 zip.file(`image${i+1}.${type}`, base64String, { base64: true });
+
+                const jsonFile = panels[i].canvas; //getting json too
+                const data = JSON.stringify(JSON.parse(jsonFile), null, "\t"); //attempting to make it look nice lmao
+                zip.file(`json${i+1}.json`, data, { base64: false });
             }
             const link = document.createElement('a');
             link.download = 'comic';
