@@ -535,6 +535,11 @@ public class ComicController{
     @ResponseBody
     public SearchResult search(@RequestBody SearchForm form){
         SearchResult result = new SearchResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        // If credentials invalid, don't send any data
+        if (user == null || !user.getUsername().equals(form.getUsername())) {
+            return result;
+        }
         //search all 3 to see if any username, comic anme, or series name match search query
         List<UserModel> allUsers = userRepository.findAll();
         ArrayList<UserModel> matchedUsers = new ArrayList<>();
@@ -548,15 +553,20 @@ public class ComicController{
         ArrayList<String> seriesOwners = new ArrayList<>();
         for( ComicSeriesModel c : allseries){
             if(c.getName().contains(form.getQuery()) || form.getQuery().contains(c.getName())){
-                matchedSeries.add(c);
-                seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
+                // Check permissions
+                if (c.getUserID().equals(user.getId()) || c.getPrivacy().equals("Public") || c.getSharedWith().contains(user.getUsername())) {
+                    matchedSeries.add(c);
+                    seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
+                }
             }
         }
         List<ComicModel> allComics = comicRepository.findAll();
         ArrayList<ComicModel> matchedComics = new ArrayList<>();
         for(ComicModel x: allComics){
             if(x.getName().contains(form.getQuery()) || form.getQuery().contains(x.getName())){
-                matchedComics.add(x);
+                if (x.getUserID().equals(user.getId()) || x.getPrivacy().equals("Public") || x.getSharedWith().contains(user.getUsername())) {
+                    matchedComics.add(x);
+                }
             }
         }
         result.setUsers(matchedUsers);

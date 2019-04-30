@@ -31,6 +31,8 @@ class Search extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                 },
                 body: JSON.stringify({
+                    username: this.props.CurrUser.username,
+                    token: this.props.CurrUser.token,
                     query: this.props.history.location.state.query
                 })
             });
