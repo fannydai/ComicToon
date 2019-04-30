@@ -129,7 +129,7 @@ class ViewComic extends Component {
                 zip.file(`json${i+1}.json`, data, { base64: false });
             }
             const link = document.createElement('a');
-            link.download = 'comic';
+            link.download = `${this.props.match.params.comicName}`;
             zip.generateAsync({type: "base64"}).then((base64) => {
                 // window.location = "data:application/zip;base64," + base64;
                 link.href = "data:application/zip;base64," + base64;
