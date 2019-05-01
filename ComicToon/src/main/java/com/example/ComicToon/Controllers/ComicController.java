@@ -714,53 +714,57 @@ public class ComicController{
         if(findComicList!=null){
             //check for comics of same author
             for(ComicModel comic : findComicList){
+                if(comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())){
                 //max of 3 suggestions for comics from same as the viewed comic
-                if(suggestions_Found == 3)
-                    break;
-                if(comic.getUserID().equals(viewedComic.getUserID()) && !(comic.getId().equals(viewedComic.getId()))){
-                    ViewAllComicsResult pans = new ViewAllComicsResult();
-                            pans.setComicName(comic.getName());
-                            pans.setComicID(comic.getId());
-                            pans.setUsername(comic.getUsername());
-                            pans.setDate(comic.getDate());
-                            for(int k=0; k<comic.getPanelsList().size(); k++){
-                                PanelModel real = panelRepository.findByid(comic.getPanelsList().get(k));
-                                pans.getComicList().add(real);
-                            }
-                            result.getBundleComicList().add(pans);
-                            suggestions_Found +=1;
+                    if(suggestions_Found == 3)
+                        break;
+                    if(comic.getUserID().equals(viewedComic.getUserID()) && !(comic.getId().equals(viewedComic.getId()))){
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                                pans.setComicName(comic.getName());
+                                pans.setComicID(comic.getId());
+                                pans.setUsername(comic.getUsername());
+                                pans.setDate(comic.getDate());
+                                for(int k=0; k<comic.getPanelsList().size(); k++){
+                                    PanelModel real = panelRepository.findByid(comic.getPanelsList().get(k));
+                                    pans.getComicList().add(real);
+                                }
+                                result.getBundleComicList().add(pans);
+                                suggestions_Found +=1;
+                    }
                 }
             }
             //now by genres (last 2 or up to 5)
             ComicSeriesModel currentSeries = ComicSeriesRepository.findByid(viewedComic.getComicSeriesID());
             ArrayList<String> currentGenres = currentSeries.getGenre();
             for(ComicModel comic: findComicList){
-                if(suggestions_Found == 5)
-                    break;
-                if(viewedComic.getId().equals(comic.getId()))
-                    continue;
-                ComicSeriesModel tempSeries = ComicSeriesRepository.findByid(comic.getComicSeriesID());
-                ArrayList<String> tempGenres = tempSeries.getGenre();
-                boolean genreInCommon = false;
-                for(String g : currentGenres){
-                    for (String g2: tempGenres){
-                        if (g.equals(g2)){
-                            genreInCommon = true;
+                if(comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())){
+                    if(suggestions_Found == 5)
+                        break;
+                    if(viewedComic.getId().equals(comic.getId()))
+                        continue;
+                    ComicSeriesModel tempSeries = ComicSeriesRepository.findByid(comic.getComicSeriesID());
+                    ArrayList<String> tempGenres = tempSeries.getGenre();
+                    boolean genreInCommon = false;
+                    for(String g : currentGenres){
+                        for (String g2: tempGenres){
+                            if (g.equals(g2)){
+                                genreInCommon = true;
+                            }
                         }
                     }
-                }
-                if(genreInCommon){
-                    ViewAllComicsResult pans = new ViewAllComicsResult();
-                            pans.setComicName(comic.getName());
-                            pans.setComicID(comic.getId());
-                            pans.setUsername(comic.getUsername());
-                            pans.setDate(comic.getDate());
-                            for(int k=0; k<comic.getPanelsList().size(); k++){
-                                PanelModel real = panelRepository.findByid(comic.getPanelsList().get(k));
-                                pans.getComicList().add(real);
-                            }
-                            result.getBundleComicList().add(pans);
-                            suggestions_Found +=1;
+                    if(genreInCommon){
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                                pans.setComicName(comic.getName());
+                                pans.setComicID(comic.getId());
+                                pans.setUsername(comic.getUsername());
+                                pans.setDate(comic.getDate());
+                                for(int k=0; k<comic.getPanelsList().size(); k++){
+                                    PanelModel real = panelRepository.findByid(comic.getPanelsList().get(k));
+                                    pans.getComicList().add(real);
+                                }
+                                result.getBundleComicList().add(pans);
+                                suggestions_Found +=1;
+                    }
                 }
             }
             //now if there aren't 5 of those two above, we get rest from recents.
@@ -786,14 +790,11 @@ public class ComicController{
                 }
             }
 
-
         }
         else{
             result.setResult("No Comics Found");
         }
-
-
-
+        
         return result;
     }
     
