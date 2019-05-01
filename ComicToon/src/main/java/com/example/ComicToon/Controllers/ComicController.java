@@ -718,8 +718,8 @@ public class ComicController{
                             pans.setComicID(temp.getId());
                             pans.setUsername(temp.getUsername());
                             pans.setDate(temp.getDate());
-                            for(int j=0; j<temp.getPanelsList().size(); j++){
-                                PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
+                            for(int k=0; j<temp.getPanelsList().size(); k++){
+                                PanelModel real = panelRepository.findByid(temp.getPanelsList().get(k));
                                 pans.getComicList().add(real);
                             }
                             result.getBundleComicList().add(pans);
