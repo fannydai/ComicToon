@@ -1,8 +1,17 @@
 package com.example.ComicToon.Models.RequestResponseModels;
 
 public class ChangePasswordForm {
+    private String key;
     private String username;
     private String password;
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getUsername(){
         return this.username;
