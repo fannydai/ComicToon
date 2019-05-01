@@ -42,12 +42,18 @@ class ViewAllComics extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        comicOwnerName: this.props.CurrUser.token
+                        token: this.props.CurrUser.token,
+                        comicOwnerName: this.props.CurrUser.username
                     })
                 });
                 let content = await res.json();
                 console.log(content)
-                this.setState({allComics: content.bundleComicList, isLoading: false})
+                if (content.result === "success") {
+                    this.setState({allComics: content.bundleComicList, isLoading: false})
+                } else {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                }
             })();
         }
     }

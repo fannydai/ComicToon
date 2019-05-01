@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Collections;
+// import java.util.Comparator;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 @RestController
 public class ComicController{
@@ -512,7 +516,11 @@ public class ComicController{
     @ResponseBody
     public BundleViewAllComics viewAllComics(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
-        UserModel theUser = userRepository.findBytoken(form.getComicOwnerName());
+        UserModel theUser = userRepository.findBytoken(form.getToken());
+        if (theUser == null || !theUser.getUsername().equals(form.getComicOwnerName())) {
+            result.setResult("tokenerror");
+            return result;
+        }
         List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
@@ -520,6 +528,7 @@ public class ComicController{
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 pans.setComicName(temp.getName());
                 pans.setComicID(temp.getId());
+                pans.setDate(temp.getDate());
                 for(int j=0; j<temp.getPanelsList().size(); j++){
                     PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
                     pans.getComicList().add(real);
@@ -527,6 +536,7 @@ public class ComicController{
                 result.getBundleComicList().add(pans);
             }
         }
+        result.setResult("success");
         return result;
     }
 
@@ -684,9 +694,9 @@ public class ComicController{
     @ResponseBody
     public BundleViewAllComics recent(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
-        UserModel user = userRepository.findBytoken(form.getComicOwnerName());
+        UserModel user = userRepository.findBytoken(form.getToken());
         // Check if token is valid
-        if (user == null) {
+        if (user == null || !user.getUsername().equals(form.getComicOwnerName())) {
             result.setResult("tokenerror");
             return result;
         }
@@ -694,16 +704,50 @@ public class ComicController{
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
                 ComicModel temp = findComicList.get(i);
-                ViewAllComicsResult pans = new ViewAllComicsResult();
-                pans.setComicName(temp.getName());
-                pans.setComicID(temp.getId());
-                pans.setUsername(temp.getUsername());
-                for(int j=0; j<temp.getPanelsList().size(); j++){
-                    PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
-                    pans.getComicList().add(real);
+                // Check permissions
+                if (user.getId().equals(temp.getUserID()) || temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
+                    ViewAllComicsResult pans = new ViewAllComicsResult();
+                    pans.setComicName(temp.getName());
+                    pans.setComicID(temp.getId());
+                    pans.setUsername(temp.getUsername());
+                    pans.setDate(temp.getDate());
+                    for(int j=0; j<temp.getPanelsList().size(); j++){
+                        PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
+                        pans.getComicList().add(real);
+                    }
+                    result.getBundleComicList().add(pans);
                 }
-                result.getBundleComicList().add(pans);
             }
+            // Sort the comic list
+            ArrayList<ViewAllComicsResult> comicList = result.getBundleComicList();
+            /*
+            Collections.sort(comicList, new Comparator<ViewAllComicsResult>() {
+                SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
+                @Override
+                public int compare(ViewAllComicsResult comic1, ViewAllComicsResult comic2) {
+                    try {
+                        // Comic2 comes first to get descending order
+                        return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
+                    } catch (ParseException e) {
+                        System.out.println("Error parsing date for welcomerecent");
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+            });*/
+            SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
+            Collections.sort(comicList, (ViewAllComicsResult comic1, ViewAllComicsResult comic2) -> {
+                try {
+                    return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
+                } catch (ParseException e) {
+                        System.out.println("Error parsing date for welcomerecent");
+                        throw new IllegalArgumentException(e);
+                }
+            });
+            System.out.println("Sorted comics, recents should be first");
+            for (ViewAllComicsResult c : result.getBundleComicList()) {
+                System.out.println(c);
+            }
+            System.out.println("~~~~~~~~~~~~~~");
         }
         result.setResult("success");
         return result;
