@@ -689,6 +689,53 @@ public class ComicController{
     //     return result;
     // }
     
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/welcomefavorites", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public BundleViewAllComics favorites(@RequestBody ViewAllComicsForm form){
+        BundleViewAllComics result = new BundleViewAllComics();
+
+        //find user
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if(user == null || !user.getUsername().equals(form.getComicOwnerName())){
+            result.setResult("tokenerror");
+            return result;
+        }
+
+        List<ComicModel> findComicList = comicRepository.findAll();
+        List<RatingModel> ratingsList = ratingRepository.findAll();
+
+        if(findComicList!=null){
+            for(int i = 0;i<findComicList.size();i++){
+                ComicModel temp = findComicList.get(i);
+                if (user.getId().equals(temp.getUserID()) || temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
+                    for(int j = 0;j<ratingsList.size();j++){
+                        RatingModel tRating = ratingsList.get(j);
+                        if(tRating.getUserID().equals(user.getId()) && tRating.getRating() == 1){
+                            ViewAllComicsResult pans = new ViewAllComicsResult();
+                            pans.setComicName(temp.getName());
+                            pans.setComicID(temp.getId());
+                            pans.setUsername(temp.getUsername());
+                            pans.setDate(temp.getDate());
+                            for(int k=0; j<temp.getPanelsList().size(); k++){
+                                PanelModel real = panelRepository.findByid(temp.getPanelsList().get(k));
+                                pans.getComicList().add(real);
+                            }
+                            result.getBundleComicList().add(pans);
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            result.setResult("No Comics Found");
+        }
+
+        return result;
+
+    }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/welcomerecent", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody

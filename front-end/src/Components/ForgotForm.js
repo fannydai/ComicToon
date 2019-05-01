@@ -18,7 +18,7 @@ class ForgotForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        if(this.state.email === "" || this.state.pwNew === "" || this.state.userInputKey === "" || this.state.username === ""){
+        if(this.state.pwNew === "" || this.state.userInputKey === "" || this.state.username === ""){
             alert("No Fields Can Be Empty!!")
         }
         else{
@@ -34,6 +34,7 @@ class ForgotForm extends Component {
                             "Content-Type": "application/json; charset=utf-8"
                         },
                         body: JSON.stringify({
+                            key: this.state.userInputKey,
                             username: this.state.username,
                             password: this.state.pwNew
                         })
@@ -41,7 +42,7 @@ class ForgotForm extends Component {
                     let content = await res.json();
                     console.log(content)
                     if(content.result === "success"){alert("Successfully Changed Password!!")}
-                    else{alert("ERROR, SOMETHING IS WRONG..")}
+                    else{alert(content.result)}
                 })();
             }
         }

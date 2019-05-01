@@ -164,15 +164,15 @@ public class UserRestController {
         ChangePasswordResult result = new ChangePasswordResult();
 
         UserModel findUser = userRepository.findByusername(form.getUsername());
-
-        if(findUser!=null){
+        if(findUser!=null && findUser.getKey().equals(form.getKey())){
             findUser.setPassword(form.getPassword());
             findUser.setKey(UUID.randomUUID().toString());
             userRepository.save(findUser);
             result.setResult("success");
-        }
-        else{
-            result.setResult("failure");
+        } else if (findUser == null) {
+            result.setResult("Invalid username");
+        } else{
+            result.setResult("Invalid key");
         }
 
         return result;
