@@ -140,8 +140,8 @@ class ViewSeries extends Component {
             <div className="view-one-series-container">
                 <NavigationBar />
                 <div className="view-one-series-heading">
-                    <h1>{this.props.match.params.seriesName}</h1>
-                    <h2>By: {this.props.match.params.username}</h2>
+                    <h1 className = "hometext">{this.props.match.params.seriesName}</h1>
+                    <h2 className = "hometext">By: {this.props.match.params.username}</h2>
                 </div>
                 <div className="view-one-series-bottom">
                     <div className="view-one-series-comics">
