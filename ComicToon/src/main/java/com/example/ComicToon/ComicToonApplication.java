@@ -48,6 +48,7 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/view/allComics",
             "/view/panel",
             "/welcomerecent",
+            "/welcomesubscriptions",
             "/delComic",
             "/upload",
             "/update/comic",

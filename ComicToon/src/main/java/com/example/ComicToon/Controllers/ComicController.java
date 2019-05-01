@@ -753,6 +753,54 @@ public class ComicController{
         return result;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/welcomesubscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public BundleViewAllComics welcomeSubscriptions(@RequestBody ViewAllComicsForm form) {
+        BundleViewAllComics result = new BundleViewAllComics();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        // Check if token is valid
+        if (user == null || !user.getUsername().equals(form.getComicOwnerName())) {
+            result.setResult("tokenerror");
+            return result;
+        }
+        ArrayList<String> subs = user.getSubscriptions();
+        List<ComicModel> findComicList = comicRepository.findAll();
+        for (ComicModel comic : findComicList) {
+            // Check if comic author is subscribed to
+            if (subs.contains(comic.getUsername())) {
+                // Check permissions
+                if (user.getId().equals(comic.getUserID()) || comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())) {
+                    ViewAllComicsResult pans = new ViewAllComicsResult();
+                    pans.setComicName(comic.getName());
+                    pans.setComicID(comic.getId());
+                    pans.setUsername(comic.getUsername());
+                    pans.setDate(comic.getDate());
+                    // Get only the first panel to display
+                    PanelModel firstPanel = panelRepository.findByid(comic.getPanelsList().get(0));
+                    pans.getComicList().add(firstPanel);
+                    result.getBundleComicList().add(pans);
+                }
+            }
+        }
+        SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
+        Collections.sort(result.getBundleComicList(), (ViewAllComicsResult comic1, ViewAllComicsResult comic2) -> {
+            try {
+                return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
+            } catch (ParseException e) {
+                    System.out.println("Error parsing date for welcomesubscriptions");
+                    throw new IllegalArgumentException(e);
+            }
+        });
+        System.out.println("Sorted comics, recents should be first");
+        for (ViewAllComicsResult c : result.getBundleComicList()) {
+            System.out.println(c);
+        }
+        System.out.println("~~~~~~~~~~~~~~");
+        result.setResult("success");
+        return result;
+    }
+
     //Get a single panel
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/view/panel", method = RequestMethod.POST, consumes = {"application/json"})

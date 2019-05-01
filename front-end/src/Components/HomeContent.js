@@ -28,6 +28,7 @@ class HomeContent extends Component {
         // this.handleUpdate = this.handleUpdate.bind(this);
         this.state = {
             allComics: null,
+            subscriptionComics: null,
             isLoading: true
         }
     }
@@ -57,6 +58,27 @@ class HomeContent extends Component {
                 console.log(content)
                 if (content.result === "success") {
                     this.setState({allComics: content.bundleComicList, isLoading: false})
+                } else {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                }
+            })();
+            (async () => {
+                const res = await fetch("http://localhost:8080/welcomesubscriptions", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        comicOwnerName: this.props.CurrUser.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                if (content.result === "success") {
+                    this.setState({subscriptionComics: content.bundleComicList, isLoading: false})
                 } else {
                     localStorage.removeItem("state");
                     this.props.history.push("/");
@@ -98,6 +120,27 @@ class HomeContent extends Component {
                 })
             )
         }
+    }
+
+    renderSubscriptions() {
+        if (this.state.subscriptionComics !== null) {
+            return (
+                this.state.subscriptionComics.map(item => {
+                    return item !== null ?
+                    <span key={"subscription-" + item.comicName} onClick={() => this.handleViewRecent(item.comicName, item.username)}>
+                        {this.renderSubscription(item)}
+                    </span>
+                    : null
+                })
+            );
+        }
+    }
+
+    renderSubscription(comic) {
+        const filtered = comic.comicList.filter(item => item !== null);
+        return (
+            filtered[0] ? <span key={filtered[0].id}><OverlayTrigger trigger="hover" placement="top" overlay={this.popover(comic)}><img className="comic" src={filtered[0].image} alt="comic" /></OverlayTrigger></span> : null
+        )
     }
 
 
@@ -158,34 +201,31 @@ class HomeContent extends Component {
         if (this.state.isLoading) {
             return <LoadingScreen />
         }
+        // Adjust props dynamically
+        var subProps = JSON.parse(JSON.stringify(props)); // Deep copy the props
+        if (this.state.subscriptionComics && this.state.subscriptionComics.length < 4) {
+            subProps.slidesToShow = this.state.subscriptionComics.length;
+            subProps.slidesToScroll = this.state.subscriptionComics.length;
+        }
+        var recentProps = JSON.parse(JSON.stringify(props)); // Deep copy the props
+        if (this.state.allComics && this.state.allComics.length < 4) {
+            recentProps.slidesToShow = this.state.allComics.length;
+            recentProps.slidesToScroll = this.state.allComics.length;
+        }
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
 
                 <div className="home-content-container">
                     <h2 className = "hometext"> Subscriptions</h2>
-                    <Slider {...props}>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                    <Slider {...subProps}>
+                        {this.renderSubscriptions()}
                     </Slider>
                 </div>
 
                 <div className="home-content-container">
                     <h2 className = "hometext">Recent Creations</h2>
-                    <Slider {...props}>
-                        {this.renderRecents()}
-                        {this.renderRecents()}
-                        {this.renderRecents()}
+                    <Slider {...recentProps}>
                         {this.renderRecents()}
                     </Slider>
                 </div>
