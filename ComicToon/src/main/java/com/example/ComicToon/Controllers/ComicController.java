@@ -179,7 +179,7 @@ public class ComicController{
         List<ComicSeriesModel> series = ComicSeriesRepository.findAll();
         ArrayList<ComicSeriesModel> allowed = new ArrayList<>();
         for (ComicSeriesModel s : series) {
-            if (s.getUserID().equals(user.getId()) || s.getPrivacy().equals("Public") || (s.getUserID().equals(owner.getId()) && s.getSharedWith().contains(user.getUsername()))) {
+            if (s.getUserID().equals(owner.getId()) && (s.getUserID().equals(user.getId()) || s.getPrivacy().equals("Public") || s.getSharedWith().contains(user.getUsername()))) {
                 allowed.add(s);
             }
         }

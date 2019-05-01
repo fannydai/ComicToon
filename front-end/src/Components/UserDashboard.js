@@ -48,6 +48,7 @@ class UserDashboard extends Component {
                     })
                 });
                 let content = await res.json();
+                console.log(content);
                 if (content.result === "tokenerror") {
                     localStorage.removeItem("state");
                     this.props.history.push("/");
@@ -56,9 +57,34 @@ class UserDashboard extends Component {
                     this.setState({ isLoading: false });
                 }
             })(); 
-        }
-        else{
-            this.setState({visible: false, isLoading: false})
+        } else if (this.props.history.location.state) {
+            console.log(this.props.history.location.state);
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/series-viewable", {
+                    method: "POST",
+                    headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        username: this.props.history.location.state.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content);
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                } else if (content.comicSeries) {
+                    this.props.getUserSeries(content.comicSeries);
+                    //this.setState({ isLoading: false });
+                    this.setState({visible: false, isLoading: false})
+                }
+            })(); 
+        } else{
+            this.props.history.goBack();
+            //this.setState({visible: false, isLoading: false})
         }
         
     }
