@@ -26,8 +26,6 @@ import About from './Components/About';
 import UpdateComic from './Components/UpdateComic';
 import UpdateSeries from './Components/UpdateSeries';
 import Canvas from './Components/Canvas';
-import ViewSubs from './Components/ViewSubscriptions';
-import ViewRecents from './Components/ViewRecents';
 import ViewComic from './Components/ViewComic'
 import ViewSeries from './Components/ViewSeries';
 import store from './Components/Store';
@@ -57,12 +55,10 @@ ReactDOM.render(
                 <Route exact path="/logout" component={App} />    
                 <Route exact path="/about" component={About} />
                 <Route exact path="/canvas" component={Canvas} />  
-                <Route exact path="/subscriptions" component={ViewSubs} />
                 <Route path="/view/comic/:username/:comicName" component={ViewComic} />  
                 <Route exact path="/view/series/:username/:seriesName" component={ViewSeries} />
                 <Route exact path="/update/comic/:username/:comicName" component={UpdateComic} />
                 <Route exact path="/update/series/:username/:seriesName" component={UpdateSeries} />
-                <Route exact path="/recents" component={ViewRecents} />
                 <Route exact path="/search" component={Search} />
                 <Route exact path="/dashboard" component={UserDashboard} />
                 <Route exact path="/report" component={ReportComponent} />

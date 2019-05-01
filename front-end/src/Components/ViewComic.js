@@ -37,23 +37,21 @@ class ViewComic extends Component {
         }
     }
 
-    componentWillMount() {
-        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/*')
-        }
-    }
-
     componentDidMount() {
-        console.log('COMIC', this.props.comic);
-        if (!this.props.match.params.username || !this.props.match.params.comicName) {
-            this.props.history.goBack();
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/')
+        } else {
+            console.log('COMIC', this.props.comic);
+            if (!this.props.match.params.username || !this.props.match.params.comicName) {
+                this.props.history.goBack();
+            }
+            // Load comic only if this page is not redirected from create comic
+            if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
+                console.log('VIEW COMIC FETCHING DATA');
+                this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
+            }
+            //this.updateRating();
         }
-        // Load comic only if this page is not redirected from create comic
-        if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
-            console.log('VIEW COMIC FETCHING DATA');
-            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
-        }
-        //this.updateRating();
     }
 
     componentWillReceiveProps(nextProps){

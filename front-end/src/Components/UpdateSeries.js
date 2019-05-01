@@ -32,7 +32,8 @@ class UpdateSeries extends Component {
 
     componentWillMount() {
         if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/*')
+            this.state.removeItem("state");
+            this.props.history.push('/');
         }
     }
 
@@ -41,33 +42,74 @@ class UpdateSeries extends Component {
         console.log(this.props.location.state);
         console.log(this.state.seriesName);
         // Load the information if needed
-        if (!this.props.location.state) {
+        if (this.props.CurrUser.username !== this.props.match.params.username) {
+            this.props.history.push('/');
+        }
+        else if (!this.props.location.state) {
             (async () => {
-                const res = await fetch("http://localhost:8080/view/series", {
+                const res = await fetch("http://localhost:8080/checkToken", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    token: this.props.CurrUser.token,
+                    username: this.props.CurrUser.username
+                })
+                });
+                let content = await res.json();
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                } else {
+                    (async () => {
+                        const res = await fetch("http://localhost:8080/view/series", {
+                            method: "POST",
+                            headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json; charset=utf-8"
+                            },
+                            body: JSON.stringify({
+                            username: this.props.match.params.username
+                            })
+                        });
+                        let content = await res.json();
+                        console.log(content);
+                        if (content) {
+                            for (const series of content.comicSeries) {
+                                if (series && series.name === this.props.match.params.seriesName) {
+                                    this.setState({ id: series.id, seriesDescription: series.description, genreList: series.genre, addUserList: series.sharedWith, privacy: series.privacy });
+                                    break;
+                                }
+                            }
+                        }
+                    })();
+                }
+            })(); 
+        } else {
+            (async () => {
+                const res = await fetch("http://localhost:8080/checkToken", {
                   method: "POST",
                   headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
                   },
                   body: JSON.stringify({
-                    username: this.props.match.params.username
+                    token: this.props.CurrUser.token,
+                    username: this.props.CurrUser.username
                   })
                 });
                 let content = await res.json();
-                console.log(content);
-                if (content) {
-                    for (const series of content.comicSeries) {
-                        if (series && series.name === this.props.match.params.seriesName) {
-                            this.setState({ id: series.id, seriesDescription: series.description, genreList: series.genre, addUserList: series.sharedWith, privacy: series.privacy });
-                            break;
-                        }
-                    }
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                } else {
+                    this.setState({ id: this.props.location.state.id, genreList: this.props.location.state.genre, 
+                        addUserList: this.props.location.state.addUserList, privacy: this.props.location.state.privacy, 
+                        seriesDescription: this.props.location.state.description });
                 }
-            })();
-        } else {
-            this.setState({ id: this.props.location.state.id, genreList: this.props.location.state.genre, 
-                addUserList: this.props.location.state.addUserList, privacy: this.props.location.state.privacy, 
-                seriesDescription: this.props.location.state.description });
+            })(); 
         }
     }
 

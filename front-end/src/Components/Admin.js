@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import './styles/Admin.css';
+import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
+import LoadingScreen from './LoadingScreen';
 
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user
+});
 class Admin extends Component {
     constructor(){
         super()
@@ -21,13 +26,8 @@ class Admin extends Component {
             comics: [],
             series: [],
             comments: [],
-            owners: []
-        }
-    }
-
-    componentWillMount() {
-        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/*')
+            owners: [],
+            isLoading: true
         }
     }
 
@@ -35,37 +35,47 @@ class Admin extends Component {
         //fill page with reported users, comics, series, and comments
         (async () => {
             const res = await fetch("http://localhost:8080/adminData", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
-                }
+                },
+                body: JSON.stringify({
+                    token: this.props.CurrUser.token,
+                    username: this.props.CurrUser.username
+                })
             });
             let content = await res.json();
             console.log(content)
-            const k_users = Object.keys(content.users);  //user ids
-            const v_users = Object.values(content.users); //frequency of reports
-            const k_comics = Object.keys(content.comics); //comics ids
-            const v_comics = Object.values(content.comics); //frequency of reports
-            const k_series = Object.keys(content.series); //series ids
-            const v_series = Object.values(content.series); //frequency of reports
-            const k_comments = Object.keys(content.comments) //comments ids
-            const v_comments = Object.values(content.comments) //frequency of reports
-            this.setState({
-                usersKeys: k_users,
-                usersValues: v_users,
-                comicsKeys: k_comics,
-                comicsValues: v_comics,
-                seriesKeys: k_series,
-                seriesValues: v_series,
-                commentsKeys: k_comments,
-                commentsValues: v_comments,
-                users: content.userContent,
-                comics: content.comicConent,
-                series: content.seriesContent,
-                comments: content.commentContent,
-                owners: content.seriesOwners
-            });
+            if (content.result === "success") {
+                const k_users = Object.keys(content.users);  //user ids
+                const v_users = Object.values(content.users); //frequency of reports
+                const k_comics = Object.keys(content.comics); //comics ids
+                const v_comics = Object.values(content.comics); //frequency of reports
+                const k_series = Object.keys(content.series); //series ids
+                const v_series = Object.values(content.series); //frequency of reports
+                const k_comments = Object.keys(content.comments) //comments ids
+                const v_comments = Object.values(content.comments) //frequency of reports
+                this.setState({
+                    usersKeys: k_users,
+                    usersValues: v_users,
+                    comicsKeys: k_comics,
+                    comicsValues: v_comics,
+                    seriesKeys: k_series,
+                    seriesValues: v_series,
+                    commentsKeys: k_comments,
+                    commentsValues: v_comments,
+                    users: content.userContent,
+                    comics: content.comicConent,
+                    series: content.seriesContent,
+                    comments: content.commentContent,
+                    owners: content.seriesOwners,
+                    isLoading: false
+                });
+            } else {
+                localStorage.removeItem("state");
+                this.props.history.push("/");
+            }
         })();  
     }
 
@@ -236,6 +246,9 @@ class Admin extends Component {
                 : null
             )
         }) : <h3> NO COMMENTS FOUND</h3>
+        if (this.state.isLoading) {
+            return <LoadingScreen />
+        }
         return (
             <div>
                 <NavigationBar />
@@ -265,4 +278,4 @@ class Admin extends Component {
     }
 }
 
-export default withRouter(Admin);
+export default connect(StateToProps, {})(withRouter(Admin));

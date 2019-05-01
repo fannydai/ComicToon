@@ -33,14 +33,18 @@ class HomeContent extends Component {
         }
     }
 
+    /*
     componentWillMount() {
         if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/*')
+            this.props.history.push('/')
         }
-    }
+    }*/
 
     componentDidMount(){
-        if(!this.props.CurrUser.active) {this.props.history.push('*');}
+        if(!this.props.CurrUser.active) {
+            localStorage.removeItem("state");
+            this.props.history.push('/');
+        }
         else if (!this.props.CurrUser.token || !this.props.CurrUser.isValidated) {
             this.props.history.push('/verify');
         }

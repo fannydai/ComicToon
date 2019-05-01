@@ -9,15 +9,24 @@ import com.example.ComicToon.Models.CommentModel;
 import com.example.ComicToon.Models.UserModel;
 
 public class AdminDataResult {
-   private HashMap<String, Integer> users = new HashMap<>(); //id of users and # of times they've been reported
-   private HashMap<String, Integer> comics = new HashMap<>(); //id of comics and # of times they've been reported
-   private HashMap<String, Integer> series = new HashMap<>(); //id of series and # of times they've been reported
-   private HashMap<String, Integer> comments = new HashMap<>(); //id of comments and # of times they've been reported
-   private ArrayList<UserModel> userContent = new ArrayList<>();
-   private ArrayList<ComicModel> comicConent = new ArrayList<>();
-   private ArrayList<ComicSeriesModel> seriesContent = new ArrayList<>();
-   private ArrayList<CommentModel> commentContent = new ArrayList<>();
-   private ArrayList<String> seriesOwners = new ArrayList<>();
+    private String result;
+    private HashMap<String, Integer> users = new HashMap<>(); //id of users and # of times they've been reported
+    private HashMap<String, Integer> comics = new HashMap<>(); //id of comics and # of times they've been reported
+    private HashMap<String, Integer> series = new HashMap<>(); //id of series and # of times they've been reported
+    private HashMap<String, Integer> comments = new HashMap<>(); //id of comments and # of times they've been reported
+    private ArrayList<UserModel> userContent = new ArrayList<>();
+    private ArrayList<ComicModel> comicConent = new ArrayList<>();
+    private ArrayList<ComicSeriesModel> seriesContent = new ArrayList<>();
+    private ArrayList<CommentModel> commentContent = new ArrayList<>();
+    private ArrayList<String> seriesOwners = new ArrayList<>();
+
+    public String getResult() {
+        return this.result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 
     /**
      * @return the users

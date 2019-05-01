@@ -36,15 +36,19 @@ class UpdateComic extends Component {
 
     componentWillMount() {
         if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/*')
+            localStorage.removeItem("state");
+            this.props.history.push('/')
         }
     }
 
     componentDidMount() {
         console.log(this.props.comic);
         console.log(this.props.location);
+        if (this.props.CurrUser.username !== this.props.match.params.username) {
+            this.props.history.push("/");
+        }
         // Load saved data if any
-        if (this.props.location.state && this.props.location.state.previous === 'canvas') {
+        else if (this.props.location.state && this.props.location.state.previous === 'canvas') {
             const savedData = this.props.comic.saveUpdateComic;
             if (savedData.comicName) {
                 this.setState({ comicName: savedData.comicName });

@@ -1053,10 +1053,17 @@ public class ComicController{
         * gets the id of whatever that was reported and the # of times it was reported
     */
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/adminData", method = RequestMethod.GET, consumes = {"application/json"})
+    @RequestMapping(value = "/adminData", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public AdminDataResult getAdminData(){
+    public AdminDataResult getAdminData(@RequestBody AdminDataForm form){
         AdminDataResult result = new AdminDataResult();
+        // Check for validity of token
+        UserModel admin = userRepository.findBytoken(form.getToken());
+        if (admin == null || !form.getUsername().equals("admin") || !admin.getUsername().equals("admin")) {
+            result.setResult("tokenerror");
+            return result;
+        }
+
         HashMap<String, Integer> allUserData = new HashMap<>();
         List<ReportedUsersModel> allUsers = reportedUsersRepo.findAll();
         for(ReportedUsersModel x: allUsers){
@@ -1139,10 +1146,9 @@ public class ComicController{
         result.setComicConent(comicContent);
         result.setCommentContent(commentContent);
         result.setSeriesOwners(owners);
+        result.setResult("success");
         return result;
     }
-
-    //Download Comic
 
     //Comment on Comic
     @CrossOrigin(origins = "http://localhost:3000")
