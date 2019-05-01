@@ -56,6 +56,9 @@ class ViewComic extends Component {
         if (nextProps.comic.saveNewComic.commentsList) {
             this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
         }
+        if(nextProps.comic.saveNewComic.privacy === "Private"){
+            this.props.history.push('/*');
+        }
         (async () => {
             const res = await fetch("http://localhost:8080/comic/rate/getRating", {
                 method: "POST",
@@ -141,7 +144,27 @@ class ViewComic extends Component {
     }
 
     handleSubscribe = (event) => {
-        this.setState({ subbed: !this.state.subbed });
+        if(this.props.CurrUser.username === this.props.match.params.username){
+            alert("Can't sub to yourself...")
+        }
+        else{
+            (async () => {
+                const res = await fetch("http://localhost:8080/subscribe", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: this.props.CurrUser.token,
+                        sub: this.props.match.params.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({ subbed: !this.state.subbed });
+            })(); 
+        }
     }
 
     handleUpVote = () => {
@@ -158,7 +181,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.username,
+                        username: this.props.CurrUser.token,
                         token: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
@@ -340,6 +363,30 @@ class ViewComic extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    handleUnSubscribe = () => {
+        if(this.props.CurrUser.username === this.props.match.params.username){
+            alert("Can't unsub to yourself...")
+        }
+        else{
+            (async () => {
+                const res = await fetch("http://localhost:8080/unsubscribe", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: this.props.CurrUser.token,
+                        unSub: this.props.match.params.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({ subbed: !this.state.subbed });
+            })(); 
+        }
+    }
+
     render() {
         console.log(this.props.comic);
         /*
@@ -354,7 +401,7 @@ class ViewComic extends Component {
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         const subButton = this.props.CurrUser.username !== this.props.match.params.username ? this.state.subbed ? 
         <div className="ml-auto">
-            <Button onClick={this.handleSubscribe}>Unsubscribe</Button>
+            <Button onClick={this.handleUnSubscribe}>Unsubscribe</Button>
         </div> :
         <div className="ml-auto">
             <Button onClick={this.handleSubscribe}>Subscribe</Button>
