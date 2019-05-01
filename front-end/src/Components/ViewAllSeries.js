@@ -24,6 +24,12 @@ class ViewAllSeries extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         // Fetch all series just in case or if coming from update series
         if ((this.props.location.state && this.props.location.state.previous === 'update') || this.props.comic.allSeries.length === 0) {

@@ -802,36 +802,23 @@ public class ComicController{
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
                 ComicModel temp = findComicList.get(i);
-                // Check permissions
-                if (user.getId().equals(temp.getUserID()) || temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
-                    ViewAllComicsResult pans = new ViewAllComicsResult();
-                    pans.setComicName(temp.getName());
-                    pans.setComicID(temp.getId());
-                    pans.setUsername(temp.getUsername());
-                    pans.setDate(temp.getDate());
-                    for(int j=0; j<temp.getPanelsList().size(); j++){
-                        PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
-                        pans.getComicList().add(real);
+                // Should not be your comic
+                if (!temp.getUsername().equals(user.getUsername())) {
+                    // Check permissions
+                    if (temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                        pans.setComicName(temp.getName());
+                        pans.setComicID(temp.getId());
+                        pans.setUsername(temp.getUsername());
+                        pans.setDate(temp.getDate());
+                        PanelModel firstPanel = panelRepository.findByid(temp.getPanelsList().get(0));
+                        pans.getComicList().add(firstPanel);
+                        result.getBundleComicList().add(pans);
                     }
-                    result.getBundleComicList().add(pans);
                 }
             }
             // Sort the comic list
             ArrayList<ViewAllComicsResult> comicList = result.getBundleComicList();
-            /*
-            Collections.sort(comicList, new Comparator<ViewAllComicsResult>() {
-                SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
-                @Override
-                public int compare(ViewAllComicsResult comic1, ViewAllComicsResult comic2) {
-                    try {
-                        // Comic2 comes first to get descending order
-                        return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
-                    } catch (ParseException e) {
-                        System.out.println("Error parsing date for welcomerecent");
-                        throw new IllegalArgumentException(e);
-                    }
-                }
-            });*/
             SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
             Collections.sort(comicList, (ViewAllComicsResult comic1, ViewAllComicsResult comic2) -> {
                 try {
@@ -847,6 +834,54 @@ public class ComicController{
             }
             System.out.println("~~~~~~~~~~~~~~");
         }
+        result.setResult("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/welcomesubscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public BundleViewAllComics welcomeSubscriptions(@RequestBody ViewAllComicsForm form) {
+        BundleViewAllComics result = new BundleViewAllComics();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        // Check if token is valid
+        if (user == null || !user.getUsername().equals(form.getComicOwnerName())) {
+            result.setResult("tokenerror");
+            return result;
+        }
+        ArrayList<String> subs = user.getSubscriptions();
+        List<ComicModel> findComicList = comicRepository.findAll();
+        for (ComicModel comic : findComicList) {
+            // Check if comic author is subscribed to
+            if (subs.contains(comic.getUsername())) {
+                // Check permissions
+                if (user.getId().equals(comic.getUserID()) || comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())) {
+                    ViewAllComicsResult pans = new ViewAllComicsResult();
+                    pans.setComicName(comic.getName());
+                    pans.setComicID(comic.getId());
+                    pans.setUsername(comic.getUsername());
+                    pans.setDate(comic.getDate());
+                    // Get only the first panel to display
+                    PanelModel firstPanel = panelRepository.findByid(comic.getPanelsList().get(0));
+                    pans.getComicList().add(firstPanel);
+                    result.getBundleComicList().add(pans);
+                }
+            }
+        }
+        SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
+        Collections.sort(result.getBundleComicList(), (ViewAllComicsResult comic1, ViewAllComicsResult comic2) -> {
+            try {
+                return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
+            } catch (ParseException e) {
+                    System.out.println("Error parsing date for welcomesubscriptions");
+                    throw new IllegalArgumentException(e);
+            }
+        });
+        System.out.println("Sorted comics, recents should be first");
+        for (ViewAllComicsResult c : result.getBundleComicList()) {
+            System.out.println(c);
+        }
+        System.out.println("~~~~~~~~~~~~~~");
         result.setResult("success");
         return result;
     }

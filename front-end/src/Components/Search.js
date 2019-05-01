@@ -22,6 +22,12 @@ class Search extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         // Update search if query changes
         if (nextProps.location.state.query !== this.props.location.state.query) {

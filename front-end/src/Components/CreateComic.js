@@ -40,6 +40,12 @@ class CreateComic extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         // Initialize values if comics is already being edited
         const savedData = this.props.comic.saveNewComic;

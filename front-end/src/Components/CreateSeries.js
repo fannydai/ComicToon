@@ -25,6 +25,12 @@ class CreateSeries extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         // Make sure token is correct
         (async () => {

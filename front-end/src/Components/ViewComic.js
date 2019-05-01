@@ -37,6 +37,12 @@ class ViewComic extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         console.log('COMIC', this.props.comic);
         if (!this.props.match.params.username || !this.props.match.params.comicName) {
@@ -181,7 +187,7 @@ class ViewComic extends Component {
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({
-                        username: this.props.CurrUser.token,
+                        username: this.props.CurrUser.username,
                         token: this.props.CurrUser.token,
                         comicID: this.props.comic.saveNewComic.comicID,
                         rating: 1
