@@ -14,6 +14,7 @@ import Footer from './Footer';
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 import LoadingScreen from './LoadingScreen';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
@@ -64,10 +65,18 @@ class HomeContent extends Component {
         }
     }
 
-    renderRecent(panelList){
-        const filtered = panelList.filter(item => item !== null);
+    popover(comic) {
         return (
-            filtered[0] ? <span key={filtered[0].id}><img className="comic" src={filtered[0].image} alt="comic" /></span> : null
+            <Popover title={comic.comicName}>
+                Created by {comic.username} on {comic.date}
+            </Popover>
+        );
+    }
+
+    renderRecent(comic){
+        const filtered = comic.comicList.filter(item => item !== null);
+        return (
+            filtered[0] ? <span key={filtered[0].id}><OverlayTrigger trigger="hover" placement="top" overlay={this.popover(comic)}><img className="comic" src={filtered[0].image} alt="comic" /></OverlayTrigger></span> : null
         )
     }
 
@@ -82,7 +91,7 @@ class HomeContent extends Component {
                 this.state.allComics.map(item=> {
                     return item !== null ?
                     <span key={item.comicName} onClick={() => {this.handleViewRecent(item.comicName, item.username)}}>
-                        {this.renderRecent(item.comicList)}
+                        {this.renderRecent(item)}
                     </span>
                     :
                     null
