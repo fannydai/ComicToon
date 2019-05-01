@@ -33,6 +33,12 @@ class UploadComic extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         window.addEventListener('dragenter', this.onDragEnter, false);
         window.addEventListener('dragover', this.onDragOver, false);

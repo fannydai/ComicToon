@@ -25,6 +25,12 @@ class UserDashboard extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         if(this.props.history.location.state.username === this.props.CurrUser.username){
             this.setState({visible: true})
