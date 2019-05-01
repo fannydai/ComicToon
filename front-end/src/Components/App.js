@@ -8,6 +8,7 @@ import Admin from './Admin'
 
 import Footer from './Footer';
 class App extends Component {
+	
 
 	render() {
 		if (localStorage.getItem('state')) {

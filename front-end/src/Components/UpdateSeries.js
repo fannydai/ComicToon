@@ -30,6 +30,12 @@ class UpdateSeries extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/*')
+        }
+    }
+
     componentDidMount() {
         console.log('UPDATE SERIES INFO');
         console.log(this.props.location.state);
