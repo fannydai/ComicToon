@@ -25,31 +25,68 @@ class UserDashboard extends Component {
         }
     }
 
-    componentDidMount() {
-        if(this.props.history.location.state.username === this.props.CurrUser.username){
-            this.setState({visible: true})
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            localStorage.removeItem("state");
+            this.props.history.push('/');
         }
-        else{
-            this.setState({visible: false})
-        }
+    }
 
-        (async () => {
-            const res = await fetch("http://localhost:8080/view/series", {
-                method: "POST",
-                headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    username: this.props.history.location.state.username
-                })
-            });
-            let content = await res.json();
-            if (content.comicSeries) {
-                this.props.getUserSeries(content.comicSeries);
-                this.setState({ isLoading: false });
-            }
-        })(); 
+    componentDidMount() {
+        if(this.props.history.location.state && this.props.history.location.state.username === this.props.CurrUser.username){
+            this.setState({visible: true});
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/series-viewable", {
+                    method: "POST",
+                    headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        username: this.props.history.location.state.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content);
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                } else if (content.comicSeries) {
+                    this.props.getUserSeries(content.comicSeries);
+                    this.setState({ isLoading: false });
+                }
+            })(); 
+        } else if (this.props.history.location.state) {
+            console.log(this.props.history.location.state);
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/series-viewable", {
+                    method: "POST",
+                    headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        username: this.props.history.location.state.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content);
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                } else if (content.comicSeries) {
+                    this.props.getUserSeries(content.comicSeries);
+                    //this.setState({ isLoading: false });
+                    this.setState({visible: false, isLoading: false})
+                }
+            })(); 
+        } else{
+            this.props.history.goBack();
+            //this.setState({visible: false, isLoading: false})
+        }
+        
     }
 
     handleClick = (series) => {
@@ -97,7 +134,7 @@ class UserDashboard extends Component {
                 </Card>
                 : null
             )
-        }) : <h2>NO SERIES FOR THIS USER YET</h2>;
+        }) : !this.props.history.location.state ? <h2>FIND INFO ON A USER THROUGH THE SEARCH BAR</h2> : <h2>NO SERIES FOR THIS USER YET</h2>;
         if (this.state.isLoading) {
             return <LoadingScreen />
         }

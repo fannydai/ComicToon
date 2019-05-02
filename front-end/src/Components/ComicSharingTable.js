@@ -3,10 +3,6 @@ import { Button, Table } from 'react-bootstrap';
 
 class ComicSharingTable extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const trs = this.props.usernames.map((username, i) => {
             return <tr key={i}><td>{username}</td><td><Button className="btn-danger" onClick={(e) => this.props.handleDeleteShare(i, e)}>Delete</Button></td></tr>

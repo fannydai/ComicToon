@@ -46,6 +46,12 @@ class Canvas extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/')
+        }
+    }
+
     componentDidMount() {
         this.canvas = new fabric.Canvas('canvas', {
             height: 600,

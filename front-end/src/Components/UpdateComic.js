@@ -34,11 +34,21 @@ class UpdateComic extends Component {
         }
     }
 
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            localStorage.removeItem("state");
+            this.props.history.push('/')
+        }
+    }
+
     componentDidMount() {
         console.log(this.props.comic);
         console.log(this.props.location);
+        if (this.props.CurrUser.username !== this.props.match.params.username) {
+            this.props.history.push("/");
+        }
         // Load saved data if any
-        if (this.props.location.state && this.props.location.state.previous === 'canvas') {
+        else if (this.props.location.state && this.props.location.state.previous === 'canvas') {
             const savedData = this.props.comic.saveUpdateComic;
             if (savedData.comicName) {
                 this.setState({ comicName: savedData.comicName });
@@ -110,6 +120,7 @@ class UpdateComic extends Component {
                 this.props.history.goBack();
             }
         })();
+   
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
               method: "POST",
@@ -118,13 +129,13 @@ class UpdateComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.match.params.username
+                username: this.props.CurrUser.username,
+                token: this.props.CurrUser.token
               })
             });
             let content = await res.json();
-            console.log(content);
-            this.setState({ series: content.comicSeries })
-        })();
+            this.setState({series: content.comicSeries})
+        })();   
     }   
     
     componentWillUnmount() {

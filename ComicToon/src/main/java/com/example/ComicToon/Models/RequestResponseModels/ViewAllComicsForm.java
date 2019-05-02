@@ -1,7 +1,16 @@
 package com.example.ComicToon.Models.RequestResponseModels;
 
 public class ViewAllComicsForm {
+    private String token;
     private String comicOwnerName;
+
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     /**
      * @return the comicOwnerName

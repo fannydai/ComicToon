@@ -35,17 +35,39 @@ class ViewAllSeries extends Component {
                     "Content-Type": "application/json; charset=utf-8"
                   },
                   body: JSON.stringify({
-                    username: this.props.CurrUser.token
+                    token: this.props.CurrUser.token,
+                    username: this.props.CurrUser.username
                   })
                 });
                 let content = await res.json();
-                if (content.comicSeries) {
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                } else if (content.comicSeries) {
                     this.props.getAllSeries(content.comicSeries);
                     console.log('LOADING IS FALSE');
                     this.setState({ isLoading: false });
                 }
             })();  
         } else {
+            (async () => {
+                const res = await fetch("http://localhost:8080/checkToken", {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                  },
+                  body: JSON.stringify({
+                      token: this.props.CurrUser.token,
+                      username: this.props.CurrUser.username
+                  })
+                });
+                let content = await res.json();
+                if (content.result === "tokenerror") {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                }
+            })();
             this.setState({ isLoading: false });
         }
     }

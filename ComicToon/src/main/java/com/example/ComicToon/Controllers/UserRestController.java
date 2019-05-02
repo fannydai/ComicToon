@@ -52,7 +52,7 @@ public class UserRestController {
                 MimeMessage message = sender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message);
                 helper.setTo(form.getEmail());
-                helper.setText("Your verification key is:" + user.getVerificationKey());
+                helper.setText("Your verification key is: " + user.getVerificationKey());
                 helper.setSubject("ComicToon Verify Account");
                 sender.send(message);
                 result.setStatus("success");
@@ -121,7 +121,7 @@ public class UserRestController {
                 MimeMessage message = sender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message);
                 helper.setTo(findUser.getEmail());
-                helper.setText("Your password reset code is :" + findUser.getKey());
+                helper.setText("Your password reset code is: " + findUser.getKey());
                 helper.setSubject("ComicToon Forgot Password Reset");
                 sender.send(message);
                 result.setResult("Success");
@@ -164,15 +164,15 @@ public class UserRestController {
         ChangePasswordResult result = new ChangePasswordResult();
 
         UserModel findUser = userRepository.findByusername(form.getUsername());
-
-        if(findUser!=null){
+        if(findUser!=null && findUser.getKey().equals(form.getKey())){
             findUser.setPassword(form.getPassword());
             findUser.setKey(UUID.randomUUID().toString());
             userRepository.save(findUser);
             result.setResult("success");
-        }
-        else{
-            result.setResult("failure");
+        } else if (findUser == null) {
+            result.setResult("Invalid username");
+        } else{
+            result.setResult("Invalid key");
         }
 
         return result;
@@ -195,6 +195,20 @@ public class UserRestController {
             }
         } else {
             result.setResult("Email does not exist");
+        }
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/checkToken", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public VerifyAccountResult checkToken(@RequestBody CheckTokenForm form) {
+        VerifyAccountResult result = new VerifyAccountResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if (user == null || !user.getUsername().equals(form.getUsername())) {
+            result.setResult("tokenerror");
+        } else {
+            result.setResult("success");
         }
         return result;
     }

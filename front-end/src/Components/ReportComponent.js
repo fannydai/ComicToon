@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom'
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import './styles/Welcome.css';
+const history = require('browser-history')
 
 class ReportComponent extends Component {
     constructor(){
@@ -47,8 +48,8 @@ class ReportComponent extends Component {
                 let content = await res.json();
                 if (content.status === "success") {alert("Reported!!");}
                 else{ alert("you already reported this item.. wait for it to be resolved")}
+                history(-1);
             })(); 
-            
         }
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dropdown, Form } from 'react-bootstrap';
+import { Button, Dropdown, Form, Alert, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -18,18 +18,27 @@ class UploadComic extends Component {
 
     constructor(props) {
         super(props);
+        this.selectFileRef = React.createRef();
         this.state = {
             isLoading: true,
             image: null,
             json: null,
             filename: null,
+            fileError: '',
             comicName: '',
             comicDescription: '',
             privacy: 'Public',
             series: '',
             seriesList: [],
             userInput: '',
-            sharedUsersList: []
+            sharedUsersList: [],
+            showSubmitError: ''
+        }
+    }
+
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/');
         }
     }
 
@@ -45,7 +54,8 @@ class UploadComic extends Component {
                 "Content-Type": "application/json; charset=utf-8"
               },
               body: JSON.stringify({
-                username: this.props.CurrUser.token
+                token: this.props.CurrUser.token,
+                username: this.props.CurrUser.username
               })
             });
             let content = await res.json();
@@ -78,11 +88,11 @@ class UploadComic extends Component {
             const reader = new FileReader();
             reader.onload = (() => {
                 return (e) => {
-                    this.setState({ image: e.target.result });
+                    this.setState({ image: e.target.result, filename: file.name, fileError: '', showSubmitError: '' });
                 };
             })();
             reader.readAsDataURL(file);
-        } else if (file.type === 'application/json') {
+        } /*else if (file.type === 'application/json') {
             this.setState({ filename: file.name });
             const reader = new FileReader();
             reader.onload = (() => {
@@ -92,13 +102,14 @@ class UploadComic extends Component {
                 }
             })();
             reader.readAsText(file);
-        } else {
-            alert('Sorry, only image and JSON files are allowed');
+        }*/ else {
+            //alert('Sorry, only image files are allowed');
+            this.setState({ fileError: "Only image files are allowed.", showSubmitError: '' });
         }
     }
 
     handleDelete = (event) => {
-        this.setState({ image: null, json: null });
+        this.setState({ image: null, json: null, filename: '' });
     }
 
     handleComicName = (event) => {
@@ -159,8 +170,9 @@ class UploadComic extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
-        if (this.state.image === null && this.state.json === null) {
-            alert('Please upload an image or a JSON file');
+        if (this.state.image === null) {
+            //alert('Please upload an image file');
+            this.setState({ showSubmitError: 'Select an image file.'});
         } else if (this.state.series === '') {
             alert('Please select a series');
         } else {
@@ -212,6 +224,9 @@ class UploadComic extends Component {
                 <tr key={i}><td>{username}</td><td><button className="btn-danger" onClick={(e) => this.handleDeleteShare(i, e)}>Delete</button></td></tr>
             );
         });
+        const fileAlert = this.state.fileError ? <Alert variant={"danger"} ref={this.selectFileRef}>{this.state.fileError}</Alert> 
+            : this.state.filename ? <Alert variant={"success"}>File chosen: {this.state.filename}</Alert>
+            : <Alert variant="primary" ref={this.selectFileRef}>No file chosen</Alert>
         if (this.state.loading)
             return <LoadingScreen />
         return (
@@ -221,6 +236,8 @@ class UploadComic extends Component {
                     <Form className="upload-form" onSubmit={this.handleSubmit}>
                         <div className="upload-container" id="upload-container">
                             {imgOrUpload}
+                            {fileAlert}
+                            <Overlay target={this.selectFileRef.current} show={this.state.showSubmitError.length > 0} placement="right"><Tooltip>{this.state.showSubmitError}</Tooltip></Overlay>
                         </div>
                         <div className="upload-info">
                             <Form.Control required className="upload-name-input" type="text" placeholder="Type Comic Name..." value={this.state.comicName} onChange={this.handleComicName} />

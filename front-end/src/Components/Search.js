@@ -22,30 +22,77 @@ class Search extends Component {
         }
     }
 
-    componentDidMount(){
-       (async () => {
-            const res = await fetch("http://localhost:8080/search", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    query: this.props.history.location.state.query
-                })
-            });
-            let content = await res.json();
-            console.log(content)
-            this.setState({comics: content.all_comics, users: content.users, seriess: content.all_series, seriesOwners: content.seriesOwners}, () => {
-                console.log(this.state);
-                if(this.state.comics.length){
-                    this.state.comics.forEach(com=> {
-                        console.log(com.id)
-                        this.getRating(com.id);
+    componentWillMount() {
+        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
+            this.props.history.push('/')
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // Update search if query changes
+        if (this.props.history.location.state) {
+            if (nextProps.location.state.query !== this.props.location.state.query) {
+                (async () => {
+                    const res = await fetch("http://localhost:8080/search", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        body: JSON.stringify({
+                            username: this.props.CurrUser.username,
+                            token: this.props.CurrUser.token,
+                            query: this.props.history.location.state.query
+                        })
+                    });
+                    let content = await res.json();
+                    console.log(content)
+                    this.setState({comics: content.all_comics, users: content.users, seriess: content.all_series, seriesOwners: content.seriesOwners}, () => {
+                        console.log(this.state);
+                        if(this.state.comics.length){
+                            this.state.comics.forEach(com=> {
+                                console.log(com.id)
+                                this.getRating(com.id);
+                            })
+                        }
                     })
-                }
-            })
-        })();   
+                })();
+            } else {
+                this.props.history.push("/");
+            }
+        }
+    }
+
+    componentDidMount(){
+        if (this.props.history.location.state) {
+            (async () => {
+                const res = await fetch("http://localhost:8080/search", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        username: this.props.CurrUser.username,
+                        token: this.props.CurrUser.token,
+                        query: this.props.history.location.state.query
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({comics: content.all_comics, users: content.users, seriess: content.all_series, seriesOwners: content.seriesOwners}, () => {
+                    console.log(this.state);
+                    if(this.state.comics.length){
+                        this.state.comics.forEach(com=> {
+                            console.log(com.id)
+                            this.getRating(com.id);
+                        })
+                    }
+                })
+            })();   
+        } else {
+            this.props.history.push("/");
+        }
     }
 
     handleReport = (e, reportedID, reportingID, type) =>{
@@ -166,9 +213,11 @@ class Search extends Component {
                         <Card.Title onClick={() => {this.handleSeeUserStuff(usr.username)}}>User: {usr.username} (click here to see more details)</Card.Title>
                         <Card.Text>Total Series: {usr.comicSeries.length}</Card.Text>
                         <Card.Text>Total Comics: {usr.comics.length}</Card.Text>
-                        <Button name={usr.username} onClick={this.handleSubscribe} variant="primary">Subscribe</Button>
-                        <Button name={usr.username} onClick={this.handleUnSubscribe} variant="primary">UnSubscribe</Button>
-                        <Button name={usr.username} onClick={(e) => {this.handleReport(e, usr.id, this.props.CurrUser.id, "user")}} variant="danger">Report User</Button>
+                        <div style={{ display: "flex", justifyContent: "space-between"}}>
+                            <Button name={usr.username} onClick={this.handleSubscribe} variant="primary">Subscribe</Button>
+                            <Button name={usr.username} onClick={this.handleUnSubscribe} variant="primary">Unsubscribe</Button>
+                            <Button name={usr.username} onClick={(e) => {this.handleReport(e, usr.id, this.props.CurrUser.id, "user")}} variant="danger">Report User</Button>
+                        </div>
                     </Card.Body>
                 </Card>
                 : null

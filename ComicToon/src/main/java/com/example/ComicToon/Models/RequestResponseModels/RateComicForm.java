@@ -3,6 +3,7 @@ package com.example.ComicToon.Models.RequestResponseModels;
 public class RateComicForm{
     private String username;
     private String comicID;
+    private String token;
     //1 or -1
     private int rating;
 
@@ -28,5 +29,19 @@ public class RateComicForm{
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    /**
+     * @return the token
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * @param token the token to set
+     */
+    public void setToken(String token) {
+        this.token = token;
     }
 }

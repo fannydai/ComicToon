@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import './styles/Admin.css';
+import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
+import LoadingScreen from './LoadingScreen';
 
+const StateToProps = (state) => ({ //application level state via redux
+    CurrUser: state.user
+});
 class Admin extends Component {
     constructor(){
         super()
@@ -16,7 +21,13 @@ class Admin extends Component {
             seriesKeys: [],
             seriesValues: [],
             commentsKeys: [],
-            commentsValues: []
+            commentsValues: [],
+            users: [],
+            comics: [],
+            series: [],
+            comments: [],
+            owners: [],
+            isLoading: true
         }
     }
 
@@ -24,32 +35,47 @@ class Admin extends Component {
         //fill page with reported users, comics, series, and comments
         (async () => {
             const res = await fetch("http://localhost:8080/adminData", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json; charset=utf-8"
-                }
+                },
+                body: JSON.stringify({
+                    token: this.props.CurrUser.token,
+                    username: this.props.CurrUser.username
+                })
             });
             let content = await res.json();
             console.log(content)
-            const k_users = Object.keys(content.users);  //user ids
-            const v_users = Object.values(content.users); //frequency of reports
-            const k_comics = Object.keys(content.comics); //comics ids
-            const v_comics = Object.values(content.comics); //frequency of reports
-            const k_series = Object.keys(content.series); //series ids
-            const v_series = Object.values(content.series); //frequency of reports
-            const k_comments = Object.keys(content.comments) //comments ids
-            const v_comments = Object.values(content.comments) //frequency of reports
-            this.setState({
-                usersKeys: k_users,
-                usersValues: v_users,
-                comicsKeys: k_comics,
-                comicsValues: v_comics,
-                seriesKeys: k_series,
-                seriesValues: v_series,
-                commentsKeys: k_comments,
-                commentsValues: v_comments
-            });
+            if (content.result === "success") {
+                const k_users = Object.keys(content.users);  //user ids
+                const v_users = Object.values(content.users); //frequency of reports
+                const k_comics = Object.keys(content.comics); //comics ids
+                const v_comics = Object.values(content.comics); //frequency of reports
+                const k_series = Object.keys(content.series); //series ids
+                const v_series = Object.values(content.series); //frequency of reports
+                const k_comments = Object.keys(content.comments) //comments ids
+                const v_comments = Object.values(content.comments) //frequency of reports
+                this.setState({
+                    usersKeys: k_users,
+                    usersValues: v_users,
+                    comicsKeys: k_comics,
+                    comicsValues: v_comics,
+                    seriesKeys: k_series,
+                    seriesValues: v_series,
+                    commentsKeys: k_comments,
+                    commentsValues: v_comments,
+                    users: content.userContent,
+                    comics: content.comicConent,
+                    series: content.seriesContent,
+                    comments: content.commentContent,
+                    owners: content.seriesOwners,
+                    isLoading: false
+                });
+            } else {
+                localStorage.removeItem("state");
+                this.props.history.push("/");
+            }
         })();  
     }
 
@@ -64,6 +90,7 @@ class Admin extends Component {
     }
 
     deactivateUser = (e) =>{
+        console.log(e.target);
         (async () => {
             const res = await fetch("http://localhost:8080/deactivate", {
                 method: "POST",
@@ -143,6 +170,24 @@ class Admin extends Component {
         })();
     }
 
+    handleSeeUser = (name) => {
+        console.log(name)
+        this.props.history.push({
+            pathname: '/dashboard', 
+            state: {
+            username: name
+            }
+        })
+    }
+
+    handleSeeSeries = (username, seriesName) => {
+        this.props.history.push(`/view/series/${username}/${seriesName}`);
+    }
+
+    handleSeeComic = (username, comicName) => {
+        this.props.history.push(`/view/comic/${username}/${comicName}`);
+    }
+
     render() {
         const badUsers = this.state.usersKeys.length ? this.state.usersKeys.map((item, i) => {
             return (
@@ -152,6 +197,7 @@ class Admin extends Component {
                         <Card.Title>User ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.usersValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deactivateUser} variant="danger">Deactivate User</Button>
+                        <Button name={item} onClick={() => {this.handleSeeUser(this.state.users[i].username)}} variant="primary">See User Details</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -165,11 +211,12 @@ class Admin extends Component {
                         <Card.Title>Comic ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.comicsValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteComic} variant="danger">Delete Comic</Button>
+                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name)}} variant="primary">See Comic Details</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
-        }) : <h3> NO COMCICS FOUND</h3>
+        }) : <h3> NO COMICS FOUND</h3>
         const badSeries = this.state.seriesKeys.length ? this.state.seriesKeys.map((item, i) => {
             return (
                 item ?
@@ -178,6 +225,7 @@ class Admin extends Component {
                         <Card.Title>Series ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.seriesValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteSeries} variant="danger">Delete Series</Button>
+                        <Button name={item} onClick={() => {this.handleSeeSeries(this.state.owners[i], this.state.series[i].name)}} variant="primary">See Series Details</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -190,12 +238,17 @@ class Admin extends Component {
                     <Card.Body>
                         <Card.Title>Comment ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.commentsValues[i]}</Card.Text>
+                        <Card.Text>Ower of Comment: {this.state.comments[i].username}</Card.Text>
+                        <Card.Text>Content of Comment: "{this.state.comments[i].content}"</Card.Text>
                         <Button name={item} onClick={this.deleteComment} variant="danger">Delete Comment</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
         }) : <h3> NO COMMENTS FOUND</h3>
+        if (this.state.isLoading) {
+            return <LoadingScreen />
+        }
         return (
             <div>
                 <NavigationBar />
@@ -209,10 +262,12 @@ class Admin extends Component {
                     <h3>Reported Series: </h3>
                     {badSeries}
                 </div>
+                <hr/>
                 <div className="del-comics">
                     <h3>Reported Comics: </h3>
                     {badComics}
                 </div>
+                <hr/>
                 <div className="del-comments">
                     <h3>Reported Comments: </h3>
                     {badComments}
@@ -223,4 +278,4 @@ class Admin extends Component {
     }
 }
 
-export default withRouter(Admin);
+export default connect(StateToProps, {})(withRouter(Admin));

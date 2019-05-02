@@ -7,6 +7,8 @@ import com.example.ComicToon.Models.PanelModel;
 public class ViewAllComicsResult {
     private String comicName;
     private String comicId;
+    private String username;
+    private String date;
     private ArrayList<PanelModel> allComicsPanels = new ArrayList<>();
 
     public void setComicList(ArrayList<PanelModel> allComicsPanels) {
@@ -31,5 +33,26 @@ public class ViewAllComicsResult {
 
     public void setComicID(String comicId){
         this.comicId = comicId;
+    }
+
+    public String getUsername(){
+        return this.username;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Comic: " + this.comicName + " by: " + this.username + " on: " + this.date;
     }
 }

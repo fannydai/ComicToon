@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Collections;
+// import java.util.Comparator;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 @RestController
 public class ComicController{
@@ -46,7 +50,7 @@ public class ComicController{
         UserModel user = userRepository.findBytoken(form.getUsername());
         System.out.println(user);
         if (user == null){
-            result.setResult("user does not exists");
+            result.setResult("tokenerror");
             return result;
         } else{
             //Look for another one under the user
@@ -157,6 +161,30 @@ public class ComicController{
             }
         }
         result.setResult("success");
+        return result;
+    }
+
+    // View series with permission or is public
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/view/series-viewable", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public ViewMySeriesResult viewSeriesViewable(@RequestBody ViewMySeriesForm form) {
+        ViewMySeriesResult result = new ViewMySeriesResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if (user == null) {
+            result.setResult("tokenerror");
+            return result;
+        }
+        UserModel owner = userRepository.findByusername(form.getUsername());
+        List<ComicSeriesModel> series = ComicSeriesRepository.findAll();
+        ArrayList<ComicSeriesModel> allowed = new ArrayList<>();
+        for (ComicSeriesModel s : series) {
+            if (s.getUserID().equals(owner.getId()) && (s.getUserID().equals(user.getId()) || s.getPrivacy().equals("Public") || s.getSharedWith().contains(user.getUsername()))) {
+                allowed.add(s);
+            }
+        }
+        result.setResult("success");
+        result.setComics(allowed);
         return result;
     }
 
@@ -488,7 +516,11 @@ public class ComicController{
     @ResponseBody
     public BundleViewAllComics viewAllComics(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
-        UserModel theUser = userRepository.findBytoken(form.getComicOwnerName());
+        UserModel theUser = userRepository.findBytoken(form.getToken());
+        if (theUser == null || !theUser.getUsername().equals(form.getComicOwnerName())) {
+            result.setResult("tokenerror");
+            return result;
+        }
         List<ComicModel> findComicList = comicRepository.findByUserID(theUser.getId());
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
@@ -496,6 +528,7 @@ public class ComicController{
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 pans.setComicName(temp.getName());
                 pans.setComicID(temp.getId());
+                pans.setDate(temp.getDate());
                 for(int j=0; j<temp.getPanelsList().size(); j++){
                     PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
                     pans.getComicList().add(real);
@@ -503,6 +536,7 @@ public class ComicController{
                 result.getBundleComicList().add(pans);
             }
         }
+        result.setResult("success");
         return result;
     }
 
@@ -511,6 +545,11 @@ public class ComicController{
     @ResponseBody
     public SearchResult search(@RequestBody SearchForm form){
         SearchResult result = new SearchResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        // If credentials invalid, don't send any data
+        if (user == null || !user.getUsername().equals(form.getUsername())) {
+            return result;
+        }
         //search all 3 to see if any username, comic anme, or series name match search query
         List<UserModel> allUsers = userRepository.findAll();
         ArrayList<UserModel> matchedUsers = new ArrayList<>();
@@ -524,15 +563,20 @@ public class ComicController{
         ArrayList<String> seriesOwners = new ArrayList<>();
         for( ComicSeriesModel c : allseries){
             if(c.getName().contains(form.getQuery()) || form.getQuery().contains(c.getName())){
-                matchedSeries.add(c);
-                seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
+                // Check permissions
+                if (c.getUserID().equals(user.getId()) || c.getPrivacy().equals("Public") || c.getSharedWith().contains(user.getUsername())) {
+                    matchedSeries.add(c);
+                    seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
+                }
             }
         }
         List<ComicModel> allComics = comicRepository.findAll();
         ArrayList<ComicModel> matchedComics = new ArrayList<>();
         for(ComicModel x: allComics){
             if(x.getName().contains(form.getQuery()) || form.getQuery().contains(x.getName())){
-                matchedComics.add(x);
+                if (x.getUserID().equals(user.getId()) || x.getPrivacy().equals("Public") || x.getSharedWith().contains(user.getUsername())) {
+                    matchedComics.add(x);
+                }
             }
         }
         result.setUsers(matchedUsers);
@@ -550,8 +594,9 @@ public class ComicController{
     @ResponseBody
     public ViewMySeriesResult viewMySeries(@RequestBody ViewMySeriesForm form){
         ViewMySeriesResult result = new ViewMySeriesResult();
-        UserModel user = userRepository.findBytoken(form.getUsername());
-        if(user == null){
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if (user == null || !user.getUsername().equals(form.getUsername())) {
+            result.setResult("tokenerror");
             return result;
         } else{
             for (String seriesID : user.getComicSeries()){
@@ -643,26 +688,252 @@ public class ComicController{
     //     }
     //     return result;
     // }
+
+
+    //SIDEBAR RECOMMENDATIONS   Recommendations are returned based on same user of the comic in question or same genre.
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/sidebar", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public BundleViewAllComics sidebar (@RequestBody SideBarForm form){
+        BundleViewAllComics result = new BundleViewAllComics();
+
+        UserModel user = userRepository.findBytoken(form.getToken());
+        ComicModel viewedComic = comicRepository.findByid(form.getViewedComicID());
+        if(user == null || !user.getUsername().equals(form.getViewerName())){
+            result.setResult("tokenerror");
+            return result;
+        }
+        if(viewedComic == null){
+            result.setResult("Comic does not exists");
+            return result;
+        }
+
+        int suggestions_Found = 0;
+
+        List<ComicModel> findComicList = comicRepository.findAll();
+        if(findComicList!=null){
+            //check for comics of same author
+            for(ComicModel comic : findComicList){
+                if(comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())){
+                //max of 3 suggestions for comics from same as the viewed comic
+                    if(suggestions_Found == 3)
+                        break;
+                    if(comic.getUserID().equals(viewedComic.getUserID()) && !(comic.getId().equals(viewedComic.getId()))){
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                                pans.setComicName(comic.getName());
+                                pans.setComicID(comic.getId());
+                                pans.setUsername(comic.getUsername());
+                                pans.setDate(comic.getDate());
+                                for(int k=0; k<comic.getPanelsList().size(); k++){
+                                    PanelModel real = panelRepository.findByid(comic.getPanelsList().get(k));
+                                    pans.getComicList().add(real);
+                                }
+                                result.getBundleComicList().add(pans);
+                                suggestions_Found +=1;
+                    }
+                }
+            }
+            //now by genres (last 2 or up to 5)
+            ComicSeriesModel currentSeries = ComicSeriesRepository.findByid(viewedComic.getComicSeriesID());
+            ArrayList<String> currentGenres = currentSeries.getGenre();
+            for(ComicModel comic: findComicList){
+                if(comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())){
+                    if(suggestions_Found == 5)
+                        break;
+                    if(viewedComic.getId().equals(comic.getId()))
+                        continue;
+                    ComicSeriesModel tempSeries = ComicSeriesRepository.findByid(comic.getComicSeriesID());
+                    ArrayList<String> tempGenres = tempSeries.getGenre();
+                    boolean genreInCommon = false;
+                    for(String g : currentGenres){
+                        for (String g2: tempGenres){
+                            if (g.equals(g2)){
+                                genreInCommon = true;
+                            }
+                        }
+                    }
+                    if(genreInCommon){
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                                pans.setComicName(comic.getName());
+                                pans.setComicID(comic.getId());
+                                pans.setUsername(comic.getUsername());
+                                pans.setDate(comic.getDate());
+                                for(int k=0; k<comic.getPanelsList().size(); k++){
+                                    PanelModel real = panelRepository.findByid(comic.getPanelsList().get(k));
+                                    pans.getComicList().add(real);
+                                }
+                                result.getBundleComicList().add(pans);
+                                suggestions_Found +=1;
+                    }
+                }
+            }
+            //now if there aren't 5 of those two above, we get rest from recents.
+
+            for(int i=0; i<findComicList.size(); i++){
+                if(suggestions_Found == 5)
+                    break;
+                ComicModel temp = findComicList.get(i);
+                // Should not be your comic
+                if (!temp.getUsername().equals(user.getUsername())) {
+                    // Check permissions
+                    if (temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                        pans.setComicName(temp.getName());
+                        pans.setComicID(temp.getId());
+                        pans.setUsername(temp.getUsername());
+                        pans.setDate(temp.getDate());
+                        PanelModel firstPanel = panelRepository.findByid(temp.getPanelsList().get(0));
+                        pans.getComicList().add(firstPanel);
+                        result.getBundleComicList().add(pans);
+                        suggestions_Found +=1;
+                    }
+                }
+            }
+
+        }
+        else{
+            result.setResult("No Comics Found");
+        }
+        
+        return result;
+    }
     
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/welcomefavorites", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public BundleViewAllComics favorites(@RequestBody ViewAllComicsForm form){
+        BundleViewAllComics result = new BundleViewAllComics();
+
+        //find user
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if(user == null || !user.getUsername().equals(form.getComicOwnerName())){
+            result.setResult("tokenerror");
+            return result;
+        }
+        
+        ArrayList<String> favs = user.getFavorites();
+        if(favs.size() != 0){
+            for(String id: favs){
+                ViewAllComicsResult pans = new ViewAllComicsResult();
+                ComicModel com = comicRepository.findByid(id);
+                pans.setComicID(com.getId());
+                pans.setComicName(com.getName());
+                pans.setDate(com.getDate());
+                pans.setUsername(com.getUsername());
+                ArrayList<String> panIds = com.getPanelsList();
+                for(String pnID: panIds){
+                    PanelModel panel = panelRepository.findByid(pnID);
+                    pans.getComicList().add(panel);
+                }
+                result.getBundleComicList().add(pans);
+            }
+        }/*
+        else{
+            result.setResult("No Comics Found");
+            return result;
+        }*/
+        result.setResult("success");
+        return result;
+
+    }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/welcomerecent", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
     public BundleViewAllComics recent(@RequestBody ViewAllComicsForm form){
         BundleViewAllComics result = new BundleViewAllComics();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        // Check if token is valid
+        if (user == null || !user.getUsername().equals(form.getComicOwnerName())) {
+            result.setResult("tokenerror");
+            return result;
+        }
         List<ComicModel> findComicList = comicRepository.findAll();
         if(findComicList != null){
             for(int i=0; i<findComicList.size(); i++){
                 ComicModel temp = findComicList.get(i);
-                ViewAllComicsResult pans = new ViewAllComicsResult();
-                pans.setComicName(temp.getName());
-                pans.setComicID(temp.getId());
-                for(int j=0; j<temp.getPanelsList().size(); j++){
-                    PanelModel real = panelRepository.findByid(temp.getPanelsList().get(j));
-                    pans.getComicList().add(real);
+                // Should not be your comic
+                if (!temp.getUsername().equals(user.getUsername())) {
+                    // Check permissions
+                    if (temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                        pans.setComicName(temp.getName());
+                        pans.setComicID(temp.getId());
+                        pans.setUsername(temp.getUsername());
+                        pans.setDate(temp.getDate());
+                        PanelModel firstPanel = panelRepository.findByid(temp.getPanelsList().get(0));
+                        pans.getComicList().add(firstPanel);
+                        result.getBundleComicList().add(pans);
+                    }
                 }
-                result.getBundleComicList().add(pans);
+            }
+            // Sort the comic list
+            ArrayList<ViewAllComicsResult> comicList = result.getBundleComicList();
+            SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
+            Collections.sort(comicList, (ViewAllComicsResult comic1, ViewAllComicsResult comic2) -> {
+                try {
+                    return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
+                } catch (ParseException e) {
+                        System.out.println("Error parsing date for welcomerecent");
+                        throw new IllegalArgumentException(e);
+                }
+            });
+            System.out.println("Sorted comics, recents should be first");
+            for (ViewAllComicsResult c : result.getBundleComicList()) {
+                System.out.println(c);
+            }
+            System.out.println("~~~~~~~~~~~~~~");
+        }
+        result.setResult("success");
+        return result;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/welcomesubscriptions", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public BundleViewAllComics welcomeSubscriptions(@RequestBody ViewAllComicsForm form) {
+        BundleViewAllComics result = new BundleViewAllComics();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        // Check if token is valid
+        if (user == null || !user.getUsername().equals(form.getComicOwnerName())) {
+            result.setResult("tokenerror");
+            return result;
+        }
+        ArrayList<String> subs = user.getSubscriptions();
+        List<ComicModel> findComicList = comicRepository.findAll();
+        for (ComicModel comic : findComicList) {
+            // Check if comic author is subscribed to
+            if (subs.contains(comic.getUsername())) {
+                // Check permissions
+                if (user.getId().equals(comic.getUserID()) || comic.getPrivacy().equals("Public") || comic.getSharedWith().contains(user.getUsername())) {
+                    ViewAllComicsResult pans = new ViewAllComicsResult();
+                    pans.setComicName(comic.getName());
+                    pans.setComicID(comic.getId());
+                    pans.setUsername(comic.getUsername());
+                    pans.setDate(comic.getDate());
+                    // Get only the first panel to display
+                    PanelModel firstPanel = panelRepository.findByid(comic.getPanelsList().get(0));
+                    pans.getComicList().add(firstPanel);
+                    result.getBundleComicList().add(pans);
+                }
             }
         }
+        SimpleDateFormat format = new SimpleDateFormat("EEE LLL dd HH:mm:ss z yyyy");
+        Collections.sort(result.getBundleComicList(), (ViewAllComicsResult comic1, ViewAllComicsResult comic2) -> {
+            try {
+                return format.parse(comic2.getDate()).compareTo(format.parse(comic1.getDate()));
+            } catch (ParseException e) {
+                    System.out.println("Error parsing date for welcomesubscriptions");
+                    throw new IllegalArgumentException(e);
+            }
+        });
+        System.out.println("Sorted comics, recents should be first");
+        for (ViewAllComicsResult c : result.getBundleComicList()) {
+            System.out.println(c);
+        }
+        System.out.println("~~~~~~~~~~~~~~");
+        result.setResult("success");
         return result;
     }
 
@@ -688,17 +959,37 @@ public class ComicController{
     public RateComicResult RateComic(@RequestBody RateComicForm form){
         RateComicResult result = new RateComicResult();
         ComicModel comic = comicRepository.findByid(form.getComicID());
-        UserModel user = userRepository.findBytoken(form.getUsername());
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if(!user.getToken().equals(form.getToken())){
+            result.setResult("invalid token");
+            return result;
+        }
         if (comic != null && user != null) {
             List<RatingModel> temp= ratingRepository.findAll();
             for(Iterator<RatingModel> it = temp.iterator(); it.hasNext();){
                 RatingModel item = it.next();
-                if(item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())){
+                if(item.getUserID().equals(userRepository.findByusername(form.getUsername()).getId())
+                && item.getComicID().equals(form.getComicID())){
                     ratingRepository.delete(item); //delete existing to replace
                 }
             }
             RatingModel newRating = new RatingModel(user.getId(), form.getRating(), comic.getId());
             ratingRepository.save(newRating);
+            ArrayList<String> favs = user.getFavorites();
+            if(favs.size() != 0){
+                if(user.getFavorites().contains(form.getComicID()) && form.getRating()== -1){
+                    user.getFavorites().remove(form.getComicID()); //un liking it
+                    userRepository.save(user); 
+                }
+                else if(!user.getFavorites().contains(form.getComicID()) && form.getRating()==1){
+                    user.getFavorites().add(form.getComicID()); // liking it
+                    userRepository.save(user);
+                } 
+            }
+            else{
+                user.getFavorites().add(form.getComicID());
+                userRepository.save(user);
+            }
             result.setResult("success");
         }
         return result;
@@ -879,10 +1170,17 @@ public class ComicController{
         * gets the id of whatever that was reported and the # of times it was reported
     */
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "/adminData", method = RequestMethod.GET, consumes = {"application/json"})
+    @RequestMapping(value = "/adminData", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public AdminDataResult getAdminData(){
+    public AdminDataResult getAdminData(@RequestBody AdminDataForm form){
         AdminDataResult result = new AdminDataResult();
+        // Check for validity of token
+        UserModel admin = userRepository.findBytoken(form.getToken());
+        if (admin == null || !form.getUsername().equals("admin") || !admin.getUsername().equals("admin")) {
+            result.setResult("tokenerror");
+            return result;
+        }
+
         HashMap<String, Integer> allUserData = new HashMap<>();
         List<ReportedUsersModel> allUsers = reportedUsersRepo.findAll();
         for(ReportedUsersModel x: allUsers){
@@ -892,6 +1190,12 @@ public class ComicController{
             else{
                 allUserData.put(x.getReportedUserID(), 1);
             }
+        }
+
+        ArrayList<UserModel> userConent = new ArrayList<>(); //actual content for admin
+        for(String key: allUserData.keySet()){
+            UserModel badUser = userRepository.findByid(key);
+            userConent.add(badUser);
         }
 
         HashMap<String, Integer> allSeriesData = new HashMap<>();
@@ -905,6 +1209,15 @@ public class ComicController{
             }
         }
 
+        ArrayList<ComicSeriesModel> seriesContent = new ArrayList<>();
+        ArrayList<String> owners = new ArrayList<>();
+        for(String key: allSeriesData.keySet()){
+            ComicSeriesModel badSeries = ComicSeriesRepository.findByid(key);
+            seriesContent.add(badSeries);
+            UserModel seriesOwner = userRepository.findByid(badSeries.getUserID());
+            owners.add(seriesOwner.getUsername()); 
+        }
+
         HashMap<String, Integer> allComicsData = new HashMap<>();
         List<ReportedComicsModel> allComics = reportedComicsRepo.findAll();
         for(ReportedComicsModel x: allComics){
@@ -915,6 +1228,13 @@ public class ComicController{
                 allComicsData.put(x.getComicID(), 1);
             }
         }
+
+        ArrayList<ComicModel> comicContent = new ArrayList<>();
+        for(String key: allComicsData.keySet()){
+            ComicModel badComic = comicRepository.findByid(key);
+            comicContent.add(badComic);
+        }
+
 
         HashMap<String, Integer> allCommentsData = new HashMap<>();
         List<ReportedCommentsModel> allComents = reportedCommentsRepo.findAll();
@@ -927,14 +1247,25 @@ public class ComicController{
             }
         }
 
+        ArrayList<CommentModel> commentContent = new ArrayList<>();
+        for(String key: allCommentsData.keySet()){
+            CommentModel badCommment = commentRepository.findByid(key);
+            commentContent.add(badCommment);
+        }
+
+
         result.setUsers(allUserData);
         result.setSeries(allSeriesData);
         result.setComics(allComicsData);
         result.setComments(allCommentsData);
+        result.setUserContent(userConent);
+        result.setSeriesContent(seriesContent);
+        result.setComicConent(comicContent);
+        result.setCommentContent(commentContent);
+        result.setSeriesOwners(owners);
+        result.setResult("success");
         return result;
     }
-
-    //Download Comic
 
     //Comment on Comic
     @CrossOrigin(origins = "http://localhost:3000")
@@ -1018,4 +1349,6 @@ public class ComicController{
         result.setStatus("success");
         return result;
     }
+
+
 }
