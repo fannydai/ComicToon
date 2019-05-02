@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dropdown, Form, Alert } from 'react-bootstrap';
+import { Button, Dropdown, Form, Alert, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -18,6 +18,7 @@ class UploadComic extends Component {
 
     constructor(props) {
         super(props);
+        this.selectFileRef = React.createRef();
         this.state = {
             isLoading: true,
             image: null,
@@ -31,6 +32,7 @@ class UploadComic extends Component {
             seriesList: [],
             userInput: '',
             sharedUsersList: [],
+            showSubmitError: ''
         }
     }
 
@@ -86,7 +88,7 @@ class UploadComic extends Component {
             const reader = new FileReader();
             reader.onload = (() => {
                 return (e) => {
-                    this.setState({ image: e.target.result, filename: file.name, fileError: '' });
+                    this.setState({ image: e.target.result, filename: file.name, fileError: '', showSubmitError: '' });
                 };
             })();
             reader.readAsDataURL(file);
@@ -102,7 +104,7 @@ class UploadComic extends Component {
             reader.readAsText(file);
         }*/ else {
             //alert('Sorry, only image files are allowed');
-            this.setState({ fileError: "Only image files are allowed."});
+            this.setState({ fileError: "Only image files are allowed.", showSubmitError: '' });
         }
     }
 
@@ -169,7 +171,8 @@ class UploadComic extends Component {
         e.preventDefault();
         console.log(this.state);
         if (this.state.image === null) {
-            alert('Please upload an image file');
+            //alert('Please upload an image file');
+            this.setState({ showSubmitError: 'Select an image file.'});
         } else if (this.state.series === '') {
             alert('Please select a series');
         } else {
@@ -221,9 +224,9 @@ class UploadComic extends Component {
                 <tr key={i}><td>{username}</td><td><button className="btn-danger" onClick={(e) => this.handleDeleteShare(i, e)}>Delete</button></td></tr>
             );
         });
-        const fileAlert = this.state.fileError ? <Alert variant={"danger"}>{this.state.fileError}</Alert> 
+        const fileAlert = this.state.fileError ? <Alert variant={"danger"} ref={this.selectFileRef}>{this.state.fileError}</Alert> 
             : this.state.filename ? <Alert variant={"success"}>File chosen: {this.state.filename}</Alert>
-            : <Alert variant="primary">No file chosen</Alert>
+            : <Alert variant="primary" ref={this.selectFileRef}>No file chosen</Alert>
         if (this.state.loading)
             return <LoadingScreen />
         return (
@@ -234,6 +237,7 @@ class UploadComic extends Component {
                         <div className="upload-container" id="upload-container">
                             {imgOrUpload}
                             {fileAlert}
+                            <Overlay target={this.selectFileRef.current} show={this.state.showSubmitError.length > 0} placement="right"><Tooltip>{this.state.showSubmitError}</Tooltip></Overlay>
                         </div>
                         <div className="upload-info">
                             <Form.Control required className="upload-name-input" type="text" placeholder="Type Comic Name..." value={this.state.comicName} onChange={this.handleComicName} />
