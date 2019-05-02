@@ -15,7 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-import java.util.Random;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,8 @@ import java.util.Properties;
 
 import javax.mail.internet.MimeMessage;
 import java.util.UUID;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @RestController
@@ -40,7 +41,9 @@ public class UserRestController {
         RegistrationLoginResult result = new RegistrationLoginResult();
 
         if(userRepository.findByusername(form.getUsername()) == null && userRepository.findByemail(form.getEmail())==null){
-            UserModel user = new UserModel(form.getEmail(),form.getUsername(), form.getPassword(),"Regular");
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String pw_hash = passwordEncoder.encode(form.getPassword());
+            UserModel user = new UserModel(form.getEmail(),form.getUsername(), pw_hash, "Regular");
             userRepository.save(user);
             UserModel newUser = userRepository.findByusername(user.getUsername());
             // result.setStatus("success");
@@ -84,17 +87,17 @@ public class UserRestController {
         RegistrationLoginResult result = new RegistrationLoginResult();
         
         UserModel findUser = userRepository.findByemail(form.getEmail());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         if(findUser !=null){
             // Check if verified
-            if(!findUser.getPassword().equals(form.getPassword())){
+            if(!passwordEncoder.matches(form.getPassword(), findUser.getPassword())){
                 result.setStatus("Incorrect Login Details");
                 result.setUsername("");
-            }
-            else if (!findUser.getVerified()) {
+            } else if (!findUser.getVerified()) {
                 result.setStatus("User is not verified!");
                 return result;
-            }
-            else if(findUser.getPassword().equals(form.getPassword())){
+            } else if(passwordEncoder.matches(form.getPassword(), findUser.getPassword())){
                 result.setStatus("success");
                 result.setUsername(findUser.getUsername());
                 result.setUsername(findUser.getUsername());

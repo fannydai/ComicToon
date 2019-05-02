@@ -19,7 +19,8 @@ import { addPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
 
 
-const history = require('browser-history')
+const history = require('browser-history');
+var SCALE_FACTOR = 1.3;
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
@@ -34,8 +35,8 @@ class Canvas extends Component {
             redo: [],
             undoBtn: 'disable',
             redoBtn: 'disable',
-            
-            zooming: false,
+        
+            copyObject: null,
             canvasState: null,
 
             brushColor: '#000',
@@ -43,12 +44,6 @@ class Canvas extends Component {
             stroke: '#000',
 
             previousCanvas: null
-        }
-    }
-
-    componentWillMount() {
-        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/')
         }
     }
 
@@ -70,12 +65,13 @@ class Canvas extends Component {
             }
         }
 
-        // this.canvas.on('object:added', (event) => {
-        //     this.handleSave(event);
-        // });
-        // this.canvas.on('object:modified', (event) => {
-        //     this.handleSave(event);
-        // });
+        this.handleZoom();
+        this.canvas.on('object:added', (event) => {
+            this.handleSave(event);
+        });
+        this.canvas.on('object:modified', (event) => {
+            this.handleSave(event);
+        });
     }
 
     pencil = () => {
@@ -204,6 +200,7 @@ class Canvas extends Component {
     }
     
     handleText = (event) => {
+        this.canvas.isDrawingMode = false;
         const newText = new fabric.Textbox('Lorum ipsum dolor sit amet', {
             left: 50,
             top: 50,
@@ -217,6 +214,7 @@ class Canvas extends Component {
     }
 
     handlePolygon = (event) => {
+        this.canvas.isDrawingMode = false;
         console.log('MAKING POLYGON');
         const newPolygon = new fabric.Polygon([0, 0], {
 			opacity: 1,
@@ -230,17 +228,18 @@ class Canvas extends Component {
     }
 
     handleLine = (event) => {
+        this.canvas.isDrawingMode = false;
         console.log('MAKING LINE');
         console.log(this.state.lineWidth);
         const newLine = new fabric.Line([0, 0, 50, 50], {
-            fill: this.state.brushColor,
-			stroke: this.state.stroke,
+			stroke: this.state.brushColor,
 			strokeWidth: this.state.lineWidth,
         });
         this.canvas.add(newLine);
     }
 
     handleCircle = (event) => {
+        this.canvas.isDrawingMode = false;
         console.log('MAKING CIRCLE');
         const newCircle = new fabric.Circle({
             radius: 20,
@@ -254,6 +253,7 @@ class Canvas extends Component {
     }
 
     handleRectangle = (event) => {
+        this.canvas.isDrawingMode = false;
         console.log('MAKING RECTANGLE');
         const newRect = new fabric.Rect({
             left: 50,
@@ -268,6 +268,7 @@ class Canvas extends Component {
     }
 
     handleTriangle = (event) => {
+        this.canvas.isDrawingMode = false;
         console.log('MAKING TRIANGLE');
         const newTriangle = new fabric.Triangle({
             left: 50,
@@ -282,19 +283,17 @@ class Canvas extends Component {
     }
 
     handleSelectFile = (event) => {
+        this.canvas.isDrawingMode = false;
         this.refs.fileUploader.click();
     }
 
     handleImage = (event) => {
-        //this.refs.fileUploader.click();
-        console.log(event.target);
-        console.log(event.target.files);
         const file = event.target.files[0];
+        
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = (() => {
                 return (e) => {
-                    console.log(e.target.result);
                     fabric.Image.fromURL(e.target.result, (image) => {
                         this.canvas.add(image);
                         this.canvas.renderAll();
@@ -310,41 +309,51 @@ class Canvas extends Component {
         } else {
             alert('Upload images only!');
         }
-        // this.refs.fileUploader.onLoad = function () {
-        //     console.log("AAAA");
-        // }
-        
-        // var imgObj = new Image();   
-        // imgObj.src = event.target.file;
-        // console.log(imgObj.src);
-        
-        // const newImage = new fabric.Image(document.getElementById("file").value, {
-        //     left: 50,
-        //     top: 50,
-        //     stroke: this.state.stroke,
-        //     strokeWidth: this.state.lineWidth
-        // });
-        // this.canvas.add(newImage);
-        // this.canvas.renderAll();
+    }
+
+    handleDeleteObject = (event) => {
+        this.canvas.remove(this.canvas.getActiveObject());
     }
 
     handleClearCanvas = (event) => {
+        this.canvas.isDrawingMode = false;
         this.canvas.clear();
     }
 
     handleFillColor = (color) => {
         this.setState({ brushColor: color });
         this.canvas.freeDrawingBrush.color = color;
+        try {
+            this.canvas.getActiveObject().set("fill", color);
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Obj does not have fill");
+        }
     }
 
     handleLineWidth = (value) => {
         this.setState({ lineWidth: value });
         this.canvas.freeDrawingBrush.width = value;
+
+        try {
+            this.canvas.getActiveObject().set("strokeWidth", value);
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Obj does not have width");
+        }
     }
 
     handleStrokeColor = (color) => {
         this.setState({ stroke: color });
         this.canvas.freeDrawingBrush.stroke = color;
+
+        try {
+            this.canvas.getActiveObject().set("stroke", color);
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Obj does not have stoke");
+        }
+        
     }
 
     handleBGColor = (color) => {
@@ -353,44 +362,88 @@ class Canvas extends Component {
     }
 
     handleZoom = (event) => {
-        if (!this.state.zooming) {
-            console.log('ZOOMING');
-            this.setState({ zooming: true });
-            this.canvas.on('mouse:wheel', (opt) => {
-                var delta = opt.e.deltaY;
-                var zoom = this.canvas.getZoom();
-                zoom = zoom + delta/200;
-                if (zoom > 20) zoom = 20;
-                if (zoom < 0.01) zoom = 0.01;
-                this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-                opt.e.preventDefault();
-                opt.e.stopPropagation();
-                var vpt = this.canvas.viewportTransform;
-                if (zoom < 400 / 1000) {
-                this.canvas.viewportTransform[4] = 200 - 1000 * zoom / 2;
-                this.canvas.viewportTransform[5] = 200 - 1000 * zoom / 2;
-                } else {
-                    if (vpt[4] >= 0) {
-                        this.canvas.viewportTransform[4] = 0;
-                    } else if (vpt[4] < this.canvas.getWidth() - 1000 * zoom) {
-                        this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
-                    }
-                    if (vpt[5] >= 0) {
-                        this.canvas.viewportTransform[5] = 0;
-                    } else if (vpt[5] < this.canvas.getHeight() - 1000 * zoom) {
-                        this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
-                    }
+        console.log('ZOOMING');
+        this.setState({ zooming: true });
+        this.canvas.on('mouse:wheel', (opt) => {
+            var delta = opt.e.deltaY;
+            var zoom = this.canvas.getZoom();
+            zoom = zoom + delta/200;
+            if (zoom > 20) zoom = 20;
+            if (zoom < 0.01) zoom = 0.01;
+            this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+            opt.e.preventDefault();
+            opt.e.stopPropagation();
+            var vpt = this.canvas.viewportTransform;
+            if (zoom < 400 / 1000) {
+            this.canvas.viewportTransform[4] = 200 - 1000 * zoom / 2;
+            this.canvas.viewportTransform[5] = 200 - 1000 * zoom / 2;
+            } else {
+                if (vpt[4] >= 0) {
+                    this.canvas.viewportTransform[4] = 0;
+                } else if (vpt[4] < this.canvas.getWidth() - 1000 * zoom) {
+                    this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
                 }
-            })
-        } else {
-            console.log('CANNOT ZOOM');
-            this.setState({ zooming: false });
-            this.canvas.off('mouse:wheel');
-        }
+                if (vpt[5] >= 0) {
+                    this.canvas.viewportTransform[5] = 0;
+                } else if (vpt[5] < this.canvas.getHeight() - 1000 * zoom) {
+                    this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
+                }
+            }
+        })
+    }
+    handleZoomIn = (event) => {
+        this.canvas.setZoom(this.canvas.getZoom()/SCALE_FACTOR);
+        // this.canvas.zoomToPoint(new fabric.Point(this.canvas.width / 2, this.canvas.height / 2), this.canvas.getZoom() / 1.1);
+    }
+
+    handleZoomOut = (event) => {
+        this.canvas.setZoom(this.canvas.getZoom()*SCALE_FACTOR);
+    }
+
+    handleResetZoom = (event) => {
+        this.canvas.setViewportTransform([1,0,0,1,0,0]);
+    }
+
+    handleCopy = (event) => {
+        // http://jsfiddle.net/softvar/7Hsdh/1/
+        this.canvas.getActiveObject().clone(function(cloned) {
+            this.setState ({copyObject: cloned});
+        });
+    }
+
+    handleCut = (event) => {
+
+    }
+
+    handlePaste = (event) => {
+        this.state.copyObject.clone(function(clonedObj) {
+            this.canvas.discardActiveObject();
+            clonedObj.set({
+                left: clonedObj.left + 10,
+                top: clonedObj.top + 10,
+                evented: true,
+            });
+            if (clonedObj.type === 'activeSelection') {
+                // active selection needs a reference to the canvas.
+                clonedObj.canvas = this.canvas;
+                clonedObj.forEachObject(function(obj) {
+                    this.canvas.add(obj);
+                });
+                // this should solve the unselectability
+                clonedObj.setCoords();
+            } else {
+                this.canvas.add(clonedObj);
+            }
+            this.state.copyObject.top += 10;
+            this.state.copyObject.left += 10;
+            this.canvas.setActiveObject(clonedObj);
+            this.canvas.requestRenderAll();
+        });
     }
 
     // Not working will work on undo & redo later
     handleUndo = (event) => {
+        this.canvas.isDrawingMode = false;
         if(this.state.undo.length !== 0) {
             this.state.redo.push(this.state.previousCanvas);
             this.canvas.clear();
@@ -406,6 +459,7 @@ class Canvas extends Component {
     }
 
     handleRedo = (event) => {
+        this.canvas.isDrawingMode = false;
         if(this.state.redo.length !== 0) {
             this.state.undo.push(this.state.previousCanvas);
             this.canvas.clear();
@@ -418,6 +472,10 @@ class Canvas extends Component {
         if(this.state.redo.length === 0) {
             this.setState({redoBtn: 'disable'});
         }
+    }
+
+    handleMoveObject = (event) => {
+        this.canvas.isDrawingMode = false;
     }
 
     handleSave = (event) => {
@@ -471,6 +529,22 @@ class Canvas extends Component {
         }
     }
 
+    // handleGrid = (event) => {
+    //     const group = new fabric.Group([], {left: 0, top: 0});
+    //     const gridOption = { stroke: '#ccc', selectable: false };
+    //     const grid = 50;
+    //     const width = this.canvas.width;
+    //     const height = this.canvas.height;
+
+    //     for(var i=0; (i*grid)<=height; i++) {
+    //         group.add(new fabric.Line([0,i*grid,width,i*grid], gridOption));
+    //     }
+    //     for(var i = 0; (i*grid)<=width; i++) {
+    //         group.add(new fabric.Line([i*grid,0,i*grid,height], gridOption));
+    //     }
+    //     this.canvas.add(group);
+    // }
+
     render() {
         return (
             <div className="panel-container">
@@ -479,20 +553,20 @@ class Canvas extends Component {
 
                     {/* TOP BAR */}
                     <div className="top-bar">
-                        <FontAwesomeIcon className="icon" icon="th" />
+                        {/* <FontAwesomeIcon className="icon" icon="th" onClick={this.handleGrid}/> */}
 
-                        <FontAwesomeIcon className="icon" icon="search-minus" />
-                        <FontAwesomeIcon className="icon" icon="search-plus" />
-                        <FontAwesomeIcon className="icon" icon="search" onClick={this.handleZoom}/>
+                        <FontAwesomeIcon className="icon" icon="search-minus" onClick={this.handleZoomIn}/>
+                        <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoomOut}/>
+                        <FontAwesomeIcon className="icon" icon="search" onClick={this.handleResetZoom}/>
 
-                        <FontAwesomeIcon className="icon" icon="clone" />
-                        <FontAwesomeIcon className="icon" icon="cut" />
-                        <FontAwesomeIcon className="icon" icon="paste" />
+                        {/* <FontAwesomeIcon className="icon" icon="clone" onClick={this.handleCopy}/>
+                        <FontAwesomeIcon className="icon" icon="cut" onClick={this.handleCut}/>
+                        <FontAwesomeIcon className="icon" icon="paste" onClick={this.handlePaste}/> */}
 
-                        <FontAwesomeIcon className="icon" icon="forward" />
+                        {/* <FontAwesomeIcon className="icon" icon="forward" />
                         <FontAwesomeIcon className="icon" icon="step-forward" />
                         <FontAwesomeIcon className="icon" icon="backward" />
-                        <FontAwesomeIcon className="icon" icon="step-backward" />
+                        <FontAwesomeIcon className="icon" icon="step-backward" /> */}
                         
                         <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
                         <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
@@ -506,7 +580,7 @@ class Canvas extends Component {
                                 <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} /></td>
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="draw-polygon" /></td>
+                                {/* <td><FontAwesomeIcon className="icon" icon="draw-polygon" /></td> */}
                                 <td><FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} /></td>
                             </tr>
                             <tr>
@@ -519,22 +593,19 @@ class Canvas extends Component {
                                 <FontAwesomeIcon className="icon" icon="image" onClick={this.handleSelectFile} /></td>
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="trash" /></td>
+                                <td><FontAwesomeIcon className="icon" icon="trash" onClick={this.handleDeleteObject}/></td>
                                 <td><FontAwesomeIcon className="icon" onClick={this.handleClearCanvas} icon="eraser" /></td> 
                             </tr>
-                            <tr>
+                            {/* <tr>
                                 <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/></td>
                                 <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/></td> 
-                            </tr>
+                            </tr> */}
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="arrows-alt" /></td>
-                                <td><FontAwesomeIcon className="icon" icon="eye-dropper" /></td> 
-                            </tr>
-                            <tr>
+                                <td><FontAwesomeIcon className="icon" icon="arrows-alt" onClick={this.handleMoveObject}/></td>
                                 <td><ColorButton changeColor={this.handleFillColor}/></td>
-                                <td><ColorButton changeColor={this.handleStrokeColor}/></td>
                             </tr>
                             <tr>
+                                <td><ColorButton changeColor={this.handleStrokeColor}/></td>
                                 <td><ColorButton changeColor={this.handleBGColor}/></td>
                             </tr>
                         </tbody>
@@ -546,7 +617,7 @@ class Canvas extends Component {
                     <div className="bottom-bar">
                         <div>
                             <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
-                            <NumericInput onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth} min={1} max={100} step={1} precision={0} size={5} />
+                            <NumericInput onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth} min={0} max={100} step={1} precision={0} size={5} />
                         </div>
                         <DropdownButton title="Pencil Mode">
                             <Dropdown.Item onClick={this.handlePencil}>Pencil</Dropdown.Item>

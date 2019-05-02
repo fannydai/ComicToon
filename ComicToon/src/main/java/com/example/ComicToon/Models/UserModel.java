@@ -147,8 +147,6 @@ public class UserModel{
 
 
     public UserModel(String email,String username, String password, String userType){
-
-
         this.email = email;
         this.username = username;
         this.password = password;
