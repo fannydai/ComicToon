@@ -811,36 +811,29 @@ public class ComicController{
             result.setResult("tokenerror");
             return result;
         }
-
-        List<ComicModel> findComicList = comicRepository.findAll();
-        List<RatingModel> ratingsList = ratingRepository.findAll();
-
-        if(findComicList!=null){
-            for(int i = 0;i<findComicList.size();i++){
-                ComicModel temp = findComicList.get(i);
-                if (user.getId().equals(temp.getUserID()) || temp.getPrivacy().equals("Public") || temp.getSharedWith().contains(user.getUsername())) {
-                    for(int j = 0;j<ratingsList.size();j++){
-                        RatingModel tRating = ratingsList.get(j);
-                        if(tRating.getUserID().equals(user.getId()) && tRating.getRating() == 1){
-                            ViewAllComicsResult pans = new ViewAllComicsResult();
-                            pans.setComicName(temp.getName());
-                            pans.setComicID(temp.getId());
-                            pans.setUsername(temp.getUsername());
-                            pans.setDate(temp.getDate());
-                            for(int k=0; k<temp.getPanelsList().size(); k++){
-                                PanelModel real = panelRepository.findByid(temp.getPanelsList().get(k));
-                                pans.getComicList().add(real);
-                            }
-                            result.getBundleComicList().add(pans);
-                        }
-                    }
+        
+        ArrayList<String> favs = user.getFavorites();
+        if(favs.size() != 0){
+            for(String id: favs){
+                ViewAllComicsResult pans = new ViewAllComicsResult();
+                ComicModel com = comicRepository.findByid(id);
+                pans.setComicID(com.getId());
+                pans.setComicName(com.getName());
+                pans.setDate(com.getDate());
+                pans.setUsername(com.getUsername());
+                ArrayList<String> panIds = com.getPanelsList();
+                for(String pnID: panIds){
+                    PanelModel panel = panelRepository.findByid(pnID);
+                    pans.getComicList().add(panel);
                 }
+                result.getBundleComicList().add(pans);
             }
         }
         else{
             result.setResult("No Comics Found");
+            return result;
         }
-
+        result.setResult("success");
         return result;
 
     }
@@ -982,6 +975,21 @@ public class ComicController{
             }
             RatingModel newRating = new RatingModel(user.getId(), form.getRating(), comic.getId());
             ratingRepository.save(newRating);
+            ArrayList<String> favs = user.getFavorites();
+            if(favs.size() != 0){
+                if(user.getFavorites().contains(form.getComicID()) && form.getRating()== -1){
+                    user.getFavorites().remove(form.getComicID()); //un liking it
+                    userRepository.save(user); 
+                }
+                else if(!user.getFavorites().contains(form.getComicID()) && form.getRating()==1){
+                    user.getFavorites().add(form.getComicID()); // liking it
+                    userRepository.save(user);
+                } 
+            }
+            else{
+                user.getFavorites().add(form.getComicID());
+                userRepository.save(user);
+            }
             result.setResult("success");
         }
         return result;

@@ -22,6 +22,7 @@ public class UserModel{
     private ArrayList<String> comicSeries;
     private ArrayList<String> subscriptions;
     private boolean isAdmin;
+    private ArrayList<String> favorites;
 
     public String getId() {
         return this.id;
@@ -161,6 +162,7 @@ public class UserModel{
         this.comics = new ArrayList<String>();
         this.comicSeries = new ArrayList<String>();
         this.subscriptions = new ArrayList<String>();
+        this.favorites = new ArrayList<>();
     }
 
     //Class methods
@@ -188,6 +190,20 @@ public class UserModel{
      */
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    /**
+     * @return the favorites
+     */
+    public ArrayList<String> getFavorites() {
+        return favorites;
+    }
+
+    /**
+     * @param favorites the favorites to set
+     */
+    public void setFavorites(ArrayList<String> favorites) {
+        this.favorites = favorites;
     }
 
     //Getters and Setters

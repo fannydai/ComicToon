@@ -29,7 +29,8 @@ class HomeContent extends Component {
         this.state = {
             allComics: null,
             subscriptionComics: null,
-            isLoading: true
+            isLoading: true,
+            favorites: null
         }
     }
 
@@ -94,6 +95,27 @@ class HomeContent extends Component {
                     this.props.history.push("/");
                 }
             })();
+            (async () => {
+                const res = await fetch("http://localhost:8080/welcomefavorites", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        comicOwnerName: this.props.CurrUser.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                if (content.result === "success") {
+                    this.setState({favorites: content.bundleComicList, isLoading: false})
+                } else {
+                    localStorage.removeItem("state");
+                    this.props.history.push("/");
+                }
+            })();
         }
     }
 
@@ -153,6 +175,26 @@ class HomeContent extends Component {
         )
     }
 
+    renderFavorites(){
+        if (this.state.favorites !== null) {
+            return (
+                this.state.favorites.map(item => {
+                    return item !== null ?
+                    <span key={"favorite-" + item.comicName} onClick={() => this.handleViewRecent(item.comicName, item.username)}>
+                        {this.renderFavorite(item)}
+                    </span>
+                    : null
+                })
+            );
+        }
+    }
+
+    renderFavorite(comic){
+        const filtered = comic.comicList.filter(item => item !== null);
+        return (
+            filtered[0] ? <span key={filtered[0].id}><OverlayTrigger trigger="hover" placement="top" overlay={this.popover(comic)}><img className="comic" src={filtered[0].image} alt="comic" /></OverlayTrigger></span> : null
+        )
+    }
 
     handleClick = (event) => {
         console.log(event.target);
@@ -222,6 +264,12 @@ class HomeContent extends Component {
             recentProps.slidesToShow = this.state.allComics.length;
             recentProps.slidesToScroll = this.state.allComics.length;
         }
+
+        let favProps = JSON.parse(JSON.stringify(props));
+        if(this.state.favorites && this.state.favorites.length < 4){
+            favProps.slidesToShow = this.state.favorites.length;
+            favProps.slidesToScroll = this.state.favorites.length;
+        }
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
@@ -242,19 +290,8 @@ class HomeContent extends Component {
 
                 <div className="home-content-container">
                     <h2 className = "hometext"> Favorites</h2>
-                    <Slider {...props}>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={yeti} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={pi} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
-                        <img src={shoes} className="comic" onClick={this.handleGoToComic} alt= "can't load"/>
+                    <Slider {...favProps}>
+                        {this.renderFavorites()}
                     </Slider>
                 </div>
 
