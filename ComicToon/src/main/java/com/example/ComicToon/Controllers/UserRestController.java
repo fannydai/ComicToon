@@ -168,7 +168,10 @@ public class UserRestController {
 
         UserModel findUser = userRepository.findByusername(form.getUsername());
         if(findUser!=null && findUser.getKey().equals(form.getKey())){
-            findUser.setPassword(form.getPassword());
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String pw_hash = passwordEncoder.encode(form.getPassword());
+            //findUser.setPassword(form.getPassword());
+            findUser.setPassword(pw_hash);
             findUser.setKey(UUID.randomUUID().toString());
             userRepository.save(findUser);
             result.setResult("success");
