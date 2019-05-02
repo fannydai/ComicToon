@@ -4,7 +4,6 @@ import './styles/App.css';
 import Authentication from './Authentication';
 import HomeContent from './HomeContent';
 import logo from './images/logo.jpg';
-import Admin from './Admin'
 
 import Footer from './Footer';
 class App extends Component {

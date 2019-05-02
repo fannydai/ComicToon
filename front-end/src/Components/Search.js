@@ -213,9 +213,11 @@ class Search extends Component {
                         <Card.Title onClick={() => {this.handleSeeUserStuff(usr.username)}}>User: {usr.username} (click here to see more details)</Card.Title>
                         <Card.Text>Total Series: {usr.comicSeries.length}</Card.Text>
                         <Card.Text>Total Comics: {usr.comics.length}</Card.Text>
-                        <Button name={usr.username} onClick={this.handleSubscribe} variant="primary">Subscribe</Button>
-                        <Button name={usr.username} onClick={this.handleUnSubscribe} variant="primary">UnSubscribe</Button>
-                        <Button name={usr.username} onClick={(e) => {this.handleReport(e, usr.id, this.props.CurrUser.id, "user")}} variant="danger">Report User</Button>
+                        <div style={{ display: "flex", justifyContent: "space-between"}}>
+                            <Button name={usr.username} onClick={this.handleSubscribe} variant="primary">Subscribe</Button>
+                            <Button name={usr.username} onClick={this.handleUnSubscribe} variant="primary">Unsubscribe</Button>
+                            <Button name={usr.username} onClick={(e) => {this.handleReport(e, usr.id, this.props.CurrUser.id, "user")}} variant="danger">Report User</Button>
+                        </div>
                     </Card.Body>
                 </Card>
                 : null

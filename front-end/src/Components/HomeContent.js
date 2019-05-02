@@ -6,11 +6,7 @@ import { getSubscriptions, getRecentCreations, getFavorites, getAllSeries } from
 
 import Slider from "react-slick";
 
-import shoes from './images/shoes.png';
-import pi from './images/pi.png';
-import yeti from './images/yeti.png';
 import Footer from './Footer';
-
 import NavigationBar from './NavigationBar';
 import './styles/HomeContent.css';
 import LoadingScreen from './LoadingScreen';
@@ -24,8 +20,6 @@ class HomeContent extends Component {
 
     constructor(props) {
         super(props);
-        // this.handleClick = this.handleClick.bind(this);
-        // this.handleUpdate = this.handleUpdate.bind(this);
         this.state = {
             allComics: null,
             subscriptionComics: null,
@@ -33,13 +27,6 @@ class HomeContent extends Component {
             favorites: null
         }
     }
-
-    /*
-    componentWillMount() {
-        if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
-            this.props.history.push('/')
-        }
-    }*/
 
     componentDidMount(){
         if(!this.props.CurrUser.active) {
@@ -142,7 +129,7 @@ class HomeContent extends Component {
         console.log(this.state.allComics)
         if(this.state.allComics != null) {
             return (
-                this.state.allComics.map(item=> {
+                this.state.allComics.slice(0, 10).map(item=> {
                     return item !== null ?
                     <span key={item.comicName} onClick={() => {this.handleViewRecent(item.comicName, item.username)}}>
                         {this.renderRecent(item)}
@@ -157,7 +144,7 @@ class HomeContent extends Component {
     renderSubscriptions() {
         if (this.state.subscriptionComics !== null) {
             return (
-                this.state.subscriptionComics.map(item => {
+                this.state.subscriptionComics.slice(0, 10).map(item => {
                     return item !== null ?
                     <span key={"subscription-" + item.comicName} onClick={() => this.handleViewRecent(item.comicName, item.username)}>
                         {this.renderSubscription(item)}
@@ -178,7 +165,7 @@ class HomeContent extends Component {
     renderFavorites(){
         if (this.state.favorites !== null) {
             return (
-                this.state.favorites.map(item => {
+                this.state.favorites.slice(0, 10).map(item => {
                     return item !== null ?
                     <span key={"favorite-" + item.comicName} onClick={() => this.handleViewRecent(item.comicName, item.username)}>
                         {this.renderFavorite(item)}
@@ -259,40 +246,36 @@ class HomeContent extends Component {
             subProps.slidesToShow = this.state.subscriptionComics.length;
             subProps.slidesToScroll = this.state.subscriptionComics.length;
         }
+        const subSlider = this.state.subscriptionComics && this.state.subscriptionComics.length ? <Slider {...subProps}> {this.renderSubscriptions()} </Slider> : <h5>Recent comics from your subscriptions will appear here.</h5>;
         var recentProps = JSON.parse(JSON.stringify(props)); // Deep copy the props
         if (this.state.allComics && this.state.allComics.length < 4) {
             recentProps.slidesToShow = this.state.allComics.length;
             recentProps.slidesToScroll = this.state.allComics.length;
         }
-
+        const recentSlider = this.state.allComics && this.state.allComics.length ? <Slider {...recentProps}> {this.renderRecents()} </Slider> : <h5>Recents comics created by others will appears here.</h5>;
         let favProps = JSON.parse(JSON.stringify(props));
         if(this.state.favorites && this.state.favorites.length < 4){
             favProps.slidesToShow = this.state.favorites.length;
             favProps.slidesToScroll = this.state.favorites.length;
         }
+        const favSlider = this.state.favorites && this.state.favorites.length ? <Slider {...favProps}> {this.renderFavorites()} </Slider> : <h5>Comics that you have previously liked will appear here.</h5>;
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
 
                 <div className="home-content-container">
                     <h2 className = "hometext"> Subscriptions</h2>
-                    <Slider {...subProps}>
-                        {this.renderSubscriptions()}
-                    </Slider>
+                    {subSlider}
                 </div>
 
                 <div className="home-content-container">
                     <h2 className = "hometext">Recent Creations</h2>
-                    <Slider {...recentProps}>
-                        {this.renderRecents()}
-                    </Slider>
+                    {recentSlider}
                 </div>
 
                 <div className="home-content-container">
                     <h2 className = "hometext"> Favorites</h2>
-                    <Slider {...favProps}>
-                        {this.renderFavorites()}
-                    </Slider>
+                    {favSlider}
                 </div>
 
                 <Footer />

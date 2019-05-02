@@ -828,11 +828,11 @@ public class ComicController{
                 }
                 result.getBundleComicList().add(pans);
             }
-        }
+        }/*
         else{
             result.setResult("No Comics Found");
             return result;
-        }
+        }*/
         result.setResult("success");
         return result;
 

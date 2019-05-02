@@ -18,7 +18,7 @@ class About extends Component {
                 </p>
                 <p>
                     <b>ComicToon</b> is a web application accessible through most common consumer oriented web browsers. Its purpose is to allow users of 
-                    <b>ComicToon</b> to view, create, and upload short comics to the <b>ComicToon</b> website. <b>ComicToon</b> aims to be user friendly, intuitive, and
+                    <b> ComicToon</b> to view, create, and upload short comics to the <b>ComicToon</b> website. <b>ComicToon</b> aims to be user friendly, intuitive, and
                     fully featured.
                 </p>
                 <p>
