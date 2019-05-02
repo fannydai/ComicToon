@@ -60,7 +60,7 @@ class ViewComic extends Component {
         if (nextProps.comic.saveNewComic.commentsList) {
             this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
         }
-        if(nextProps.comic.saveNewComic.privacy === "Private"){
+        if(nextProps.comic.saveNewComic.privacy === "Private" && this.props.CurrUser.username !== this.props.match.params.username){
             this.props.history.push('/*');
         }
         (async () => {
