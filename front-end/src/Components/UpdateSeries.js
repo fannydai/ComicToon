@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Table } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
@@ -246,24 +246,26 @@ class UpdateSeries extends Component {
                             <Form.Control className="create-series-name-form-control" type="text" placeholder="Type Series Name..." name="seriesName" value={this.state.seriesName} onChange={this.handleChange} />
                             <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" name="seriesDescription" value={this.state.seriesDescription} onChange={this.handleChange} />
                         </div>
-                        <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handleChange} />
-                        <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
+                        <div>
+                            <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handleChange} />
+                            <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
+                        </div>
                         <div className="create-series-genre-input">
                             <div className="update-series-table-container">
                                 <Form.Control type="text" placeholder="Genre/Tags" name="genre" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddGenreEnter} />
-                                <table className="update-series-genre-table">
+                                <Table bordered hover className="update-series-genre-table">
                                     <tbody>
                                         {this.renderGenre()}
                                     </tbody>
-                                </table>
+                                </Table>
                             </div>
                             <div className="update-series-table-container">
                                 <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" name="addUser" value={this.state.addUser} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} />
-                                <table className="update-series-genre-table">
+                                <Table bordered hover className="update-series-genre-table">
                                     <tbody>
                                         {this.renderAddUserEnter()}
                                     </tbody>
-                                </table>
+                                </Table>
                             </div>
                         </div>
                         <div className="create-series-bottom">
