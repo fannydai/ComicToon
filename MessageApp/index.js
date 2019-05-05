@@ -40,7 +40,7 @@ if(cluster.isMaster) {
 
     io.on('connection', socket => {
         console.log('A user just connected.. ');
-        socket.on('saveMessage', (sender, reciever, message) => {
+        socket.on('saveMessage', (token, sender, reciever, message) => {
             //validate msg with UserModel
             //save msg to db, if valid, and emit status  w/ msg back
         });
