@@ -112,7 +112,7 @@ class UpdateComic extends Component {
                 if (this.state.comicPanels.length === 0) {
                     this.setState({ comicPanels: content.panels });
                 }
-                if (!this.props.comic.saveUpdateComic.privacy) {
+                if (!this.state.privacy) {
                     this.setState({ privacy: content.privacy });
                 }
             } else {
@@ -280,7 +280,6 @@ class UpdateComic extends Component {
     }
 
     handleChange = e => {
-        console.log(e.target)
         const { name } = e.target;
         this.setState({ selected_series: name });
     }
@@ -323,7 +322,6 @@ class UpdateComic extends Component {
                 }
             ]
         };
-        console.log(this.state.sharedUsersList);
         return (
             <div className="create-comic-container">
                 <NavigationBar />
