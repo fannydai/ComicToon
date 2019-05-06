@@ -43,6 +43,13 @@ if(cluster.isMaster) {
         socket.on('saveMessage', (token, sender, reciever, message) => {
             //validate msg with UserModel
             //save msg to db, if valid, and emit status  w/ msg back
+            // const new_msg = new MessageModel({
+            //     token: 23452,
+            //     sender: "jgeorge116",
+            //     reciever: "some dude",
+            //     message: "sup dawg"
+            //   });
+            // await new_msg.save();
         });
     });
 
