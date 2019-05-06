@@ -31,8 +31,8 @@ if(cluster.isMaster) {
     app.use(parser.json());
 
     mongoose.connect('mongodb://localhost:27017/Messages', {useNewUrlParser: true}); //Messages db
-    const db = mongoose.connection;
-    db.on("error", console.error.bind(console, "MongoDB connection error: "));
+    const MessageDB = mongoose.connection;
+    MessageDB.on("error", console.error.bind(console, "MongoDB connection error: "));
     
     let UserModelDBConnection = null; 
     MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true })
