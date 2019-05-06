@@ -530,17 +530,16 @@ class Canvas extends Component {
     }
 
     // handleGrid = (event) => {
-    //     const group = new fabric.Group([], {left: 0, top: 0});
-    //     const gridOption = { stroke: '#ccc', selectable: false };
+    //     var group = new fabric.Group([], {left: 0, top: 0});
+    //     const gridOption = { stroke:'#000', selectable:false };
+
     //     const grid = 50;
     //     const width = this.canvas.width;
     //     const height = this.canvas.height;
 
-    //     for(var i=0; (i*grid)<=height; i++) {
-    //         group.add(new fabric.Line([0,i*grid,width,i*grid], gridOption));
-    //     }
-    //     for(var i = 0; (i*grid)<=width; i++) {
+    //     for(var i=0; i<width/(grid*2); i++) {
     //         group.add(new fabric.Line([i*grid,0,i*grid,height], gridOption));
+    //         group.add(new fabric.Line([0,i*grid,width,i*grid], gridOption));
     //     }
     //     this.canvas.add(group);
     // }
