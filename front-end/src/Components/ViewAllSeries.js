@@ -106,15 +106,15 @@ class ViewAllSeries extends Component {
         if (this.state.isLoading) {
             return <LoadingScreen />
         }
+        // Keep the message consistent with view all comics
+        const bottom = this.props.comic.allSeries.length ? <div className="view-series-bottom">{seriesCards}</div> : <div className="view-comics-bottom">{seriesCards}</div>
         return (
             <div className="view-series-container">
                 <NavigationBar />
                 <div className="view-series-top">
                     <h1 className = "hometext">Your Series</h1>
                 </div>
-                <div className="view-series-bottom">
-                    {seriesCards}
-                </div>
+                {bottom}
                 <Footer />
             </div>
         );
