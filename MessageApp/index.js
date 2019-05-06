@@ -36,21 +36,22 @@ if(cluster.isMaster) {
     
     let UserModelDBConnection = null; 
     MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true })
-.   then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err)) ;
+    .then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err));
 
     io.on('connection', socket => {
         console.log('A user just connected.. ');
-        socket.on('saveMessage', (token, sender, reciever, message) => {
+        socket.on('saveMessage', (token, sender, reciever, message, date) => {
             UserModelDBConnection.findOne({token: token}, (err, item) => {
-                if(err || item === null) socket.emit("error")
+                if(err || item === null) socket.emit("error");
                 else{
-                    if(item.username !== sender) socket.emit("error")
+                    if(item.username !== sender) socket.emit("error");
                     else{
                         const new_msg = new MessageModel({
                             token: token,
                             sender: sender,
                             reciever: reciever,
-                            message: message
+                            message: message,
+                            date: date
                         });
                         new_msg.save(); //new msg saved to db
                         socket.emit("success", message); //successful msg saved, send back to front-end

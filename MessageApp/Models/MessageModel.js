@@ -5,7 +5,8 @@ let MessageModel = new Schema({
   token: String, //sender's token
   sender: String,
   reciever: String,
-  message: String
+  message: String,
+  date: Number
 });
 
 MessageModel.set("collection", "UserMessages");
