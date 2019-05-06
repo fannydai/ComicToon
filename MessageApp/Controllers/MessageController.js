@@ -9,8 +9,6 @@ const MessageDB = mongoose.connection;
 
 exports.getAllMessages = async function(req, res) { //gets all of a user's msgs
     //takes in "token" and "sender"
-    console.log(req.body.token);
-    console.log(req.body.sender);
     DBConnection.collection("userModel").findOne({token: req.body.token}, (err, item) => {
         if(err) res.send({status: "mongodb err"});
         else if(item === null) res.send({status: "invalid token"});
@@ -21,11 +19,12 @@ exports.getAllMessages = async function(req, res) { //gets all of a user's msgs
                     if(err) res.send({status: "mongodb error"});
                     else{
                         let data = new Map();
-                        result.forEach(item => {
+                        result.forEach(item => { 
                             if(data.has(item.reciever)) data.get(item.reciever).push(item);
-                            else data.set(item.reciever, [item])
+                            else data.set(item.reciever, [item]);
                         });
                         console.log(data); //works
+                        //sends back map of each person you messaged (as key) & list of message objs as value
                         res.send({status: "success", messages: data});
                     }
                 });

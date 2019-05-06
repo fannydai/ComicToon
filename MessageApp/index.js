@@ -41,15 +41,22 @@ if(cluster.isMaster) {
     io.on('connection', socket => {
         console.log('A user just connected.. ');
         socket.on('saveMessage', (token, sender, reciever, message) => {
-            //validate msg with UserModel
-            //save msg to db, if valid, and emit status  w/ msg back
-            // const new_msg = new MessageModel({
-            //     token: 23452,
-            //     sender: "jgeorge116",
-            //     reciever: "some dude",
-            //     message: "sup dawg"
-            //   });
-            // await new_msg.save();
+            UserModelDBConnection.findOne({token: token}, (err, item) => {
+                if(err || item === null) socket.emit("error")
+                else{
+                    if(item.username !== sender) socket.emit("error")
+                    else{
+                        const new_msg = new MessageModel({
+                            token: token,
+                            sender: sender,
+                            reciever: reciever,
+                            message: message
+                        });
+                        new_msg.save(); //new msg saved to db
+                        socket.emit("success", message); //successful msg saved, send back to front-end
+                    }
+                }
+            });
         });
     });
 
