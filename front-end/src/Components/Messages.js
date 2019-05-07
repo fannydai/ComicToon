@@ -43,7 +43,13 @@ class Messages extends Component {
     }
 
     handleSendMessage = () => {
-        socket.on("saveMessage", (this.props.CurrUser.token, this.props.CurrUser.username, "placeholder for reciever's username", Date.now()));
+        socket.emit("saveMessage", {token: this.props.CurrUser.token, sender: this.props.CurrUser.username, reciever: "placeholder", message: "testing 123", date: Date.now()});
+        socket.on("result", function(data){
+            console.log(data);
+        });
+        socket.on("error", function(data){
+            console.log(data);
+        });
     }
 
     componentWillUnmount() {
