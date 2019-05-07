@@ -39,7 +39,7 @@ if(cluster.isMaster) {
     .then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err));
 
     io.on('connection', socket => {
-        console.log('A user just connected.. ');
+        console.log('A user just connected.. ', socket);
         socket.on('saveMessage', (token, sender, reciever, message, date) => {
             UserModelDBConnection.findOne({token: token}, (err, item) => {
                 if(err || item === null) socket.emit("error");

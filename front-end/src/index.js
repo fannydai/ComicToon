@@ -32,6 +32,7 @@ import store from './Components/Store';
 import Search from './Components/Search'
 import UserDashboard from './Components/UserDashboard'
 import ReportComponent from './Components/ReportComponent';
+import Messages from './Components/Messages';
 
 library.add(faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, faThumbsDown, solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
@@ -62,6 +63,7 @@ ReactDOM.render(
                 <Route exact path="/search" component={Search} />
                 <Route exact path="/dashboard" component={UserDashboard} />
                 <Route exact path="/report" component={ReportComponent} />
+                <Route exact path="/messages" component={Messages} />
                 <Redirect from="/" exact to="/welcome"/>
                 <Route path="*" component={Error404} />
             </Switch>
