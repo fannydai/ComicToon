@@ -53,7 +53,8 @@ class Messages extends Component {
     }
 
     componentWillUnmount() {
-        socket.off("saveMessage"); //avoid multiple listeners
+        socket.off("result"); //avoid multiple listeners
+        socket.off("error");
     }
 
     render() {
