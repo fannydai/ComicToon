@@ -31,29 +31,30 @@ if(cluster.isMaster) {
     app.use(parser.json());
 
     mongoose.connect('mongodb://localhost:27017/Messages', {useNewUrlParser: true}); //Messages db
-    const db = mongoose.connection;
-    db.on("error", console.error.bind(console, "MongoDB connection error: "));
+    const MessageDB = mongoose.connection;
+    MessageDB.on("error", console.error.bind(console, "MongoDB connection error: "));
     
     let UserModelDBConnection = null; 
     MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true })
-.   then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err)) ;
+    .then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err));
 
     io.on('connection', socket => {
         console.log('A user just connected.. ');
-        socket.on('saveMessage', (token, sender, reciever, message) => {
-            UserModelDBConnection.findOne({token: token}, (err, item) => {
-                if(err || item === null) socket.emit("error")
+        socket.on('saveMessage', function(data){
+            UserModelDBConnection.collection("userModel").findOne({token: data.token}, (err, item) => { // error that "findOne" is not a function.. will fix later
+                if(err || item === null) socket.emit("error", "invalid token");
                 else{
-                    if(item.username !== sender) socket.emit("error")
+                    if(item.username !== data.sender) socket.emit("error", "invalid user");
                     else{
                         const new_msg = new MessageModel({
-                            token: token,
-                            sender: sender,
-                            reciever: reciever,
-                            message: message
+                            token: data.token,
+                            sender: data.sender,
+                            reciever: data.reciever,
+                            message: data.message,
+                            date: data.date
                         });
                         new_msg.save(); //new msg saved to db
-                        socket.emit("success", message); //successful msg saved, send back to front-end
+                        socket.emit("result", data.message); //successful msg saved, send back to front-end
                     }
                 }
             });
