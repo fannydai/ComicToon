@@ -18,25 +18,7 @@ exports.getAllMessages = async function(req, res) { //gets all of a user's msgs
                 //get both ends of conversation
                 MessageModel.find({$or:[{sender: req.body.sender}, {reciever:req.body.sender}]}, (err, result) => { 
                     if(err) res.send({status: "mongodb error"});
-                    else{
-                        let data = new Map();
-                        result.forEach(item => { 
-                            if(data.has(item.reciever)) data.get(item.reciever).unshift(item);
-                            else data.set(item.reciever, [item]);
-                        });
-                        let temp = data.get(req.body.sender); 
-                        data.delete(req.body.sender);
-                        temp.forEach((item) => {
-                            data.get(item.sender).unshift(item) //and other end to each conversation
-                        });
-                        data.forEach((item) => {
-                            item.sort(function(a,b){return a.date - b.date}) //sort each msg in conversation
-                        });
-                        //sends back map of each person you messaged (as key) & list of message objs as value
-                        //each msg in each converation is sort by the date
-                        console.log(data);// works
-                        res.send({status: "success", messages: data});
-                    }
+                    else res.send({status: "success", messages: result});
                 });
             }
         }
