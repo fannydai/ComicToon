@@ -440,8 +440,12 @@ class Canvas extends Component {
             } else {
                 this.canvas.add(clonedObj);
             }
-            this.state.copyObject.top += 10;
-            this.state.copyObject.left += 10;
+            //this.state.copyObject.top += 10; don't mutate state directly...
+            //this.state.copyObject.left += 10;
+            let dummyObj = this.state.copyObject;
+            dummyObj.top += 10;
+            dummyObj.left +=10;
+            this.setState({copyObject: dummyObj});
             this.canvas.setActiveObject(clonedObj);
             this.canvas.requestRenderAll();
         });
