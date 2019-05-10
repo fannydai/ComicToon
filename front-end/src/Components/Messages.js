@@ -79,6 +79,7 @@ class Messages extends Component {
                 if(this.state.talking !== "") this.setState({conversations: tempArr});
                 else this.setState({conversations: tempArr, currCon: tempArr[tempArr.length-1][1], talking: data.username});
             }
+            this.scrollToBottom();
         });
         (async () => {
             const res = await fetch("http://localhost:4000/allMessages", {
@@ -126,6 +127,8 @@ class Messages extends Component {
         })();
     }
 
+    scrollToBottom = () => {document.getElementById("top").scrollTop = document.getElementById("top").scrollHeight;}
+
     handleSendMessage = (e) => {
         if(this.state.talking === "") alert("Search for a user to talk to or select a conversation to continue talking")
         else if(this.state.str !== ""){
@@ -143,6 +146,7 @@ class Messages extends Component {
                 this.setState({currCon: tempArr});
                 document.getElementById("toClear").value = "";
                 socket.off("result"); //avoid multiple listeners
+                this.scrollToBottom();
             });
             socket.on("error", function(data){
                 alert(data);
@@ -207,7 +211,7 @@ class Messages extends Component {
 
     handleOpenConversation = (e) => {
         this.state.conversations.forEach((item) => {
-            if(item[0] === e.target.getAttribute('name')) this.setState({currCon: item[1], talking: e.target.getAttribute('name')});
+            if(item[0] === e.target.getAttribute('name')) this.setState({currCon: item[1], talking: e.target.getAttribute('name')}, () => {this.scrollToBottom();});
         });
     }
 
@@ -277,7 +281,7 @@ class Messages extends Component {
                                 </div>
                             </div>
                             <div className="mesgs">
-                                <div className="msg_history">
+                                <div id="top" className="msg_history">
                                     {currCon}
                                 </div>
                                 <div className="type_msg">
