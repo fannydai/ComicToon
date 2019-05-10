@@ -103,11 +103,12 @@ class Messages extends Component {
                         if(data.has(item.reciever)) data.get(item.reciever).unshift(item);
                         else data.set(item.reciever, [item]);
                     });
+                    console.log(data);
                     let temp = data.get(this.props.CurrUser.username); 
                     data.delete(this.props.CurrUser.username);
                     temp.forEach((item) => {
                         console.log(item.sender);
-                        data.get(item.sender).unshift(item) //and other end to each conversation
+                        if(data.get(item.sender)) data.get(item.sender).unshift(item); //and other end to each conversation
                     });
                     data.forEach((item) => {
                         item.sort(function(a,b){return a.date - b.date}) //sort each msg in conversation
@@ -177,24 +178,27 @@ class Messages extends Component {
             if(content.status === "success"){
                 const BreakException = {};
                 let flag = false;
-                this.state.conversations.forEach((item) => {
-                    if(item[0] === content.username){ //aready has a conversation with them
-                        try{
-                            this.setState({currCon: item[1], talking: content.username});
-                            flag = true;
-                            document.getElementById("toClear2").value = "";
-                            throw BreakException;
+                if(content.username === this.props.CurrUser.username) alert("make some friends and message someone else lol");
+                else{
+                    this.state.conversations.forEach((item) => {
+                        if(item[0] === content.username){ //aready has a conversation with them
+                            try{
+                                this.setState({currCon: item[1], talking: content.username});
+                                flag = true;
+                                document.getElementById("toClear2").value = "";
+                                throw BreakException;
+                            }
+                            catch(e){
+                                if (e !== BreakException) throw e;
+                            }
                         }
-                        catch(e){
-                            if (e !== BreakException) throw e;
-                        }
+                    });
+                    if(!flag){
+                        let tempArr = this.state.conversations;
+                        tempArr.push([content.username, [{date: Date.now(), message: "", reciever: content.username, sender: this.props.CurrUser.username, token: this.props.CurrUser.token}]]);
+                        this.setState({conversations: tempArr, currCon: tempArr[tempArr.length-1][1], talking: content.username});
+                        
                     }
-                });
-                if(!flag){
-                    let tempArr = this.state.conversations;
-                    tempArr.push([content.username, [{date: Date.now(), message: "", reciever: content.username, sender: this.props.CurrUser.username, token: this.props.CurrUser.token}]]);
-                    this.setState({conversations: tempArr, currCon: tempArr[tempArr.length-1][1], talking: content.username});
-                    
                 }
             }
             else alert(`${content.status}`)
