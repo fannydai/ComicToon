@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
-
 import './styles/Messages.css';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux'
 import NavigationBar from './NavigationBar';
 import io from 'socket.io-client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import moment from "moment";
 let socket;
-
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
 });
 
-
 class Messages extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            conversations: [] //index 0 is reciever's username & index 1 is array of ordered messages between the two users
+            conversations: [], //index 0 is reciever's username & index 1 is array of ordered messages between the two users
+            currCon: [],
+            str: "",
+            selectedUser: "",
+            talking: ""
         }
-        socket = io('http://localhost:4000', { transports: ['websocket'] }); //connect to web socket
     }
 
     componentWillMount(){
@@ -34,7 +36,50 @@ class Messages extends Component {
         }
     }
 
+    handleChange = (e) => {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
+    }
+
     componentDidMount() { //load all of user's messages
+        socket = io('http://localhost:4000', { transports: ['websocket'] }); //connect to web socket
+        socket.emit('init', this.props.CurrUser.username);
+        socket.on('recieveMessage', (data) => {
+            let isFound = false;
+            const BreakException = {};
+            this.state.conversations.forEach((item, i) => {
+                if(item[0] === data.username){ //already has a convo with them
+                    try{
+                        isFound = true;
+                        let res = item[1];
+                        res.push({date: Date.now(),
+                            message: data.message,
+                            reciever: this.props.CurrUser.username,
+                            sender:  this.state.talking,
+                            token: "",
+                            __v: 0,
+                            _id: ""})
+                        if(this.state.talking === "") this.setState({currCon: res, talking: data.username});
+                        else {
+                            let temp = this.state.conversations;
+                            temp.splice(i, 1, [item[0], res])
+                            this.setState({conversations: temp});
+                        }
+                        
+                        throw BreakException;
+                    }
+                    catch(e){
+                        if (e !== BreakException) throw e;
+                    }
+                }
+            });
+            if(!isFound){ // from new user
+                let tempArr = this.state.conversations;
+                tempArr.push([data.username, [{date: Date.now(), message: data.message, reciever: this.props.CurrUser.username, sender: data.username, token: this.props.CurrUser.token}]]);
+                if(this.state.talking !== "") this.setState({conversations: tempArr});
+                else this.setState({conversations: tempArr, currCon: tempArr[tempArr.length-1][1], talking: data.username});
+            }
+        });
         (async () => {
             const res = await fetch("http://localhost:4000/allMessages", {
                 method: "POST",
@@ -61,6 +106,7 @@ class Messages extends Component {
                     let temp = data.get(this.props.CurrUser.username); 
                     data.delete(this.props.CurrUser.username);
                     temp.forEach((item) => {
+                        console.log(item.sender);
                         data.get(item.sender).unshift(item) //and other end to each conversation
                     });
                     data.forEach((item) => {
@@ -71,6 +117,7 @@ class Messages extends Component {
                     let it = data[Symbol.iterator]();
                     for(let temp of it) conversations.push(temp);
                     this.setState({conversations: conversations});
+                    
                 }
                 else console.log("YOU GOT NO MESSAGES:((")
             }
@@ -78,22 +125,128 @@ class Messages extends Component {
         })();
     }
 
-    handleSendMessage = () => {
-        socket.emit("saveMessage", {token: this.props.CurrUser.token, sender: this.props.CurrUser.username, reciever: "placeholder", message: "testing 123", date: Date.now()});
-        socket.on("result", function(data){
-            console.log(data);
-        });
-        socket.on("error", function(data){
-            console.log(data);
-        });
+    handleSendMessage = (e) => {
+        if(this.state.talking === "") alert("Search for a user to talk to or select a conversation to continue talking")
+        else if(this.state.str !== ""){
+            socket.emit("saveMessage", {token: this.props.CurrUser.token, sender: this.props.CurrUser.username, reciever: this.state.talking, message: this.state.str, date: Date.now()});
+            socket.on("result", (data) => {
+                console.log(data);
+                let tempArr = this.state.currCon;
+                tempArr.push({date: Date.now(),
+                    message: data,
+                    reciever: this.state.talking,
+                    sender: this.props.CurrUser.username,
+                    token: "",
+                    __v: 0,
+                    _id: ""})
+                this.setState({currCon: tempArr});
+                document.getElementById("toClear").value = "";
+                socket.off("result"); //avoid multiple listeners
+            });
+            socket.on("error", function(data){
+                alert(data);
+                socket.off("error"); //avoid multiple listeners
+            });  
+        }
+        else alert("Type something to send!!")
     }
 
     componentWillUnmount() {
-        socket.off("result"); //avoid multiple listeners
-        socket.off("error");
+        socket.emit('remove', this.props.CurrUser.username);   
+        socket.disconnect();
+    }
+
+    handleSearchUser = (e) => {
+        (async () => {
+            const res = await fetch("http://localhost:4000/search", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    token: this.props.CurrUser.token,
+                    username: this.props.CurrUser.username,
+                    toFind: this.state.selectedUser.trim()
+                })
+            });
+
+            let content = await res.json();
+            console.log(content)
+            if(content.status === "success"){
+                const BreakException = {};
+                let flag = false;
+                this.state.conversations.forEach((item) => {
+                    if(item[0] === content.username){ //aready has a conversation with them
+                        try{
+                            this.setState({currCon: item[1], talking: content.username});
+                            flag = true;
+                            document.getElementById("toClear2").value = "";
+                            throw BreakException;
+                        }
+                        catch(e){
+                            if (e !== BreakException) throw e;
+                        }
+                    }
+                });
+                if(!flag){
+                    let tempArr = this.state.conversations;
+                    tempArr.push([content.username, [{date: Date.now(), message: "", reciever: content.username, sender: this.props.CurrUser.username, token: this.props.CurrUser.token}]]);
+                    this.setState({conversations: tempArr, currCon: tempArr[tempArr.length-1][1], talking: content.username});
+                    
+                }
+            }
+            else alert(`${content.status}`)
+        })();
+    }
+
+    handleOpenConversation = (e) => {
+        this.state.conversations.forEach((item) => {
+            if(item[0] === e.target.getAttribute('name')) this.setState({currCon: item[1], talking: e.target.getAttribute('name')});
+        });
     }
 
     render() {
+        const cons = this.state.conversations.length ? this.state.conversations.map((item) => {
+            return (
+                item ?
+                <div onClick={this.handleOpenConversation} name={item[0]} className="chat_list active_chat" key={item[0]}>
+                    <div name={item[0]} className="chat_people">
+                         <div name={item[0]} className="chat_ib">
+                            <h5 name={item[0]} >{item[0]} <span name={item[0]} className="chat_date">{moment(item[1][item[1].length-1].date).format('MMMM Do YYYY h:mm a')}</span></h5>
+                            <p name={item[0]}>{item[1][item[1].length-1].message}</p>
+                        </div>
+                    </div>
+                </div>
+                : null
+            ) 
+        }) : null
+
+        const currCon = this.state.currCon.length ? this.state.currCon.map((item, i) => {
+            if(item !==null && item.sender === this.props.CurrUser.username && item.message !== ""){ //your own
+                return (
+                    <div key={i} className="outgoing_msg">
+                        <div className="sent_msg">
+                            <p>{item.message}</p>
+                            <span className="time_date">{item.sender}  |   {moment(item.date).format('MMMM Do YYYY h:mm a')}</span> 
+                        </div>
+                    </div>
+                )
+            }
+            else if(item !== null && item.message !== ""){
+                return(
+                    <div key={i} className="incoming_msg">
+                        <div className="received_msg">
+                            <div className="received_withd_msg">
+                                <p>{item.message}</p>
+                                <span className="time_date">{item.sender}  |   {moment(item.date).format('MMMM Do YYYY h:mm a')}</span>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        }): null
         return (
             <div>
                 <NavigationBar history={this.props.history}/>
@@ -108,67 +261,25 @@ class Messages extends Component {
                                     </div>
                                     <div className="srch_bar">
                                         <div className="stylish-input-group">
-                                            <input type="text" className="search-bar"  placeholder="Search" />
+                                            <input id="toClear2" type="text" className="search-bar" placeholder="Enter a user to start messaging" name="selectedUser" onChange={this.handleChange}/>
                                             <span className="input-group-addon">
-                                                <button type="button"> <i className="fa fa-search" aria-hidden="true"></i> </button>
+                                                <button type="button" name="selectedUser" onClick={this.handleSearchUser}> <i className="fa fa-search" aria-hidden="true"></i> </button>
                                             </span> 
                                         </div>
                                     </div>
                                 </div>
                                 <div className="inbox_chat">
-                                    <div className="chat_list active_chat">
-                                        <div className="chat_people">
-                                            <div className="chat_ib">
-                                                <h5>Joel George <span className="chat_date">Dec 25</span></h5>
-                                                <p>Testing</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="chat_list active_chat">
-                                        <div className="chat_people">
-                                            <div className="chat_ib">
-                                                <h5>Meow <span className="chat_date">Dec 26</span></h5>
-                                                <p>Testing again</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {cons}
                                 </div>
                             </div>
                             <div className="mesgs">
                                 <div className="msg_history">
-                                    <div className="incoming_msg">
-                                        <div className="received_msg">
-                                            <div className="received_withd_msg">
-                                                <p>Testing</p>
-                                                <span className="time_date"> 11:01 AM    |    June 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="outgoing_msg">
-                                        <div className="sent_msg">
-                                            <p>Testing</p>
-                                            <span className="time_date"> 11:02 AM    |    June 9</span> 
-                                        </div>
-                                    </div>
-                                    <div className="incoming_msg">
-                                        <div className="received_msg">
-                                            <div className="received_withd_msg">
-                                                <p>heyyyy;)</p>
-                                                <span className="time_date"> 11:03 AM    |    June 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="outgoing_msg">
-                                        <div className="sent_msg">
-                                            <p>bye</p>
-                                            <span className="time_date"> 11:04 AM    |    June 9</span> 
-                                        </div>
-                                    </div>
+                                    {currCon}
                                 </div>
                                 <div className="type_msg">
                                     <div className="input_msg_write">
-                                        <input type="text" className="write_msg" placeholder="Type a message" />
-                                        <button className="msg_send_btn" type="button"><i className="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                        <input id="toClear" type="text" className="write_msg" name="str" placeholder="Type a message" onChange={this.handleChange}/>
+                                        <button className="msg_send_btn" type="button" onClick={this.handleSendMessage.bind(this)}><i className="fa fa-paper-plane-o" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </div>

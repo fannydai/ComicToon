@@ -24,3 +24,21 @@ exports.getAllMessages = async function(req, res) { //gets all of a user's msgs
         }
     });
 };
+
+exports.search = async function(req, res) {
+    //takes in "token", "username", and "toFind"
+    DBConnection.collection("userModel").findOne({token: req.body.token}, (err, item) => {
+        if(err) res.send({status: "mongodb err"});
+        else if(item === null) res.send({status: "invalid token"});
+        else{
+            if(item.username !== req.body.username) res.send({status: "invalid user"});
+            else{ 
+                DBConnection.collection("userModel").findOne({username: req.body.toFind, verified: true}, (err2, find) => {
+                    if(err2) res.send({status: "mongodb err"});
+                    else if(find === null) res.send({status: "user doesn't exist"});
+                    else res.send({status: "success", username: req.body.toFind});
+                });
+            }
+        }
+    });
+};
