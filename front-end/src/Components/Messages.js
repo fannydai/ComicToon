@@ -103,18 +103,23 @@ class Messages extends Component {
                     content.messages.forEach(item => { 
                         if(data.has(item.reciever)) data.get(item.reciever).unshift(item);
                         else data.set(item.reciever, [item]);
+                        console.log(data);
                     });
                     console.log(data);
-                    let temp = data.get(this.props.CurrUser.username); 
-                    data.delete(this.props.CurrUser.username);
-                    temp.forEach((item) => {
-                        console.log(item.sender);
-                        if(data.get(item.sender)) data.get(item.sender).unshift(item); //and other end to each conversation
-                    });
+                    if(data.has(this.props.CurrUser.username)){
+                        let temp = data.get(this.props.CurrUser.username); 
+                        data.delete(this.props.CurrUser.username);
+                        temp.forEach((item) => {
+                            console.log(item.sender);
+                            if(data.get(item.sender)) data.get(item.sender).unshift(item); //and other end to each conversation
+                            else data.set(item.sender, [item]);
+                        });
+                    }
                     data.forEach((item) => {
                         item.sort(function(a,b){return a.date - b.date}) //sort each msg in conversation
                     });
                     console.log(data);
+                
                     let conversations = [];
                     let it = data[Symbol.iterator]();
                     for(let temp of it) conversations.push(temp);
@@ -133,6 +138,7 @@ class Messages extends Component {
         if(this.state.talking === "") alert("Search for a user to talk to or select a conversation to continue talking")
         else if(this.state.str !== ""){
             socket.emit("saveMessage", {token: this.props.CurrUser.token, sender: this.props.CurrUser.username, reciever: this.state.talking, message: this.state.str, date: Date.now()});
+            this.setState({str: ""});
             socket.on("result", (data) => {
                 console.log(data);
                 let tempArr = this.state.currCon;
@@ -189,7 +195,6 @@ class Messages extends Component {
                             try{
                                 this.setState({currCon: item[1], talking: content.username});
                                 flag = true;
-                                document.getElementById("toClear2").value = "";
                                 throw BreakException;
                             }
                             catch(e){
@@ -204,6 +209,7 @@ class Messages extends Component {
                         
                     }
                 }
+                document.getElementById("toClear2").value = "";
             }
             else alert(`${content.status}`)
         })();
