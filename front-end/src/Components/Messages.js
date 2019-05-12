@@ -6,6 +6,7 @@ import NavigationBar from './NavigationBar';
 import io from 'socket.io-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from "moment";
+import Footer from './Footer';
 let socket;
 
 const StateToProps = (state) => ({ //application level state via redux
@@ -300,6 +301,7 @@ class Messages extends Component {
                         </div>
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }
