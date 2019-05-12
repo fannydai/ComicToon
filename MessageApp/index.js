@@ -1,71 +1,70 @@
-process.env.UV_THREADPOOL_SIZE = 128;
-const cluster = require("cluster");
-
-if(cluster.isMaster) {
-    const numberOfCPU = require("os").cpus().length;
-    //taking advantage of the # of cpus you have, making that many processes for better performance
-    for(let i = 0; i < numberOfCPU; i++) { 
-      cluster.fork();
-      cluster.on("exit", function(worker, code, signal) {
-        console.log("Worker died, starting a new one... ");
-        cluster.fork();
-      });
-    }
-} else {
-    const express = require('express');
-    const cors = require('cors');
-    const parser = require('body-parser');
-    const app = express();
-    const http = require('http').Server(app);
-    const io = require('socket.io')(http);
-    const mongoose = require('mongoose'); //for msgs model
-    const MongoClient = require('mongodb').MongoClient //using this to get UserModel collection for msg validation
-    const MessageModel = require("./Models/MessageModel"); //make the model and save
+const express = require('express');
+const cors = require('cors');
+const parser = require('body-parser');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const mongoose = require('mongoose'); //for msgs model
+const MongoClient = require('mongodb').MongoClient //using this to get UserModel collection for msg validation
+const MessageModel = require("./Models/MessageModel"); //make the model and save
     
-    const corsOptions = {
-        origin: "http://localhost:3000",
-        credentials: true
-    };
-    app.use(cors(corsOptions));
-    app.use(parser.urlencoded({ extended: false }));
-    app.use(parser.json());
+const corsOptions = {
+    origin: "http://localhost:3000",
+    credentials: true
+};
+app.use(cors(corsOptions));
+app.use(parser.urlencoded({ extended: false }));
+app.use(parser.json());
 
-    mongoose.connect('mongodb://localhost:27017/Messages', {useNewUrlParser: true}); //Messages db
-    const MessageDB = mongoose.connection;
-    MessageDB.on("error", console.error.bind(console, "MongoDB connection error: "));
+mongoose.connect('mongodb://localhost:27017/Messages', {useNewUrlParser: true}); //Messages db
+const MessageDB = mongoose.connection;
+MessageDB.on("error", console.error.bind(console, "MongoDB connection error: "));
     
-    let UserModelDBConnection = null; 
-    MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true })
-    .then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err));
+let UserModelDBConnection = null; 
+MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true })
+.then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err));
 
-    io.on('connection', socket => {
-        console.log('A user just connected.. ');
-        socket.on('saveMessage', function(data){
-            UserModelDBConnection.collection("userModel").findOne({token: data.token}, (err, item) => { // error that "findOne" is not a function.. will fix later
-                if(err || item === null) socket.emit("error", "invalid token");
+let clients = new Map();
+io.on('connection', socket => {
+    console.log('A user just connected.. ');
+    socket.on('init', function(data){
+        clients.set(data, socket.id);
+    });
+
+    socket.on('saveMessage', function(data){
+        UserModelDBConnection.collection("userModel").findOne({token: data.token}, (err, item) => { // error that "findOne" is not a function.. will fix later
+            if(err || item === null) socket.emit("error", "invalid token");
+            else{
+                if(item.username !== data.sender) socket.emit("error", "invalid user");
                 else{
-                    if(item.username !== data.sender) socket.emit("error", "invalid user");
-                    else{
-                        const new_msg = new MessageModel({
-                            token: data.token,
-                            sender: data.sender,
-                            reciever: data.reciever,
-                            message: data.message,
-                            date: data.date
-                        });
-                        new_msg.save(); //new msg saved to db
-                        socket.emit("result", data.message); //successful msg saved, send back to front-end
-                    }
+                    const new_msg = new MessageModel({
+                        token: data.token,
+                        sender: data.sender,
+                        reciever: data.reciever,
+                        message: data.message,
+                        date: data.date
+                    });
+                    new_msg.save(); //new msg saved to db
+                    socket.emit("result", data.message); //successful msg saved, send back to front-end 
+                    if(clients.has(data.reciever)) socket.broadcast.to(clients.get(data.reciever)).emit('recieveMessage', {message: data.message, username: data.sender}); //send to other person
                 }
-            });
+            }
         });
     });
 
-    const MessageRouter = require("./Routes/MessageRoutes");
-    app.use("/", [MessageRouter]);
-    
-    const port = process.env.PORT || 4000;
-    const server = http.listen(port, () => {
-        console.log('Server is running on port', server.address().port);
+    socket.on('disconnect', (reason) =>{
+        console.log(reason)
     });
-}
+
+    socket.on('remove', function(data){
+        clients.delete(data);
+    });
+});
+
+const MessageRouter = require("./Routes/MessageRoutes");
+app.use("/", [MessageRouter]);
+    
+const port = process.env.PORT || 4000;
+const server = http.listen(port, () => {
+    console.log('Server is running on port', server.address().port);
+});

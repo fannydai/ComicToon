@@ -18,25 +18,25 @@ exports.getAllMessages = async function(req, res) { //gets all of a user's msgs
                 //get both ends of conversation
                 MessageModel.find({$or:[{sender: req.body.sender}, {reciever:req.body.sender}]}, (err, result) => { 
                     if(err) res.send({status: "mongodb error"});
-                    else{
-                        let data = new Map();
-                        result.forEach(item => { 
-                            if(data.has(item.reciever)) data.get(item.reciever).unshift(item);
-                            else data.set(item.reciever, [item]);
-                        });
-                        let temp = data.get(req.body.sender); 
-                        data.delete(req.body.sender);
-                        temp.forEach((item) => {
-                            data.get(item.sender).unshift(item) //and other end to each conversation
-                        });
-                        data.forEach((item) => {
-                            item.sort(function(a,b){return a.date - b.date}) //sort each msg in conversation
-                        });
-                        //sends back map of each person you messaged (as key) & list of message objs as value
-                        //each msg in each converation is sort by the date
-                        console.log(data);// works
-                        res.send({status: "success", messages: data});
-                    }
+                    else res.send({status: "success", messages: result});
+                });
+            }
+        }
+    });
+};
+
+exports.search = async function(req, res) {
+    //takes in "token", "username", and "toFind"
+    DBConnection.collection("userModel").findOne({token: req.body.token}, (err, item) => {
+        if(err) res.send({status: "mongodb err"});
+        else if(item === null) res.send({status: "invalid token"});
+        else{
+            if(item.username !== req.body.username) res.send({status: "invalid user"});
+            else{ 
+                DBConnection.collection("userModel").findOne({username: req.body.toFind, verified: true}, (err2, find) => {
+                    if(err2) res.send({status: "mongodb err"});
+                    else if(find === null) res.send({status: "user doesn't exist"});
+                    else res.send({status: "success", username: req.body.toFind});
                 });
             }
         }
