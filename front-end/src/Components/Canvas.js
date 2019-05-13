@@ -17,7 +17,7 @@ import ColorButton from './ColorButton';
 import './styles/Canvas.css';
 import { addPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
-
+import { faFlagUsa } from '@fortawesome/free-solid-svg-icons';
 
 const history = require('browser-history');
 var SCALE_FACTOR = 1.3;
@@ -25,6 +25,19 @@ var SCALE_FACTOR = 1.3;
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user
 });
+
+const SHAPES = {
+    none: 'none',
+    text: 'text',
+    polygon: 'polygon',
+    bubble: 'bubble',
+    line: 'line',
+    rectangle: 'rectangle',
+    circle: 'circle',
+    triagle: 'triangle',
+    image: 'image'
+  };
+  
 
 class Canvas extends Component {
 
@@ -43,7 +56,16 @@ class Canvas extends Component {
             lineWidth: 1,
             stroke: '#000',
 
-            previousCanvas: null
+            shadowColor: '#000',
+            shadowWidth: 0,
+            shadowOffset: 0,
+
+            previousCanvas: null,
+            drawShape: SHAPES.none,
+            selectedShape: null,
+
+            startX: 0,
+            startY: 0
         }
     }
 
@@ -71,6 +93,11 @@ class Canvas extends Component {
             }
         }
 
+        this.canvas.on('mouse:down', this.doMouseDown);
+        this.canvas.on('mouse:move', this.doMouseMove);
+        this.canvas.on('mouse:up', this.doMouseUpOut);
+        this.canvas.on('mouse:out', this.doMouseUpOut);
+
         this.handleZoom();
         this.canvas.on('object:added', (event) => {
             this.handleSave(event);
@@ -80,18 +107,30 @@ class Canvas extends Component {
         });
     }
 
+    /**********************************************************
+     ********************** PENCIL ****************************
+     **********************************************************/
+    // Pencil which all the pencil features will call. Sets the values needed.
     pencil = () => {
         this.canvas.freeDrawingBrush = this.pencilBrush;
         this.canvas.freeDrawingBrush.color = this.state.brushColor;
         this.canvas.freeDrawingBrush.width = this.state.lineWidth;
+        this.handleShadow();
         this.canvas.isDrawingMode = true;
+        this.selectable(true);
+        this.setState({
+            selectedShape: null,
+            drawShape: SHAPES.none
+        });
     }
 
+    // Enables the pencil feature
     handlePencil = (event) => {
         this.pencilBrush = new fabric.PencilBrush(this.canvas);
         this.pencil();
     }
 
+    // Currently not working.
     handlePencilCrayon = (event) => {
         this.pencilBrush = new fabric.CrayonBrush(this.canvas);
         this.pencilBrush.density = 200;
@@ -99,31 +138,37 @@ class Canvas extends Component {
         this.pencil();
     }
 
+    // Currently not working.
     handlePencilInk = (event) => {
         this.pencilBrush = new fabric.InkBrush(this.canvas);
         this.pencil();
     }
 
+    // Currently not working.
     handlePencilMarker = (event) => {
         this.pencilBrush = new fabric.MarkerBrush(this.canvas);
         this.pencil();
     }
 
+    // Circle feature for pencil
     handlePencilCircle = (event) => {
         this.pencilBrush = new fabric.CircleBrush(this.canvas);
         this.pencil();
     }
 
+    // Spray feature for pencil
     handlePencilSpray = (event) => {
         this.pencilBrush = new fabric.SprayBrush(this.canvas);
         this.pencil();
     }
 
+    // The poka dot feature for pencil
     handlePencilPattern = (event) => {
         this.pencilBrush = new fabric.PatternBrush(this.canvas);
         this.pencil();
     }
 
+    // Currently not working. Deletes after writing...
     handlePencilHline = (event) => {
         this.pencilBrush = new fabric.PatternBrush(this.canvas);
         this.pencil();
@@ -144,6 +189,7 @@ class Canvas extends Component {
         };
     }
 
+    // Currently not working. Deletes after writing...
     handlePencilVline = (event) => {
         this.pencilBrush = new fabric.PatternBrush(this.canvas);
         this.pencil();
@@ -164,6 +210,7 @@ class Canvas extends Component {
         };
     }
 
+    // Currently not working. Deletes after writing...
     handlePencilSquare = (event) => {
         this.pencilBrush = new fabric.PatternBrush(this.canvas);
         this.pencil();
@@ -179,6 +226,7 @@ class Canvas extends Component {
         };
     }
 
+    // Currently not working. Deletes after writing...
     handlePencilDiamond = (event) => {
         this.pencilBrush = new fabric.PatternBrush(this.canvas);
         this.pencil();
@@ -204,19 +252,181 @@ class Canvas extends Component {
             return patternCanvas;
         };
     }
+
+    /**********************************************************
+     ********************** SHAPES ****************************
+     **********************************************************/
+    selectable = (flag) => {
+        if(!flag) {
+            this.canvas.isDrawingMode = false;
+        }
+        this.canvas.forEachObject((o) => o.selectable = o.evented = flag);
+        if(flag) {
+            this.canvas.defaultCursor = 'default';
+        } else {
+            this.canvas.defaultCursor = 'crosshair';
+        }
+    }
+
+    doMouseDown = (o) => {
+        if(this.state.drawShape === SHAPES.none) {
+            return;
+        }
+        
+        var pointer = this.canvas.getPointer(o.e);
+        var newShape = null;
+        this.setState({
+            startX: pointer.x,
+            startY: pointer.y
+        });
+
+        if(this.state.drawShape === SHAPES.text) {
+            newShape = new fabric.Textbox('Lorum ipsum dolor sit amet', {
+                left: pointer.x,
+                top: pointer.y,
+                fontSize: 20,
+                fill: this.state.brushColor,
+                stroke: this.state.stroke,
+                strokeWidth: this.state.lineWidth,
+            });
+            this.canvas.add(newShape);
+            this.setState({ selectedShape: newShape});
+            this.doMouseUpOut();
+            return;
+        } else if(this.state.drawShape === SHAPES.line) {
+            var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+            newShape = new fabric.Line(points, {
+                strokeWidth: this.state.lineWidth,
+                stroke: this.state.stroke,
+            });
+        } else if(this.state.drawShape === SHAPES.polygon) {
+
+        } else if(this.state.drawShape === SHAPES.circle) {
+            newShape= new fabric.Ellipse({
+                left: this.state.startX,
+                top: this.state.startY,
+                originX: 'left',
+                originY: 'top',
+                rx: pointer.x-this.state.startX,
+                ry: pointer.y-this.state.startY,
+                fill: this.state.brushColor,
+                stroke: this.state.stroke,
+                strokeWidth: this.state.lineWidth
+            });
+        } else if(this.state.drawShape === SHAPES.rectangle) {
+            newShape = new fabric.Rect({
+                originX: 'left',
+                originY: 'top',
+                left: pointer.x,
+                top: pointer.y,
+                height: pointer.x - this.state.startX,
+                width: pointer.y - this.state.startY,
+                fill: this.state.brushColor,
+                stroke: this.state.stroke,
+                strokeWidth: this.state.lineWidth
+            });
+        } else if(this.state.drawShape === SHAPES.triangle) {
+            newShape = new fabric.Triangle({
+                originX: 'left',
+                originY: 'top',
+                left: Math.abs(pointer.x),
+                top: Math.abs(pointer.y),
+                height: pointer.x - this.state.startX,
+                width: pointer.y - this.state.startY,
+                fill: this.state.brushColor,
+                stroke: this.state.stroke,
+                strokeWidth: this.state.lineWidth
+            });
+        } else if(this.state.drawShape === SHAPES.image && this.state.selectedShape !== null) {
+            this.state.selectedShape.originX = 'center';
+            this.state.selectedShape.originY = 'center';
+            this.state.selectedShape.left = pointer.x;
+            this.state.selectedShape.top = pointer.y;
+            this.canvas.add(this.state.selectedShape);
+            this.doMouseUpOut();
+            return;
+        } else {
+            return;
+        }
+
+        this.canvas.add(newShape);
+        this.setState({ selectedShape: newShape});
+    }
+    
+    linearDistance = (point1, point2) => {
+        let xs = point2.x - point1.x;
+        let ys = point2.y - point1.y;
+        return Math.sqrt(xs * xs + ys * ys);
+    };
+
+    doMouseMove = (o) => {
+        if(this.state.selectedShape === null) {
+            return;
+        }
+
+        var pointer = this.canvas.getPointer(o.e);
+        if(this.state.drawShape === SHAPES.line) {
+            this.state.selectedShape.set({ x2: pointer.x, y2: pointer.y });
+        } else if(this.state.drawShape === SHAPES.polygon) {
+            
+        } else if(this.state.drawShape === SHAPES.circle) {
+            var rx = Math.abs(this.state.startX  - pointer.x)/2;
+            var ry = Math.abs(this.state.startY - pointer.y)/2;
+            if (rx > this.state.selectedShape.strokeWidth) {
+            rx -= this.state.selectedShape.strokeWidth/2
+            }
+            if (ry > this.state.selectedShape.strokeWidth) {
+            ry -= this.state.selectedShape.strokeWidth/2
+            }
+            this.state.selectedShape.set({ rx: rx, ry: ry});
+            
+            if(this.state.startX > pointer.x){
+                this.state.selectedShape.set({originX: 'right' });
+            } else {
+                this.state.selectedShape.set({originX: 'left' });
+            }
+            if(this.state.startY > pointer.y){
+                this.state.selectedShape.set({originY: 'bottom'  });
+            } else {
+                this.state.selectedShape.set({originY: 'top'  });
+            }
+        } else if(this.state.drawShape === SHAPES.rectangle) {
+            if (this.state.startX > pointer.x) {
+                this.state.selectedShape.set({ left: Math.abs(pointer.x) });
+            }
+            if (this.state.startY > pointer.y) {
+                this.state.selectedShape.set({ top: Math.abs(pointer.y) });
+            }
+            this.state.selectedShape.set({ width: Math.abs(this.state.startX - pointer.x) });
+            this.state.selectedShape.set({ height: Math.abs(this.state.startY - pointer.y) });
+        } else if(this.state.drawShape === SHAPES.triangle) {
+            if (this.state.startX > pointer.x) {
+                this.state.selectedShape.set({ left: Math.abs(pointer.x) });
+            }
+            if (this.state.startY > pointer.y) {
+                this.state.selectedShape.set({ top: Math.abs(pointer.y) });
+            }
+            this.state.selectedShape.set({ width: Math.abs(this.state.startX - pointer.x) });
+            this.state.selectedShape.set({ height: Math.abs(this.state.startY - pointer.y) });
+        } else {
+            return;
+        }
+        this.state.selectedShape.setCoords();
+        this.canvas.renderAll();    
+    }
+    
+    doMouseUpOut = (o) => {
+        if(this.state.selectedShape == null) { return; }
+        this.setState({
+            selectedShape: null,
+            drawShape: SHAPES.none
+        });
+        this.selectable(true);
+    }
     
     handleText = (event) => {
-        this.canvas.isDrawingMode = false;
-        const newText = new fabric.Textbox('Lorum ipsum dolor sit amet', {
-            left: 50,
-            top: 50,
-            width: 150,
-            fontSize: 20,
-            fill: this.state.brushColor,
-			stroke: this.state.stroke,
-			strokeWidth: this.state.lineWidth,
-        });
-        this.canvas.add(newText).setActiveObject(newText);
+        this.setState({ drawShape: SHAPES.text });
+        this.selectable(false);
     }
 
     handlePolygon = (event) => {
@@ -234,58 +444,23 @@ class Canvas extends Component {
     }
 
     handleLine = (event) => {
-        this.canvas.isDrawingMode = false;
-        console.log('MAKING LINE');
-        console.log(this.state.lineWidth);
-        const newLine = new fabric.Line([0, 0, 50, 50], {
-			stroke: this.state.brushColor,
-			strokeWidth: this.state.lineWidth,
-        });
-        this.canvas.add(newLine);
+        this.setState({ drawShape: SHAPES.line });
+        this.selectable(false);
     }
 
     handleCircle = (event) => {
-        this.canvas.isDrawingMode = false;
-        console.log('MAKING CIRCLE');
-        const newCircle = new fabric.Circle({
-            radius: 20,
-            left: 50,
-            top: 50,
-            fill: this.state.brushColor,
-			stroke: this.state.stroke,
-            strokeWidth: this.state.lineWidth
-        });
-        this.canvas.add(newCircle);
+        this.setState({ drawShape: SHAPES.circle });
+        this.selectable(false);
     }
 
     handleRectangle = (event) => {
-        this.canvas.isDrawingMode = false;
-        console.log('MAKING RECTANGLE');
-        const newRect = new fabric.Rect({
-            left: 50,
-            top: 50,
-            height: 20,
-            width: 20,
-            fill: this.state.brushColor,
-			stroke: this.state.stroke,
-			strokeWidth: this.state.lineWidth,
-        });
-        this.canvas.add(newRect);
+        this.setState({ drawShape: SHAPES.rectangle });
+        this.selectable(false);
     }
 
     handleTriangle = (event) => {
-        this.canvas.isDrawingMode = false;
-        console.log('MAKING TRIANGLE');
-        const newTriangle = new fabric.Triangle({
-            left: 50,
-            top: 50,
-            height: 20,
-            width: 20,
-            fill: this.state.brushColor,
-			stroke: this.state.stroke,
-			strokeWidth: this.state.lineWidth
-        });
-        this.canvas.add(newTriangle);
+        this.setState({ drawShape: SHAPES.triangle });
+        this.selectable(false);
     }
 
     handleSelectFile = (event) => {
@@ -295,35 +470,26 @@ class Canvas extends Component {
 
     handleImage = (event) => {
         const file = event.target.files[0];
-        
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = (() => {
                 return (e) => {
                     fabric.Image.fromURL(e.target.result, (image) => {
-                        this.canvas.add(image);
-                        this.canvas.renderAll();
+                        this.setState({
+                            selectedShape: image,
+                            drawShape: SHAPES.image
+                        });
+                        this.selectable(false);
                     }, {
-                        left: 50,
-                        top: 50,
                         stroke: this.state.stroke,
                         strokeWidth: this.state.lineWidth
                     });
                 };
             })();
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file);            
         } else {
             alert('Upload images only!');
         }
-    }
-
-    handleDeleteObject = (event) => {
-        this.canvas.remove(this.canvas.getActiveObject());
-    }
-
-    handleClearCanvas = (event) => {
-        this.canvas.isDrawingMode = false;
-        this.canvas.clear();
     }
 
     handleFillColor = (color) => {
@@ -349,6 +515,39 @@ class Canvas extends Component {
         }
     }
 
+    handleShadow = () => {
+        this.canvas.freeDrawingBrush.shadow = new fabric.Shadow({
+            blur: this.state.shadowWidth,
+            offsetX: this.state.shadowOffset,
+            offsetY: this.state.shadowOffset,
+            color: this.state.shadowColor
+        });
+        try {
+            this.canvas.getActiveObject().setShadow({
+                color: this.state.shadowColor,
+                blur: this.state.shadowWidth,
+                offsetX: this.state.shadowOffset,
+                offsetY: this.state.shadowOffset
+            });
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Obj does not have shadow option");
+        }
+    }
+
+    handleShadowWidth = (value) => {
+        this.setState({ shadowWidth: value });
+        this.canvas.freeDrawingBrush.shadowBlur = value;
+        this.handleShadow();
+    }
+
+    handleShadowOffset  = (value) => {
+        this.setState({ shadowOffset: value });
+        this.canvas.freeDrawingBrush.shadowOffsetX = value;
+        this.canvas.freeDrawingBrush.shadowOffsetY = value;
+        this.handleShadow();
+    }
+
     handleStrokeColor = (color) => {
         this.setState({ stroke: color });
         this.canvas.freeDrawingBrush.stroke = color;
@@ -358,8 +557,13 @@ class Canvas extends Component {
             this.canvas.renderAll();
         } catch (error) {
             console.log("Obj does not have stoke");
-        }
-        
+        }   
+    }
+
+    handleShadowColor = (color) => {
+        this.setState({ shadowColor: color });
+        this.canvas.freeDrawingBrush.shadowColor = color;
+        this.handleShadow();
     }
 
     handleBGColor = (color) => {
@@ -367,6 +571,18 @@ class Canvas extends Component {
         this.canvas.renderAll();
     }
 
+     /**********************************************************
+     ********************** OTHERS ****************************
+     **********************************************************/
+    handleDeleteObject = (event) => {
+        this.canvas.remove(this.canvas.getActiveObject());
+    }
+
+    handleClearCanvas = (event) => {
+        this.canvas.isDrawingMode = false;
+        this.canvas.clear();
+    }
+    
     handleZoom = (event) => {
         console.log('ZOOMING');
         this.setState({ zooming: true });
@@ -397,6 +613,7 @@ class Canvas extends Component {
             }
         })
     }
+
     handleZoomIn = (event) => {
         this.canvas.setZoom(this.canvas.getZoom()/SCALE_FACTOR);
         // this.canvas.zoomToPoint(new fabric.Point(this.canvas.width / 2, this.canvas.height / 2), this.canvas.getZoom() / 1.1);
@@ -408,6 +625,38 @@ class Canvas extends Component {
 
     handleResetZoom = (event) => {
         this.canvas.setViewportTransform([1,0,0,1,0,0]);
+    }
+
+    handleForward = (event) => {
+        try {
+            this.canvas.bringForward(this.canvas.getActiveObject());
+        } catch (error) {
+            console.log("Nothing Selected");
+        }
+    }
+
+    handleFront = (event) => {
+        try {
+            this.canvas.bringToFront(this.canvas.getActiveObject());
+        } catch (error) {
+            console.log("Nothing Selected");
+        }
+    }
+
+    handleBackward = (event) => {
+        try {
+            this.canvas.sendBackwards(this.canvas.getActiveObject());
+        } catch (error) {
+            console.log("Nothing Selected");
+        }
+    }
+
+    handleBack = (event) => {
+        try {
+            this.canvas.sendToBack(this.canvas.getActiveObject());
+        } catch (error) {
+            console.log("Nothing Selected");
+        }
     }
 
     handleCopy = (event) => {
@@ -539,6 +788,7 @@ class Canvas extends Component {
         }
     }
 
+    // excludeFromExport
     // handleGrid = (event) => {
     //     var group = new fabric.Group([], {left: 0, top: 0});
     //     const gridOption = { stroke:'#000', selectable:false };
@@ -572,10 +822,10 @@ class Canvas extends Component {
                         <FontAwesomeIcon className="icon" icon="cut" onClick={this.handleCut}/>
                         <FontAwesomeIcon className="icon" icon="paste" onClick={this.handlePaste}/> */}
 
-                        {/* <FontAwesomeIcon className="icon" icon="forward" />
-                        <FontAwesomeIcon className="icon" icon="step-forward" />
-                        <FontAwesomeIcon className="icon" icon="backward" />
-                        <FontAwesomeIcon className="icon" icon="step-backward" /> */}
+                        <FontAwesomeIcon className="icon" icon="angle-right" onClick={this.handleForward}/>
+                        <FontAwesomeIcon className="icon" icon="angle-double-right" onClick={this.handleFront}/>
+                        <FontAwesomeIcon className="icon" icon="angle-left" onClick={this.handleBackward}/>
+                        <FontAwesomeIcon className="icon" icon="angle-double-left" onClick={this.handleBack}/>
                         
                         <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
                         <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
@@ -611,10 +861,14 @@ class Canvas extends Component {
                             </tr> */}
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="arrows-alt" onClick={this.handleMoveObject}/></td>
-                                <td><ColorButton changeColor={this.handleFillColor}/></td>
+                                
                             </tr>
                             <tr>
+                                <td><ColorButton changeColor={this.handleFillColor}/></td>
                                 <td><ColorButton changeColor={this.handleStrokeColor}/></td>
+                            </tr>
+                            <tr>
+                                <td><ColorButton changeColor={this.handleShadowColor}/></td>
                                 <td><ColorButton changeColor={this.handleBGColor}/></td>
                             </tr>
                         </tbody>
@@ -628,6 +882,14 @@ class Canvas extends Component {
                             <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
                             <NumericInput onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth} min={0} max={100} step={1} precision={0} size={5} />
                         </div>
+                        <div>
+                            <div htmlFor="shadowWidthSlider">ShadowWidth: {this.state.shadowWidth}</div>
+                            <NumericInput onChange={this.handleShadowWidth} className="shadow_width" value={this.state.shadowWidth} min={0} max={100} step={1} precision={0} size={5} />
+                        </div>
+                        <div>
+                            <div htmlFor="shadowOffsetSlider">ShadowOffset: {this.state.shadowOffset}</div>
+                            <NumericInput onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset} min={0} max={100} step={1} precision={0} size={5} />
+                        </div>
                         <DropdownButton title="Pencil Mode">
                             <Dropdown.Item onClick={this.handlePencil}>Pencil</Dropdown.Item>
 
@@ -637,7 +899,7 @@ class Canvas extends Component {
 
                             <Dropdown.Item onClick={this.handlePencilSpray}>Spray</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilCircle}>Circle</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handlePencilPattern}>Pattern</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handlePencilPattern}>Poka dots</Dropdown.Item>
 
                             {/* <Dropdown.Item onClick={this.handlePencilHline}>H Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilVline}>V Line</Dropdown.Item>

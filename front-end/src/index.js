@@ -7,7 +7,7 @@ import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp as solidUp, faThumbsDown as solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
-    faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
+    faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
     faChevronLeft,faPaintBrush, faHandPointer
@@ -35,7 +35,7 @@ import ReportComponent from './Components/ReportComponent';
 import Messages from './Components/Messages';
 
 library.add(faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, faThumbsDown, solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
-    faPaste, faForward, faStepForward, faBackward, faStepBackward, faDownload, faCheck,
+    faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
     faChevronLeft,faPaintBrush, faHandPointer);
