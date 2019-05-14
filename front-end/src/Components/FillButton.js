@@ -2,7 +2,7 @@ import React from 'react'
 import { ChromePicker } from 'react-color'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-class ColorButton extends React.Component {
+class FillButton extends React.Component {
     constructor(props){
         super(props);    
     }
@@ -51,7 +51,7 @@ class ColorButton extends React.Component {
         return (
         <div>
             <span onClick={this.handleClick}>
-                <FontAwesomeIcon style={palette} className="icon" icon="palette" />
+                <FontAwesomeIcon style={palette} className="icon" icon="fill" />
             </span>
             {this.state.displayColorPicker ? 
                 <div style={popover}> <div style={cover} onClick={this.handleClose} />
@@ -63,4 +63,4 @@ class ColorButton extends React.Component {
     }
 }
 
-export default ColorButton
+export default FillButton

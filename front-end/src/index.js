@@ -7,9 +7,9 @@ import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp as solidUp, faThumbsDown as solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
-    faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck,
+    faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
-    faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
+    faEyeDropper, faArrowsAlt, faTrash, faFill, faPalette, faEraser, faCloud, faDotCircle,
     faChevronLeft,faPaintBrush, faHandPointer
 } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
@@ -35,9 +35,9 @@ import ReportComponent from './Components/ReportComponent';
 import Messages from './Components/Messages';
 
 library.add(faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, faThumbsDown, solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
-    faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck,
+    faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
-    faEyeDropper, faArrowsAlt, faTrash, faPalette, faEraser,
+    faEyeDropper, faArrowsAlt, faTrash, faFill, faPalette, faEraser, faCloud, faDotCircle,
     faChevronLeft,faPaintBrush, faHandPointer);
 
 ReactDOM.render(

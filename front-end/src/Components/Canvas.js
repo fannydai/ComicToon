@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Dropdown, DropdownButton, Form} from 'react-bootstrap';
 import NumericInput from 'react-numeric-input';
-// import { ItemDirective, ItemsDirective, ToolbarComponent } from '@syncfusion/ej2-react-navigations';
 
 import { fabric } from 'fabric';
 // import { CrayonBrush, InkBrush, MarkerBrush } from 'fabric-brush';
@@ -13,11 +12,13 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavigationBar from './NavigationBar';
+import ShadowButton from './ShadowButton';
+import OutlineButton from './OutlineButton';
+import FillButton from './FillButton';
 import ColorButton from './ColorButton';
 import './styles/Canvas.css';
 import { addPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
-import { faFlagUsa } from '@fortawesome/free-solid-svg-icons';
 
 const history = require('browser-history');
 var SCALE_FACTOR = 1.3;
@@ -65,7 +66,10 @@ class Canvas extends Component {
             selectedShape: null,
 
             startX: 0,
-            startY: 0
+            startY: 0,
+
+            fontSize: 20,
+            fontFamily: 'Times New Roman',
         }
     }
 
@@ -97,8 +101,8 @@ class Canvas extends Component {
         this.canvas.on('mouse:move', this.doMouseMove);
         this.canvas.on('mouse:up', this.doMouseUpOut);
         this.canvas.on('mouse:out', this.doMouseUpOut);
+        this.canvas.on('mouse:wheel', this.handleZoom);
 
-        this.handleZoom();
         this.canvas.on('object:added', (event) => {
             this.handleSave(event);
         });
@@ -187,6 +191,7 @@ class Canvas extends Component {
             ctx.stroke();
             return patternCanvas;
         };
+        this.canvas.renderAll();
     }
 
     // Currently not working. Deletes after writing...
@@ -284,7 +289,8 @@ class Canvas extends Component {
             newShape = new fabric.Textbox('Lorum ipsum dolor sit amet', {
                 left: pointer.x,
                 top: pointer.y,
-                fontSize: 20,
+                fontSize: this.state.fontSize,
+                fontFamily: this.state.fontFamily,
                 fill: this.state.brushColor,
                 stroke: this.state.stroke,
                 strokeWidth: this.state.lineWidth,
@@ -427,6 +433,17 @@ class Canvas extends Component {
     handleText = (event) => {
         this.setState({ drawShape: SHAPES.text });
         this.selectable(false);
+    }
+
+    handleChangeFontFamily = (event) => {
+        if(event.target.textContent==="") { return; }
+        try {
+            this.canvas.getActiveObject().set("fontFamily", event.target.textContent);
+            this.setState({ fontFamily: event.target.textContent });
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
     }
 
     handlePolygon = (event) => {
@@ -584,39 +601,18 @@ class Canvas extends Component {
     }
     
     handleZoom = (event) => {
-        console.log('ZOOMING');
-        this.setState({ zooming: true });
-        this.canvas.on('mouse:wheel', (opt) => {
-            var delta = opt.e.deltaY;
-            var zoom = this.canvas.getZoom();
-            zoom = zoom + delta/200;
-            if (zoom > 20) zoom = 20;
-            if (zoom < 0.01) zoom = 0.01;
-            this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-            opt.e.preventDefault();
-            opt.e.stopPropagation();
-            var vpt = this.canvas.viewportTransform;
-            if (zoom < 400 / 1000) {
-            this.canvas.viewportTransform[4] = 200 - 1000 * zoom / 2;
-            this.canvas.viewportTransform[5] = 200 - 1000 * zoom / 2;
-            } else {
-                if (vpt[4] >= 0) {
-                    this.canvas.viewportTransform[4] = 0;
-                } else if (vpt[4] < this.canvas.getWidth() - 1000 * zoom) {
-                    this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
-                }
-                if (vpt[5] >= 0) {
-                    this.canvas.viewportTransform[5] = 0;
-                } else if (vpt[5] < this.canvas.getHeight() - 1000 * zoom) {
-                    this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
-                }
-            }
-        })
+        var delta = event.e.deltaY;
+        var zoom = this.canvas.getZoom();
+        zoom = zoom + delta/200;
+        if (zoom > 20) zoom = 20;
+        if (zoom < 0.01) zoom = 0.01;
+        this.canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
+        event.e.preventDefault();
+        event.e.stopPropagation();
     }
 
     handleZoomIn = (event) => {
         this.canvas.setZoom(this.canvas.getZoom()/SCALE_FACTOR);
-        // this.canvas.zoomToPoint(new fabric.Point(this.canvas.width / 2, this.canvas.height / 2), this.canvas.getZoom() / 1.1);
     }
 
     handleZoomOut = (event) => {
@@ -660,44 +656,43 @@ class Canvas extends Component {
     }
 
     handleCopy = (event) => {
-        // http://jsfiddle.net/softvar/7Hsdh/1/
-        this.canvas.getActiveObject().clone(function(cloned) {
-            this.setState ({copyObject: cloned});
-        });
+        try {
+            this.canvas.getActiveObject().clone(cloned => this._clipboard = cloned);
+        } catch(error) {
+            console.log("Nothing selected.");
+        }
     }
 
     handleCut = (event) => {
-
+        this.handleCopy(event);
+        this.handleDeleteObject(event);
     }
 
     handlePaste = (event) => {
-        this.state.copyObject.clone(function(clonedObj) {
-            this.canvas.discardActiveObject();
-            clonedObj.set({
-                left: clonedObj.left + 10,
-                top: clonedObj.top + 10,
-                evented: true,
-            });
-            if (clonedObj.type === 'activeSelection') {
-                // active selection needs a reference to the canvas.
-                clonedObj.canvas = this.canvas;
-                clonedObj.forEachObject(function(obj) {
-                    this.canvas.add(obj);
+        try {
+            this._clipboard.clone(clonedObj => {
+                this.canvas.discardActiveObject();
+                clonedObj.set({
+                    left: clonedObj.left + 10,
+                    top: clonedObj.top + 10,
+                    evented: true,
                 });
-                // this should solve the unselectability
-                clonedObj.setCoords();
-            } else {
-                this.canvas.add(clonedObj);
-            }
-            //this.state.copyObject.top += 10; don't mutate state directly...
-            //this.state.copyObject.left += 10;
-            let dummyObj = this.state.copyObject;
-            dummyObj.top += 10;
-            dummyObj.left +=10;
-            this.setState({copyObject: dummyObj});
-            this.canvas.setActiveObject(clonedObj);
-            this.canvas.requestRenderAll();
-        });
+                if (clonedObj.type === 'activeSelection') {
+                    // active selection needs a reference to the canvas.
+                    clonedObj.canvas = this.canvas;
+                    clonedObj.forEachObject(obj => this.canvas.add(obj));
+                    clonedObj.setCoords();
+                } else {
+                    this.canvas.add(clonedObj);
+                }
+                this._clipboard.top += 10;
+                this._clipboard.left += 10;
+                this.canvas.setActiveObject(clonedObj);
+                this.canvas.requestRenderAll();
+            });
+        } catch (error) {
+            console.log("Nothing copied.");
+        }
     }
 
     // Not working will work on undo & redo later
@@ -818,9 +813,9 @@ class Canvas extends Component {
                         <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoomOut}/>
                         <FontAwesomeIcon className="icon" icon="search" onClick={this.handleResetZoom}/>
 
-                        {/* <FontAwesomeIcon className="icon" icon="clone" onClick={this.handleCopy}/>
+                        <FontAwesomeIcon className="icon" icon="clone" onClick={this.handleCopy}/>
                         <FontAwesomeIcon className="icon" icon="cut" onClick={this.handleCut}/>
-                        <FontAwesomeIcon className="icon" icon="paste" onClick={this.handlePaste}/> */}
+                        <FontAwesomeIcon className="icon" icon="paste" onClick={this.handlePaste}/>
 
                         <FontAwesomeIcon className="icon" icon="angle-right" onClick={this.handleForward}/>
                         <FontAwesomeIcon className="icon" icon="angle-double-right" onClick={this.handleFront}/>
@@ -835,7 +830,7 @@ class Canvas extends Component {
                     <table className="side-bar">
                         <tbody>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="pencil-alt" onClick={this.handlePencil} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="paint-brush" onClick={this.handlePencil} /></td>
                                 <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} /></td>
                             </tr>
                             <tr>
@@ -864,11 +859,11 @@ class Canvas extends Component {
                                 
                             </tr>
                             <tr>
-                                <td><ColorButton changeColor={this.handleFillColor}/></td>
-                                <td><ColorButton changeColor={this.handleStrokeColor}/></td>
+                                <td><FillButton changeColor={this.handleFillColor}/></td>
+                                <td><OutlineButton changeColor={this.handleStrokeColor}/></td>
                             </tr>
                             <tr>
-                                <td><ColorButton changeColor={this.handleShadowColor}/></td>
+                                <td><ShadowButton changeColor={this.handleShadowColor}/></td>
                                 <td><ColorButton changeColor={this.handleBGColor}/></td>
                             </tr>
                         </tbody>
@@ -879,16 +874,16 @@ class Canvas extends Component {
                     {/* BOTTOM BAR */}
                     <div className="bottom-bar">
                         <div>
-                            <div htmlFor="lineWidthSlider">Line Width: {this.state.lineWidth}</div>
+                            <div htmlFor="lineWidthSlider">Line Width</div>
                             <NumericInput onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth} min={0} max={100} step={1} precision={0} size={5} />
                         </div>
                         <div>
-                            <div htmlFor="shadowWidthSlider">ShadowWidth: {this.state.shadowWidth}</div>
+                            <div htmlFor="shadowWidthSlider">Shadow Width</div>
                             <NumericInput onChange={this.handleShadowWidth} className="shadow_width" value={this.state.shadowWidth} min={0} max={100} step={1} precision={0} size={5} />
                         </div>
                         <div>
-                            <div htmlFor="shadowOffsetSlider">ShadowOffset: {this.state.shadowOffset}</div>
-                            <NumericInput onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset} min={0} max={100} step={1} precision={0} size={5} />
+                            <div htmlFor="shadowOffsetSlider">Shadow Offset</div>
+                            <NumericInput onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset} min={-20} max={20} step={1} precision={0} size={5} />
                         </div>
                         <DropdownButton title="Pencil Mode">
                             <Dropdown.Item onClick={this.handlePencil}>Pencil</Dropdown.Item>
@@ -907,6 +902,33 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item> */}
                         </DropdownButton>
                     </div>
+                    <div className="bottom-bar">
+                        {/* <div>
+                            <div htmlFor="lineWidthSlider">Font Size</div>
+                            <NumericInput onChange={this.handleFontSize} className="line_width" value={this.state.lineWidth} min={5} max={100} step={1} precision={0} size={5} />
+                        </div> */}
+                        <DropdownButton title={this.state.fontFamily}>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Arial</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Comic Sans MS</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Courier</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Garamond</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Georgia</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Helvetica</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Hoefler Text</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Impact</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Monaco</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Myriad Pro</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Optima</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Pacifico</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Palatino</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Plaster</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Times New Roman</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Trebuchet MS</Dropdown.Item>                  
+                            <Dropdown.Item onClick={this.handleChangeFontFamily}>Verdana</Dropdown.Item>         
+                        </DropdownButton>
+                        {/* Italic Bold Underline Line Through Line Over */}
+                    </div>
+                    <br />
                     <Form onSubmit={this.handleSubmit}>
                         <textarea id="textform" ref={(input) => this.input = input}></textarea>
                         <input type="submit" value="Import JSON"></input>
