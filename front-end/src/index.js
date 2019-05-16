@@ -33,6 +33,7 @@ import Search from './Components/Search'
 import UserDashboard from './Components/UserDashboard'
 import ReportComponent from './Components/ReportComponent';
 import Messages from './Components/Messages';
+import SharedComics from './Components/SharedComics';
 
 library.add(faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, faThumbsDown, solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
@@ -64,6 +65,7 @@ ReactDOM.render(
                 <Route exact path="/dashboard" component={UserDashboard} />
                 <Route exact path="/report" component={ReportComponent} />
                 <Route exact path="/messages" component={Messages} />
+                <Route exact path="/sharedComics" component={SharedComics} />
                 <Redirect from="/" exact to="/welcome"/>
                 <Route path="*" component={Error404} />
             </Switch>

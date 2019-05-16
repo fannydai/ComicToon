@@ -12,9 +12,24 @@ public class UpdateComicForm {
     private ArrayList<String> sharedWith;
     private ArrayList<String> canvases;
     private ArrayList<String> images;
+    private Boolean flag;
 
     public String getUsername() {
         return this.username;
+    }
+
+    /**
+     * @return the flag
+     */
+    public boolean getFlag() {
+        return flag;
+    }
+
+    /**
+     * @param flag the flag to set
+     */
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
     }
 
     /**

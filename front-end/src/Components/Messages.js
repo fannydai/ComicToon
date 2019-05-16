@@ -230,7 +230,7 @@ class Messages extends Component {
                     <div name={item[0]} className="chat_people">
                          <div name={item[0]} className="chat_ib">
                             <h5 name={item[0]} >{item[0]} <span name={item[0]} className="chat_date">{moment(item[1][item[1].length-1].date).format('MMMM Do YYYY h:mm a')}</span></h5>
-                            <p name={item[0]}>{item[1][item[1].length-1].message}</p>
+                            <p name={item[0]}> {item[1][item[1].length-1].sender}: {item[1][item[1].length-1].message}</p>
                         </div>
                     </div>
                 </div>

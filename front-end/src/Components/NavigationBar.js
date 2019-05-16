@@ -44,6 +44,7 @@ class NavigationBar extends Component {
         })
     }
     handleGoToMessages = (e) => {this.props.history.push('/messages')}
+    handleGoToSharedComics = (e) => {this.props.history.push('/sharedComics')}
 
     render() {
         return (
@@ -60,6 +61,7 @@ class NavigationBar extends Component {
                             <NavDropdown.Item onClick={this.handleGoToUpload}>Upload Comic</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToCreateSeries}>Create Series</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToMessages}>My Messages</NavDropdown.Item>
+                            <NavDropdown.Item onClick={this.handleGoToSharedComics}>Comics Shared With Me</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                     <Form className="navbar-search-form" inline onSubmit={this.handleSearch}>

@@ -12,6 +12,7 @@ import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import addPanel from './images/addPanel.png';
 import { saveUpdateComic, clearPanels } from './../Actions/ComicActions';
+const history = require('browser-history');
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -30,7 +31,8 @@ class UpdateComic extends Component {
             userInput: '',
             sharedUsersList: [],
             series: [],
-            selected_series: ''
+            selected_series: '',
+            showSeries: false
         }
     }
 
@@ -43,8 +45,13 @@ class UpdateComic extends Component {
 
     componentDidMount() {
         console.log(this.props.comic);
-        console.log(this.props.location);
-        if (this.props.CurrUser.username !== this.props.match.params.username) {
+        console.log(this.props.location.state);
+        if(this.props.location.state !== undefined){
+            if(!this.props.location.state.flag) this.setState({showSeries: true});
+        }
+        else{ this.setState({showSeries: true});}
+
+        if (this.props.CurrUser.username !== this.props.match.params.username && this.props.location.state.flag !== true) {
             this.props.history.push("/");
         }
         // Load saved data if any
@@ -120,22 +127,23 @@ class UpdateComic extends Component {
                 this.props.history.goBack();
             }
         })();
-   
-        (async () => {
-            const res = await fetch("http://localhost:8080/view/series", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-              },
-              body: JSON.stringify({
-                username: this.props.CurrUser.username,
-                token: this.props.CurrUser.token
-              })
-            });
-            let content = await res.json();
-            this.setState({series: content.comicSeries})
-        })();   
+        if(this.props.location.state === undefined || this.props.location.state.flag){
+            (async () => {
+                const res = await fetch("http://localhost:8080/view/series", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    username: this.props.CurrUser.username,
+                    token: this.props.CurrUser.token
+                })
+                });
+                let content = await res.json();
+                this.setState({series: content.comicSeries})
+            })();   
+        }
     }   
     
     componentWillUnmount() {
@@ -223,6 +231,8 @@ class UpdateComic extends Component {
         const images = this.state.comicPanels.map(panel => panel.image);
         console.log(canvases);
         console.log(images);
+        let myFlag = false;
+        if(this.props.location.state !== undefined && this.props.location.state.flag) {myFlag = true;}
         (async () => {
             const res = await fetch('http://localhost:8080/update/comic', {
                 method: "POST",
@@ -239,16 +249,18 @@ class UpdateComic extends Component {
                     privacy: this.state.privacy,
                     sharedWith: this.state.sharedUsersList,
                     canvases: canvases,
-                    images: images
+                    images: images,
+                    flag: myFlag
                 })
             });
-            let content = res.json();
+            let content =  await res.json();
             console.log(content);
             if (content.result === 'failed') {
                 alert('Could not update comic');
             } else {
                 this.props.saveUpdateComic({});
-                this.props.history.push('/view/comics');
+                //this.props.history.push('/view/comics');
+                history(-1);
             }
         })();
     }
@@ -285,6 +297,7 @@ class UpdateComic extends Component {
     }
 
     render() {
+        console.log(this.state.showSeries);
         var props = {
             dots: false,
             infinite: false,
@@ -323,6 +336,7 @@ class UpdateComic extends Component {
             ]
         };
         return (
+          
             <div className="create-comic-container">
                 <NavigationBar />
                 <div className="create-comic-bottom">
@@ -343,9 +357,7 @@ class UpdateComic extends Component {
                                 <Dropdown.Toggle variant="outline-info">
                                     {this.state.selected_series ? this.state.selected_series : 'Select Series'}
                                 </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    {this.renderUserSeries()}
-                                </Dropdown.Menu>
+                                {this.state.showSeries ? <Dropdown.Menu> {this.renderUserSeries()} </Dropdown.Menu> : null}
                             </Dropdown>
                         </div>
                         <div className="create-comic-description">
@@ -367,7 +379,7 @@ class UpdateComic extends Component {
                         </div>
                         <div className="update-comic-submit">
                             <Button type="submit" variant="success" onClick={this.handleSubmit}>Update Comic</Button>
-                            <Button variant="danger" onClick={this.handleDelete}>Delete Comic</Button>
+                            {this.state.showSeries ? <Button variant="danger" onClick={this.handleDelete}>Delete Comic</Button> : null}
                         </div>
                     </Form>
                 </div>

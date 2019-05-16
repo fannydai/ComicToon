@@ -55,12 +55,12 @@ class ViewComic extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps);
         // Set the new comments
         if (nextProps.comic.saveNewComic.commentsList) {
             this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
         }
-        if(nextProps.comic.saveNewComic.privacy === "Private" && this.props.CurrUser.username !== this.props.match.params.username){
+        if((nextProps.comic.saveNewComic.privacy === "Private" && this.props.CurrUser.username !== this.props.match.params.username) && nextProps.comic.saveNewComic.sharedWith.indexOf(this.props.CurrUser.username) === -1){
+           console.log("NSDGDSG");
             this.props.history.push('/*');
         }
         (async () => {

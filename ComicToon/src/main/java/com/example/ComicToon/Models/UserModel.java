@@ -23,9 +23,24 @@ public class UserModel{
     private ArrayList<String> subscriptions;
     private boolean isAdmin;
     private ArrayList<String> favorites;
+    private ArrayList<ArrayList<String>> sharedComics; //index 0: owner name index 1: comic name
 
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * @return the sharedComics
+     */
+    public ArrayList<ArrayList<String>> getSharedComics() {
+        return sharedComics;
+    }
+
+    /**
+     * @param sharedComics the sharedComics to set
+     */
+    public void setSharedComics(ArrayList<ArrayList<String>> sharedComics) {
+        this.sharedComics = sharedComics;
     }
 
     /**
@@ -60,7 +75,7 @@ public class UserModel{
         this.id = id;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return this.email;
     }
 
@@ -143,10 +158,9 @@ public class UserModel{
     public void setComicSeries(ArrayList<String> comicSeries) {
         this.comicSeries = comicSeries;
     }
-    //private ArrayList<SubscriptionModel> subscriptions;
+    // private ArrayList<SubscriptionModel> subscriptions;
 
-
-    public UserModel(String email,String username, String password, String userType){
+    public UserModel(String email, String username, String password, String userType) {
         this.email = email;
         this.username = username;
         this.password = password;
@@ -161,6 +175,7 @@ public class UserModel{
         this.comicSeries = new ArrayList<String>();
         this.subscriptions = new ArrayList<String>();
         this.favorites = new ArrayList<>();
+        this.sharedComics = new ArrayList<ArrayList<String>>();
     }
 
     //Class methods
