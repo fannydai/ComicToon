@@ -64,21 +64,10 @@ class SharedComics extends Component {
             })
         )
     }
-    handleDel = (e) => {
-        e.persist();
-        (async () => {
-            fetch("http://localhost:8080/delete/comic", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify({ comicName: e.target.name, ownerName: this.props.CurrUser.token})
-            });
-        })();
-        alert(`Comic deleted!!`)
-        let newArr = this.state.allComics.filter(item => item.comicId !== e.target.name);
-        this.setState({allComics: newArr}, this.forceUpdate());
+
+    handleClick = (item, event) => {
+        console.log(item);
+        this.props.history.push(`/view/comic/${item.username}/${item.comicName}`);
     }
 
     renderAll(){
@@ -91,7 +80,7 @@ class SharedComics extends Component {
                     return item !== null ?
                     <div className="view-comics-strip-container" key={item.comicName}>
                         <div className="view-comics-strip-top">
-                            <h3 className="view-comics-h3" >{item.comicName}</h3>
+                            <h3 className="view-comics-h3" onClick={(e) => this.handleClick(item, e)}>{item.comicName}</h3>
                             <Button onClick={(e) => this.handleUpdate(item, e)}>Update</Button>
                         </div>
                         <div className="view-comics-strip-bottom">
