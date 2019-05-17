@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dropdown, Form, Alert, Overlay, Tooltip } from 'react-bootstrap';
+import { Button, Dropdown, Form, Alert, Overlay, Table, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -61,6 +61,9 @@ class UploadComic extends Component {
             let content = await res.json();
             console.log("GOT ALL SERIES FOR UPLOAD COMIC", content);
             this.setState({ seriesList: content.comicSeries, isLoading: false });
+            if (content.comicSeries && content.comicSeries.length === 0) {
+                this.setState({ fileError: "Please create a comic series first." });
+            }
         })();
     }
 
@@ -103,7 +106,6 @@ class UploadComic extends Component {
             })();
             reader.readAsText(file);
         }*/ else {
-            //alert('Sorry, only image files are allowed');
             this.setState({ fileError: "Only image files are allowed.", showSubmitError: '' });
         }
     }
@@ -171,7 +173,6 @@ class UploadComic extends Component {
         e.preventDefault();
         console.log(this.state);
         if (this.state.image === null) {
-            //alert('Please upload an image file');
             this.setState({ showSubmitError: 'Select an image file.'});
         } else if (this.state.series === '') {
             alert('Please select a series');
@@ -200,7 +201,7 @@ class UploadComic extends Component {
                     console.log('DONE UPLOAD');
                     this.props.history.push('/view/comics');
                 } else {
-                    alert('Could not upload the comic');
+                    this.setState({ fileError: "Could not upload the comic." });
                 }
             })();
         }
@@ -256,13 +257,13 @@ class UploadComic extends Component {
                         <div className="upload-sharing">
                             <div className="upload-sharing-inner">
                                 <div className="upload-table-container">
-                                    <table className="upload-sharing-table">
+                                <label>Add User: (Press 'Enter' to Add)</label>
+                                <Form.Control type="text" placeholder="Sean Jeffrey Fanny Joel" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
+                                    <Table bordered hover className="upload-sharing-table">
                                         <tbody>
-                                            <tr><td><label>Add User: (Press 'Enter' to Add)</label></td></tr>
-                                            <tr><td><Form.Control type="text" placeholder="Sean Jeffrey Fanny Joel" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} /></td></tr>
                                             {trs}
                                         </tbody>
-                                    </table>
+                                    </Table>
                                 </div>
                                 <div className="upload-sharing-right">
                                     <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
