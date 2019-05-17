@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Form} from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 import './styles/Welcome.css';
 import {withRouter} from 'react-router-dom'
 import PropTypes from 'prop-types';
@@ -16,6 +16,7 @@ class LoginForm extends Component {
         this.state = {
           pwd: "",
           email: "",
+          error: "",
         };
     }
 
@@ -25,7 +26,10 @@ class LoginForm extends Component {
             this.props.history.push('/home');
             // localStorage.setItem('user', nextProps.user.username);
         }
-        else if(!nextProps.user.verified){
+        else if (nextProps.user.loginError) {
+            this.setState({ error: nextProps.user.loginError });
+        }
+        else if(!nextProps.user.verified && !nextProps.user.registerError){
             this.props.history.push('/verify');
         }
     }
@@ -43,6 +47,7 @@ class LoginForm extends Component {
     render() {
         return (
             <Form className="welcome" onSubmit={this.handleLogin}>
+                {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                 <div className="bubbletext">
                     <Form.Control required id="email" type="email" name="email" className ="paddedFormControl textbox" placeholder="Enter your email..." onChange={this.handleChange}/>
                 </div>

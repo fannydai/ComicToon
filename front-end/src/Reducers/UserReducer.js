@@ -4,7 +4,9 @@ const initState = {
     username: "",
     token: "",
     email: "",
-    isValidated: false
+    isValidated: false,
+    loginError: "",
+    registerError: ""
 }
 
 export default function(state = initState, action){
@@ -16,7 +18,9 @@ export default function(state = initState, action){
                 active: action.payload.active,
                 token: action.payload.token,
                 email: action.payload.email,
-                isValidated: action.payload.verified
+                isValidated: action.payload.verified,
+                loginError: "",
+                registerError: ""
             };
         case REGISTER_USER:
             return{
@@ -25,15 +29,23 @@ export default function(state = initState, action){
                 token: action.payload.token,
                 active: true,
                 email: action.payload.email,
-                isValidated: action.payload.verified
+                isValidated: action.payload.verified,
+                loginError: "",
+                registerError: ""
             };
         case VERIFY:
             return{
                 ...state,
+                loginError: "",
+                registerError: "",
                 isValidated: action.payload.isValidated
             };
         case ERR:
-            return state
+            return {
+                ...state,
+                loginError: action.payload.loginError,
+                registerError: action.payload.registerError
+            }
         default: 
             return state
     }

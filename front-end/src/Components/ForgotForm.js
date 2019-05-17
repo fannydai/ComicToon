@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 import {withRouter} from 'react-router-dom'
 import './styles/Welcome.css';
 
@@ -11,21 +11,23 @@ class ForgotForm extends Component {
             pwNew: "",
             key: "",
             userInputKey: "",
-            username: ""
+            username: "",
+            error: "",
+            info: "",
+            success: "",
         }
-        
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        if(this.state.pwNew === "" || this.state.userInputKey === "" || this.state.username === ""){
-            alert("No Fields Can Be Empty!!")
+        if (this.state.pwNew === "" || this.state.userInputKey === "" || this.state.username === "") {
+            this.setState({ error: "Key, username, and new password must be filled in.", info: "", success: "" });
         }
-        else{
-            if(this.state.key !== this.state.userInputKey){
-                alert("Wrong Key!!")
+        else {
+            if (this.state.key && this.state.key !== this.state.userInputKey) {
+                this.setState({ error: "Invalid key.", info: "", success: "" });
             }
-            else{
+            else {
                 (async () => {
                     const res = await fetch("http://localhost:8080/forgotChangePassword", {
                         method: "POST",
@@ -41,8 +43,11 @@ class ForgotForm extends Component {
                     });
                     let content = await res.json();
                     console.log(content)
-                    if(content.result === "success"){alert("Successfully Changed Password!!")}
-                    else{alert(content.result)}
+                    if (content.result === "success") {
+                        this.setState({ success: "Your password has been changed.", info: "", error: "" });
+                    } else{
+                        this.setState({ error: content.result, info: "", success: "" });
+                    }
                 })();
             }
         }
@@ -55,7 +60,9 @@ class ForgotForm extends Component {
 
     sendEmail = () => {
         if(this.state.email === ""){
-            alert("Email Can't Be Empty!!")
+            this.setState({ error: "Email field cannot be empty.", info: "", success: "" });
+        } else if (!/.+@.+\..+/.test(this.state.email)) {
+            this.setState({ error: "Invalid email.", info: "", success: "" });
         }
         else{ 
             console.log(this.state.email);
@@ -72,8 +79,7 @@ class ForgotForm extends Component {
                 });
                 let content = await res.json();
                 console.log(content)
-                this.setState({key: content.key})
-                alert("EMAIL HAS BEEN SENT!!")
+                this.setState({ key: content.key, info: "Email has been sent.", error: "", success: "" });
             })();
         } 
     }
@@ -82,9 +88,10 @@ class ForgotForm extends Component {
         return (
             <div className="Forgot-container">
                 <Form className="welcome" onSubmit={this.handleSubmit}>
+                {this.state.success ? <Alert variant="success" >{this.state.success}</Alert> : this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : this.state.info ?  <Alert variant="info" >{this.state.info}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                     <p>First, Enter Your Email to Get The Key!</p>
                     <div className="bubbletext">
-                    <Form.Control name="email" type="email" className = "paddedFormControl textbox" placeholder="Enter your email" onChange={this.handleChange}/>
+                        <Form.Control name="email" type="email" className = "paddedFormControl textbox" placeholder="Enter your email" onChange={this.handleChange}/>
                     </div>
                     <Button onClick={this.sendEmail} className = "paddedFormControl" variant="primary">Get Key Via Email!</Button>
                     <br/>

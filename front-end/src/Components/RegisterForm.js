@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 import {withRouter} from 'react-router-dom'
 import './styles/Welcome.css';
 import PropTypes from 'prop-types';
@@ -17,7 +17,8 @@ class RegisterForm extends Component {
           username: "",
           pwd: "",
           email: "",
-          confirm: ""
+          confirm: "",
+          error: ""
         };
     }
 
@@ -29,14 +30,15 @@ class RegisterForm extends Component {
             this.props.history.push('/verify');
         }
         else{
-            console.log("heye")
+            console.log("heye");
+            this.setState({ error: nextProps.user.registerError });
         }
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.state.pwd !== this.state.confirm)
-            alert("PASSWORD AND CONFIRM PASSWORD DON'T MATCH!")
+            this.setState({ error: "Password and confirm password do not match." });
         else this.props.RegisterUser(this.state.username, this.state.email, this.state.pwd)
     }
 
@@ -48,6 +50,7 @@ class RegisterForm extends Component {
     render() {
         return (
             <Form className="welcome" onSubmit={this.handleSubmit}>
+                {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                 <div className="bubbletext">
                     <Form.Control required type="email" className = "paddedFormControl textbox" name="email" placeholder="Enter your email..." onChange={this.handleChange}/>
                 </div>

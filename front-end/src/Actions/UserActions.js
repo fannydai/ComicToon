@@ -16,10 +16,9 @@ export const LoginUser = (email, pwd) => (dispatch) => {
             let content = await res.json();
             console.log(content);
             if(content.status === "Incorrect Login Details") { 
-                alert("INCORRECT EMAIL OR PASSWORD!!");
                 dispatch({
                     type: ERR,
-                    payload: {username: "", id: "", active: "", token: "", email: ""}
+                    payload: {username: "", id: "", active: "", token: "", email: "", loginError: "Incorrect email and/or password.", registerError: ""}
                 });
             }  else if (content.status === "User is not verified!") {
                 dispatch({
@@ -28,7 +27,6 @@ export const LoginUser = (email, pwd) => (dispatch) => {
                 });
             }
             else { 
-                console.log(content);
                 dispatch({
                     type: LOGIN_USER,
                     payload: {username: content.username, id: content.id, active: content.active, token: content.token, email: email, verified: true}
@@ -54,10 +52,9 @@ export const RegisterUser = (username, email, pwd) => (dispatch) => {
         let content = await res.json();
         console.log(content);
         if (content.status !== "success") {
-            alert(content.status);
             dispatch({
                 type: ERR,
-                payload: {username: "", id: "", token: "", email: "", verified: false}
+                payload: {username: "", id: "", token: "", email: "", verified: false, loginError: "", registerError: "Username and/or email already registered."}
             });
         }
         else {

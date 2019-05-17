@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 import './styles/VerifyForm.css';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -14,7 +14,8 @@ class Verify extends Component {
         super(props);
         this.state = {
             email: "",
-            key: ""
+            key: "",
+            error: ""
         }
     }
 
@@ -42,11 +43,10 @@ class Verify extends Component {
             let content = await res.json();
             console.log("VERIFICAION RESULT", content);
             if (content.result === "success") {
-                alert("YOU ARE NOW VERIFIED!")
                 this.props.verifyUser(true);
                 this.props.history.push("/");
             } else {
-                alert(content.result);
+                this.setState({ error: content.result });
             }
         })();
     }
@@ -56,6 +56,7 @@ class Verify extends Component {
             <div className="verify-form-container">
 				<div className="verify">
                     <h1>Verify Your Account!</h1>
+                    {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                     <Form className="verify-form" onSubmit={this.handleRequest}>
                         <Form.Control required name="email" type="email" onChange={this.handleChange} placeholder="Enter your email..." />
                         <Form.Control required name="key" type="key" onChange={this.handleChange} placeholder="Enter the key found in your email... " />
