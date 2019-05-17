@@ -49,7 +49,7 @@
 
 .upload-info {
     width: 50vw;
-    height: 20%;
+    min-height: 25vh;
     margin: auto;
     /*
     display: flex;
@@ -60,19 +60,24 @@
 
 .upload-name-input {
     /* width: 50%; */
+    margin-bottom: 1vh;
 }
 
 .upload-comic-description {
-
+    margin-bottom: 1vh;
 }
 
 .upload-dropdown {
-    width: 50%;
 }
 
 /* Make the dropdown fill the space */
 .upload-dropdown > button + div {
     width: 100%;
+}
+
+.upload-dropdown-button {
+    width: 100%;
+    margin-bottom: 2vh;
 }
 
 /* Upload Sharing */
@@ -103,7 +108,7 @@
 
 .upload-sharing-table {
     height: 100%;
-    width: 60% !important;
+    width: 100% !important;
     min-width: 400px !important;
 }
 

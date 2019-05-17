@@ -102,7 +102,7 @@ class ViewAllSeries extends Component {
                 </Card>
                 : null
             )
-        }) : <h2>NO SERIES FOR THIS USER YET</h2>;
+        }) : <h2>YOU HAVE NO SERIES. <a href="/create/series">CLICK HERE TO CREATE ONE</a></h2>;
         if (this.state.isLoading) {
             return <LoadingScreen />
         }
@@ -112,7 +112,7 @@ class ViewAllSeries extends Component {
             <div className="view-series-container">
                 <NavigationBar />
                 <div className="view-series-top">
-                    <h1 className = "hometext">Your Series</h1>
+                    <h1 className = "hometext">Your Comic Series</h1>
                 </div>
                 {bottom}
                 <Footer />

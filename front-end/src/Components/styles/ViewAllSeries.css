@@ -14,7 +14,6 @@
     width: 90%;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     justify-content: center;
     padding-left: 2vw;
     padding-right: 2vw;
@@ -29,4 +28,8 @@
 
 .view-series-card-title:hover {
     cursor: pointer;
+}
+
+.dashboard-h1 {
+    color: white;
 }

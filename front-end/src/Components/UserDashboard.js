@@ -18,7 +18,6 @@ class UserDashboard extends Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.comic);
         this.state = {
             isLoading: true,
             visible: true
@@ -134,7 +133,7 @@ class UserDashboard extends Component {
                 </Card>
                 : null
             )
-        }) : !this.props.history.location.state ? <h2>FIND INFO ON A USER THROUGH THE SEARCH BAR</h2> : <h2>NO SERIES FOR THIS USER YET</h2>;
+        }) : !this.props.history.location.state ? <h2>FIND INFO ON A USER THROUGH THE SEARCH BAR</h2> : <h2>{this.props.history.location.state.username} HAS NOT POSTED A SERIES YET</h2>;
         if (this.state.isLoading) {
             return <LoadingScreen />
         }
@@ -142,7 +141,7 @@ class UserDashboard extends Component {
             <div className="view-series-container">
                 <NavigationBar />
                 <div className="view-series-top">
-                    <h1>User Series</h1>
+                    <h1 className="dashboard-h1">{this.props.history.location.state.username}'s Series</h1>
                 </div>
                 <div className="view-series-bottom">
                     {seriesCards}

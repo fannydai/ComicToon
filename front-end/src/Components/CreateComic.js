@@ -266,6 +266,7 @@ class CreateComic extends Component {
                     <NavigationBar />
                     <div className="create-comic-bottom">
                         <Form className="create-comic-form" onSubmit={this.handleSubmit}>
+                            <h1>CREATE COMIC</h1>
                             <div className="create-comic-panel-container">
                                 <Slider {...props}>
                                     {this.props.comic.newComic.length ? 
@@ -279,7 +280,7 @@ class CreateComic extends Component {
                                 <Form.Control required className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
                                 <Form.Control.Feedback type="invalid">Please name the comic.</Form.Control.Feedback>
                                 <Dropdown className="create-comic-dropdown">
-                                    <Dropdown.Toggle variant="outline-info">
+                                    <Dropdown.Toggle variant="outline-info" className="create-comic-dropdown-button">
                                         {this.state.selected_series ? this.state.selected_series : 'Select Series'}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
@@ -298,7 +299,7 @@ class CreateComic extends Component {
                                     </div>
                                     <div className="create-comic-sharing-right">
                                         <label>Add User: (Press 'Enter' to Add)</label>
-                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
+                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny Joel" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
                                         <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                         <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                     </div>

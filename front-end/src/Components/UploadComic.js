@@ -244,13 +244,22 @@ class UploadComic extends Component {
                             <div className="upload-comic-description">
                                 <Form.Control required className="create-comic-description-input" as="textarea" rows="3"  placeholder="Write a description of the comic" value={this.state.comicDescription} onChange={this.handleComicDescription} />
                             </div>
+                            <Dropdown className="upload-dropdown">
+                                <Dropdown.Toggle variant="outline-info" className="upload-dropdown-button">
+                                    {this.state.series ? this.state.series : 'Select Series'}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {this.handleUserSeries()}
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
                         <div className="upload-sharing">
                             <div className="upload-sharing-inner">
                                 <div className="upload-table-container">
                                     <table className="upload-sharing-table">
                                         <tbody>
-                                            <tr><td><Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} /></td></tr>
+                                            <tr><td><label>Add User: (Press 'Enter' to Add)</label></td></tr>
+                                            <tr><td><Form.Control type="text" placeholder="Sean Jeffrey Fanny Joel" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} /></td></tr>
                                             {trs}
                                         </tbody>
                                     </table>
@@ -258,17 +267,6 @@ class UploadComic extends Component {
                                 <div className="upload-sharing-right">
                                     <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                     <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <Dropdown className="upload-dropdown">
-                                        <Dropdown.Toggle variant="outline-info">
-                                            {this.state.series ? this.state.series : 'Select Series'}
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            {this.handleUserSeries()}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
                                 </div>
                             </div>
                         </div>
