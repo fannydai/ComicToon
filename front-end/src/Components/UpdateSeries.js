@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { Button, Form, Table } from 'react-bootstrap';
+import { Alert, Button, Form, Table } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
@@ -182,7 +182,7 @@ class UpdateSeries extends Component {
             let content = await res.json();
             console.log(content);
             if (content.result === 'failure') {
-                alert('Could not delete series.');
+                this.setState({ error: "Could not delete series." });
             } else {
                 console.log('DELETED');
                 (async () => {
@@ -239,42 +239,38 @@ class UpdateSeries extends Component {
         return (
             <div className="create-series-container">
                  <NavigationBar />
-
-                 <div className="update-series-bottom-container">
-                    <Form className="create-form">
-                        <div className="create-series-name-input">
-                            <Form.Control className="create-series-name-form-control" type="text" placeholder="Type Series Name..." name="seriesName" value={this.state.seriesName} onChange={this.handleChange} />
-                            <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" name="seriesDescription" value={this.state.seriesDescription} onChange={this.handleChange} />
+                <Form className="create-form" onSubmit={this.handleUpdate}>
+                    <Form.Control required className="create-series-form-control" type="text" placeholder="Type Series Name..." name="seriesName" value={this.state.seriesName} onChange={this.handleChange} />
+                    <Form.Control required className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" name="seriesDescription" value={this.state.seriesDescription} onChange={this.handleChange} />
+                    <div style={{ marginBottom: "1vh" }}>
+                        <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handleChange} />
+                        <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
+                    </div>
+                    <div className="update-series-genre-input">
+                        <div className="update-series-table-container">
+                            <Form.Control type="text" placeholder="Press 'Enter' to Add Genre (ex. #horror)" name="genre" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddGenreEnter} style={{ marginBottom: "1vh" }} />
+                            <Table bordered hover className="update-series-genre-table">
+                                <tbody>
+                                    {this.renderGenre()}
+                                </tbody>
+                            </Table>
                         </div>
-                        <div>
-                            <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handleChange} />
-                            <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
+                        <div className="update-series-table-container">
+                            <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" name="addUser" value={this.state.addUser} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} style={{ marginBottom: "1vh" }} />
+                            <Table bordered hover className="update-series-genre-table">
+                                <tbody>
+                                    {this.renderAddUserEnter()}
+                                </tbody>
+                            </Table>
                         </div>
-                        <div className="create-series-genre-input">
-                            <div className="update-series-table-container">
-                                <Form.Control type="text" placeholder="Genre/Tags" name="genre" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddGenreEnter} />
-                                <Table bordered hover className="update-series-genre-table">
-                                    <tbody>
-                                        {this.renderGenre()}
-                                    </tbody>
-                                </Table>
-                            </div>
-                            <div className="update-series-table-container">
-                                <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" name="addUser" value={this.state.addUser} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} />
-                                <Table bordered hover className="update-series-genre-table">
-                                    <tbody>
-                                        {this.renderAddUserEnter()}
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </div>
-                        <div className="create-series-bottom">
-                            <Button onClick={this.handleUpdate} type="submit" variant="primary">Update Series</Button>
-                            <Button onClick={this.handleDelete} type="submit" variant="danger">Delete Series</Button>
-                        </div>
-                    </Form>
-                 </div>
-                 <Footer />
+                    </div>
+                    {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
+                    <div className="create-series-bottom">
+                        <Button type="submit" variant="primary">Update Series</Button>
+                        <Button onClick={this.handleDelete} variant="danger">Delete Series</Button>
+                    </div>
+                </Form>
+                <Footer />
             </div>
         );
     }

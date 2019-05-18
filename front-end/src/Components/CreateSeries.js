@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import NavigationBar from './NavigationBar';
@@ -21,13 +21,21 @@ class CreateSeries extends Component {
             seriesName: "",
             genre : "",
             genreList: [],
-            seriesDes: ""
+            seriesDes: "",
+            error: ""
         }
     }
 
     componentWillMount() {
         if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
             this.props.history.push('/');
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
+        if (typeof nextProps.UserSeries === "string") {
+            this.setState({ error: nextProps.UserSeries });
         }
     }
 
@@ -56,9 +64,9 @@ class CreateSeries extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.state.seriesName === '') {
-            alert('Please enter a name for the series.');
+            this.setState({ error: "Enter a name for the series." });
         } else if (this.state.seriesDes === '') {
-            alert('Please enter a description for the series.');
+            this.setState({ error: "Enter a description for the series." });
         } else {
             console.log(this.state)
             this.props.createSeries(this.props.CurrUser.token, this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private", this.props.history);
@@ -95,25 +103,22 @@ class CreateSeries extends Component {
     render() {
         return (
             <div className="create-series-container">
-                 <NavigationBar />
-                    <Form className="create-form" onSubmit={this.handleSubmit}>
-                        <Form.Control className="create-series-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
-                        <br />
-                        <Form.Control className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
-                        <br />
-                        <div className="create-series-genre-input">
-                            <div className="create-series-table-container">
-                                <h2>Genre: </h2>
-                                <div className="list-genre"><ComicSharingTable usernames={this.state.genreList} handleDeleteShare={this.handleDeleteShare} /></div>
-                            </div>
-                            <div className="create-series-genre-right">
-                                <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter}/>
-                            </div>
+                <NavigationBar />
+                <Form className="create-form" onSubmit={this.handleSubmit}>
+                    <Form.Control required className="create-series-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
+                    <Form.Control required className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
+                    <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} className="create-series-form-control" />
+                    <div className="create-series-genre-input">
+                        <h2>Genres </h2>
+                        <div className="create-series-table-container">
+                            <div className="list-genre"><ComicSharingTable usernames={this.state.genreList} handleDeleteShare={this.handleDeleteShare} /></div>
                         </div>
-                        <div className="create-series-bottom">
-                            <Button type="submit" variant="primary">Create Series</Button>
-                        </div>
-                    </Form>
+                    </div>
+                    {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
+                    <div className="create-series-bottom">
+                        <Button type="submit" variant="primary">Create Series</Button>
+                    </div>
+                </Form>
                  <Footer />
             </div>
         );

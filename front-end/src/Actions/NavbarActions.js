@@ -48,7 +48,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
                 type: ERR,
                 payload: { Series: content.result }
             });
-            alert(content.result);
         }
     })();
 }

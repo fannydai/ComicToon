@@ -20,9 +20,9 @@
 /* First input */
 .create-series-form-control,
 .create-series-description-input {
-    width: 60%;
-    min-width: 500px;
-    /* margin-bottom: 20px; */
+    width: 50%;
+    min-width: 25%;
+    margin-bottom: 1vh;
 }
 
 .create-series-description {
@@ -33,34 +33,25 @@
 /* Middle section */
 .create-series-genre-input {
     width: 90%;
-    height: 600px;
-    margin-bottom: 20px;
+    min-height: 60vh;
+    margin-bottom: 1vh;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     align-items: center;
+    border-bottom: 1px solid black;
 }
 
 .create-series-table-container {
-    height: 100%;
+    min-height: 50vh;
     width: 40%;
-    border-bottom: 1px solid black;
     overflow-y: auto;
     overflow-x: auto;
 }
 
 .list-genre {
-    height: 100%;
-    border: 1px solid black;
+    min-height: 50vh;
     border-bottom: none;
     padding: 10px;
-}
-
-.create-series-genre-right {
-    width: 40%;
-    top: 0;
-    margin-left: 50px;
-    display: flex;
-    flex-direction: column;
 }
 
 .create-series-bottom {
@@ -79,17 +70,28 @@
 }
 
 .update-series-bottom-container {
-    width: 80%;
+    width: 90%;
     display: flex;
     justify-content: center;
 }
+
 
 .update-series-genre-table {
     width: 100%;
 }
 
+.update-series-genre-input {
+    min-height: 60vh;
+    width: 90%;
+    margin-bottom: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-bottom: 1px solid black;
+}
+
 .update-series-genre-right {
-    height: 90%;
+    min-height: 60vh;
     width: 40%;
     top: 0;
     margin-left: 50px;
@@ -98,9 +100,8 @@
 }
 
 .update-series-table-container {
-    height: 90%;
+    min-height: 60vh;
     width: 40%;
-    border-bottom: 1px solid black;
     overflow-y: auto;
     overflow-x: auto;
 }

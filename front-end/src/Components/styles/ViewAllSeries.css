@@ -10,7 +10,7 @@
 }
 
 .view-series-bottom {
-    min-height: 650px;
+    min-height: 100vh;
     width: 90%;
     display: flex;
     flex-wrap: wrap;
@@ -22,6 +22,7 @@
 }
 
 .view-series-card {
+    max-height: 40vh;
     width: 18rem;
     margin-bottom: 5vh;
 }

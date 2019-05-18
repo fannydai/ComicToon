@@ -69,10 +69,12 @@
 
 .create-comic-name-input {
     width: 50%;
+    margin-top: 1vh;
 }
 
 .create-comic-dropdown {
     width: 50%;
+    margin-top: 1vh;
 }
 
 .create-comic-dropdown > button + div {
@@ -85,6 +87,7 @@
 
 .create-comic-description {
     width: 50%;
+    margin-top: 1vh;
 }
 
 /* Comic sharing and privacy */
