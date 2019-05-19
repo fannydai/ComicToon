@@ -28,6 +28,9 @@ img{ max-width:100%;}
   font-size: 21px;
   margin: auto;
 }
+.messages-search-bar-button:hover {
+  cursor: pointer;
+}
 .srch_bar input{ border:1px solid #1a1919; border-width:0 0 1px 0; width:100%; padding:2px 0 4px 6px; background:none;}
 .srch_bar .input-group-addon button {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -136,4 +139,7 @@ img{ max-width:100%;}
 .msg_history {
   height: 668px;
   overflow-y: auto;
+}
+.write_msg {
+  padding-left: 1vw;
 }

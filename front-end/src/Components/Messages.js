@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert, Overlay, Tooltip, Form } from 'react-bootstrap';
 import './styles/Messages.css';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux'
@@ -16,12 +17,15 @@ const StateToProps = (state) => ({ //application level state via redux
 class Messages extends Component {
     constructor(props) {
         super(props);
+        this.messageButtonRef = React.createRef();
         this.state = {
             conversations: [], //index 0 is reciever's username & index 1 is array of ordered messages between the two users
             currCon: [],
             str: "",
             selectedUser: "",
-            talking: ""
+            talking: "",
+            error: "",
+            messageError: ""
         }
     }
 
@@ -129,15 +133,18 @@ class Messages extends Component {
                 }
                 else console.log("YOU GOT NO MESSAGES:((")
             }
-            else alert("ERROR!")
+            else {
+                this.setState({ error: "Error loading messages" });
+            }
         })();
     }
 
     scrollToBottom = () => {document.getElementById("top").scrollTop = document.getElementById("top").scrollHeight;}
 
     handleSendMessage = (e) => {
-        if(this.state.talking === "") alert("Search for a user to talk to or select a conversation to continue talking")
-        else if(this.state.str !== ""){
+        if(this.state.talking === "") {
+            this.setState({ messageError: "Search for a user to talk to or select a conversation to continue talking (click to dismiss)" });
+        } else if(this.state.str !== ""){
             socket.emit("saveMessage", {token: this.props.CurrUser.token, sender: this.props.CurrUser.username, reciever: this.state.talking, message: this.state.str, date: Date.now()});
             this.setState({str: ""});
             socket.on("result", (data) => {
@@ -150,17 +157,19 @@ class Messages extends Component {
                     token: "",
                     __v: 0,
                     _id: ""})
-                this.setState({currCon: tempArr});
-                document.getElementById("toClear").value = "";
+                this.setState({currCon: tempArr, str: ""});
                 socket.off("result"); //avoid multiple listeners
                 this.scrollToBottom();
             });
             socket.on("error", function(data){
-                alert(data);
+                this.setState({ messageError: "Error sending message." });
+                console.log(data);
                 socket.off("error"); //avoid multiple listeners
             });  
         }
-        else alert("Type something to send!!")
+        else {
+            this.setState({ messageError: "Type something to send (click to dismiss)" });
+        }
     }
 
     componentWillUnmount() {
@@ -169,6 +178,10 @@ class Messages extends Component {
     }
 
     handleSearchUser = (e) => {
+        if (!this.state.selectedUser.trim()) {
+            this.setState({ error: "Enter a user to search." });
+            return;
+        }
         (async () => {
             const res = await fetch("http://localhost:4000/search", {
                 method: "POST",
@@ -189,8 +202,11 @@ class Messages extends Component {
             if(content.status === "success"){
                 const BreakException = {};
                 let flag = false;
-                if(content.username === this.props.CurrUser.username) alert("make some friends and message someone else lol");
+                if(content.username === this.props.CurrUser.username) {
+                    this.setState({ error: "You cannot message yourself." });
+                }
                 else{
+                    this.setState({ error: "" });
                     this.state.conversations.forEach((item) => {
                         if(item[0] === content.username){ //aready has a conversation with them
                             try{
@@ -210,9 +226,11 @@ class Messages extends Component {
                         
                     }
                 }
-                document.getElementById("toClear2").value = "";
+                this.setState({ selectedUser: "" });
             }
-            else alert(`${content.status}`)
+            else {
+                this.setState({ error: content.status });
+            }
         })();
     }
 
@@ -220,6 +238,23 @@ class Messages extends Component {
         this.state.conversations.forEach((item) => {
             if(item[0] === e.target.getAttribute('name')) this.setState({currCon: item[1], talking: e.target.getAttribute('name')}, () => {this.scrollToBottom();});
         });
+    }
+
+    handleClearMessageError = (e) => {
+        console.log("CLEARING MESSAGE ERROR");
+        this.setState({ messageError: "" });
+    }
+
+    handleEnter = (e) => {
+        if (e.key === "Enter") {
+            console.log(e.target.id);
+            if (e.target.id === "toClear") {
+                this.handleSendMessage();
+            } else if (e.target.id === "toClear2") {
+                console.log("SEARCHING USER");
+                this.handleSearchUser();
+            }
+        }
     }
 
     render() {
@@ -267,6 +302,7 @@ class Messages extends Component {
                 <NavigationBar history={this.props.history}/>
                 <div className="container">
                     <h3 className= "text-center" style= {{color: 'white'}}> Your Messages</h3>
+                    {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                     <div className="messaging">
                         <div className="inbox_msg">
                             <div className="inbox_people">
@@ -276,9 +312,9 @@ class Messages extends Component {
                                     </div>
                                     <div className="srch_bar">
                                         <div className="stylish-input-group">
-                                            <input id="toClear2" type="text" className="search-bar" placeholder="Enter a user to start messaging" name="selectedUser" onChange={this.handleChange}/>
+                                            <input id="toClear2" type="text" className="search-bar" placeholder="Enter a user to start messaging" name="selectedUser" value={this.state.selectedUser} onChange={this.handleChange} onKeyPress={this.handleEnter} />
                                             <span className="input-group-addon">
-                                                <button type="button" name="selectedUser" onClick={this.handleSearchUser}> <i className="fa fa-search" aria-hidden="true"></i> </button>
+                                                <FontAwesomeIcon icon="search" aria-hidden="true" className="messages-search-bar-button" onClick={this.handleSearchUser} />
                                             </span> 
                                         </div>
                                     </div>
@@ -293,8 +329,9 @@ class Messages extends Component {
                                 </div>
                                 <div className="type_msg">
                                     <div className="input_msg_write">
-                                        <input id="toClear" type="text" className="write_msg" name="str" placeholder="Type a message" onChange={this.handleChange}/>
-                                        <button className="msg_send_btn" type="button" onClick={this.handleSendMessage.bind(this)}><i className="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                        <input id="toClear" type="text" className="write_msg" name="str" placeholder="Type a message" value={this.state.str} onChange={this.handleChange} onKeyPress={this.handleEnter} />
+                                        <button className="msg_send_btn" type="button" onClick={this.handleSendMessage.bind(this)} ref={this.messageButtonRef}><i className="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                        <Overlay target={this.messageButtonRef.current} show={this.state.messageError.length > 0} placement="top"><Tooltip onClick={this.handleClearMessageError}>{this.state.messageError}</Tooltip></Overlay>
                                     </div>
                                 </div>
                             </div>
