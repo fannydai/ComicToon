@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Button, Card, Form, Badge } from 'react-bootstrap';
+import { Badge, Button, Card, Form, Overlay, Tooltip } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import JSZip from 'jszip';
 
@@ -17,14 +17,10 @@ const StateToProps = (state) => ({ //application level state via redux
     comic: state.comic
 });
 class ViewComic extends Component {
-
-    //<Comic src= {this.props.history.location.state.src}></Comic>
-
-    // Fetch the details of the comic using its ID
-    // Make sure to take the privacy into account
     constructor(props){
-        super(props)
-        // console.log(this.props.history.location.state.src)
+        super(props);
+        this.upvoteRef = React.createRef();
+
         this.state = {
             comicData: {},
             panelIndex: 0,
@@ -34,6 +30,7 @@ class ViewComic extends Component {
             didUpVote: false,
             comment: '',
             comments: [],
+            upvoteError: ""
         }
     }
 
@@ -100,6 +97,7 @@ class ViewComic extends Component {
 
     componentWillUnmount() {
         // Clears panels and comic data (if it was loaded after creation)
+        console.log("CALLING COMPONENT WILL UNMOUNT VIEW COMIC");
         this.props.clearPanels();
         this.props.saveNewComic({});
     }
@@ -175,9 +173,11 @@ class ViewComic extends Component {
 
     handleUpVote = () => {
         if(this.props.match.params.username === this.props.CurrUser.username){
-            alert("you can't upvote your own comic...")
+            this.setState({ upvoteError: "You can't upvote your own comic." });
         }
-        else if(this.state.didUpVote) alert("YOU JUST UPVOTED!!")
+        else if (this.state.didUpVote) {
+            this.setState({ upvoteError: "You've already upvoted." });
+        }
         else{
             (async () => {
                 const res = await fetch("http://localhost:8080/comic/rate", {
@@ -195,8 +195,11 @@ class ViewComic extends Component {
                 });
                 let content = await res.json();
                 console.log(content)
-                if(content.result !== "success") alert("you're trying to do multiple upvotes...")
-                else alert("You just up voted!");
+                if(content.result !== "success") {
+                    this.setState({ upvoteError: "You've already upvoted." });
+                } else {
+                    this.setState({ upvoteError: "Successfully upvoted." });
+                }
                 this.setState({didUpVote: !this.state.didUpVote, didDownVote: false})
                 this.updateRating();
             })();
@@ -205,9 +208,11 @@ class ViewComic extends Component {
 
     handleDownVote = () => {
         if(this.props.match.params.username === this.props.CurrUser.username){
-            alert("you can't downvote your own comic...")
+            this.setState({ upvoteError: "You can't downvote your own comic." });
         }
-        else if(this.state.didDownVote) alert("YOU JUST DOWNVOTED:((")
+        else if(this.state.didDownVote) {
+            this.setState({ upvoteError: "You've already downvoted." });
+        }
         else{
             (async () => {
                 const res = await fetch("http://localhost:8080/comic/rate", {
@@ -225,12 +230,20 @@ class ViewComic extends Component {
                 }); 
                 let content = await res.json();
                 console.log(content)
-                if(content.result !== "success") alert("you're trying to do multiple downvotes...")
-                else alert("You just down voted:(");
+                if(content.result !== "success") {
+                    this.setState({ upvoteError: "You've already downvoted." });
+                } else {
+                    this.setState({ upvoteError: "Successfully downvoted" });
+                }
                 this.setState({didUpVote: false, didDownVote: !this.state.didDownVote})
                 this.updateRating();
             })();
         }
+    }
+
+    handleClearUpvoteError = () => {
+        console.log("CLEARING");
+        this.setState({ upvoteError: "" });
     }
 
     handleComment = (event) => {
@@ -297,16 +310,6 @@ class ViewComic extends Component {
     }
 
     renderComments = () => {
-        /*
-        <div className="view-comic-comment" key={index}>
-                    <div className="view-comic-comment-info">
-                        <p><span style={{ fontWeight: "bold", fontSize: "large" }}>{ comment.username }</span><span style={{ fontSize: "small" }}> on { comment.date }</span></p>
-                        {deleteButton}
-                        {reportButton}
-                    </div>
-                    <p style={{ fontWeight: "400"}}>{ comment.content }</p>
-                </div>
-                */
         console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
@@ -434,13 +437,14 @@ class ViewComic extends Component {
                                     <Card.Body>
                                         <div className="view-comic-title-row">
                                             <h1>{this.props.match.params.comicName}</h1>
-                                            <div className="view-comic-button-row ml-auto">
+                                            <div className="view-comic-button-row ml-auto" ref={this.upvoteRef}>
                                                 <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} className="view-comic-button" />
                                                 {!this.state.didUpVote ? <FontAwesomeIcon className="icon-cog view-comic-press-like view-comic-button" icon={['far', 'thumbs-up']} size="2x" onClick={this.handleUpVote} /> 
                                                     : <FontAwesomeIcon className="icon-cog view-comic-press-like" icon='thumbs-up' size="2x" onClick={this.handleUpVote} />}
                                                 {!this.state.didDownVote ? <FontAwesomeIcon className="icon-cog view-comic-press-dislike view-comic-button" icon={['far', 'thumbs-down']} size="2x" onClick={this.handleDownVote} /> 
                                                     : <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon='thumbs-down' size="2x" onClick={this.handleDownVote} />}
-                                                <Button role="button" variant="dark">
+                                                <Overlay target={this.upvoteRef.current} show={this.state.upvoteError.length > 0} placement="left"><Tooltip onClick={this.handleClearUpvoteError}>{this.state.upvoteError}</Tooltip></Overlay>
+                                                <Button role="button" variant="dark" className="view-comic-rating-button">
                                                     Rating <Badge pill variant="secondary">{this.state.rating}</Badge>
                                                 </Button>
                                             </div>
@@ -456,16 +460,12 @@ class ViewComic extends Component {
                                         </div>
                                     </Card.Body>
                                 </Card>
-                                <hr />
                                 <Card>
                                     <Card.Body>
-                                        <div className="view-comic-description">
-                                            <h1>Description</h1>
-                                            <p>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</p>
-                                        </div>
+                                        <h1>Description</h1>
+                                        <p>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</p>
                                     </Card.Body>
                                 </Card>
-                                <hr />
                                 <Form className="view-comic-comment-form">
                                     <Form.Control as="textarea" rows="2" className="view-comic-comment-input" name="comment" type="text" placeholder="Comment on this comic..." value={this.state.comment} onChange={this.handleChange} />
                                     <Button onClick={this.handleComment}>Submit</Button>

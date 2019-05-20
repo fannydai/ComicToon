@@ -157,3 +157,11 @@
 .view-comic-button:hover {
     cursor: pointer;
 }
+
+.view-comic-rating-button:hover {
+    cursor: default;
+}
+
+.view-comic-rating-button:after {
+    content: none;
+}
