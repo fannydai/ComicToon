@@ -10,82 +10,112 @@
 * IDE
     * Intellij IDEA
 * Build Tools
-    * Graven
     * Maven
 * Library for drawing
-    * We will be using DrawerJs which was implemented using FabricJs
-    * https://github.com/fabricjs/fabric.js/wiki/Who%27s-using-Fabric
-    * https://www.drawerjs.com/samples
+    * We will be using FabricJs
 
 ### MileStone:
 * [X] User Registration
 * [X] User Login
 * [X] User Logout
-* [ ] Create Comic Series
-* [ ] Create Comic
+* [X] Create Comic Series
+* [X] Create Comic
 * [X] Draw on Canvas
-* [ ] View Comic Series
-* [ ] Delete Comic Series
-* [ ] View Comic
-* [ ] View Own Comic Sereis
-* [ ] Delete Comic
+* [X] View Comic Series
+* [X] Delete Comic Series
+* [X] View Comic
+* [X] View Own Comic Sereis
+* [X] Delete Comic
 
-* [ ] Upload Comic
-* [ ] Update Comic
-* [ ] Modify Comic Permissions
-* [ ] User Subscribe to Series
-* [ ] User Unsubscribe to Series
-* [ ] Update Comic Series
-* [ ] Rate Comic
-* [ ] View Subscriptions
-* [ ] View Recent Creations
+* [X] Upload Comic
+* [X] Update Comic
+* [X] Modify Comic Permissions
+* [X] User Subscribe to Series
+* [X] User Unsubscribe to Series
+* [X] Update Comic Series
+* [X] Rate Comic
+* [X] View Subscriptions
+* [X] View Recent Creations
 
-* [ ] Comic Privacy Settings
-* [ ] Comment on Comic
-* [ ] Delete Comment
-* [ ] Download Comic
-* [ ] Search for Comic
-* [ ] Admin Deactivate Account
-* [ ] Admin Delete Series
-* [ ] Admin Delete Comic
-* [ ] Admin Delete Comment
-* [ ] User Reset Password
-* [ ] User Verify Account
+* [X] Comic Privacy Settings
+* [X] Comment on Comic
+* [X] Delete Comment
+* [X] Download Comic
+* [X] Search for Comic
+* [X] Admin Deactivate Account
+* [X] Admin Delete Series
+* [X] Admin Delete Comic
+* [X] Admin Delete Comment
+* [X] User Reset Password
+* [X] User Verify Account
 * [X] About Page
 
 ### TO DO:
-* [] Hash password with this library org.springframework.security.crypto.bcrypt.BCrypt
+* [X] Hash password with this library org.springframework.security.crypto.bcrypt.BCrypt
 
 ### TO DO FOR CANVAS:
-* [X] Pencil
-* [X] Text
+#### Pencil
+* [X] Circle
+* [] Crayon
+* [] Ink
+* [] Marker
+* [] Drip
+* [X] Spray
+* [X] Pattern
+* [] Hline
+* [] Vline
+* [] Square
+* [] Diamond
+
+#### Text
+* [] Size
+* [] Italic
+* [] Bold
+* [] Underline
+* [] Line Through
+* [] Line Over
+* [] Font Family
+
+#### Shapes
 * [X] Line
 * [] Polygon
 * [X] Circle
 * [X] Rectangle
 * [X] Triangle
-* [] Image
-* [] Being able to drag the shape to make it rather than setting it a certain size at the top left
+* [X] Image
+* [X] Being able to drag the shape to make it rather than setting it a certain size at the top left
 
 * [] Brush Color (fill color)
 * [] Border Color
 * [] Background Color
 * [X] Line Width
+* [X] Opacity
+* [X] Shadow
+* [X] Shadow Offset
+* [X] Shadow Color
+* [] Dotted Border
+* [] Thickness of border
+* [] Shadow
+* [] Gradient
 
-* [] Cut
-* [] Copy
-* [] Paste
-* [] Delete Shape
-* [] Clear Canvas
-
+* [] Grid
 * [X] Zoom In
 * [X] Zoom Out
-* [] Reset Zoom
-* [] grid
+* [X] Reset Zoom
+* [] Pan
+* [X] Cut
+* [X] Copy
+* [X] Paste
 * [X] Undo
 * [X] Redo
+* [X] Move Forward
+* [X] Move Backward
+* [X] Move Front
+* [X] Move Back
+* [] Group Items
 * [X] Download
 * [X] Save
-
-### Reference
-* https://www.marvel.com/comics?&options%5Boffset%5D=0&totalcount=12
+* [] Move single object
+* [X] Delete Shape
+* [X] Clear Canvas
+* [X] Background color

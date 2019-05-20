@@ -16,6 +16,7 @@ import ShadowButton from './ShadowButton';
 import OutlineButton from './OutlineButton';
 import FillButton from './FillButton';
 import ColorButton from './ColorButton';
+import HighlightButton from './HighlightButton';
 import './styles/Canvas.css';
 import { addPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
@@ -37,9 +38,8 @@ const SHAPES = {
     circle: 'circle',
     triagle: 'triangle',
     image: 'image'
-  };
+};
   
-
 class Canvas extends Component {
 
     constructor(props) {
@@ -49,6 +49,10 @@ class Canvas extends Component {
             redo: [],
             undoBtn: 'disable',
             redoBtn: 'disable',
+            previousCanvas: null,
+
+            lst: [],
+            mods: 0,
         
             copyObject: null,
             canvasState: null,
@@ -61,7 +65,6 @@ class Canvas extends Component {
             shadowWidth: 0,
             shadowOffset: 0,
 
-            previousCanvas: null,
             drawShape: SHAPES.none,
             selectedShape: null,
 
@@ -104,6 +107,9 @@ class Canvas extends Component {
         this.canvas.on('mouse:wheel', this.handleZoom);
 
         this.canvas.on('object:added', (event) => {
+            this.handleSave(event);
+        });
+        this.canvas.on('object:removed', (event) => {
             this.handleSave(event);
         });
         this.canvas.on('object:modified', (event) => {
@@ -435,11 +441,127 @@ class Canvas extends Component {
         this.selectable(false);
     }
 
+    handleFontSize = (value) => {
+        this.setState({ fontSize: value });
+        try {
+            this.canvas.getActiveObject().set("fontSize", value);
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
     handleChangeFontFamily = (event) => {
         if(event.target.textContent==="") { return; }
         try {
             this.canvas.getActiveObject().set("fontFamily", event.target.textContent);
             this.setState({ fontFamily: event.target.textContent });
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontItalic = (event) => {
+        try {
+            var italic = this.canvas.getActiveObject().get("fontStyle") === 'italic' ? 'normal' : 'italic';
+            this.canvas.getActiveObject().set("fontStyle", italic);
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontBold = (event) => {
+        try {
+            var bold = this.canvas.getActiveObject().get("fontWeight") === 'bold' ? 'normal' : 'bold';
+            this.canvas.getActiveObject().set("fontWeight", bold);
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontUnderline = (event) => {
+        try {
+            this.canvas.getActiveObject().set("underline", !this.canvas.getActiveObject().get("underline"));
+            // this.canvas.getActiveObject().setSelectionStyles("underline", !this.canvas.getActiveObject().getSelectionStyles('underline'));
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontOverline = (event) => {
+        try {
+            this.canvas.getActiveObject().set("overline", !this.canvas.getActiveObject().get("overline"));
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontLinethrough = (event) => {
+        try {
+            this.canvas.getActiveObject().set("linethrough", !this.canvas.getActiveObject().get("linethrough"));
+            this.canvas.renderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontSub = (event) => {
+        try {
+            var active = this.canvas.getActiveObject();
+            if (!active) return;
+            active.setSubscript();
+            this.canvas.requestRenderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleFontSup = (event) => {
+        try {
+            var active = this.canvas.getActiveObject();
+            if (!active) return;
+            active.setSuperscript();
+            this.canvas.requestRenderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleLeftAlign = (event) => {
+        try {
+            this.canvas.getActiveObject().textAlign = "left";
+            this.canvas.requestRenderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleCenterAlign = (event) => {
+        try {
+            this.canvas.getActiveObject().textAlign = "center";
+            this.canvas.requestRenderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleRightAlign = (event) => {
+        try {
+            this.canvas.getActiveObject().textAlign = "right";
+            this.canvas.requestRenderAll();
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+    }
+
+    handleHighlightFont = (color) => {
+        try {
+            this.canvas.getActiveObject().set('backgroundColor', color);
             this.canvas.renderAll();
         } catch (error) {
             console.log("Text box not selected");
@@ -695,56 +817,67 @@ class Canvas extends Component {
         }
     }
 
-    // Not working will work on undo & redo later
+    handleSave = (event) => {
+        if(this.state.flag) {
+            this.setState({flag: false});
+            return;
+        }
+        console.log('SAVING');
+        const newCanvas = this.canvas.toJSON();
+        this.setState({
+            redo: [],
+            redoBtn: 'disable'
+        });
+        // Push the canvas onto the undo stack
+        const newUndo = this.state.undo;
+        newUndo.push(newCanvas);
+        this.setState({ 
+            undo: newUndo,
+            undoBtn: "icon",
+            previousCanvas: newCanvas
+        });
+    }
+
     handleUndo = (event) => {
+        this.setState({flag: true});
         this.canvas.isDrawingMode = false;
-        if(this.state.undo.length !== 0) {
+        // undo button is enabled
+        if(this.state.undo.length !== 0 && this.state.undoBtn !== 'disable') {
             this.state.redo.push(this.state.previousCanvas);
-            this.canvas.clear();
+            this.setState({redoBtn: 'icon'});
 
             const lastElement = this.state.undo.pop();
             this.canvas.loadFromJSON(lastElement, () => {
                 this.setState({ previousCanvas: lastElement });
             });
+            this.canvas.renderAll();
         }
-        if(this.state.undo.length === 0) {
+        if (this.state.undo.length === 0) {
             this.setState({undoBtn: 'disable'});
         }
     }
 
     handleRedo = (event) => {
+        this.setState({flag: true});
         this.canvas.isDrawingMode = false;
-        if(this.state.redo.length !== 0) {
+        // redo button is enabled
+        if(this.state.redo.length !== 0 && this.state.redoBtn !== 'disable') {
             this.state.undo.push(this.state.previousCanvas);
-            this.canvas.clear();
+            this.setState({undoBtn: 'icon'});
 
             const lastElement = this.state.redo.pop();
             this.canvas.loadFromJSON(lastElement, () => {
                 this.setState({ previousCanvas: lastElement });
             });
-        }
-        if(this.state.redo.length === 0) {
+            this.canvas.renderAll();
+        } 
+        if (this.state.redo.length === 0) {
             this.setState({redoBtn: 'disable'});
         }
     }
 
     handleMoveObject = (event) => {
         this.canvas.isDrawingMode = false;
-    }
-
-    handleSave = (event) => {
-        console.log(event);
-
-        console.log('SAVING');
-        const newCanvas = this.canvas.toJSON()
-        this.setState({ redo: [] });
-        // Push the canvas onto the undo stack
-        if (this.state.previousCanvas) {
-            const newUndo = this.state.undo;
-            newUndo.push(this.state.previousCanvas);
-            this.setState({ undo: newUndo });
-        }
-        this.setState({ previousCanvas: newCanvas });
     }
 
     handleDownload = (event) => {
@@ -783,21 +916,18 @@ class Canvas extends Component {
         }
     }
 
-    // excludeFromExport
-    // handleGrid = (event) => {
-    //     var group = new fabric.Group([], {left: 0, top: 0});
-    //     const gridOption = { stroke:'#000', selectable:false };
+    handleGrid = (event) => {
+        const gridOption = { stroke:'#000', selectable:false, excludeFromExport:true };
 
-    //     const grid = 50;
-    //     const width = this.canvas.width;
-    //     const height = this.canvas.height;
+        const grid = 50;
+        const width = this.canvas.width*100;
+        const height = this.canvas.height*100;
 
-    //     for(var i=0; i<width/(grid*2); i++) {
-    //         group.add(new fabric.Line([i*grid,0,i*grid,height], gridOption));
-    //         group.add(new fabric.Line([0,i*grid,width,i*grid], gridOption));
-    //     }
-    //     this.canvas.add(group);
-    // }
+        for(var i=0; i<width/(grid*2); i++) {
+            this.canvas.add(new fabric.Line([i*grid,0,i*grid,height], gridOption));
+            this.canvas.add(new fabric.Line([0,i*grid,width,i*grid], gridOption));
+        }
+    }
 
     render() {
         return (
@@ -850,10 +980,10 @@ class Canvas extends Component {
                                 <td><FontAwesomeIcon className="icon" icon="trash" onClick={this.handleDeleteObject}/></td>
                                 <td><FontAwesomeIcon className="icon" onClick={this.handleClearCanvas} icon="eraser" /></td> 
                             </tr>
-                            {/* <tr>
-                                <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo}/></td>
-                                <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo}/></td> 
-                            </tr> */}
+                            <tr>
+                                {/* <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo} disabled={this.state.undoBtn}/></td>
+                                <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo} disabled={this.state.redoBtn}/></td>  */}
+                            </tr>
                             <tr>
                                 <td><FontAwesomeIcon className="icon" icon="arrows-alt" onClick={this.handleMoveObject}/></td>
                                 
@@ -903,11 +1033,11 @@ class Canvas extends Component {
                         </DropdownButton>
                     </div>
                     <div className="bottom-bar">
-                        {/* <div>
-                            <div htmlFor="lineWidthSlider">Font Size</div>
-                            <NumericInput onChange={this.handleFontSize} className="line_width" value={this.state.lineWidth} min={5} max={100} step={1} precision={0} size={5} />
-                        </div> */}
-                        <DropdownButton title={this.state.fontFamily}>
+                        <div>
+                            <div htmlFor="fontSize">Font Size</div>
+                            <NumericInput onChange={this.handleFontSize} className="font_size" value={this.state.fontSize} min={1} step={1} precision={0} size={5} />
+                        </div>
+                        <DropdownButton title={this.state.fontFamily} value={this.state.fontFamily}>
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Arial</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Comic Sans MS</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Courier</Dropdown.Item>
@@ -926,7 +1056,20 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Trebuchet MS</Dropdown.Item>                  
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Verdana</Dropdown.Item>         
                         </DropdownButton>
-                        {/* Italic Bold Underline Line Through Line Over */}
+
+                        <td><FontAwesomeIcon className="icon" icon="italic" onClick={this.handleFontItalic}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="bold" onClick={this.handleFontBold}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="underline" onClick={this.handleFontUnderline}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="strikethrough" onClick={this.handleFontLinethrough}/></td>
+                        {/* <td><FontAwesomeIcon className="icon" icon="strikethrough" onClick={this.handleFontOverline}/></td> */}
+
+                        {/* <td><FontAwesomeIcon className="icon" icon="subscript" onClick={this.handleFontSub}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="superscript" onClick={this.handleFontSup}/></td> */}
+
+                        <td><FontAwesomeIcon className="icon" icon="align-left" onClick={this.handleLeftAlign}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="align-center" onClick={this.handleCenterAlign}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="align-right" onClick={this.handleRightAlign}/></td>
+                        <td><HighlightButton changeColor={this.handleHighlightFont}/></td>
                     </div>
                     <br />
                     <Form onSubmit={this.handleSubmit}>

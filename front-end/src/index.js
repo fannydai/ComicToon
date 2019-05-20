@@ -10,7 +10,8 @@ import { faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp as solidUp, faT
     faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faFill, faPalette, faEraser, faCloud, faDotCircle,
-    faChevronLeft,faPaintBrush, faHandPointer
+    faChevronLeft,faPaintBrush, faHandPointer,
+    faItalic, faBold, faUnderline, faStrikethrough, faSubscript, faSuperscript, faAlignLeft, faAlignRight, faAlignCenter, faHighlighter
 } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import CreateSeries from './Components/CreateSeries';
@@ -39,7 +40,8 @@ library.add(faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, fa
     faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faFill, faPalette, faEraser, faCloud, faDotCircle,
-    faChevronLeft,faPaintBrush, faHandPointer);
+    faChevronLeft,faPaintBrush, faHandPointer,
+    faItalic, faBold, faUnderline, faStrikethrough, faSubscript, faSuperscript, faAlignLeft, faAlignRight, faAlignCenter, faHighlighter);
 
 ReactDOM.render(
     <Provider store={store}>
