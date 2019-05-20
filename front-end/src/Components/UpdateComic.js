@@ -354,7 +354,7 @@ class UpdateComic extends Component {
                             <Form.Control required className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
                             <Form.Control.Feedback type="invalid">Please name the comic.</Form.Control.Feedback>
                             <Dropdown className="create-comic-dropdown">
-                                <Dropdown.Toggle variant="outline-info">
+                                <Dropdown.Toggle variant="info">
                                     {this.state.selected_series ? this.state.selected_series : 'Select Series'}
                                 </Dropdown.Toggle>
                                 {this.state.showSeries ? <Dropdown.Menu> {this.renderUserSeries()} </Dropdown.Menu> : null}

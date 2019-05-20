@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Card, Form, Badge } from 'react-bootstrap';
 import  { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import JSZip from 'jszip';
 
@@ -119,8 +119,10 @@ class ViewComic extends Component {
     }
 
     handleDownload = (event) => {
+        console.log("DOWNLOADING");
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         if (panels.length) {
+            console.log(panels);
             const zip =new JSZip();
             for (var i = 0; i < panels.length; i++) {
                 // Look for the type of file
@@ -131,8 +133,8 @@ class ViewComic extends Component {
                 const base64String = image.replace("data:image/png;base64,", "");
                 zip.file(`image${i+1}.${type}`, base64String, { base64: true });
 
-                const jsonFile = panels[i].canvas; //getting json too
-                const data = JSON.stringify(JSON.parse(jsonFile), null, "\t"); //attempting to make it look nice lmao
+                const jsonFile = panels[i].json; //getting json too
+                const data = JSON.stringify(jsonFile, null, "\t"); //attempting to make it look nice lmao
                 zip.file(`json${i+1}.json`, data, { base64: false });
             }
             const link = document.createElement('a');
@@ -428,32 +430,41 @@ class ViewComic extends Component {
                                 </div>
                             </div>
                             <div className="view-comic-left-bottom">
-                                <div className="view-comic-title-row">
-                                    <h1>{this.props.match.params.comicName}</h1>
-                                    <div className="view-comic-button-row ml-auto">
-                                        <FontAwesomeIcon icon="history" size="2x" />
-                                        <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} />
-                                        {!this.state.didUpVote ? <FontAwesomeIcon className="icon-cog view-comic-press-like" icon={['far', 'thumbs-up']} size="2x" onClick={this.handleUpVote} /> 
-                                            : <FontAwesomeIcon className="icon-cog view-comic-press-like" icon='thumbs-up' size="2x" onClick={this.handleUpVote} />}
-                                        {!this.state.didDownVote ? <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon={['far', 'thumbs-down']} size="2x" onClick={this.handleDownVote} /> 
-                                            : <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon='thumbs-down' size="2x" onClick={this.handleDownVote} />}
-                                        <p className="view-comic-rating">{this.state.rating}</p>
-                                    </div>
-                                </div>
-                                <div className="view-comic-second-row">
-                                    <div className="mr-auto">
-                                        <h2>By: {this.props.match.params.username}</h2>
-                                    </div>
-                                    <div className="view-comic-second-middle">
-                                        <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
-                                    </div>
-                                    {subButton}
-                                </div>
+                                <Card>
+                                    <Card.Body>
+                                        <div className="view-comic-title-row">
+                                            <h1>{this.props.match.params.comicName}</h1>
+                                            <div className="view-comic-button-row ml-auto">
+                                                <FontAwesomeIcon icon="download" size="2x" onClick={this.handleDownload} className="view-comic-button" />
+                                                {!this.state.didUpVote ? <FontAwesomeIcon className="icon-cog view-comic-press-like view-comic-button" icon={['far', 'thumbs-up']} size="2x" onClick={this.handleUpVote} /> 
+                                                    : <FontAwesomeIcon className="icon-cog view-comic-press-like" icon='thumbs-up' size="2x" onClick={this.handleUpVote} />}
+                                                {!this.state.didDownVote ? <FontAwesomeIcon className="icon-cog view-comic-press-dislike view-comic-button" icon={['far', 'thumbs-down']} size="2x" onClick={this.handleDownVote} /> 
+                                                    : <FontAwesomeIcon className="icon-cog view-comic-press-dislike" icon='thumbs-down' size="2x" onClick={this.handleDownVote} />}
+                                                <Button role="button" variant="dark">
+                                                    Rating <Badge pill variant="secondary">{this.state.rating}</Badge>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div className="view-comic-second-row">
+                                            <div className="mr-auto">
+                                                <h2>By: {this.props.match.params.username}</h2>
+                                            </div>
+                                            <div className="view-comic-second-middle">
+                                                <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
+                                            </div>
+                                            {subButton}
+                                        </div>
+                                    </Card.Body>
+                                </Card>
                                 <hr />
-                                <div className="view-comic-description">
-                                    <h1>Description</h1>
-                                    <p>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</p>
-                                </div>
+                                <Card>
+                                    <Card.Body>
+                                        <div className="view-comic-description">
+                                            <h1>Description</h1>
+                                            <p>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</p>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
                                 <hr />
                                 <Form className="view-comic-comment-form">
                                     <Form.Control as="textarea" rows="2" className="view-comic-comment-input" name="comment" type="text" placeholder="Comment on this comic..." value={this.state.comment} onChange={this.handleChange} />

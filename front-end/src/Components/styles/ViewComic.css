@@ -153,3 +153,7 @@
     width: 100%;
     object-fit: cover;
 }
+
+.view-comic-button:hover {
+    cursor: pointer;
+}

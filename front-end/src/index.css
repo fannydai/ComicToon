@@ -21,6 +21,11 @@ Blue	#69B4FF
 Green	#B4FF69 
 */
 
+/* Vertical alignment of table cell text */
+td {
+  vertical-align: middle !important;
+}
+
 
 /* For the bubbles */
 .textbox {

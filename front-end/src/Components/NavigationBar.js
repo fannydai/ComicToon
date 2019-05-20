@@ -66,7 +66,7 @@ class NavigationBar extends Component {
                     </Nav>
                     <Form className="navbar-search-form" inline onSubmit={this.handleSearch}>
                         <FormControl type="text" name="query" placeholder="Search" className="navbar-search-input mr-sm-2" onChange={this.handleChange} />
-                        <Button variant="outline-success" type="submit">Search</Button>
+                        <Button variant="success" type="submit">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
                         <Nav.Link href="/logout" onClick={this.handleLogout}>Log Out</Nav.Link>

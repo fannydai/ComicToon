@@ -1,4 +1,4 @@
-import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA, ADD_UPDATE_PANEL } from './../Actions/Types';
+import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA, ADD_UPDATE_PANEL, DELETE_NEW_COMIC_PANEL } from './../Actions/Types';
 
 const initState = {
     subscriptions: [],
@@ -33,6 +33,13 @@ export default function(state = initState, action) {
             return {
                 ...state,
                 newComic: [...state.newComic, action.payload]
+            }
+        case DELETE_NEW_COMIC_PANEL:
+            const newComic = state.newComic;
+            newComic.splice(action.payload.index, 1);
+            return {
+                ...state,
+                newComic: newComic
             }
         case ADD_UPDATE_PANEL:
             const updatedComic = state.saveUpdateComic;

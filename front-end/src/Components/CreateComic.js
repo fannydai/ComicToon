@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dropdown, Form } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Form, Overlay, Tooltip } from 'react-bootstrap';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
 import {createComic} from '../Actions/NavbarActions'
-import { saveNewComic, clearPanels } from '../Actions/ComicActions';
+import { saveNewComic, clearPanels, deleteNewComicPanel } from '../Actions/ComicActions';
 import LoadingScreen from './LoadingScreen';
 
 
@@ -36,7 +36,8 @@ class CreateComic extends Component {
             UserSerieses: [],
             selected_series: "",
             loading: true,
-            sharedUsersList: []
+            sharedUsersList: [],
+            submitError: ""
         }
     }
 
@@ -85,7 +86,11 @@ class CreateComic extends Component {
               })
             });
             let content = await res.json();
+            console.log(content);
             this.setState({UserSerieses: content.comicSeries, loading: false})
+            if (content.comicSeries && !content.comicSeries.includes(savedData.seriesName)) {
+                this.setState({ selected_series: "" });
+            }
         })();   
     }
 
@@ -147,9 +152,9 @@ class CreateComic extends Component {
         } else if (this.state.comicDescription === '') {
             alert('Please enter a comic description.');
         } else if (this.state.selected_series === '') {
-            alert('Please select a series.');
+            this.setState({ submitError: "Select a series." });
         } else if (this.props.comic.newComic.length === 0) {
-            alert('Please create at least one panel.');
+            this.setState({ submitError: "Create at least one panel." });
         } else {
             const canvases = [];
             const images = [];
@@ -218,6 +223,10 @@ class CreateComic extends Component {
         const { name } = e.target;
         this.setState({ selected_series: name });
     }
+    
+    handleClosePanel = (index, event) => {
+        this.props.deleteNewComicPanel(index);
+    }
 
     render() {
         var props = {
@@ -271,16 +280,17 @@ class CreateComic extends Component {
                                 <Slider {...props}>
                                     {this.props.comic.newComic.length ? 
                                         this.props.comic.newComic.map((panel, i) => {
-                                            return <Panel comic={panel} key={i} />
+                                            return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i, e)} />
                                         }) : null}
                                     <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                                 </Slider>
                             </div>
                             <div className="create-comic-info">
+                                {this.state.submitError ? <Alert variant="danger" >{this.state.submitError}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                                 <Form.Control required className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
                                 <Form.Control.Feedback type="invalid">Please name the comic.</Form.Control.Feedback>
                                 <Dropdown className="create-comic-dropdown">
-                                    <Dropdown.Toggle variant="outline-info" className="create-comic-dropdown-button">
+                                    <Dropdown.Toggle variant="info" className="create-comic-dropdown-button">
                                         {this.state.selected_series ? this.state.selected_series : 'Select Series'}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
@@ -300,13 +310,13 @@ class CreateComic extends Component {
                                     <div className="create-comic-sharing-right">
                                         <label>Add User: (Press 'Enter' to Add)</label>
                                         <Form.Control type="text" placeholder= "Sean Jeffrey Fanny Joel" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
-                                        <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
+                                        <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                         <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                     </div>
                                 </div>
                             </div>
                             <div className="create-comic-submit">
-                                <Button type="submit" variant="success" onClick={this.handleSubmit}>Create Comic</Button>
+                                <Button type="submit" variant="success">Create Comic</Button>
                             </div>
                         </Form>
                     </div>
@@ -322,7 +332,8 @@ CreateComic.propTypes = {
     comic: PropTypes.object,
     createComic: PropTypes.func.isRequired,
     saveNewComic: PropTypes.func.isRequired,
-    clearPanels: PropTypes.func.isRequired
+    clearPanels: PropTypes.func.isRequired,
+    deleteNewComicPanel: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {createComic, saveNewComic, clearPanels})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic, saveNewComic, clearPanels, deleteNewComicPanel})(withRouter(CreateComic));

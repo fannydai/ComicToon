@@ -151,7 +151,7 @@ class ViewSeries extends Component {
                 </div>
                 <div className="view-one-series-bottom">
                     <div className="view-one-series-comics">
-                        {cards}
+                        {cards && cards.length !== 0 ? cards : <h2>NO COMICS IN THIS SERIES. CREATE ONE <a href="/create/comic">HERE</a></h2>}
                     </div>
                 </div>
                 <Footer />

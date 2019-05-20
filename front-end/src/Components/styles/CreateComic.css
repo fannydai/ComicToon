@@ -141,3 +141,13 @@
 .slick-track {
     width: 100%;
 }
+
+.close-panel-icon {
+    position: absolute;
+    top: 0;
+    right: 0.5vw;
+}
+
+.close-panel-icon:hover {
+    cursor: pointer;
+}

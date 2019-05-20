@@ -246,7 +246,7 @@ class UploadComic extends Component {
                                 <Form.Control required className="create-comic-description-input" as="textarea" rows="3"  placeholder="Write a description of the comic" value={this.state.comicDescription} onChange={this.handleComicDescription} />
                             </div>
                             <Dropdown className="upload-dropdown">
-                                <Dropdown.Toggle variant="outline-info" className="upload-dropdown-button">
+                                <Dropdown.Toggle variant="info" className="upload-dropdown-button">
                                     {this.state.series ? this.state.series : 'Select Series'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
