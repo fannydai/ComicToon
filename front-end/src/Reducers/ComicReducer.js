@@ -1,4 +1,4 @@
-import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA, ADD_UPDATE_PANEL, DELETE_NEW_COMIC_PANEL } from './../Actions/Types';
+import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA, ADD_UPDATE_PANEL, DELETE_NEW_COMIC_PANEL, CREATE_COMIC_ERROR } from './../Actions/Types';
 
 const initState = {
     subscriptions: [],
@@ -8,7 +8,8 @@ const initState = {
     saveNewComic: {},
     saveUpdateComic: {},
     allSeries: [],
-    userSeries: []
+    userSeries: [],
+    createComicError: ""
 }
 
 export default function(state = initState, action) {
@@ -72,6 +73,11 @@ export default function(state = initState, action) {
             return {
                 ...state,
                 userSeries: action.payload.userSeries
+            }
+        case CREATE_COMIC_ERROR:
+            return {
+                ...state,
+                createComicError: action.payload.createComicError
             }
         default:
             return state;

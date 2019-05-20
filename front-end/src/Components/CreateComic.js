@@ -11,7 +11,7 @@ import Slider from 'react-slick';
 import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
-import {createComic} from '../Actions/NavbarActions'
+import { createComic, setCreateComicError } from '../Actions/NavbarActions'
 import { saveNewComic, clearPanels, deleteNewComicPanel } from '../Actions/ComicActions';
 import LoadingScreen from './LoadingScreen';
 
@@ -44,6 +44,13 @@ class CreateComic extends Component {
     componentWillMount() {
         if(this.props.CurrUser.username === "" || this.props.CurrUser.token === "" || this.props.CurrUser.email === "" || this.props.CurrUser.isValidated === false){
             this.props.history.push('/')
+        }
+    }
+    
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.comic.createComicError) {
+            this.setState({ submitError: nextProps.comic.createComicError });
+            this.props.setCreateComicError("");
         }
     }
 
@@ -333,7 +340,8 @@ CreateComic.propTypes = {
     createComic: PropTypes.func.isRequired,
     saveNewComic: PropTypes.func.isRequired,
     clearPanels: PropTypes.func.isRequired,
-    deleteNewComicPanel: PropTypes.func.isRequired
+    deleteNewComicPanel: PropTypes.func.isRequired,
+    setCreateComicError: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {createComic, saveNewComic, clearPanels, deleteNewComicPanel})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic, saveNewComic, clearPanels, deleteNewComicPanel, setCreateComicError})(withRouter(CreateComic));

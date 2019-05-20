@@ -42,11 +42,13 @@ class ViewComic extends Component {
             if (!this.props.match.params.username || !this.props.match.params.comicName) {
                 this.props.history.goBack();
             }
+            /*
             // Load comic only if this page is not redirected from create comic
             if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
                 console.log('VIEW COMIC FETCHING DATA');
                 this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
-            }
+            }*/
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
             //this.updateRating();
         }
     }
@@ -313,17 +315,17 @@ class ViewComic extends Component {
         console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
-                <FontAwesomeIcon icon="trash" onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
+                <FontAwesomeIcon icon="trash" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
             const reportButton = comment.username !== this.props.CurrUser.username ? 
-                <p onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >REPORT</p> : null;
+                <p style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >REPORT</p> : null;
             return (
                 <Card key={index}>
                     <Card.Body>
                         <Card.Title>{ comment.username }</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">{ comment.date }</Card.Subtitle>
                         <Card.Text>{ comment.content }</Card.Text>
-                        <Card.Text>{deleteButton}</Card.Text>
-                        <Card.Text>{reportButton}</Card.Text>
+                        {deleteButton}
+                        {reportButton}
                     </Card.Body>
                 </Card>
             );
