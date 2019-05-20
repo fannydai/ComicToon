@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR } from './Types';
 
 export const createSeries = (token, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
@@ -51,41 +51,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
         }
     })();
 }
-export const viewMySeries = () => (dispatch) => {
-    // (async () => {
-    //     const res = await fetch("http://localhost:8080/replaceFavorites", {
-    //         method: "POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json; charset=utf-8"
-    //         },
-    //         body: JSON.stringify({ username: "" })
-    //     });
-    //     let content = await res.json();
-    //     dispatch({
-    //         type: GET_FAVORITES,
-    //         payload: { favorites: content.favorites }
-    //     });
-    // })();
-}
-
-export const upload = () => (dispatch) => {
-    // (async () => {
-    //     const res = await fetch("http://localhost:8080/replaceFavorites", {
-    //         method: "POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json; charset=utf-8"
-    //         },
-    //         body: JSON.stringify({ username: "" })
-    //     });
-    //     let content = await res.json();
-    //     dispatch({
-    //         type: GET_FAVORITES,
-    //         payload: { favorites: content.favorites }
-    //     });
-    // })();
-}
 
 export const createComic = (username, token, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
     (async () => {
@@ -122,15 +87,12 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
                     series: seriesName
                 }
             });
-            //alert(`Comic '${comicName}' Created!!`)
         }
         else {
             dispatch({
-                type: ERR,
-                payload: { Comic: "" }
+                type: CREATE_COMIC_ERROR,
+                payload: { createComicError: content.result }
             });
-            //alert(`ERROR! Comic '${comicName}' NOT Created!!`)
-            alert(content.result);
         }
     })();
 }
@@ -165,24 +127,6 @@ export const viewComic = (username, viewerName, comicName) => (dispatch) => {
     })();
 }
 
-export const viewMyComic = () => (dispatch) => {
-    // (async () => {
-    //     const res = await fetch("http://localhost:8080/replaceFavorites", {
-    //         method: "POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json; charset=utf-8"
-    //         },
-    //         body: JSON.stringify({ username: "" })
-    //     });
-    //     let content = await res.json();
-    //     dispatch({
-    //         type: GET_FAVORITES,
-    //         payload: { favorites: content.favorites }
-    //     });
-    // })();
-}
-
 export const viewAllComics = (newComics) => (dispatch) => {
     dispatch({
         type: VIEWCOMIC,
@@ -197,21 +141,11 @@ export const updateComicPanel = (image, canvas, panel, panelIndex, comicIndex) =
         payload: { image: image, canvas: canvas, panel: panel, panelIndex: panelIndex, comicIndex: comicIndex }
     });
     console.log(panel);
-    /*
-    (async () => {
-        const res = await fetch("http://localhost:8080/update/panel", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            body: JSON.stringify({
-                id: panel.id,
-                image: image,
-                canvas: JSON.stringify(canvas)
-              })
-        });
-        let content = await res.json();
-        console.log(content)
-    })();*/
+}
+
+export const setCreateComicError = (value) => (dispatch) => {
+    dispatch({
+        type: CREATE_COMIC_ERROR,
+        payload: { createComicError: value }
+    });
 }

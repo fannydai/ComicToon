@@ -7,7 +7,7 @@ import './styles/NavigationBar.css';
 import logo from './images/small_logo.png';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { createSeries, viewMySeries, upload, createComic, viewMyComic} from './../Actions/NavbarActions';
+import { createSeries , createComic } from './../Actions/NavbarActions';
 
 const StateToProps = (state) => ({ //application level state via redux
     NavBar: state.NavBar
@@ -66,7 +66,7 @@ class NavigationBar extends Component {
                     </Nav>
                     <Form className="navbar-search-form" inline onSubmit={this.handleSearch}>
                         <FormControl type="text" name="query" placeholder="Search" className="navbar-search-input mr-sm-2" onChange={this.handleChange} />
-                        <Button variant="outline-success" type="submit">Search</Button>
+                        <Button variant="success" type="submit">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
                         <Nav.Link href="/logout" onClick={this.handleLogout}>Log Out</Nav.Link>
@@ -79,10 +79,7 @@ class NavigationBar extends Component {
 
 NavigationBar.propTypes = {
     createSeries: PropTypes.func.isRequired,
-    viewMySeries: PropTypes.func.isRequired,
-    upload: PropTypes.func.isRequired,
-    createComic: PropTypes.func.isRequired,
-    viewMyComic: PropTypes.func.isRequired
+    createComic: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, { createSeries, viewMySeries, upload, createComic, viewMyComic})(withRouter(NavigationBar));
+export default connect(StateToProps, { createSeries, createComic})(withRouter(NavigationBar));
