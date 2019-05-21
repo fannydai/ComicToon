@@ -64,6 +64,9 @@ public class ComicModel{
     public String getName() {
         return this.name;
     }
+    public String getName2(){
+        return this.name.toLowerCase();
+    }
 
     public void setName(String name) {
         this.name = name;

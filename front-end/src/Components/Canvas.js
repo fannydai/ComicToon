@@ -20,7 +20,7 @@ import FillButton from './FillButton';
 import ColorButton from './ColorButton';
 import HighlightButton from './HighlightButton';
 import './styles/Canvas.css';
-import { addPanel } from '../Actions/ComicActions';
+import { addPanel, updateNewComicPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
 
 const history = require('browser-history');
@@ -90,7 +90,14 @@ class Canvas extends Component {
         });
         // Load Data if any
         if (this.props.location.state) {
-            if (this.props.location.state.previous === 'fromjson') {
+            console.log(this.props.location.state);
+            if (this.props.location.state.previous === '/create') {
+                const jsonData = this.props.location.state.panel.json;
+                this.canvas.loadFromJSON(jsonData , () => {
+                    this.canvas.renderAll();
+                });
+            }
+            else if (this.props.location.state.previous === 'fromjson') {
                 console.log('FROM JSON');
                 this.canvas.loadFromJSON(JSON.parse(this.props.location.state.panel.canvas), () => {
                     this.canvas.renderAll();
@@ -1087,7 +1094,7 @@ class Canvas extends Component {
             var jsonData = this.canvas.toJSON();
             var canvasAsJson = JSON.stringify(jsonData);
             var fileDownload = require('js-file-download');
-            fileDownload(canvasAsJson, fileName + '.txt');
+            fileDownload(canvasAsJson, fileName + '.json');
         }
     }
 
@@ -1102,9 +1109,15 @@ class Canvas extends Component {
     handleDone = (event) => {
         this.setState({ redo: [] });
         // If it is from JSON (from view comic) save the panel and return
-        if (this.props.location.state && this.props.location.state.previous === 'fromjson') {
-            this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
-                this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
+        if (this.props.location.state) {
+            if (this.props.location.state.previous == '/create') {
+                this.props.updateNewComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
+                history(-1);
+            }
+            else if (this.props.location.state.previous === 'fromjson') {
+                this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
+                    this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
+            }
         } else {
             // Done with drawing, reroute back to create comic
             this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
@@ -1295,4 +1308,4 @@ Canvas.propTypes = {
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, { addPanel, updateComicPanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel, updateComicPanel, updateNewComicPanel })(withRouter(Canvas));
