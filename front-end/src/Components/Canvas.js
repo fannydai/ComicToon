@@ -953,16 +953,24 @@ class Canvas extends Component {
     }
 
     handleDownload = (event) => {
-        const img = this.canvas.toDataURL();
-        const a = document.createElement('a');
-        a.href = img;
-        a.download = 'image.png';
-        a.click();
+        var randomString = require('random-string');
+        var fileName = prompt("Please enter what you would like to call your file.", randomString({length: 10}));
+        if (fileName == null) {
+            return;
+        } else if(fileName == "") {
+            alert("Nothing was entered!");
+        } else {
+            const img = this.canvas.toDataURL();
+            const a = document.createElement('a');
+            a.href = img;
+            a.download = fileName + '.png';
+            a.click();
 
-        var jsonData = this.canvas.toJSON();
-        var canvasAsJson = JSON.stringify(jsonData);
-        var fileDownload = require('js-file-download');
-        fileDownload(canvasAsJson, 'panel.txt');
+            var jsonData = this.canvas.toJSON();
+            var canvasAsJson = JSON.stringify(jsonData);
+            var fileDownload = require('js-file-download');
+            fileDownload(canvasAsJson, fileName + '.txt');
+        }
     }
 
     handleSubmit = (event) => {
