@@ -55,11 +55,11 @@ class Canvas extends Component {
             redoBtn                 : 'disable',
             save                    : true,
 
-            brushColor              : '#000',
+            brushColor              : '#000000ff',
             lineWidth               : 1,
-            stroke                  : '#000',
+            stroke                  : '#000000ff',
 
-            shadowColor             : '#000',
+            shadowColor             : '#000000ff',
             shadowWidth             : 0,
             shadowOffset            : 0,
 
@@ -574,6 +574,7 @@ class Canvas extends Component {
 
     handleHighlightFont = (color) => {
         try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get('backgroundColor') == color) return;
             this.canvas.getActiveObject().set('backgroundColor', color);
             this.canvas.renderAll();
             this.handleSave();
@@ -649,6 +650,7 @@ class Canvas extends Component {
         this.setState({ brushColor: color });
         this.canvas.freeDrawingBrush.color = color;
         try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("fill") == color) return;
             this.canvas.getActiveObject().set("fill", color);
             this.canvas.renderAll();
             this.handleSave();
@@ -709,6 +711,7 @@ class Canvas extends Component {
         this.canvas.freeDrawingBrush.stroke = color;
 
         try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("stroke") == color) return;
             this.canvas.getActiveObject().set("stroke", color);
             this.canvas.renderAll();
             this.handleSave();
@@ -718,12 +721,14 @@ class Canvas extends Component {
     }
 
     handleShadowColor = (color) => {
+        if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().shadow.color == color) return;
         this.setState({ shadowColor: color });
         this.canvas.freeDrawingBrush.shadowColor = color;
         this.handleShadow();
     }
 
     handleBGColor = (color) => {
+        if(this.canvas.backgroundColor == color) return;
         this.canvas.backgroundColor = color;
         this.canvas.renderAll();
         this.handleSave();
