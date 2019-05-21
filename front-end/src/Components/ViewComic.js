@@ -317,7 +317,7 @@ class ViewComic extends Component {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="trash" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
             const reportButton = comment.username !== this.props.CurrUser.username ? 
-                <p style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >REPORT</p> : null;
+                <Button variant="danger" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >Report Comment</Button> : null;
             return (
                 <Card key={index}>
                     <Card.Body>
