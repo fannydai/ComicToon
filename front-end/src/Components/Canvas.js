@@ -55,11 +55,11 @@ class Canvas extends Component {
             redoBtn                 : 'disable',
             save                    : true,
 
-            brushColor              : '#000',
+            brushColor              : '#000000ff',
             lineWidth               : 1,
-            stroke                  : '#000',
+            stroke                  : '#000000ff',
 
-            shadowColor             : '#000',
+            shadowColor             : '#000000ff',
             shadowWidth             : 0,
             shadowOffset            : 0,
 
@@ -574,6 +574,7 @@ class Canvas extends Component {
 
     handleHighlightFont = (color) => {
         try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get('backgroundColor') == color) return;
             this.canvas.getActiveObject().set('backgroundColor', color);
             this.canvas.renderAll();
             this.handleSave();
@@ -622,6 +623,7 @@ class Canvas extends Component {
     }
 
     handleImage = (event) => {
+        this.setState({save: false});
         const file = event.target.files[0];
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
@@ -639,7 +641,8 @@ class Canvas extends Component {
                     });
                 };
             })();
-            reader.readAsDataURL(file);            
+            reader.readAsDataURL(file);  
+            event.target.value = null;   
         } else {
             alert('Upload images only!');
         }
@@ -649,6 +652,7 @@ class Canvas extends Component {
         this.setState({ brushColor: color });
         this.canvas.freeDrawingBrush.color = color;
         try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("fill") == color) return;
             this.canvas.getActiveObject().set("fill", color);
             this.canvas.renderAll();
             this.handleSave();
@@ -709,6 +713,7 @@ class Canvas extends Component {
         this.canvas.freeDrawingBrush.stroke = color;
 
         try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("stroke") == color) return;
             this.canvas.getActiveObject().set("stroke", color);
             this.canvas.renderAll();
             this.handleSave();
@@ -718,12 +723,14 @@ class Canvas extends Component {
     }
 
     handleShadowColor = (color) => {
+        if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().shadow.color == color) return;
         this.setState({ shadowColor: color });
         this.canvas.freeDrawingBrush.shadowColor = color;
         this.handleShadow();
     }
 
     handleBGColor = (color) => {
+        if(this.canvas.backgroundColor == color) return;
         this.canvas.backgroundColor = color;
         this.canvas.renderAll();
         this.handleSave();
@@ -946,16 +953,24 @@ class Canvas extends Component {
     }
 
     handleDownload = (event) => {
-        const img = this.canvas.toDataURL();
-        const a = document.createElement('a');
-        a.href = img;
-        a.download = 'image.png';
-        a.click();
+        var randomString = require('random-string');
+        var fileName = prompt("Please enter what you would like to call your file.", randomString({length: 10}));
+        if (fileName == null) {
+            return;
+        } else if(fileName == "") {
+            alert("Nothing was entered!");
+        } else {
+            const img = this.canvas.toDataURL();
+            const a = document.createElement('a');
+            a.href = img;
+            a.download = fileName + '.png';
+            a.click();
 
-        var jsonData = this.canvas.toJSON();
-        var canvasAsJson = JSON.stringify(jsonData);
-        var fileDownload = require('js-file-download');
-        fileDownload(canvasAsJson, 'panel.txt');
+            var jsonData = this.canvas.toJSON();
+            var canvasAsJson = JSON.stringify(jsonData);
+            var fileDownload = require('js-file-download');
+            fileDownload(canvasAsJson, fileName + '.txt');
+        }
     }
 
     handleSubmit = (event) => {

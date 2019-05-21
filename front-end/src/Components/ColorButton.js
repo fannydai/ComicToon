@@ -9,7 +9,7 @@ class ColorButton extends React.Component {
 
     state = {
         displayColorPicker: false,
-        color: '#000',
+        color: '#000000ff',
     };
 
     handleClick = () => {
