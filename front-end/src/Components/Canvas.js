@@ -18,7 +18,7 @@ import FillButton from './FillButton';
 import ColorButton from './ColorButton';
 import HighlightButton from './HighlightButton';
 import './styles/Canvas.css';
-import { addPanel } from '../Actions/ComicActions';
+import { addPanel, updateNewComicPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
 
 const history = require('browser-history');
@@ -88,7 +88,14 @@ class Canvas extends Component {
         });
         // Load Data if any
         if (this.props.location.state) {
-            if (this.props.location.state.previous === 'fromjson') {
+            console.log(this.props.location.state);
+            if (this.props.location.state.previous === '/create') {
+                const jsonData = this.props.location.state.panel.json;
+                this.canvas.loadFromJSON(jsonData , () => {
+                    this.canvas.renderAll();
+                });
+            }
+            else if (this.props.location.state.previous === 'fromjson') {
                 console.log('FROM JSON');
                 this.canvas.loadFromJSON(JSON.parse(this.props.location.state.panel.canvas), () => {
                     this.canvas.renderAll();
@@ -113,6 +120,54 @@ class Canvas extends Component {
         this.canvas.on('object:modified', (event) => {
             this.handleSave(event);
         });
+
+        // this.canvas.on('selection:updated', (event) => {
+        //     this.handleUpdate(event);
+        // });
+        // this.canvas.on('selection:created', (event) => {
+        //     this.handleUpdate(event);
+        // });
+    }
+
+    handleUpdate = (event) => {
+        var value;
+        // fill color
+        // outline color
+        // shadow color
+
+        // line width
+        try {
+            value = this.canvas.getActiveObject().get("strokeWidth");
+            this.setState({ lineWidth: value });
+            this.canvas.freeDrawingBrush.width = value;
+        } catch (error) {
+            console.log("Obj does not have width");
+        }
+        // shadow width
+        try {
+            value = this.canvas.getActiveObject().shadow.blur;
+            this.setState({ shadowWidth: value });
+            this.canvas.freeDrawingBrush.shadowBlur = value;
+        } catch (error) {
+            console.log("Obj does not have shadow");
+        }
+        // shadow offset
+        try {
+            value = this.canvas.getActiveObject().shadow.offsetX + this.canvas.getActiveObject().shadow.offsetY + 1;
+            this.setState({ shadowOffset: value });
+            this.canvas.freeDrawingBrush.shadowOffset = value;
+        } catch (error) {
+            console.log("Obj does not have shadow");
+        }
+        // font size
+        try {
+            value = this.canvas.getActiveObject().get("fontSize") + 1;
+            this.setState({ fontSize: value });
+        } catch (error) {
+            console.log("Text box not selected");
+        }
+        // font family
+        // highlight color
     }
 
     /**********************************************************
@@ -348,10 +403,15 @@ class Canvas extends Component {
                 strokeWidth: this.state.lineWidth
             });
         } else if(this.state.drawShape === SHAPES.image && this.state.selectedShape !== null) {
-            this.state.selectedShape.originX = 'center';
-            this.state.selectedShape.originY = 'center';
-            this.state.selectedShape.left = pointer.x;
-            this.state.selectedShape.top = pointer.y;
+            var tempShape = this.state.selectedShape;
+            tempShape.originX = 'center';
+            tempShape.originY = 'center';
+            tempShape.left = pointer.x;
+            tempShape.top = pointer.y;
+            this.setState({
+                selectedShape: tempShape
+            });
+            
             this.canvas.add(this.state.selectedShape);
             this.doMouseUpOut();
             return;
@@ -427,6 +487,18 @@ class Canvas extends Component {
     }
     
     doMouseUpOut = (o) => {
+        try {
+            this.state.selectedShape.setShadow({
+                color: this.state.shadowColor,
+                blur: this.state.shadowWidth,
+                offsetX: this.state.shadowOffset,
+                offsetY: this.state.shadowOffset,
+            });
+            this.canvas.renderAll();
+        } catch(error) {
+            
+        }
+
         if(this.state.selectedShape == null) { return; }
         this.setState({
             selectedShape: null,
@@ -445,6 +517,7 @@ class Canvas extends Component {
     handleFontSize = (value) => {
         this.setState({ fontSize: value });
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().set("fontSize", value);
             this.canvas.renderAll();
             this.handleSave();
@@ -456,6 +529,7 @@ class Canvas extends Component {
     handleChangeFontFamily = (event) => {
         if(event.target.textContent==="") { return; }
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().set("fontFamily", event.target.textContent);
             this.setState({ fontFamily: event.target.textContent });
             this.canvas.renderAll();
@@ -467,6 +541,7 @@ class Canvas extends Component {
 
     handleFontItalic = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             var italic = this.canvas.getActiveObject().get("fontStyle") === 'italic' ? 'normal' : 'italic';
             this.canvas.getActiveObject().set("fontStyle", italic);
             this.canvas.renderAll();
@@ -478,6 +553,7 @@ class Canvas extends Component {
 
     handleFontBold = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             var bold = this.canvas.getActiveObject().get("fontWeight") === 'bold' ? 'normal' : 'bold';
             this.canvas.getActiveObject().set("fontWeight", bold);
             this.canvas.renderAll();
@@ -489,6 +565,7 @@ class Canvas extends Component {
 
     handleFontUnderline = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().set("underline", !this.canvas.getActiveObject().get("underline"));
             // this.canvas.getActiveObject().setSelectionStyles("underline", !this.canvas.getActiveObject().getSelectionStyles('underline'));
             this.canvas.renderAll();
@@ -500,6 +577,7 @@ class Canvas extends Component {
 
     handleFontOverline = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().set("overline", !this.canvas.getActiveObject().get("overline"));
             this.canvas.renderAll();
             this.handleSave();
@@ -510,6 +588,7 @@ class Canvas extends Component {
 
     handleFontLinethrough = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().set("linethrough", !this.canvas.getActiveObject().get("linethrough"));
             this.canvas.renderAll();
             this.handleSave();
@@ -520,6 +599,7 @@ class Canvas extends Component {
 
     handleFontSub = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             var active = this.canvas.getActiveObject();
             if (!active) return;
             active.setSubscript();
@@ -532,6 +612,7 @@ class Canvas extends Component {
 
     handleFontSup = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             var active = this.canvas.getActiveObject();
             if (!active) return;
             active.setSuperscript();
@@ -544,6 +625,7 @@ class Canvas extends Component {
 
     handleLeftAlign = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().textAlign = "left";
             this.canvas.requestRenderAll();
             this.handleSave();
@@ -554,6 +636,7 @@ class Canvas extends Component {
 
     handleCenterAlign = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().textAlign = "center";
             this.canvas.requestRenderAll();
             this.handleSave();
@@ -564,6 +647,7 @@ class Canvas extends Component {
 
     handleRightAlign = (event) => {
         try {
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
             this.canvas.getActiveObject().textAlign = "right";
             this.canvas.requestRenderAll();
             this.handleSave();
@@ -574,7 +658,8 @@ class Canvas extends Component {
 
     handleHighlightFont = (color) => {
         try {
-            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get('backgroundColor') == color) return;
+            if(this.canvas.getActiveObject() === null || this.canvas.getActiveObject().get('type')!=="textbox") return;
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get('backgroundColor') === color) return;
             this.canvas.getActiveObject().set('backgroundColor', color);
             this.canvas.renderAll();
             this.handleSave();
@@ -652,7 +737,10 @@ class Canvas extends Component {
         this.setState({ brushColor: color });
         this.canvas.freeDrawingBrush.color = color;
         try {
-            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("fill") == color) return;
+            if(this.canvas.getActiveObject() === null
+                || this.canvas.getActiveObject().get('type')==="image"
+                || this.canvas.getActiveObject().get("fill") === color)
+                return;
             this.canvas.getActiveObject().set("fill", color);
             this.canvas.renderAll();
             this.handleSave();
@@ -713,7 +801,7 @@ class Canvas extends Component {
         this.canvas.freeDrawingBrush.stroke = color;
 
         try {
-            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("stroke") == color) return;
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().get("stroke") === color) return;
             this.canvas.getActiveObject().set("stroke", color);
             this.canvas.renderAll();
             this.handleSave();
@@ -723,17 +811,25 @@ class Canvas extends Component {
     }
 
     handleShadowColor = (color) => {
-        if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().shadow.color == color) return;
-        this.setState({ shadowColor: color });
-        this.canvas.freeDrawingBrush.shadowColor = color;
-        this.handleShadow();
+        try {
+            if(!this.canvas.getActiveObject() || this.canvas.getActiveObject().shadow.color === color) return;
+            this.setState({ shadowColor: color });
+            this.canvas.freeDrawingBrush.shadowColor = color;
+            this.handleShadow();
+        } catch (error) {
+            console.log("Shadow color error");
+        } 
     }
 
     handleBGColor = (color) => {
-        if(this.canvas.backgroundColor == color) return;
-        this.canvas.backgroundColor = color;
-        this.canvas.renderAll();
-        this.handleSave();
+        try {
+            if(this.canvas.backgroundColor === color) return;
+            this.canvas.backgroundColor = color;
+            this.canvas.renderAll();
+            this.handleSave();
+        } catch (error) {
+            console.log("Background color error");
+        } 
     }
 
      /**********************************************************
@@ -875,14 +971,22 @@ class Canvas extends Component {
 			var canvasAsJson = JSON.stringify(jsonData);
 			if(this.state.currentStateIndex < this.state.canvasState.length-1){
 				var indexToBeInserted = this.state.currentStateIndex+1;
-				this.state.canvasState[indexToBeInserted] = canvasAsJson;
-				var numberOfElementsToRetain = indexToBeInserted+1;
-				this.state.canvasState = this.state.canvasState.splice(0,numberOfElementsToRetain);
+                var tempCanvasState = this.state.canvasState;
+                tempCanvasState[indexToBeInserted] = canvasAsJson;
+                this.setState({
+                    canvasState: tempCanvasState,
+                });
+                var numberOfElementsToRetain = indexToBeInserted+1;
+                this.setState({
+                    canvasState: this.state.canvasState.splice(0,numberOfElementsToRetain)
+                });
 			} else{
 	    	    this.state.canvasState.push(canvasAsJson);
-			}
-	        this.state.currentStateIndex = this.state.canvasState.length-1;
-            if((this.state.currentStateIndex === this.state.canvasState.length-1) && this.state.currentStateIndex != -1) {
+            }
+            this.setState({
+                currentStateIndex: this.state.canvasState.length-1
+            });
+            if((this.state.currentStateIndex === this.state.canvasState.length-1) && this.state.currentStateIndex !== -1) {
                 this.setState({redoBtn: 'disable'});
             }
         }
@@ -891,32 +995,38 @@ class Canvas extends Component {
 
     handleUndo = (event) => {
         if(this.state.undoFinishedStatus){
-            if(this.state.currentStateIndex == -1){
-            this.state.undoStatus = false;
-            } else {
-                if (this.state.canvasState.length >= 1) {
-                    this.state.undoFinishedStatus = 0;
-                    if(this.state.currentStateIndex != 0){
-                        this.state.undoStatus = true;
-                        this.canvas.loadFromJSON(this.state.canvasState[this.state.currentStateIndex-1], () => {
-                            this.canvas.renderAll();
-                            this.state.undoStatus = false;
-                            this.state.currentStateIndex -= 1;
-                            this.setState({undoBtn: 'icon'});
-                            if(this.state.currentStateIndex !== this.state.canvasState.length-1){
-                                this.setState({redoBtn: 'icon'});
-                            }
-                            this.state.undoFinishedStatus = 1;
-                        });
-                    } else if(this.state.currentStateIndex == 0){
-                        this.canvas.clear();
-                        this.state.undoFinishedStatus = 1;
+            if(this.state.currentStateIndex === -1){
+                this.setState({
+                    undoStatus: false
+                });
+            } else if(this.state.canvasState.length >= 1) {
+                this.setState({
+                    undoFinishedStatus: 0
+                });
+                if(this.state.currentStateIndex !== 0){
+                    this.setState({
+                        undoStatus: true
+                    });
+                    this.canvas.loadFromJSON(this.state.canvasState[this.state.currentStateIndex-1], () => {
+                        this.canvas.renderAll();
                         this.setState({
-                            undoBtn: 'disable',
-                            redoBtn: 'icon'
+                            undoStatus: false,
+                            currentStateIndex: -1
                         });
-                        this.state.currentStateIndex -= 1;
-                    }
+                        this.setState({undoBtn: 'icon'});
+                        if(this.state.currentStateIndex !== this.state.canvasState.length-1){
+                            this.setState({redoBtn: 'icon'});
+                        }
+                        this.setState({undoFinishedStatus: 1});
+                    });
+                } else if(this.state.currentStateIndex === 0){
+                    this.canvas.clear();
+                    this.setState({
+                        undoFinishedStatus: 1,
+                        undoBtn: 'disable',
+                        redoBtn: 'icon',
+                        currentStateIndex: this.state.currentStateIndex -1
+                    });
                 }
             }
 		}
@@ -924,26 +1034,29 @@ class Canvas extends Component {
 
     handleRedo = (event) => {
         if(this.state.redoFinishedStatus){
-			if((this.state.currentStateIndex == this.state.canvasState.length-1) && this.state.currentStateIndex != -1){
+			if((this.state.currentStateIndex === this.state.canvasState.length-1) && this.state.currentStateIndex !== -1){
                 this.setState({redoBtn: 'disable'});
-			} else{
-                if (this.state.canvasState.length > this.state.currentStateIndex && this.state.canvasState.length != 0){
-                    this.state.redoFinishedStatus = 0;
-                    this.state.redoStatus = true;
-                    this.canvas.loadFromJSON(this.state.canvasState[this.state.currentStateIndex+1], () => {
-                        var jsonData = JSON.parse(this.state.canvasState[this.state.currentStateIndex+1]);
-                        this.canvas.renderAll();
-                        this.state.redoStatus = false;
-                        this.state.currentStateIndex += 1;
-                        if(this.state.currentStateIndex != -1){
-                            this.setState({undoBtn: 'icon'});
-                        }
-                        this.state.redoFinishedStatus = 1;
-                        if((this.state.currentStateIndex == this.state.canvasState.length-1) && this.state.currentStateIndex != -1){
-                            this.setState({redoBtn: 'disable'});
-                        }
+			} else if(this.state.canvasState.length > this.state.currentStateIndex && this.state.canvasState.length !== 0){
+                this.setState({
+                    redoFinishedStatus: 0,
+                    redoStatus: true
+                });
+                this.canvas.loadFromJSON(this.state.canvasState[this.state.currentStateIndex+1], () => {
+                    this.canvas.renderAll();
+                    this.setState({
+                        currentStateIndex: this.state.currentStateIndex + 1,
+                        redoStatus: false
                     });
-                }
+                    if(this.state.currentStateIndex !== -1){
+                        this.setState({undoBtn: 'icon'});
+                    }
+                    this.setState({
+                        redoFinishedStatus: 1
+                    });
+                    if((this.state.currentStateIndex === this.state.canvasState.length-1) && this.state.currentStateIndex !== -1){
+                        this.setState({redoBtn: 'disable'});
+                    }
+                });
 			}
 		}
     }
@@ -957,7 +1070,7 @@ class Canvas extends Component {
         var fileName = prompt("Please enter what you would like to call your file.", randomString({length: 10}));
         if (fileName == null) {
             return;
-        } else if(fileName == "") {
+        } else if(fileName === "") {
             alert("Nothing was entered!");
         } else {
             const img = this.canvas.toDataURL();
@@ -969,7 +1082,7 @@ class Canvas extends Component {
             var jsonData = this.canvas.toJSON();
             var canvasAsJson = JSON.stringify(jsonData);
             var fileDownload = require('js-file-download');
-            fileDownload(canvasAsJson, fileName + '.txt');
+            fileDownload(canvasAsJson, fileName + '.json');
         }
     }
 
@@ -984,9 +1097,15 @@ class Canvas extends Component {
     handleDone = (event) => {
         this.setState({ redo: [] });
         // If it is from JSON (from view comic) save the panel and return
-        if (this.props.location.state && this.props.location.state.previous === 'fromjson') {
-            this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
-                this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
+        if (this.props.location.state) {
+            if (this.props.location.state.previous == '/create') {
+                this.props.updateNewComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
+                history(-1);
+            }
+            else if (this.props.location.state.previous === 'fromjson') {
+                this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
+                    this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
+            }
         } else {
             // Done with drawing, reroute back to create comic
             this.props.addPanel(this.canvas.toDataURL(), this.canvas.toJSON());
@@ -1013,7 +1132,7 @@ class Canvas extends Component {
             this.canvas.add(new fabric.Line([0,i*grid,width,i*grid], gridOption));
         }
     }
-
+      
     render() {
         return (
             <div className="panel-container">
@@ -1111,10 +1230,10 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handlePencilCircle}>Circle</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilPattern}>Poka dots</Dropdown.Item>
 
-                            {/* <Dropdown.Item onClick={this.handlePencilHline}>H Line</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handlePencilHline}>H Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilVline}>V Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilSquare}>Square</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item> */}
+                            <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item>
                         </DropdownButton>
                     </div>
                     <div className="bottom-bar">
@@ -1171,4 +1290,4 @@ Canvas.propTypes = {
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, { addPanel, updateComicPanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel, updateComicPanel, updateNewComicPanel })(withRouter(Canvas));

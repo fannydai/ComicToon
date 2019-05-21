@@ -686,6 +686,8 @@ public class ComicController{
                 for(ComicModel temp : coms){
                     if(temp.getName().equals(list.get(1)) && temp.getUsername().equals(list.get(0))){ //get the right comic
                         ViewAllComicsResult pans = new ViewAllComicsResult();
+                        ComicSeriesModel series = ComicSeriesRepository.findByid(temp.getComicSeriesID());
+                        pans.setComicSeriesName(series.getName());
                         pans.setComicID(temp.getId());
                         pans.setComicName(temp.getName());
                         pans.setDate(temp.getDate());

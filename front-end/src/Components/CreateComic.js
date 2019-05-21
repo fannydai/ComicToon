@@ -128,7 +128,7 @@ class CreateComic extends Component {
         )
     }
 
-    handleNavigateCanvas() {
+    handleNavigateCanvas = (e) => {
         // Save the current state to the store
         this.props.saveNewComic({
             comicName: this.state.comicName,
@@ -140,6 +140,23 @@ class CreateComic extends Component {
             sharedUsersList: this.state.sharedUsersList
         });
         this.props.history.push('/canvas');
+    }
+
+    handleEditPanel = (e, panel, index) => {
+        this.props.saveNewComic({
+            comicName: this.state.comicName,
+            description: this.state.comicDescription,
+            userInput: this.state.userInput,
+            privacy: this.state.privacy,
+            UserSerieses: this.state.UserSerieses,
+            seriesName: this.state.selected_series,
+            sharedUsersList: this.state.sharedUsersList
+        });
+        this.props.history.push("/canvas", {
+            previous: "/create",
+            panel: panel,
+            index: index
+        });
     }
 
     handleSubmit = (event) => {
@@ -306,7 +323,7 @@ class CreateComic extends Component {
                                 <Slider {...props}>
                                     {this.props.comic.newComic.length ? 
                                         this.props.comic.newComic.map((panel, i) => {
-                                            return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i, e)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
+                                            return <Panel comic={panel} key={i} edit={e => this.handleEditPanel(e, panel, i)} close={e => this.handleClosePanel(i, e)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                         }) : null}
                                     <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                                 </Slider>
