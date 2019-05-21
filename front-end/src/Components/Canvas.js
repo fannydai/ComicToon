@@ -10,6 +10,8 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 import NavigationBar from './NavigationBar';
 import ShadowButton from './ShadowButton';
@@ -18,8 +20,7 @@ import FillButton from './FillButton';
 import ColorButton from './ColorButton';
 import HighlightButton from './HighlightButton';
 import './styles/Canvas.css';
-import { addPanel, updateNewComicPanel } from '../Actions/ComicActions';
-import { updateComicPanel } from '../Actions/NavbarActions';
+import { addPanel, updateNewComicPanel, updateComicPanel, addUpdatePanel } from '../Actions/ComicActions';
 
 const history = require('browser-history');
 var SCALE_FACTOR = 1.3;
@@ -95,13 +96,19 @@ class Canvas extends Component {
                     this.canvas.renderAll();
                 });
             }
-            else if (this.props.location.state.previous === 'fromjson') {
-                console.log('FROM JSON');
-                this.canvas.loadFromJSON(JSON.parse(this.props.location.state.panel.canvas), () => {
-                    this.canvas.renderAll();
-                }, (o, object) => {
-                    console.log(o, object);
-                });
+            else if (this.props.location.state.previous === '/update') {
+                const data = this.props.location.state.panel;
+                if (data.canvas) {
+                    this.canvas.loadFromJSON(JSON.parse(data.canvas), () => {
+                        this.canvas.renderAll();
+                    });
+                }
+                else {
+                    fabric.Image.fromURL(data.image, (img) => {
+                        this.canvas.add(img);
+                        this.canvas.renderAll();
+                    });
+                }
             }
         }
 
@@ -121,12 +128,12 @@ class Canvas extends Component {
             this.handleSave(event);
         });
 
-        // this.canvas.on('selection:updated', (event) => {
-        //     this.handleUpdate(event);
-        // });
-        // this.canvas.on('selection:created', (event) => {
-        //     this.handleUpdate(event);
-        // });
+        this.canvas.on('selection:updated', (event) => {
+            this.handleUpdate(event);
+        });
+        this.canvas.on('selection:created', (event) => {
+            this.handleUpdate(event);
+        });
     }
 
     handleUpdate = (event) => {
@@ -153,20 +160,30 @@ class Canvas extends Component {
         }
         // shadow offset
         try {
-            value = this.canvas.getActiveObject().shadow.offsetX + this.canvas.getActiveObject().shadow.offsetY + 1;
+            value = this.canvas.getActiveObject().shadow.offsetX;
             this.setState({ shadowOffset: value });
             this.canvas.freeDrawingBrush.shadowOffset = value;
         } catch (error) {
             console.log("Obj does not have shadow");
         }
-        // font size
-        try {
-            value = this.canvas.getActiveObject().get("fontSize") + 1;
-            this.setState({ fontSize: value });
-        } catch (error) {
-            console.log("Text box not selected");
+        
+        if(this.canvas.getActiveObject().get('type')==="textbox"){
+            // font size
+            try {
+                value = this.canvas.getActiveObject().get("fontSize");
+                this.setState({ fontSize: value });
+            } catch (error) {
+                console.log("Text box not selected");
+            }
+            // font family
+            try {
+                value = this.canvas.getActiveObject().get('fontFamily');
+                console.log(value);
+                this.setState({ fontFamily: value });
+            } catch (error) {
+                console.log("Text box not selected");
+            }
         }
-        // font family
         // highlight color
     }
 
@@ -1098,13 +1115,21 @@ class Canvas extends Component {
         this.setState({ redo: [] });
         // If it is from JSON (from view comic) save the panel and return
         if (this.props.location.state) {
-            if (this.props.location.state.previous == '/create') {
+            if (this.props.location.state.previous === '/create') {
                 this.props.updateNewComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
                 history(-1);
             }
-            else if (this.props.location.state.previous === 'fromjson') {
-                this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
-                    this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
+            else if (this.props.location.state.previous === '/update') {
+                this.props.updateComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
+                this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
+                    previous: '/canvas'
+                });
+            }
+            else if (this.props.location.state.previous === '/update/new') {
+                this.props.addUpdatePanel(this.canvas.toDataURL(), this.canvas.toJSON());
+                this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
+                    previous: '/canvas'
+                });
             }
         } else {
             // Done with drawing, reroute back to create comic
@@ -1197,7 +1222,7 @@ class Canvas extends Component {
                                 <td><OutlineButton changeColor={this.handleStrokeColor}  title="Stroke Color"/></td>
                             </tr>
                             <tr>
-                                <td><ShadowButton changeColor={this.handleShadowColor}  title="Shadow Color"/></td>
+                                <td><ShadowButton changeColor={this.handleShadowColor} title="Shadow Color"/></td>
                                 <td><ColorButton changeColor={this.handleBGColor}  title="Background Color"/></td>
                             </tr>
                         </tbody>
@@ -1209,15 +1234,21 @@ class Canvas extends Component {
                     <div className="bottom-bar">
                         <div>
                             <div htmlFor="lineWidthSlider">Line Width</div>
-                            <NumericInput onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth} min={0} max={100} step={1} precision={0} size={5} />
+                            <Slider onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth}
+                                railStyle={{ backgroundColor: 'black'}}
+                                trackStyle={{ backgroundColor: '#047AFB'}}/>
                         </div>
                         <div>
                             <div htmlFor="shadowWidthSlider">Shadow Width</div>
-                            <NumericInput onChange={this.handleShadowWidth} className="shadow_width" value={this.state.shadowWidth} min={0} max={100} step={1} precision={0} size={5} />
+                            <Slider onChange={this.handleShadowWidth} className="shadow_width" value={this.state.shadowWidth}
+                                railStyle={{ backgroundColor: 'black'}}
+                                trackStyle={{ backgroundColor: '#047AFB'}}/>
                         </div>
                         <div>
                             <div htmlFor="shadowOffsetSlider">Shadow Offset</div>
-                            <NumericInput onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset} min={-20} max={20} step={1} precision={0} size={5} />
+                            <Slider onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset}
+                                railStyle={{ backgroundColor: 'black'}}
+                                trackStyle={{ backgroundColor: '#047AFB'}}/>
                         </div>
                         <DropdownButton title="Pencil Mode">
                             <Dropdown.Item onClick={this.handlePencil}>Pencil</Dropdown.Item>
@@ -1239,7 +1270,7 @@ class Canvas extends Component {
                     <div className="bottom-bar">
                         <div>
                             <div htmlFor="fontSize">Font Size</div>
-                            <NumericInput onChange={this.handleFontSize} className="font_size" value={this.state.fontSize} min={1} step={1} precision={0} size={5} />
+                            <NumericInput onChange={this.handleFontSize} className="font_size" value={this.state.fontSize} size={5} />
                         </div>
                         <DropdownButton title={this.state.fontFamily} value={this.state.fontFamily}>
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Arial</Dropdown.Item>
@@ -1290,4 +1321,4 @@ Canvas.propTypes = {
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, { addPanel, updateComicPanel, updateNewComicPanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel, updateComicPanel, updateNewComicPanel, addUpdatePanel })(withRouter(Canvas));

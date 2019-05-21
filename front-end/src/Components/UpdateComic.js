@@ -66,8 +66,9 @@ class UpdateComic extends Component {
             this.props.history.push("/");
         }
         // Load saved data if any
-        else if (this.props.location.state && this.props.location.state.previous === 'canvas') {
+        else if (this.props.location.state && this.props.location.state.previous === '/canvas') {
             const savedData = this.props.comic.saveUpdateComic;
+            console.log(savedData);
             if (savedData.comicName) {
                 this.setState({ comicName: savedData.comicName });
             }
@@ -90,15 +91,18 @@ class UpdateComic extends Component {
                 this.setState({ sharedUsersList: savedData.sharedUsersList });
             }
             if (savedData.comicPanels) {
+                /*
                 // Potentially add a new panel if any
-                if (this.props.comic.newComic.length) {
-                    this.setState({ comicPanels: [...savedData.comicPanels, ...this.props.comic.newComic]});
-                    this.props.clearPanels();
+                if (this.props.comic.newUpdateComic) {
+                    this.setState({ comicPanels: [...savedData.comicPanels, ...this.props.comic.newUpdateComic]});
+                    this.props.clearUpdateComic();
                 } else {
                     this.setState({ comicPanels: savedData.comicPanels });
-                }
+                }*/
+                this.setState({ comicPanels: savedData.comicPanels });
             }
         }
+        else {
 
         (async () => {
             // Need to fetch panel data
@@ -138,6 +142,7 @@ class UpdateComic extends Component {
                 this.props.history.goBack();
             }
         })();
+    }
         if(this.props.location.state === undefined || this.props.location.state.flag){
             (async () => {
                 const res = await fetch("http://localhost:8080/view/series", {
@@ -217,6 +222,7 @@ class UpdateComic extends Component {
         )
     }
 
+    // Create new panel to the comic
     handleNavigateCanvas = (event) => {
         this.props.saveUpdateComic({
             comicName: this.state.comicName,
@@ -228,7 +234,19 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
-        this.props.history.push('/canvas', { previous: 'update', username: this.props.match.params.username, series: this.props.match.params.seriesName, comic: this.props.match.params.comicName });
+        this.props.history.push('/canvas', { previous: '/update/new', username: this.props.match.params.username, seriesName: this.props.match.params.seriesName, comicName: this.props.match.params.comicName  });
+    }
+
+    // Change an existing panel
+    handleEditPanel = (e, panel, index) => {
+        this.props.history.push("/canvas", {
+            previous: '/update',
+            panel: panel,
+            index: index,
+            username: this.props.match.params.username, 
+            seriesName: this.props.match.params.seriesName, 
+            comicName: this.props.match.params.comicName
+        })
     }
 
     handleDeleteShare = (index, event) => {
@@ -279,7 +297,7 @@ class UpdateComic extends Component {
             console.log(content);
             if (content.result === "success") {
                 this.props.saveUpdateComic({});
-                history(-1);
+                this.props.history.push('/view/comics');
             } else {
                 this.setState({ error: content.result });
             }
@@ -390,7 +408,7 @@ class UpdateComic extends Component {
                             <Slider {...props}>
                                 {this.state.comicPanels.length ? 
                                     this.state.comicPanels.map((panel, i) => {
-                                        return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
+                                        return <Panel comic={panel} key={i} edit={e => this.handleEditPanel(e, panel, i)} close={e => this.handleClosePanel(i)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                     }) : null}
                                 <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                             </Slider>

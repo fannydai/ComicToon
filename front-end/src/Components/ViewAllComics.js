@@ -127,7 +127,12 @@ class ViewAllComics extends Component {
             )
         else{
             return(
-                <h2>CREATE A <a href="/create/series">SERIES</a> THEN A <a href="/create/comic">COMIC</a></h2>
+                <div>
+
+                
+                <h2>You Haven't Created Any Comics Yet.</h2>
+                <h2>First Create a <a href="/create/series">SERIES</a> And Then Create a <a href="/create/comic">COMIC</a></h2>
+                </div>
             )
         }
     }

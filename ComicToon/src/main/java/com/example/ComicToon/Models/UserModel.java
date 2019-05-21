@@ -83,6 +83,10 @@ public class UserModel{
         return this.username;
     }
 
+    public String getUsername2() {
+        return this.username.toLowerCase();
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

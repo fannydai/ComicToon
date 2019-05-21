@@ -719,7 +719,7 @@ public class ComicController{
         List<UserModel> allUsers = userRepository.findAll();
         ArrayList<UserModel> matchedUsers = new ArrayList<>();
         for(UserModel u: allUsers){
-            if(u.getUsername().contains(form.getQuery()) || form.getQuery().contains(u.getUsername())){
+            if(u.getUsername2().contains(form.getQuery().toLowerCase()) || form.getQuery().toLowerCase().contains(u.getUsername2())){
                 matchedUsers.add(u);
             }
         }
@@ -727,7 +727,7 @@ public class ComicController{
         ArrayList<ComicSeriesModel> matchedSeries = new ArrayList<>();
         ArrayList<String> seriesOwners = new ArrayList<>();
         for( ComicSeriesModel c : allseries){
-            if(c.getName().contains(form.getQuery()) || form.getQuery().contains(c.getName())){
+            if(c.getName2().contains(form.getQuery().toLowerCase()) || form.getQuery().toLowerCase().contains(c.getName2())){
                 // Check permissions
                 if (c.getUserID().equals(user.getId()) || c.getPrivacy().equals("Public") || c.getSharedWith().contains(user.getUsername())) {
                     matchedSeries.add(c);
@@ -738,7 +738,7 @@ public class ComicController{
         List<ComicModel> allComics = comicRepository.findAll();
         ArrayList<ComicModel> matchedComics = new ArrayList<>();
         for(ComicModel x: allComics){
-            if(x.getName().contains(form.getQuery()) || form.getQuery().contains(x.getName())){
+            if(x.getName2().contains(form.getQuery().toLowerCase()) || form.getQuery().toLowerCase().contains(x.getName2())){
                 if (x.getUserID().equals(user.getId()) || x.getPrivacy().equals("Public") || x.getSharedWith().contains(user.getUsername())) {
                     matchedComics.add(x);
                 }
