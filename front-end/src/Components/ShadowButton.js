@@ -55,7 +55,8 @@ class ShadowButton extends React.Component {
             </span>
             {this.state.displayColorPicker ? 
                 <div style={popover}> <div style={cover} onClick={this.handleClose} />
-                    <ChromePicker color={this.state.color} onChange={this.handleChange} onChangeComplete={this.handleChangeComplete}/>
+                    <ChromePicker color={this.state.color} onChange={this.handleChange} 
+                    onChangeComplete={this.handleChangeComplete}/>
                 </div>  : null 
             }
         </div>

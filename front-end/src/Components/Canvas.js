@@ -10,6 +10,8 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 import NavigationBar from './NavigationBar';
 import ShadowButton from './ShadowButton';
@@ -121,12 +123,12 @@ class Canvas extends Component {
             this.handleSave(event);
         });
 
-        // this.canvas.on('selection:updated', (event) => {
-        //     this.handleUpdate(event);
-        // });
-        // this.canvas.on('selection:created', (event) => {
-        //     this.handleUpdate(event);
-        // });
+        this.canvas.on('selection:updated', (event) => {
+            this.handleUpdate(event);
+        });
+        this.canvas.on('selection:created', (event) => {
+            this.handleUpdate(event);
+        });
     }
 
     handleUpdate = (event) => {
@@ -153,20 +155,30 @@ class Canvas extends Component {
         }
         // shadow offset
         try {
-            value = this.canvas.getActiveObject().shadow.offsetX + this.canvas.getActiveObject().shadow.offsetY + 1;
+            value = this.canvas.getActiveObject().shadow.offsetX;
             this.setState({ shadowOffset: value });
             this.canvas.freeDrawingBrush.shadowOffset = value;
         } catch (error) {
             console.log("Obj does not have shadow");
         }
-        // font size
-        try {
-            value = this.canvas.getActiveObject().get("fontSize") + 1;
-            this.setState({ fontSize: value });
-        } catch (error) {
-            console.log("Text box not selected");
+        
+        if(this.canvas.getActiveObject().get('type')==="textbox"){
+            // font size
+            try {
+                value = this.canvas.getActiveObject().get("fontSize");
+                this.setState({ fontSize: value });
+            } catch (error) {
+                console.log("Text box not selected");
+            }
+            // font family
+            try {
+                value = this.canvas.getActiveObject().get('fontFamily');
+                console.log(value);
+                this.setState({ fontFamily: value });
+            } catch (error) {
+                console.log("Text box not selected");
+            }
         }
-        // font family
         // highlight color
     }
 
@@ -1197,7 +1209,7 @@ class Canvas extends Component {
                                 <td><OutlineButton changeColor={this.handleStrokeColor}  title="Stroke Color"/></td>
                             </tr>
                             <tr>
-                                <td><ShadowButton changeColor={this.handleShadowColor}  title="Shadow Color"/></td>
+                                <td><ShadowButton changeColor={this.handleShadowColor} title="Shadow Color"/></td>
                                 <td><ColorButton changeColor={this.handleBGColor}  title="Background Color"/></td>
                             </tr>
                         </tbody>
@@ -1209,15 +1221,21 @@ class Canvas extends Component {
                     <div className="bottom-bar">
                         <div>
                             <div htmlFor="lineWidthSlider">Line Width</div>
-                            <NumericInput onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth} min={0} max={100} step={1} precision={0} size={5} />
+                            <Slider onChange={this.handleLineWidth} className="line_width" value={this.state.lineWidth}
+                                railStyle={{ backgroundColor: 'black'}}
+                                trackStyle={{ backgroundColor: '#047AFB'}}/>
                         </div>
                         <div>
                             <div htmlFor="shadowWidthSlider">Shadow Width</div>
-                            <NumericInput onChange={this.handleShadowWidth} className="shadow_width" value={this.state.shadowWidth} min={0} max={100} step={1} precision={0} size={5} />
+                            <Slider onChange={this.handleShadowWidth} className="shadow_width" value={this.state.shadowWidth}
+                                railStyle={{ backgroundColor: 'black'}}
+                                trackStyle={{ backgroundColor: '#047AFB'}}/>
                         </div>
                         <div>
                             <div htmlFor="shadowOffsetSlider">Shadow Offset</div>
-                            <NumericInput onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset} min={-20} max={20} step={1} precision={0} size={5} />
+                            <Slider onChange={this.handleShadowOffset} className="shadow_offset" value={this.state.shadowOffset}
+                                railStyle={{ backgroundColor: 'black'}}
+                                trackStyle={{ backgroundColor: '#047AFB'}}/>
                         </div>
                         <DropdownButton title="Pencil Mode">
                             <Dropdown.Item onClick={this.handlePencil}>Pencil</Dropdown.Item>
@@ -1239,7 +1257,7 @@ class Canvas extends Component {
                     <div className="bottom-bar">
                         <div>
                             <div htmlFor="fontSize">Font Size</div>
-                            <NumericInput onChange={this.handleFontSize} className="font_size" value={this.state.fontSize} min={1} step={1} precision={0} size={5} />
+                            <NumericInput onChange={this.handleFontSize} className="font_size" value={this.state.fontSize} size={5} />
                         </div>
                         <DropdownButton title={this.state.fontFamily} value={this.state.fontFamily}>
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Arial</Dropdown.Item>
