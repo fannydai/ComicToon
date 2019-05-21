@@ -110,11 +110,12 @@ class ViewAllComics extends Component {
             return (
                 this.state.allComics.map((item, i)=> {
                     return item !== null ?
-                    <div className="view-comics-strip-container" key={item.comicName}>
+                    <div className="view-comics-strip-container" key={item.comicID}>
                         <div className="view-comics-strip-top">
                             <h3 className="view-comics-h3" onClick={(e) => this.handleClick(item, e)}>{item.comicName}</h3>
                             <Button onClick={(e) => this.handleUpdate(item, e)}>Update</Button>
                         </div>
+                        <h5>Comic Series: {item.comicSeriesName}</h5>
                         <div className="view-comics-strip-bottom">
                             {this.renderOne(item.comicList, i)}
                         </div>
@@ -137,7 +138,7 @@ class ViewAllComics extends Component {
     }
 
     handleUpdate(item, event) {
-        this.props.history.push(`/update/comic/${this.props.CurrUser.username}/${item.comicName}`);
+        this.props.history.push(`/update/comic/${this.props.CurrUser.username}/${item.comicSeriesName}/${item.comicName}`);
     }
 
     render() {

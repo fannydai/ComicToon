@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Form } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
 import Slider from 'react-slick';
 
 import NavigationBar from './NavigationBar';
@@ -32,7 +32,8 @@ class UpdateComic extends Component {
             sharedUsersList: [],
             series: [],
             selected_series: '',
-            showSeries: false
+            showSeries: false,
+            error: ""
         }
     }
 
@@ -211,7 +212,7 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
-        this.props.history.push('/canvas', { previous: 'update', comic: this.props.match.params.comicName });
+        this.props.history.push('/canvas', { previous: 'update', username: this.props.match.params.username, series: this.props.match.params.seriesName, comic: this.props.match.params.comicName });
     }
 
     handleDeleteShare = (index, event) => {
@@ -245,6 +246,7 @@ class UpdateComic extends Component {
                     description: this.state.comicDescription,
                     oldName: this.props.match.params.comicName,
                     name: this.state.comicName,
+                    oldSeries: this.props.match.params.seriesName,
                     series: this.state.selected_series,
                     privacy: this.state.privacy,
                     sharedWith: this.state.sharedUsersList,
@@ -255,20 +257,17 @@ class UpdateComic extends Component {
             });
             let content =  await res.json();
             console.log(content);
-            if (content.result === 'failed') {
-                alert('Could not update comic');
-            } else {
+            if (content.result === "success") {
                 this.props.saveUpdateComic({});
-                //this.props.history.push('/view/comics');
                 history(-1);
+            } else {
+                this.setState({ error: content.result });
             }
         })();
     }
     
     handleDelete = (event) => {
         event.preventDefault();
-        console.log(this.props.match.params.comicName);
-        console.log(this.props.match.params.username);
         (async () => {
             const res = await fetch('http://localhost:8080/delete/comic', {
                 method: "POST",
@@ -281,10 +280,10 @@ class UpdateComic extends Component {
                     ownerName: this.props.CurrUser.token
                 })
             });
-            let content = res.json();
+            let content = await res.json();
             console.log(content);
             if (content.result === 'failed') {
-                alert('Could not delete comic');
+                this.setState({ error: "Could not delete comic." });
             } else {
                 this.props.history.push('/view/comics');
             }
@@ -336,7 +335,6 @@ class UpdateComic extends Component {
             ]
         };
         return (
-          
             <div className="create-comic-container">
                 <NavigationBar />
                 <div className="create-comic-bottom">
@@ -351,10 +349,10 @@ class UpdateComic extends Component {
                             </Slider>
                         </div>
                         <div className="create-comic-info">
+                            {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                             <Form.Control required className="create-comic-name-input" type="text"  placeholder="Type Comic Name..." name="comicName" value={this.state.comicName} onChange={this.handleComicName} />
-                            <Form.Control.Feedback type="invalid">Please name the comic.</Form.Control.Feedback>
                             <Dropdown className="create-comic-dropdown">
-                                <Dropdown.Toggle variant="info">
+                                <Dropdown.Toggle variant="info" className="create-comic-dropdown-button">
                                     {this.state.selected_series ? this.state.selected_series : 'Select Series'}
                                 </Dropdown.Toggle>
                                 {this.state.showSeries ? <Dropdown.Menu> {this.renderUserSeries()} </Dropdown.Menu> : null}
@@ -372,13 +370,13 @@ class UpdateComic extends Component {
                                 <div className="create-comic-sharing-right">
                                     <label>Add User: (Press 'Enter' to Add)</label>
                                     <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
-                                    <Form.Check type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
+                                    <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                     <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                 </div>
                             </div>
                         </div>
                         <div className="update-comic-submit">
-                            <Button type="submit" variant="success" onClick={this.handleSubmit}>Update Comic</Button>
+                            <Button type="submit" variant="success">Update Comic</Button>
                             {this.state.showSeries ? <Button variant="danger" onClick={this.handleDelete}>Delete Comic</Button> : null}
                         </div>
                     </Form>

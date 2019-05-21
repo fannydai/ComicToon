@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Overlay, Tooltip } from 'react-bootstrap';
 import {withRouter} from 'react-router-dom'
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
@@ -8,9 +8,11 @@ const history = require('browser-history')
 
 class ReportComponent extends Component {
     constructor(){
-        super()
+        super();
+        this.errorRef = React.createRef();
         this.state = {
-            reason: ""
+            reason: "",
+            error: ""
         }
     }
 
@@ -24,11 +26,15 @@ class ReportComponent extends Component {
         console.log(this.state.toDeactivate)  
     }
 
+    handleClearError = () => {
+        this.setState({ error: "" });
+    }
+
     handleReport = (e) => {
         e.preventDefault();
         console.log(this.state.reason)
         if(this.state.reason === ""){
-            alert("You MUST give a reason for your report!");
+            this.setState({ error: "You MUST give a reason for you report." });
         }
         else{
             (async () => {
@@ -46,8 +52,11 @@ class ReportComponent extends Component {
                     })
                 });
                 let content = await res.json();
-                if (content.status === "success") {alert("Reported!!");}
-                else{ alert("you already reported this item.. wait for it to be resolved")}
+                if (content.status === "success") {
+                    this.setState({ error: "Successfully reported." });
+                } else { 
+                    this.setState({ error: "You have already reported this. Wait for it to be resolved." });
+                }
                 history(-1);
             })(); 
         }
@@ -78,7 +87,8 @@ class ReportComponent extends Component {
                 <div className="bubbletext">
                     <Form.Control name="reason" placeholder="what's the reason for your report?" className ="paddedFormControl textbox"  onChange={this.handleChange}/>
                 </div>
-                <Button type="submit" variant="danger">Submit Report</Button>
+                <Button type="submit" variant="danger" ref={this.errorRef}>Submit Report</Button>
+                <Overlay target={this.errorRef.current} show={this.state.error.length > 0} placement="bottom" ><Tooltip onClick={this.handleClearError}>{this.state.error}</Tooltip></Overlay>
                 </Form>
                 <Footer />
             </div>

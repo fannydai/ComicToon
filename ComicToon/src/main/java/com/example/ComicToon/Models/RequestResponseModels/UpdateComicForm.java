@@ -7,6 +7,7 @@ public class UpdateComicForm {
     private String description;
     private String oldName;
     private String name;
+    private String oldSeries;
     private String series;
     private String privacy;
     private ArrayList<String> sharedWith;
@@ -78,6 +79,15 @@ public class UpdateComicForm {
     public void SetName(String name){
         this.name = name;
     }
+
+    public String getOldSeries() {
+        return this.oldSeries;
+    }
+
+    public void setOldSeries(String oldSeries) {
+        this.oldSeries = oldSeries;
+    }
+
     public String getSeries(){
         return this.series;
     }
