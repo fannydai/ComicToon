@@ -28,6 +28,7 @@
     "react-color": "^2.17.0",
     "react-dom": "^16.8.5",
     "react-glide": "^3.2.0",
+    "react-keyboard-event-handler": "^1.4.1",
     "react-native-numeric-input": "^1.6.5",
     "react-numeric-input": "^2.2.3",
     "react-redux": "^6.0.1",

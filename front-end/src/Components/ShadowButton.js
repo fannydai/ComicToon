@@ -3,9 +3,9 @@ import { ChromePicker } from 'react-color'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class ShadowButton extends React.Component {
-    constructor(props){
-        super(props);    
-    }
+    // constructor(props){
+    //     super(props);    
+    // }
 
     state = {
         displayColorPicker: false,
@@ -24,7 +24,7 @@ class ShadowButton extends React.Component {
         this.setState({color: color.hex + Math.round(color.rgb.a * 255).toString(16)});
     };
 
-    handleChangeComplete = (color) => {
+    handleChangeComplete = () => {
         this.props.changeColor(this.state.color);
     };
 
@@ -42,11 +42,11 @@ class ShadowButton extends React.Component {
             background: this.state.color
         }
         const cover = {
-        position: 'fixed',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
+            position: 'fixed',
+            top: '0px',
+            right: '0px',
+            bottom: '0px',
+            left: '0px',
         }
         return (
         <div>

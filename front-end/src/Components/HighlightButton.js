@@ -3,9 +3,9 @@ import { ChromePicker } from 'react-color'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class HighlightButton extends React.Component {
-    constructor(props){
-        super(props);    
-    }
+    // constructor(props){
+    //     super(props);    
+    // }
 
     state = {
         displayColorPicker: false,
