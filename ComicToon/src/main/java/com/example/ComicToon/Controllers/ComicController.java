@@ -326,7 +326,7 @@ public class ComicController{
         UserModel user = userRepository.findBytoken(form.getToken());
         if (user == null){
             System.out.println("TOKEN IS INVALID");
-            result.setResult("token is invalid");
+            result.setResult("Token is invalid");
             return result;
         } else{
             ArrayList<ComicSeriesModel> seriesList = ComicSeriesRepository.findByname(form.getSeries());
@@ -337,6 +337,14 @@ public class ComicController{
             }
             if(series!=null){
                 System.out.println(form.getUsername());
+                // Make sure there is no comic by this name under this series
+                ArrayList<ComicModel> check = comicRepository.findByUserID(user.getId());
+                for (ComicModel c : check) {
+                    if (c.getName().equals(form.getName()) && c.getComicSeriesID().equals(series.getId())) {
+                        result.setResult("You already have a comic with that name under this series.");
+                        return result;
+                    }
+                }
                 //create and save new comic
                 Date date = new Date();
                 String strDate = date.toString();
@@ -361,7 +369,7 @@ public class ComicController{
                 ComicSeriesRepository.save(series);
                 result.setResult("success");
             } else{
-                result.setResult("comic series does not exists");
+                result.setResult("Comic series does not exists.");
                 return result;
             }
         }
@@ -424,16 +432,46 @@ public class ComicController{
                 the_model = comicRepository.findByUserID(theUser.getId());
                 toUpdate = theUser.getUsername();  
             }
-           
+
+            // Get the original series
+            ArrayList<ComicSeriesModel> allSeries = ComicSeriesRepository.findByname(form.getOldSeries());
+            ComicSeriesModel oldSeries = null;
+            for (ComicSeriesModel tempSeries : allSeries) {
+                if (tempSeries.getUserID().equals(theUser.getId())) {
+                    oldSeries = tempSeries;
+                    break;
+                }
+            }
+            if (oldSeries == null) {
+                result.setResult("Error: current comic series not found");
+                return result;
+            }
             System.out.println("there are # of comics under the user:" + the_model.size());
             for(ComicModel comic : the_model){
-                if(comic.getName().equals(form.getOldName())){//found right one
+                if(comic.getName().equals(form.getOldName()) && comic.getComicSeriesID().equals(oldSeries.getId())){//found right one
                     System.out.println("FOUND THE RIGHT ONE");
+                    // Check for setting series (cannot have duplicate comic name)
+                    ArrayList<ComicModel> comicsByName = comicRepository.findByname(form.getName());
+                    for (ComicModel tempComic : comicsByName) {
+                        if (form.getOldSeries().equals(form.getSeries()) && form.getName().equals(form.getOldName())) {
+                            // If not changing series name, don't need to do this check
+                            System.out.println("NOT CHECKING");
+                            break;
+                        }
+                        if (tempComic.getUserID().equals(theUser.getId())) {
+                            System.out.println("ANOTHER COMIC BY SAME NAME");
+                            ComicSeriesModel checkSeries = ComicSeriesRepository.findByid(tempComic.getComicSeriesID());
+                            System.out.println("The series is " + checkSeries.getName());
+                            if (checkSeries.getName().equals(form.getSeries())) {
+                                result.setResult("A comic with that name already exists in the series.");
+                                return result;
+                            }
+                        }
+                    }
                     if(form.getDescription() != null)
                         comic.setDescription(form.getDescription());
                     comic.setName(form.getName());
-                    // Find the old series and remove the reference
-                    ComicSeriesModel oldSeries = ComicSeriesRepository.findByid(comic.getComicSeriesID());
+                    //  Remove references to old series
                     if (oldSeries.getName() != form.getSeries()) {
                         ArrayList<String> oldSeriesComics = oldSeries.getComics();
                         oldSeriesComics.remove(comic.getId());
@@ -506,7 +544,9 @@ public class ComicController{
                 } 
             }
         }
-        else result.setResult("error");
+        else {
+            result.setResult("error");
+        }
         return result;
     }
 
@@ -611,6 +651,8 @@ public class ComicController{
             for(int i=0; i<findComicList.size(); i++){
                 ComicModel temp = findComicList.get(i);
                 ViewAllComicsResult pans = new ViewAllComicsResult();
+                ComicSeriesModel series = ComicSeriesRepository.findByid(temp.getComicSeriesID());
+                pans.setComicSeriesName(series.getName());
                 pans.setComicName(temp.getName());
                 pans.setComicID(temp.getId());
                 pans.setDate(temp.getDate());

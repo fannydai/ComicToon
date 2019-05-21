@@ -98,7 +98,7 @@ class ViewSeries extends Component {
     }
 
     handleUpdate = (comic, event) => {
-        this.props.history.push(`/update/comic/${comic.username}/${comic.name}`);
+        this.props.history.push(`/update/comic/${comic.username}/${this.props.match.params.seriesName}/${comic.name}`);
     }
 
     handleReport = (e, reportedID, reportingID, type) => {

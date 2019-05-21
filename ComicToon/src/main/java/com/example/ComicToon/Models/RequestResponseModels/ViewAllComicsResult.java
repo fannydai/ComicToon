@@ -9,6 +9,7 @@ public class ViewAllComicsResult {
     private String comicId;
     private String username;
     private String date;
+    private String comicSeriesName;
     private ArrayList<PanelModel> allComicsPanels = new ArrayList<>();
 
     public void setComicList(ArrayList<PanelModel> allComicsPanels) {
@@ -41,6 +42,14 @@ public class ViewAllComicsResult {
 
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public String getComicSeriesName() {
+        return this.comicSeriesName;
+    }
+
+    public void setComicSeriesName(String comicSeriesName) {
+        this.comicSeriesName = comicSeriesName;
     }
 
     public String getDate() {

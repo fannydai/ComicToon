@@ -173,9 +173,9 @@ class UploadComic extends Component {
         e.preventDefault();
         console.log(this.state);
         if (this.state.image === null) {
-            this.setState({ showSubmitError: 'Select an image file.'});
+            this.setState({ showSubmitError: "Select an image file." });
         } else if (this.state.series === '') {
-            alert('Please select a series');
+            this.setState({ showSubmitError: "Select a series." })
         } else {
             (async () => {
                 const res = await fetch("http://localhost:8080/upload", {
@@ -201,10 +201,14 @@ class UploadComic extends Component {
                     console.log('DONE UPLOAD');
                     this.props.history.push('/view/comics');
                 } else {
-                    this.setState({ fileError: "Could not upload the comic." });
+                    this.setState({ fileError: content.result });
                 }
             })();
         }
+    }
+
+    handleClearSubmitError = () => {
+        this.setState({ showSubmitError: "" });
     }
 
     render() {
@@ -225,9 +229,9 @@ class UploadComic extends Component {
                 <tr key={i}><td>{username}</td><td><button className="btn-danger" onClick={(e) => this.handleDeleteShare(i, e)}>Delete</button></td></tr>
             );
         });
-        const fileAlert = this.state.fileError ? <Alert variant={"danger"} ref={this.selectFileRef}>{this.state.fileError}</Alert> 
+        const fileAlert = this.state.fileError ? <Alert variant={"danger"}>{this.state.fileError}</Alert> 
             : this.state.filename ? <Alert variant={"success"}>File chosen: {this.state.filename}</Alert>
-            : <Alert variant="primary" ref={this.selectFileRef}>No file chosen</Alert>
+            : <Alert variant="primary">No file chosen</Alert>
         if (this.state.loading)
             return <LoadingScreen />
         return (
@@ -238,7 +242,6 @@ class UploadComic extends Component {
                         <div className="upload-container" id="upload-container">
                             {imgOrUpload}
                             {fileAlert}
-                            <Overlay target={this.selectFileRef.current} show={this.state.showSubmitError.length > 0} placement="right"><Tooltip>{this.state.showSubmitError}</Tooltip></Overlay>
                         </div>
                         <div className="upload-info">
                             <Form.Control required className="upload-name-input" type="text" placeholder="Type Comic Name..." value={this.state.comicName} onChange={this.handleComicName} />
@@ -272,7 +275,8 @@ class UploadComic extends Component {
                             </div>
                         </div>
                         <div className="upload-submit">
-                            <Button type="submit" variant="success">Upload Comic</Button>
+                            <Button type="submit" variant="success" ref={this.selectFileRef}>Upload Comic</Button>
+                            <Overlay target={this.selectFileRef.current} show={this.state.showSubmitError.length > 0} placement="right"><Tooltip onClick={this.handleClearSubmitError}>{this.state.showSubmitError}</Tooltip></Overlay>
                         </div>
                     </Form>
                 </div>
