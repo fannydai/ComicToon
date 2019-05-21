@@ -32,3 +32,8 @@
     width: 18rem;
     margin-bottom: 5vw;
 }
+
+.view-one-series-card-title:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

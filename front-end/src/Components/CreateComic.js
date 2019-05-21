@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Dropdown, Form, Overlay, Tooltip } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ import ComicSharingTable from './ComicSharingTable';
 import Panel from './Panel';
 import addPanel from './images/addPanel.png';
 import { createComic, setCreateComicError } from '../Actions/NavbarActions'
-import { saveNewComic, clearPanels, deleteNewComicPanel } from '../Actions/ComicActions';
+import { saveNewComic, clearPanels, deleteNewComicPanel, dragNewComicPanel } from '../Actions/ComicActions';
 import LoadingScreen from './LoadingScreen';
 
 
@@ -235,6 +235,25 @@ class CreateComic extends Component {
         this.props.deleteNewComicPanel(index);
     }
 
+    handleDragStart = (e, index) => {
+        this.draggedItem = this.props.comic.newComic[index];
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", e.target.parentNode);
+        e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
+    }
+
+    handleDragOver = (index) => {
+        const draggedOverItem = this.props.comic.newComic[index];
+        if (this.draggedItem === draggedOverItem) {
+            return;
+        }
+        this.props.dragNewComicPanel(index, this.draggedItem);
+    }
+
+    handleDragEnd = () => {
+        this.draggedItem = null;
+    }
+
     render() {
         var props = {
             dots: false,
@@ -287,7 +306,7 @@ class CreateComic extends Component {
                                 <Slider {...props}>
                                     {this.props.comic.newComic.length ? 
                                         this.props.comic.newComic.map((panel, i) => {
-                                            return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i, e)} />
+                                            return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i, e)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                         }) : null}
                                     <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                                 </Slider>
@@ -341,7 +360,8 @@ CreateComic.propTypes = {
     saveNewComic: PropTypes.func.isRequired,
     clearPanels: PropTypes.func.isRequired,
     deleteNewComicPanel: PropTypes.func.isRequired,
-    setCreateComicError: PropTypes.func.isRequired
+    setCreateComicError: PropTypes.func.isRequired,
+    dragNewComicPanel: PropTypes.func.isRequired
 }
 
-export default connect(StateToProps, {createComic, saveNewComic, clearPanels, deleteNewComicPanel, setCreateComicError})(withRouter(CreateComic));
+export default connect(StateToProps, {createComic, saveNewComic, clearPanels, deleteNewComicPanel, setCreateComicError, dragNewComicPanel})(withRouter(CreateComic));

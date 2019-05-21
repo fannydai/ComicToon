@@ -148,6 +148,7 @@ class UpdateComic extends Component {
     }   
     
     componentWillUnmount() {
+        console.log("UNMOUNTING UPDATE COMIC");
         // In case they want to navigate out and back again
         this.props.saveUpdateComic({
             comicName: this.state.comicName,
@@ -193,7 +194,7 @@ class UpdateComic extends Component {
             this.state.series.map(item=> {
                 return item !== null ?
                 <div key={item.name}>
-                    <Dropdown.Item name={item.name}onClick={this.handleChange}>{item.name}</Dropdown.Item>
+                    <Dropdown.Item name={item.name} onClick={this.handleChange}>{item.name}</Dropdown.Item>
                 </div>
                 :
                 null
@@ -228,6 +229,10 @@ class UpdateComic extends Component {
         event.preventDefault();
         console.log(this.state);
         console.log(this.props.comic.saveUpdateComic);
+        if (this.state.comicPanels.length === 0) {
+            this.setState({ error: "You need at least one panel." });
+            return;
+        }
         const canvases = this.state.comicPanels.map(panel => panel.canvas);
         const images = this.state.comicPanels.map(panel => panel.image);
         console.log(canvases);
@@ -295,6 +300,33 @@ class UpdateComic extends Component {
         this.setState({ selected_series: name });
     }
 
+    handleClosePanel = (index) => {
+        const copy = [...this.state.comicPanels];
+        copy.splice(index, 1);
+        this.setState({ comicPanels: copy });
+    }
+
+    handleDragStart = (e, index) => {
+        this.draggedItem = this.state.comicPanels[index];
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", e.target.parentNode);
+        e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
+    }
+
+    handleDragOver = (index) => {
+        const draggedOverItem = this.state.comicPanels[index];
+        if (this.draggedItem === draggedOverItem) {
+            return;
+        }
+        let items = this.state.comicPanels.filter(item => item !== this.draggedItem);
+        items.splice(index, 0, this.draggedItem);
+        this.setState({ comicPanels: items });
+    }
+
+    handleDragEnd = () => {
+        this.draggedItem = null;
+    }
+
     render() {
         console.log(this.state.showSeries);
         var props = {
@@ -343,7 +375,7 @@ class UpdateComic extends Component {
                             <Slider {...props}>
                                 {this.state.comicPanels.length ? 
                                     this.state.comicPanels.map((panel, i) => {
-                                        return <Panel comic={panel} key={i} />
+                                        return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                     }) : null}
                                 <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                             </Slider>

@@ -14,18 +14,21 @@
     padding-bottom: 25px;
 }
 
-/* .upload-form {
-    width: 100%;
-} */
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 /* Where the user does the uploading */
 .upload-container {
     height: 25%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+    margin-bottom: 1vh;
 }
 
 .upload-preview-container {

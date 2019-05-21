@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, Form, Alert, Overlay, Table, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { DropzoneArea } from 'material-ui-dropzone';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -43,9 +44,11 @@ class UploadComic extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('dragenter', this.onDragEnter, false);
-        window.addEventListener('dragover', this.onDragOver, false);
-        window.addEventListener('drop', this.onDrop, false);
+        /*
+        let div = this.uploadDropRef.current;
+        div.addEventListener('dragenter', this.onDragEnter, false);
+        div.addEventListener('dragover', this.onDragOver, false);
+        div.addEventListener('drop', this.onDrop, false);*/
         (async () => {
             const res = await fetch("http://localhost:8080/view/series", {
               method: "POST",
@@ -67,6 +70,7 @@ class UploadComic extends Component {
         })();
     }
 
+    /*
     onDragEnter = (event) => {
         event.stopPropagation();
         event.preventDefault();
@@ -83,18 +87,19 @@ class UploadComic extends Component {
 
         const file = event.dataTransfer.files[0];
         this.onFileUpload(file);
-    }
+    }*/
 
-    onFileUpload = (file) => {
-        console.log("SELECTED UPLOAD FILE INFO", file);
-        if (file.type.startsWith('image/')) {
+    onFileUpload = (files) => {
+        if (files && files.length > 0) {
+            console.log("SELECTED UPLOAD FILE INFO", files[0]);
             const reader = new FileReader();
             reader.onload = (() => {
                 return (e) => {
-                    this.setState({ image: e.target.result, filename: file.name, fileError: '', showSubmitError: '' });
+                    console.log(e.target.result);
+                    this.setState({ image: e.target.result, filename: files[0].name, fileError: '', showSubmitError: '' });
                 };
             })();
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(files[0]);
         } /*else if (file.type === 'application/json') {
             this.setState({ filename: file.name });
             const reader = new FileReader();
@@ -197,11 +202,12 @@ class UploadComic extends Component {
                   })
                 });
                 let content = await res.json();
+                console.log(content);
                 if (content.result === 'success') {
                     console.log('DONE UPLOAD');
                     this.props.history.push('/view/comics');
                 } else {
-                    this.setState({ fileError: content.result });
+                    this.setState({ showSubmitError: content.result });
                 }
             })();
         }
@@ -212,26 +218,11 @@ class UploadComic extends Component {
     }
 
     render() {
-        const imgOrUpload = this.state.image ? 
-            <div className="upload-preview-container">
-                <span className="upload-preview-close" onClick={this.handleDelete}>X</span>
-                <img id="upload-preview" src={this.state.image} alt="" /> 
-            </div>
-            : this.state.json ?
-            <div style={{ display: "flex" }}>
-                <p>{this.state.filename}</p>
-                <button type="button" className="btn-danger" aria-label="Close" onClick={this.handleDelete}><span aria-hidden="true">X</span></button>
-            </div>
-            :
-            <div><FontAwesomeIcon icon="cloud-upload-alt" size="7x" /><p style={{ textAlign: "center" }}>Drop file here</p></div>;
         const trs = this.state.sharedUsersList.map((username, i) => {
             return (
                 <tr key={i}><td>{username}</td><td><button className="btn-danger" onClick={(e) => this.handleDeleteShare(i, e)}>Delete</button></td></tr>
             );
         });
-        const fileAlert = this.state.fileError ? <Alert variant={"danger"}>{this.state.fileError}</Alert> 
-            : this.state.filename ? <Alert variant={"success"}>File chosen: {this.state.filename}</Alert>
-            : <Alert variant="primary">No file chosen</Alert>
         if (this.state.loading)
             return <LoadingScreen />
         return (
@@ -240,8 +231,12 @@ class UploadComic extends Component {
                 <div className="upload-bottom-container">
                     <Form className="upload-form" onSubmit={this.handleSubmit}>
                         <div className="upload-container" id="upload-container">
-                            {imgOrUpload}
-                            {fileAlert}
+                            <DropzoneArea
+                                onChange={this.onFileUpload.bind(this)}
+                                acceptedFiles={['image/*']}
+                                maxFileSize={50000000}
+                                filesLimit={1}
+                            />
                         </div>
                         <div className="upload-info">
                             <Form.Control required className="upload-name-input" type="text" placeholder="Type Comic Name..." value={this.state.comicName} onChange={this.handleComicName} />

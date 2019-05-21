@@ -465,7 +465,7 @@ class ViewComic extends Component {
                                 <Card>
                                     <Card.Body>
                                         <h1>Description</h1>
-                                        <p>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</p>
+                                        <pre>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</pre>
                                     </Card.Body>
                                 </Card>
                                 <Form className="view-comic-comment-form">

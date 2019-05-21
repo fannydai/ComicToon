@@ -99,6 +99,7 @@
 
 .view-comic-series-h2:hover {
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .view-comic-press-like {

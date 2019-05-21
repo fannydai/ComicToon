@@ -129,7 +129,7 @@ class ViewSeries extends Component {
                 <Card key={i} className="view-one-series-card">
                     <Card.Img variant="top" src={this.state.panels[i]} />
                     <Card.Body>
-                        <Card.Title onClick={(e) => this.handleClick(comic, e)}>{comic.name}</Card.Title>
+                        <Card.Title className="view-one-series-card-title" onClick={(e) => this.handleClick(comic, e)}>{comic.name}</Card.Title>
                         <Card.Text>{comic.description}</Card.Text>
                         <Card.Text>Artist: {comic.username}</Card.Text>
                         <Card.Text>Series: {this.props.match.params.seriesName}</Card.Text>

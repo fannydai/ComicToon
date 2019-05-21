@@ -1,4 +1,4 @@
-import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, ADD_UPDATE_PANEL, SAVE_NEW_COMIC_DATA, SAVE_UPDATE_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, DELETE_NEW_COMIC_PANEL } from './Types';
+import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, ADD_UPDATE_PANEL, SAVE_NEW_COMIC_DATA, SAVE_UPDATE_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, DELETE_NEW_COMIC_PANEL, DRAG_NEW_COMIC_PANEL } from './Types';
 
 // Don't call these functions yet, back-end is not set up
 export const getSubscriptions = (username) => (dispatch) => {
@@ -110,4 +110,11 @@ export const deleteNewComicPanel = (index) => (dispatch) => {
         type: DELETE_NEW_COMIC_PANEL,
         payload: { index: index }
     });
+}
+
+export const dragNewComicPanel = (index, dragItem) => (dispatch) => {
+    dispatch({
+        type: DRAG_NEW_COMIC_PANEL,
+        payload: { index: index, dragItem: dragItem }
+    })
 }

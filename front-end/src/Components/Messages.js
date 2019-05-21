@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Overlay, Tooltip, Form } from 'react-bootstrap';
+import { Alert, Overlay, Tooltip } from 'react-bootstrap';
 import './styles/Messages.css';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux'
@@ -330,7 +330,7 @@ class Messages extends Component {
                                 <div className="type_msg">
                                     <div className="input_msg_write">
                                         <input id="toClear" type="text" className="write_msg" name="str" placeholder="Type a message" value={this.state.str} onChange={this.handleChange} onKeyPress={this.handleEnter} />
-                                        <button className="msg_send_btn" type="button" onClick={this.handleSendMessage.bind(this)} ref={this.messageButtonRef}><i className="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                        <button className="msg_send_btn" type="button" onClick={this.handleSendMessage.bind(this)} ref={this.messageButtonRef}><FontAwesomeIcon icon="paper-plane" aria-hidden="true" /></button>
                                         <Overlay target={this.messageButtonRef.current} show={this.state.messageError.length > 0} placement="top"><Tooltip onClick={this.handleClearMessageError}>{this.state.messageError}</Tooltip></Overlay>
                                     </div>
                                 </div>

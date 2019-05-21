@@ -236,7 +236,7 @@ class Search extends Component {
                 ser ?
                 <Card key={i} className="search-card">
                     <Card.Body>
-                        <Card.Title  onClick={() => {this.handleViewSeries(this.state.seriesOwners[i], ser.name )}}>Series Name: {ser.name} (click here to see more details)</Card.Title>
+                        <Card.Title className="search-user-card-title" onClick={() => {this.handleViewSeries(this.state.seriesOwners[i], ser.name )}}>Series Name: {ser.name} (click here to see more details)</Card.Title>
                         <Card.Text>Artist: {this.state.seriesOwners[i]}</Card.Text>
                         <Button name={ser.username} onClick={(e) => {this.handleReport(e, ser.id, this.props.CurrUser.id, "series")}} variant="danger">Report Series</Button>
                     </Card.Body>
@@ -249,7 +249,7 @@ class Search extends Component {
                 com ?
                 <Card key={com.id} className="search-card">
                     <Card.Body>
-                        <Card.Title onClick={() => {this.handleViewComic(com.username, com.name)}}>Comic Name: {com.name} (click here to see more details)</Card.Title>
+                        <Card.Title className="search-user-card-title" onClick={() => {this.handleViewComic(com.username, com.name)}}>Comic Name: {com.name} (click here to see more details)</Card.Title>
                         <Card.Text>Artist: {com.username}</Card.Text>
                         <Card.Text>Rating: {this.state.ratings[i]}</Card.Text>
                         <Button name={com.name} onClick={(e) => {this.handleReport(e, com.id, this.props.CurrUser.id, "comic")}} variant="danger">Report Comic</Button>
@@ -261,7 +261,7 @@ class Search extends Component {
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
-                {this.state.success ? <Alert variant="success" className="search-alert">{this.state.error}</Alert> : this.state.error ? <Alert variant="danger" className="search-alert">{this.state.error}</Alert> : <Alert variant="danger" className="search-alert" style={{ visibility: "hidden" }}>Hi</Alert>}
+                {this.state.success ? <Alert variant="success" className="search-alert">{this.state.success}</Alert> : this.state.error ? <Alert variant="danger" className="search-alert">{this.state.error}</Alert> : <Alert variant="danger" className="search-alert" style={{ visibility: "hidden" }}>Hi</Alert>}
                 <div className="search-results-container"> {/*add this to css */}
                     {matchedUsers}
                     <hr/>

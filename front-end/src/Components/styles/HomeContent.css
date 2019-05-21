@@ -14,8 +14,9 @@ h2 {
 }
 
 .home-content-container {
-	height: 30vh;
+	min-height: 30vh;
 	width: 90%;
+	flex-grow: 1;
 	justify-content: center;
 	align-items: center;
 }
@@ -42,7 +43,8 @@ h2 {
 }
 
 .search-user-card-title:hover {
-    cursor: pointer;
+	cursor: pointer;
+	text-decoration: underline;
 }
 
 .search-results-container {
