@@ -105,7 +105,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DEACTIVATED!!");}
+            if(content.status === "success") {alert("User has been deactivated");}
             this.componentDidMount();
         })();
         
@@ -125,7 +125,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED COMIC!!");}
+            if(content.status === "success") {alert("Deleted Comic.");}
             else{alert("COMIC NOT FOUND");}
             this.componentDidMount();
         })();
@@ -145,7 +145,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED SERIES AND ITS COMICS!!");}
+            if(content.status === "success") {alert("Deleted Series and all Comics in the series.");}
             else{alert("SERIES NOT FOUND");}
             this.componentDidMount();
         })(); 
@@ -165,7 +165,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED COMMENT!!");}
+            if(content.status === "success") {alert("Comment has been deleted.");}
             else{alert("COMMENT NOT FOUND");}
             this.componentDidMount();
         })();
@@ -223,7 +223,7 @@ class Admin extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO USERS FOUND</h3>
+        }) : <h3> No Reported Users Found</h3>
         const badComics = this.state.comicsKeys.length ? this.state.comicsKeys.map((item, i) => {
             // Get corresponding comic series name for each reported comic (only when not already populated)
             if (!this.state.comicSeriesNames.length) {
@@ -241,7 +241,7 @@ class Admin extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO COMICS FOUND</h3>
+        }) : <h3> No Reported Comics Found</h3>
         const badSeries = this.state.seriesKeys.length ? this.state.seriesKeys.map((item, i) => {
             return (
                 item ?
@@ -255,7 +255,7 @@ class Admin extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO SERIES FOUND</h3>
+        }) : <h3> No Reported Series Found</h3>
         const badComments = this.state.commentsKeys.length ? this.state.commentsKeys.map((item, i) => {
             return (
                 item ?
@@ -270,14 +270,21 @@ class Admin extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO COMMENTS FOUND</h3>
+        }) : <h3> No Reported Comments Found</h3>
         if (this.state.isLoading) {
             return <LoadingScreen />
         }
         return (
             <div>
+                
                 <NavigationBar />
-                <h1> ADMIN WELCOME </h1>
+                <Card style={{ width: 'auto' }}> 
+                <Card style={{ width: 'auto' }}> 
+                <Card.Title>
+                <h1> Admin DashBoard </h1>
+                </Card.Title>
+                </Card>
+                
                 <div className="de-active">
                     <h3>Reported Users: </h3>
                     {badUsers}
@@ -297,6 +304,7 @@ class Admin extends Component {
                     <h3>Reported Comments: </h3>
                     {badComments}
                 </div>
+                </Card>
                 <Footer />
             </div>
         );

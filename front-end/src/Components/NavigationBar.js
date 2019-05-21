@@ -54,13 +54,14 @@ class NavigationBar extends Component {
                 <Navbar.Collapse id="top-nav">
                     <Nav className="mr-auto">
                         <Nav.Link onClick={this.handleGoToIndex}>Home</Nav.Link>
-                        <NavDropdown title="Comic">
+                        <Nav.Link onClick={this.handleGoToMessages}>Message Center</Nav.Link>
+
+                        <NavDropdown title="Comic Menu">
                             <NavDropdown.Item onClick={this.handleGoToViewComic}>View My Comics</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToViewSeries}>View My Series</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToCreateComic}>Create Comic</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToUpload}>Upload Comic</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToCreateSeries}>Create Series</NavDropdown.Item>
-                            <NavDropdown.Item onClick={this.handleGoToMessages}>My Messages</NavDropdown.Item>
                             <NavDropdown.Item onClick={this.handleGoToSharedComics}>Comics Shared With Me</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>

@@ -100,10 +100,11 @@ class SharedComics extends Component {
     }
 
     handleUpdate(item, event) {
+        console.log(this.props);
         this.props.history.push({
             pathname: `/update/comic/${item.username}/${item.comicSeriesName}/${item.comicName}`, 
             state: {
-              flag: true 
+            flag: true 
             }
         })
     }

@@ -230,7 +230,7 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3 className = "hometext"> No Users Found</h3>
+        }) : <h3 > No Users Found With Search Keywords.</h3>
         const matchedSeries = this.state.seriess.length ? this.state.seriess.map((ser, i) => {
             return (
                 ser ?
@@ -243,7 +243,7 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3 className = "hometext"> No Series Found</h3>
+        }) : <h3 > No Series Found With Search Keywords.</h3>
         const matchedComics = this.state.comics.length ? this.state.comics.map((com, i)=> {
             return (
                 com ?
@@ -257,10 +257,11 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3 className = "hometext"> No Comics Found</h3>
+        }) : <h3 > No Comics Found With Search Keywords.</h3>
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
+                <Card className = "search-card">
                 {this.state.success ? <Alert variant="success" className="search-alert">{this.state.success}</Alert> : this.state.error ? <Alert variant="danger" className="search-alert">{this.state.error}</Alert> : <Alert variant="danger" className="search-alert" style={{ visibility: "hidden" }}>Hi</Alert>}
                 <div className="search-results-container"> {/*add this to css */}
                     {matchedUsers}
@@ -269,6 +270,7 @@ class Search extends Component {
                     <hr/>
                     {matchedComics}
                 </div>
+                </Card>
             </div>
         );
     }
