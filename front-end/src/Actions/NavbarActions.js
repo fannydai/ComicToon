@@ -134,15 +134,6 @@ export const viewAllComics = (newComics) => (dispatch) => {
     });
 }
 
-export const updateComicPanel = (image, canvas, panel, panelIndex, comicIndex) => (dispatch) => {
-    // Call backend to update the panel and update User_Comic_View with it
-    dispatch({
-        type: UPDATE_COMIC_PANEL,
-        payload: { image: image, canvas: canvas, panel: panel, panelIndex: panelIndex, comicIndex: comicIndex }
-    });
-    console.log(panel);
-}
-
 export const setCreateComicError = (value) => (dispatch) => {
     dispatch({
         type: CREATE_COMIC_ERROR,
