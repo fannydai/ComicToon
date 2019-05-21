@@ -623,6 +623,7 @@ class Canvas extends Component {
     }
 
     handleImage = (event) => {
+        this.setState({save: false});
         const file = event.target.files[0];
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
@@ -640,7 +641,8 @@ class Canvas extends Component {
                     });
                 };
             })();
-            reader.readAsDataURL(file);            
+            reader.readAsDataURL(file);  
+            event.target.value = null;   
         } else {
             alert('Upload images only!');
         }
