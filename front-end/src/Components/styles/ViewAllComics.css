@@ -60,6 +60,7 @@
 
 .view-comics-h3:hover { 
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .view-comics-panel-container {

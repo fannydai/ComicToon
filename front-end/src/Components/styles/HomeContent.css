@@ -43,7 +43,8 @@ h2 {
 }
 
 .search-user-card-title:hover {
-    cursor: pointer;
+	cursor: pointer;
+	text-decoration: underline;
 }
 
 .search-results-container {

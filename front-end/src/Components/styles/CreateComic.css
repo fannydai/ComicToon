@@ -135,6 +135,7 @@
 
 .panel:hover {
     cursor: pointer;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2), 0 10px 10px rgba(0, 0, 0, 0.5);
 }
 
 .slick-prev:before, .slick-next:before {
