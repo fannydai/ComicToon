@@ -26,6 +26,9 @@ td {
   vertical-align: middle !important;
 }
 
+pre {
+  font: inherit !important;
+}
 
 /* For the bubbles */
 .textbox {

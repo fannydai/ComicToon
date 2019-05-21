@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp as solidUp, faThumbsDown as solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
+import { faPaperPlane, faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp as solidUp, faThumbsDown as solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faFill, faPalette, faEraser, faCloud, faDotCircle,
@@ -36,7 +36,7 @@ import ReportComponent from './Components/ReportComponent';
 import Messages from './Components/Messages';
 import SharedComics from './Components/SharedComics';
 
-library.add(faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, faThumbsDown, solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
+library.add(faPaperPlane, faCloudUploadAlt, faChevronRight, faHistory, faThumbsUp, solidUp, faThumbsDown, solidDown, faTh, faUndo, faRedo, faSearchMinus, faSearchPlus, faSearch, faClone, faCut, 
     faPaste, faAngleRight, faAngleDoubleRight, faAngleLeft, faAngleDoubleLeft, faDownload, faCheck, faObjectGroup, faObjectUngroup,
     faPencilAlt, faFont, faDrawPolygon, faSlash, faCircle, faSquare, faPlay, faImage,
     faEyeDropper, faArrowsAlt, faTrash, faFill, faPalette, faEraser, faCloud, faDotCircle,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Dropdown, Form, Overlay, Tooltip } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
