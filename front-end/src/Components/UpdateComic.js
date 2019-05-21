@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
 import Slider from 'react-slick';
-
 import NavigationBar from './NavigationBar';
 import './styles/CreateComic.css';
 import Panel from './Panel';
@@ -12,7 +11,10 @@ import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import addPanel from './images/addPanel.png';
 import { saveUpdateComic, clearPanels } from './../Actions/ComicActions';
+import io from 'socket.io-client';
 const history = require('browser-history');
+
+let socket;
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -49,6 +51,14 @@ class UpdateComic extends Component {
         console.log(this.props.location.state);
         if(this.props.location.state !== undefined){
             if(!this.props.location.state.flag) this.setState({showSeries: true});
+            if(this.props.location.state.flag) { 
+                socket = io('http://localhost:4000', { transports: ['websocket'] }); 
+                socket.emit('updating', {comicName: this.props.match.params.comicName, user: this.props.CurrUser.username})
+                socket.on('err', ()=> {
+                    alert("Someone is currently editing... please wait");
+                    history(-1);
+                });
+            }
         }
         else{ this.setState({showSeries: true});}
 
@@ -160,6 +170,11 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
+
+        if(socket !== undefined && socket !== null){
+            socket.emit("doneUpdating", this.props.match.params.comicName);
+            socket.disconnect();
+        }
     }
 
     handleComicName = (event) => {

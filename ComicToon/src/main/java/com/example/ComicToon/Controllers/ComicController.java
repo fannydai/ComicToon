@@ -442,7 +442,7 @@ public class ComicController{
                     break;
                 }
             }
-            if (oldSeries == null) {
+            if ( !form.getFlag() && oldSeries == null) {
                 result.setResult("Error: current comic series not found");
                 return result;
             }
