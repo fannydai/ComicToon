@@ -104,7 +104,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DEACTIVATED!!");}
+            if(content.status === "success") {alert("User has been deactivated");}
             this.componentDidMount();
         })();
         
@@ -124,7 +124,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED COMIC!!");}
+            if(content.status === "success") {alert("Deleted Comic.");}
             else{alert("COMIC NOT FOUND");}
             this.componentDidMount();
         })();
@@ -144,7 +144,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED SERIES AND ITS COMICS!!");}
+            if(content.status === "success") {alert("Deleted Series and all Comics in the series.");}
             else{alert("SERIES NOT FOUND");}
             this.componentDidMount();
         })(); 
@@ -164,7 +164,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED COMMENT!!");}
+            if(content.status === "success") {alert("Comment has been deleted.");}
             else{alert("COMMENT NOT FOUND");}
             this.componentDidMount();
         })();
