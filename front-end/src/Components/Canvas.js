@@ -841,6 +841,22 @@ class Canvas extends Component {
         }
     }
 
+    handleGroup = (event) => {
+        if (!this.canvas.getActiveObject() || this.canvas.getActiveObject().type !== 'activeSelection') {
+            return;
+        }
+        this.canvas.getActiveObject().toGroup();
+        this.canvas.requestRenderAll();
+    }
+
+    handleUngroup = (event) => {
+        if (!this.canvas.getActiveObject() || this.canvas.getActiveObject().type !== 'group') {
+            return;
+        }
+        this.canvas.getActiveObject().toActiveSelection();
+        this.canvas.requestRenderAll();
+    }
+
     handleSave = (event) => {
         if(this.state.save === false ) {
             this.setState({save: true});
@@ -935,6 +951,11 @@ class Canvas extends Component {
         a.href = img;
         a.download = 'image.png';
         a.click();
+
+        var jsonData = this.canvas.toJSON();
+        var canvasAsJson = JSON.stringify(jsonData);
+        var fileDownload = require('js-file-download');
+        fileDownload(canvasAsJson, 'panel.txt');
     }
 
     handleSubmit = (event) => {
@@ -988,62 +1009,62 @@ class Canvas extends Component {
                     <div className="top-bar">
                         {/* <FontAwesomeIcon className="icon" icon="th" onClick={this.handleGrid}/> */}
 
-                        <FontAwesomeIcon className="icon" icon="search-minus" onClick={this.handleZoomIn}/>
-                        <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoomOut}/>
-                        <FontAwesomeIcon className="icon" icon="search" onClick={this.handleResetZoom}/>
+                        <FontAwesomeIcon className="icon" icon="search-minus" onClick={this.handleZoomIn} title="Zoom In"/>
+                        <FontAwesomeIcon className="icon" icon="search-plus" onClick={this.handleZoomOut} title="Zoom Out"/>
+                        <FontAwesomeIcon className="icon" icon="search" onClick={this.handleResetZoom} title="Reset Zoom"/>
 
-                        <FontAwesomeIcon className="icon" icon="clone" onClick={this.handleCopy}/>
-                        <FontAwesomeIcon className="icon" icon="cut" onClick={this.handleCut}/>
-                        <FontAwesomeIcon className="icon" icon="paste" onClick={this.handlePaste}/>
+                        <FontAwesomeIcon className="icon" icon="clone" onClick={this.handleCopy} title="Copy"/>
+                        <FontAwesomeIcon className="icon" icon="cut" onClick={this.handleCut}  title="Cut"/>
+                        <FontAwesomeIcon className="icon" icon="paste" onClick={this.handlePaste}  title="Paste"/>
 
-                        <FontAwesomeIcon className="icon" icon="angle-right" onClick={this.handleForward}/>
-                        <FontAwesomeIcon className="icon" icon="angle-double-right" onClick={this.handleFront}/>
-                        <FontAwesomeIcon className="icon" icon="angle-left" onClick={this.handleBackward}/>
-                        <FontAwesomeIcon className="icon" icon="angle-double-left" onClick={this.handleBack}/>
+                        <FontAwesomeIcon className="icon" icon="object-group" onClick={this.handleGroup}  title="Group"/>
+                        <FontAwesomeIcon className="icon" icon="object-ungroup" onClick={this.handleUngroup}  title="Ungroup"/>
+
+                        <FontAwesomeIcon className="icon" icon="angle-right" onClick={this.handleForward}  title="Move Forward"/>
+                        <FontAwesomeIcon className="icon" icon="angle-double-right" onClick={this.handleFront}  title="Move Front"/>
+                        <FontAwesomeIcon className="icon" icon="angle-left" onClick={this.handleBackward}  title="Move Backward"/>
+                        <FontAwesomeIcon className="icon" icon="angle-double-left" onClick={this.handleBack}  title="Move Back"/>
                         
-                        <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload} />
-                        <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone} />
+                        <FontAwesomeIcon className="icon" icon="download" onClick={this.handleDownload}  title="Download Panel"/>
+                        <FontAwesomeIcon className="icon" icon="check" onClick={this.handleDone}  title="Save and Exit"/>
                     </div>
                     {/* MID BAR */}
                     <div className="mid-canvas">
                     <table className="side-bar">
                         <tbody>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="paint-brush" onClick={this.handlePencil} /></td>
-                                <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="arrows-alt" onClick={this.handleMoveObject}  title="Move Object"/></td>
+                                <td><FontAwesomeIcon className="icon" icon="paint-brush" onClick={this.handlePencil}  title="Pencil"/></td>
                             </tr>
                             <tr>
+                                <td><FontAwesomeIcon className="icon" icon="font" onClick={this.handleText}  title="Add Text"/></td>
                                 {/* <td><FontAwesomeIcon className="icon" icon="draw-polygon" /></td> */}
-                                <td><FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="slash" onClick={this.handleLine}  title="Add Line"/></td>
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle} /></td>
-                                <td><FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle} /></td> 
+                                <td><FontAwesomeIcon className="icon" icon="circle" onClick={this.handleCircle}  title="Add Circle"/></td>
+                                <td><FontAwesomeIcon className="icon" icon="square" onClick={this.handleRectangle}  title="Add Square"/></td> 
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle} /></td>
+                                <td><FontAwesomeIcon className="icon" icon="play" onClick={this.handleTriangle}  title="Add Triangle"/></td>
                                 <td><input type="file" id="file" ref="fileUploader" accept="image/*" style={{display: "none"}} onChange={this.handleImage} />
-                                <FontAwesomeIcon className="icon" icon="image" onClick={this.handleSelectFile} /></td>
+                                <FontAwesomeIcon className="icon" icon="image" onClick={this.handleSelectFile}  title="Add Image"/></td>
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="trash" onClick={this.handleDeleteObject}/></td>
-                                <td><FontAwesomeIcon className="icon" onClick={this.handleClearCanvas} icon="eraser" /></td> 
+                                <td><FontAwesomeIcon className="icon" icon="trash" onClick={this.handleDeleteObject}  title="Delete Selected Object"/></td>
+                                <td><FontAwesomeIcon className="icon" onClick={this.handleClearCanvas} icon="eraser"  title="Clear Canvas"/></td> 
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo} disabled={this.state.undoBtn}/></td>
-                                <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo} disabled={this.state.redoBtn}/></td> 
+                                <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo} disabled={this.state.undoBtn}  title="Undo"/></td>
+                                <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo} disabled={this.state.redoBtn}  title="Redo"/></td> 
                             </tr>
                             <tr>
-                                <td><FontAwesomeIcon className="icon" icon="arrows-alt" onClick={this.handleMoveObject}/></td>
-                                
+                                <td><FillButton changeColor={this.handleFillColor}  title="Fill Color"/></td>
+                                <td><OutlineButton changeColor={this.handleStrokeColor}  title="Stroke Color"/></td>
                             </tr>
                             <tr>
-                                <td><FillButton changeColor={this.handleFillColor}/></td>
-                                <td><OutlineButton changeColor={this.handleStrokeColor}/></td>
-                            </tr>
-                            <tr>
-                                <td><ShadowButton changeColor={this.handleShadowColor}/></td>
-                                <td><ColorButton changeColor={this.handleBGColor}/></td>
+                                <td><ShadowButton changeColor={this.handleShadowColor}  title="Shadow Color"/></td>
+                                <td><ColorButton changeColor={this.handleBGColor}  title="Background Color"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1106,19 +1127,19 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handleChangeFontFamily}>Verdana</Dropdown.Item>         
                         </DropdownButton>
 
-                        <td><FontAwesomeIcon className="icon" icon="italic" onClick={this.handleFontItalic}/></td>
-                        <td><FontAwesomeIcon className="icon" icon="bold" onClick={this.handleFontBold}/></td>
-                        <td><FontAwesomeIcon className="icon" icon="underline" onClick={this.handleFontUnderline}/></td>
-                        <td><FontAwesomeIcon className="icon" icon="strikethrough" onClick={this.handleFontLinethrough}/></td>
-                        {/* <td><FontAwesomeIcon className="icon" icon="strikethrough" onClick={this.handleFontOverline}/></td> */}
+                        <td><FontAwesomeIcon className="icon" icon="italic" onClick={this.handleFontItalic}  title="Italic"/></td>
+                        <td><FontAwesomeIcon className="icon" icon="bold" onClick={this.handleFontBold}  title="Bold"/></td>
+                        <td><FontAwesomeIcon className="icon" icon="underline" onClick={this.handleFontUnderline}  title="Underline"/></td>
+                        <td><FontAwesomeIcon className="icon" icon="strikethrough" onClick={this.handleFontLinethrough}  title="Strike Through"/></td>
+                        {/* <td><FontAwesomeIcon className="icon" icon="strikethrough" onClick={this.handleFontOverline}  title="Overline"/></td> */}
 
                         {/* <td><FontAwesomeIcon className="icon" icon="subscript" onClick={this.handleFontSub}/></td>
                         <td><FontAwesomeIcon className="icon" icon="superscript" onClick={this.handleFontSup}/></td> */}
 
-                        <td><FontAwesomeIcon className="icon" icon="align-left" onClick={this.handleLeftAlign}/></td>
-                        <td><FontAwesomeIcon className="icon" icon="align-center" onClick={this.handleCenterAlign}/></td>
-                        <td><FontAwesomeIcon className="icon" icon="align-right" onClick={this.handleRightAlign}/></td>
-                        <td><HighlightButton changeColor={this.handleHighlightFont}/></td>
+                        <td><FontAwesomeIcon className="icon" icon="align-left" onClick={this.handleLeftAlign}  title="Left Align"/></td>
+                        <td><FontAwesomeIcon className="icon" icon="align-center" onClick={this.handleCenterAlign}  title="Center Align"/></td>
+                        <td><FontAwesomeIcon className="icon" icon="align-right" onClick={this.handleRightAlign}  title="Right Align"/></td>
+                        <td><HighlightButton changeColor={this.handleHighlightFont}  title="Highlight Color"/></td>
                     </div>
                     <br />
                     <Form onSubmit={this.handleSubmit}>
