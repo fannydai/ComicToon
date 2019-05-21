@@ -102,7 +102,7 @@ class ViewAllSeries extends Component {
                 </Card>
                 : null
             )
-        }) : <h2>YOU HAVE NO SERIES. <a href="/create/series">CLICK HERE TO CREATE ONE</a></h2>;
+        }) : <h2>You Don't Have Any Series Created. <a href="/create/series">Click Here To Create One</a></h2>;
         if (this.state.isLoading) {
             return <LoadingScreen />
         }

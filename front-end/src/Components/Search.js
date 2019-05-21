@@ -230,7 +230,7 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO USERS FOUND</h3>
+        }) : <h3 className = "hometext"> No Users Found</h3>
         const matchedSeries = this.state.seriess.length ? this.state.seriess.map((ser, i) => {
             return (
                 ser ?
@@ -243,7 +243,7 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO SERIES FOUND</h3>
+        }) : <h3 className = "hometext"> No Series Found</h3>
         const matchedComics = this.state.comics.length ? this.state.comics.map((com, i)=> {
             return (
                 com ?
@@ -257,7 +257,7 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO COMICS FOUND</h3>
+        }) : <h3 className = "hometext"> No Comics Found</h3>
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
