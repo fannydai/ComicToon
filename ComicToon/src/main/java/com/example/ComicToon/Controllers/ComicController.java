@@ -1165,6 +1165,69 @@ public class ComicController{
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/delete-report", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public DeleteReportResult deleteReport(@RequestBody DeleteReportForm form){
+        DeleteReportResult res = new DeleteReportResult();
+        if(form.getType().equals("user")){
+            List<ReportedUsersModel> reports = reportedUsersRepo.findAll();
+            boolean delete = false;
+            for(ReportedUsersModel report: reports){
+                if(report.getId().equals(form.getReportedID())){
+                    reportedUsersRepo.delete(report);
+                }
+                delete = true;
+            }
+            if(!delete){
+                res.setStatus("Could not find user with given id");
+            }
+        }
+        else if(form.getType().equals("comic")){
+            List<ReportedComicsModel> reports = reportedComicsRepo.findAll();
+            boolean delete = false;
+            for(ReportedComicsModel report: reports){
+                if(report.getId().equals(form.getReportedID())){
+                    reportedComicsRepo.delete(report);
+                }
+                delete = true;
+            }
+            if(!delete){
+                res.setStatus("Could not find comic with given id");
+            }
+        }
+        else if(form.getType().equals("series")){
+            List<ReportedSeriesModel> reports = reportedSeriesRepo.findAll();
+            boolean delete = false;
+            for(ReportedSeriesModel report: reports){
+                if(report.getId().equals(form.getReportedID())){
+                    reportedSeriesRepo.delete(report);
+                }
+                delete = true;
+            }
+            if(!delete){
+                res.setStatus("Could not find series with given id");
+            }
+        }
+        else if((form.getType().equals("comment"))){
+            List<ReportedCommentsModel> reports = reportedCommentsRepo.findAll();
+            boolean delete = false;
+            for(ReportedCommentsModel report: reports){
+                if(report.getId().equals(form.getReportedID())){
+                    reportedCommentsRepo.delete(report);
+                }
+                delete = true;
+            }
+            if(!delete){
+                res.setStatus("Could not find comment with given id");
+            }
+        }
+        else{
+            res.setStatus("error");
+        }
+        return res;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/report", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
     public ReportResult report(@RequestBody ReportForm form){
