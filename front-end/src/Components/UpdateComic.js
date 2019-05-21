@@ -306,6 +306,27 @@ class UpdateComic extends Component {
         this.setState({ comicPanels: copy });
     }
 
+    handleDragStart = (e, index) => {
+        this.draggedItem = this.state.comicPanels[index];
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", e.target.parentNode);
+        e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
+    }
+
+    handleDragOver = (index) => {
+        const draggedOverItem = this.state.comicPanels[index];
+        if (this.draggedItem === draggedOverItem) {
+            return;
+        }
+        let items = this.state.comicPanels.filter(item => item !== this.draggedItem);
+        items.splice(index, 0, this.draggedItem);
+        this.setState({ comicPanels: items });
+    }
+
+    handleDragEnd = () => {
+        this.draggedItem = null;
+    }
+
     render() {
         console.log(this.state.showSeries);
         var props = {
@@ -354,7 +375,7 @@ class UpdateComic extends Component {
                             <Slider {...props}>
                                 {this.state.comicPanels.length ? 
                                     this.state.comicPanels.map((panel, i) => {
-                                        return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i)} />
+                                        return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                     }) : null}
                                 <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                             </Slider>
