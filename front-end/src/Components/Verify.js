@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form, Card } from 'react-bootstrap';
 import './styles/VerifyForm.css';
 import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -54,15 +54,22 @@ class Verify extends Component {
     render() {
         return (
             <div className="verify-form-container">
+                <Card  style={{ width: '36rem' }}>
+
+                <Card.Body style={{ width: '36rem' }}>
 				<div className="verify">
+                    <Card.Title style={{ width: '50rem' }}>
                     <h1>Verify Your Account!</h1>
+                    </Card.Title>
                     {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
-                    <Form className="verify-form" onSubmit={this.handleRequest}>
-                        <Form.Control required name="email" type="email" onChange={this.handleChange} placeholder="Enter your email..." />
-                        <Form.Control required name="key" type="key" onChange={this.handleChange} placeholder="Enter the key found in your email... " />
+                    <Form className="verify-form" onSubmit={this.handleRequest} style={{ width: '20rem' }}>
+                        <Form.Control required name="email" type="email" onChange={this.handleChange} placeholder="Enter your account email." />
+                        <Form.Control required name="key" type="key" onChange={this.handleChange} placeholder="Enter the key found in the sent email. " />
                         <Button type="submit" variant="primary">Verify!</Button>
                     </Form>
 				</div>
+                </Card.Body>
+                </Card>
 			</div>
         );
     }
