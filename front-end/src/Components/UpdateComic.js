@@ -104,6 +104,7 @@ class UpdateComic extends Component {
                 },
                 body: JSON.stringify({
                     comicName: this.props.match.params.comicName,
+                    seriesName: this.props.match.params.seriesName,
                     comicOwnerName: this.props.match.params.username,
                     viewerName: this.props.CurrUser.token
                 })

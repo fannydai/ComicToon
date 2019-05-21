@@ -121,8 +121,8 @@ class HomeContent extends Component {
         )
     }
 
-    handleViewRecent = (comicName, username) => {
-        this.props.history.push(`/view/comic/${username}/${comicName}`);
+    handleViewRecent = (item) => {
+        this.props.history.push(`/view/comic/${item.username}/${item.comicSeriesName}/${item.comicName}`);
     }
 
     renderRecents(){
@@ -131,7 +131,7 @@ class HomeContent extends Component {
             return (
                 this.state.allComics.slice(0, 10).map(item=> {
                     return item !== null ?
-                    <span key={item.comicName} onClick={() => {this.handleViewRecent(item.comicName, item.username)}}>
+                    <span key={item.comicID} onClick={() => {this.handleViewRecent(item)}}>
                         {this.renderRecent(item)}
                     </span>
                     :

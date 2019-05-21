@@ -139,7 +139,7 @@ class ViewAllComics extends Component {
 
     handleClick = (item, event) => {
         console.log(item);
-        this.props.history.push(`/view/comic/${this.props.CurrUser.username}/${item.comicName}`);
+        this.props.history.push(`/view/comic/${this.props.CurrUser.username}/${item.comicSeriesName}/${item.comicName}`);
     }
 
     handleUpdate(item, event) {

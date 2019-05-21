@@ -27,6 +27,7 @@ class Admin extends Component {
             series: [],
             comments: [],
             owners: [],
+            comicSeriesNames: [],
             isLoading: true
         }
     }
@@ -184,8 +185,28 @@ class Admin extends Component {
         this.props.history.push(`/view/series/${username}/${seriesName}`);
     }
 
-    handleSeeComic = (username, comicName) => {
-        this.props.history.push(`/view/comic/${username}/${comicName}`);
+    handleSeeComic = (username, comicName, seriesName) => {
+        this.props.history.push(`/view/comic/${username}/${seriesName}/${comicName}`);
+    }
+
+    populateSeriesName = (comic, index) => {
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/series-data", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    id: comic.seriesId
+                })
+            });
+            let content = await res.json();
+            console.log(content);
+            if (content) {
+                this.setState({ comicSeriesNames: [...this.state.comicSeriesNames, content.name ]});
+            }
+        })();
     }
 
     render() {
@@ -204,6 +225,10 @@ class Admin extends Component {
             )
         }) : <h3> NO USERS FOUND</h3>
         const badComics = this.state.comicsKeys.length ? this.state.comicsKeys.map((item, i) => {
+            // Get corresponding comic series name for each reported comic (only when not already populated)
+            if (!this.state.comicSeriesNames.length) {
+                this.populateSeriesName(item, i);
+            }
             return (
                 item ?
                 <Card key={item}>
@@ -211,7 +236,7 @@ class Admin extends Component {
                         <Card.Title>Comic ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.comicsValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteComic} variant="danger">Delete Comic</Button>
-                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name)}} variant="primary">See Comic Details</Button>
+                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name, this.state)}} variant="primary">See Comic Details</Button>
                     </Card.Body>
                 </Card>
                 : null

@@ -188,8 +188,8 @@ class Search extends Component {
         this.props.history.push(`/view/series/${username}/${seriesName}`);
     }
 
-    handleViewComic = (username, comic) => {
-        this.props.history.push(`/view/comic/${username}/${comic}`);
+    handleViewComic = (comic) => {
+        this.props.history.push(`/view/comic/${comic.username}/${comic.comicSeriesName}/${comic.comicName}`);
     }
 
     getRating = (id) => {
@@ -247,12 +247,12 @@ class Search extends Component {
         const matchedComics = this.state.comics.length ? this.state.comics.map((com, i)=> {
             return (
                 com ?
-                <Card key={com.id} className="search-card">
+                <Card key={com.comicID} className="search-card">
                     <Card.Body>
-                        <Card.Title className="search-user-card-title" onClick={() => {this.handleViewComic(com.username, com.name)}}>Comic Name: {com.name} (click here to see more details)</Card.Title>
+                        <Card.Title className="search-user-card-title" onClick={() => {this.handleViewComic(com)}}>Comic Name: {com.comicName} (click here to see more details)</Card.Title>
                         <Card.Text>Artist: {com.username}</Card.Text>
                         <Card.Text>Rating: {this.state.ratings[i]}</Card.Text>
-                        <Button name={com.name} onClick={(e) => {this.handleReport(e, com.id, this.props.CurrUser.id, "comic")}} variant="danger">Report Comic</Button>
+                        <Button name={com.name} onClick={(e) => {this.handleReport(e, com.comicID, this.props.CurrUser.id, "comic")}} variant="danger">Report Comic</Button>
                     </Card.Body>
                 </Card>
                 : null

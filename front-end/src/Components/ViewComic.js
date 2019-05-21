@@ -48,7 +48,7 @@ class ViewComic extends Component {
                 console.log('VIEW COMIC FETCHING DATA');
                 this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
             }*/
-            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName, this.props.match.params.seriesName, this.props.CurrUser.token);
             //this.updateRating();
         }
     }
@@ -263,6 +263,7 @@ class ViewComic extends Component {
                 body: JSON.stringify({
                     comicOwner: this.props.match.params.username,
                     comicName: this.props.match.params.comicName,
+                    seriesName: this.props.match.params.seriesName,
                     commenterName: this.props.CurrUser.token,
                     content: this.state.comment
                 })
@@ -286,6 +287,7 @@ class ViewComic extends Component {
                     },
                     body: JSON.stringify({
                         comicName: this.props.match.params.comicName,
+                        seriesName: this.props.match.params.seriesName,
                         comicOwnerName: this.props.match.params.username,
                         viewerName: this.props.CurrUser.token
                     })
@@ -398,8 +400,32 @@ class ViewComic extends Component {
         }
     }
 
+    handleViewSuggestion = (suggestion) => {
+        console.log(suggestion);
+        console.log(`/view/comic/${suggestion.username}/${suggestion.comicSeriesName}/${suggestion.comicName}`);
+        this.props.history.push(`/view/comic/${suggestion.username}/${suggestion.comicSeriesName}/${suggestion.comicName}`);
+    }
+
+    renderSuggestions() {
+        return (this.props.comic.suggestions.length ? 
+            this.props.comic.suggestions.map((suggestion, index) => {
+                return (
+                    <Card className="view-comic-suggestions-card" key={"suggestion-" +  suggestion.comicID} onClick={e => this.handleViewSuggestion(suggestion)}>
+                        <Card.Img variant="top" src={suggestion.comicList[0].image} />
+                        <Card.Body>
+                            <Card.Title>{suggestion.comicName}</Card.Title>
+                        </Card.Body>
+                    </Card>
+
+                )
+            })
+            : <h5>No Suggestions</h5>
+        );
+    }
+
     render() {
         console.log(this.props.comic);
+        console.log(this.state);
         /*
         {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
         {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
@@ -478,21 +504,8 @@ class ViewComic extends Component {
                             </div>
                         </div>
                         <div className="view-comic-right">
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
+                            <h3>Suggestions</h3>
+                            {this.renderSuggestions()}
                         </div>
                     </div>
                 </div>
