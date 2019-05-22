@@ -143,11 +143,12 @@ public class ComicController{
         for (ComicSeriesModel candidate: candidates){
             System.out.println(candidate.getUserID());
             if(candidate.getUserID().equals(owner.getId())){
+                /*
                 // Check permission
                 if (!form.getOwnerName().equals(viewer.getUsername()) && candidate.getPrivacy().equals("Private")) {
                     result.setResult("error");
                     return result;
-                }
+                }*/
                 for(String comicID : candidate.getComics()){
                     System.out.println("GETTING COMICS");
                     ComicModel comic = comicRepository.findByid(comicID);
