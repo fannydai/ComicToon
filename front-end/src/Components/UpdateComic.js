@@ -35,7 +35,8 @@ class UpdateComic extends Component {
             series: [],
             selected_series: '',
             showSeries: false,
-            error: ""
+            error: "",
+            updateErr: false
         }
     }
 
@@ -47,16 +48,17 @@ class UpdateComic extends Component {
     }
 
     componentDidMount() {
+        socket = io('http://localhost:4000', { transports: ['websocket'] }); 
+        socket.emit('updating', {comicName: this.props.match.params.comicName, user: this.props.CurrUser.username})
+        socket.on('err', () => {
+            alert("Someone is currently editing... please wait");
+            history(-1);
+            this.setState({updateErr: true});
+            //socket.off('err');
+        });
         if(this.props.location.state !== undefined){
             if(!this.props.location.state.flag) this.setState({showSeries: true});
-            if(this.props.location.state.flag) { 
-                socket = io('http://localhost:4000', { transports: ['websocket'] }); 
-                socket.emit('updating', {comicName: this.props.match.params.comicName, user: this.props.CurrUser.username})
-                socket.on('err', ()=> {
-                    alert("Someone is currently editing... please wait");
-                    history(-1);
-                });
-            }
+          
         }
         else{ this.setState({showSeries: true});}
 
@@ -174,10 +176,10 @@ class UpdateComic extends Component {
             comicPanels: this.state.comicPanels
         });
 
-        if(socket !== undefined && socket !== null){
-            socket.emit("doneUpdating", this.props.match.params.comicName);
+       // if(socket !== undefined && socket !== null){
+           if(!this.state.updateErr) {socket.emit("doneUpdating", this.props.match.params.comicName);}
             socket.disconnect();
-        }
+       // }
     }
 
     handleComicName = (event) => {
