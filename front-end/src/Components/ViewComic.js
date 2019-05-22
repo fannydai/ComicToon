@@ -434,6 +434,26 @@ class ViewComic extends Component {
         );
     }
 
+    handleReport = (e) => {
+        if(this.props.comic.saveNewComic.creatorName === "admin"){
+            this.setState({ error: "You can't report an admin.", success: "" });
+        }
+        else if(this.props.comic.saveNewComic.creatorName=== this.props.CurrUser.username){
+            this.setState({ error: "You can't report yourself.", success: "" });
+        }
+        else{
+            this.props.history.push({
+                pathname: '/report', 
+                state: {
+                  reportingID: this.props.CurrUser.id,
+                  reportedID: this.props.comic.saveNewComic.comicID,
+                  type: "comic"
+                }
+            });
+        }
+
+    }
+
     render() {
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
@@ -446,6 +466,11 @@ class ViewComic extends Component {
         </div> :
         <div className="ml-auto">
             <Button onClick={this.handleSubscribe}>Subscribe To User</Button>
+        </div> : null;
+
+        const reportbtn = this.props.CurrUser.username !== this.props.match.params.username ?
+        <div className="ml-auto">
+            <Button onClick={ () => {this.handleReport()}} variant="danger">Report</Button>
         </div> : null;
         return (
             <div className="view-comic-container">
@@ -489,6 +514,11 @@ class ViewComic extends Component {
                                                 <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                             </div>
                                             {subButton}
+                                            
+                                            
+                                        </div>
+                                        <div style={{ width: "100%"}}>
+                                        {reportbtn}
                                         </div>
                                     </Card.Body>
                                 </Card>
