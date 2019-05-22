@@ -42,6 +42,23 @@ class ViewComic extends Component {
                 this.props.history.goBack();
             }
             this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName, this.props.match.params.seriesName, this.props.CurrUser.token);
+            // Check if subbed
+            (async () => {
+                const res = await fetch("http://localhost:8080/isSubbed", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        username: this.props.match.params.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({ subbed: content.result })
+            })();
         }
     }
 
