@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Form, Modal } from 'react-bootstrap';
 import Slider from 'react-slick';
 import NavigationBar from './NavigationBar';
 import './styles/CreateComic.css';
@@ -36,7 +36,8 @@ class UpdateComic extends Component {
             selected_series: '',
             showSeries: false,
             error: "",
-            updateErr: false
+            updateErr: false,
+            show: false
         }
     }
 
@@ -364,6 +365,14 @@ class UpdateComic extends Component {
         this.setState({ comicPanels: items });
     }
 
+    handleClose = () => {
+        this.setState({ show: false });
+      }
+    
+    handleShow = () => {
+        this.setState({ show: true });
+    }
+
     handleDragEnd = () => {
         this.draggedItem = null;
     }
@@ -449,7 +458,21 @@ class UpdateComic extends Component {
                         </div>
                         <div className="update-comic-submit">
                             <Button type="submit" variant="success">Update Comic</Button>
-                            {this.state.showSeries ? <Button variant="danger" onClick={this.handleDelete}>Delete Comic</Button> : null}
+                            {this.state.showSeries ? <Button variant="danger" onClick={this.handleShow}>Delete Comic</Button> : null}
+                            <Modal show={this.state.show} onHide={this.handleClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Confirm Delete</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>Do you want to delete this comic?</Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={this.handleClose}>
+                                    Close
+                                    </Button>
+                                    <Button variant="danger" onClick={this.handleDelete}>
+                                    Delete
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
                         </div>
                     </Form>
                 </div>

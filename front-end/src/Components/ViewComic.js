@@ -528,9 +528,9 @@ class ViewComic extends Component {
                                         <pre>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</pre>
                                     </Card.Body>
                                 </Card>
-                                <Form className="view-comic-comment-form">
-                                    <Form.Control as="textarea" rows="2" className="view-comic-comment-input" name="comment" type="text" placeholder="Comment on this comic..." value={this.state.comment} onChange={this.handleChange} />
-                                    <Button onClick={this.handleComment}>Submit</Button>
+                                <Form className="view-comic-comment-form" onSubmit={this.handleComment}>
+                                    <Form.Control required as="textarea" rows="2" className="view-comic-comment-input" name="comment" type="text" placeholder="Comment on this comic..." value={this.state.comment} onChange={this.handleChange} />
+                                    <Button type="submit">Submit</Button>
                                 </Form>
                                 <div className="view-comic-comment-container">
                                     {this.renderComments()}

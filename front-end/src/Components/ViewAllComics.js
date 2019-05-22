@@ -62,7 +62,7 @@ class ViewAllComics extends Component {
         return (
             panelList.map((item, i)=> {
                 return item !== null ?
-                <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, comicIndex, e)}>
+                <div className="view-comics-panel-container" key={item.id}>
                     <img className="view-comics-panel-img" src={item.image} alt="can't load"></img>
                 </div>
                 :
@@ -85,22 +85,6 @@ class ViewAllComics extends Component {
         alert(`Comic deleted!!`)
         let newArr = this.state.allComics.filter(item => item.comicId !== e.target.name);
         this.setState({allComics: newArr}, this.forceUpdate());
-    }
-
-    handlePanelClick = (item, index, comicIndex, event) => {
-        console.log(this.props.comic);
-        console.log(item);
-        console.log(index);
-        console.log(event);
-        event.preventDefault();
-        // Save the comics
-        if (this.state.allComics) {
-            this.props.viewAllComics(this.state.allComics);
-        }
-        // Editing from JSON
-        if (!item.image) {
-            this.props.history.push('/canvas', { previous: "fromjson", panel: item, panelIndex: index, comicIndex: comicIndex });
-        }
     }
 
     renderAll(){
