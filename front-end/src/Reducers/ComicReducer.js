@@ -32,7 +32,6 @@ export default function(state = initState, action) {
                 favorites: action.payload.favorites
             };
         case ADD_PANEL:
-            console.log(action.payload);
             return {
                 ...state,
                 newComic: [...state.newComic, action.payload]
@@ -52,10 +51,8 @@ export default function(state = initState, action) {
                 newComic: items
             }
         case UPDATE_NEW_COMIC_PANEL:
-            console.log(action.payload);
             let temp = state.newComic;
             temp[action.payload.index] = { image: action.payload.image, json: action.payload.json }
-            console.log(temp);
             return {
                 ...state,
                 newComic: temp
@@ -69,8 +66,6 @@ export default function(state = initState, action) {
                 newUpdateComic: { image: action.payload.image, canvas: JSON.stringify(action.payload.json) }
             }
         case UPDATE_COMIC_PANEL:
-            console.log(state);
-            console.log(action.payload);
             let updatedComic2 = state.saveUpdateComic;
             updatedComic2.comicPanels[action.payload.index] = { image: action.payload.image, canvas: action.payload.json }
             return {

@@ -11,7 +11,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
             body: JSON.stringify({ username: token, name: seriesName, description: description, genre: genres, privacy: privacy })
         });
         let content = await res.json();
-        console.log("CREATE SERIES RESULT", content);
         if(content.result === "success"){
             dispatch({
                 type: CREATESERIES,
@@ -30,7 +29,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
                   })
                 });
                 let content = await res.json();
-                console.log(content);
                 if (content.comicSeries) {
                     dispatch({
                         type: GET_ALL_SERIES,
@@ -54,7 +52,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
 
 export const createComic = (username, token, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
     (async () => {
-        console.log('sharedWITH', userList);
         const res = await fetch("http://localhost:8080/create/comic", {
             method: "POST",
             headers: {
@@ -74,7 +71,6 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
               })
         });
         let content = await res.json();
-        console.log(content)
         if(content.result === 'success'){ 
             dispatch({
                 type: CREATECOMIC,
@@ -113,7 +109,6 @@ export const viewComic = (username, viewerName, comicName, seriesName, token) =>
             })
         });
         let content = await res.json();
-        console.log(content);
         if (!content.comicName) {
             dispatch({
                 type: SAVE_NEW_COMIC_DATA,
@@ -126,9 +121,6 @@ export const viewComic = (username, viewerName, comicName, seriesName, token) =>
             });
             // Get suggestions
             (async (content, token, viewerName) => {
-                console.log(content);
-                console.log(token);
-                console.log(viewerName);
                 const res = await fetch("http://localhost:8080/sidebar", {
                     method: "POST",
                     headers: {
@@ -142,7 +134,6 @@ export const viewComic = (username, viewerName, comicName, seriesName, token) =>
                     })
                 });
                 let content2 = await res.json();
-                console.log(content2);
                 const suggestions = content2.bundleComicList && content2.bundleComicList.length > 0 ? content2.bundleComicList : [];
                 dispatch({
                     type: SET_SUGGESTIONS,

@@ -47,8 +47,6 @@ class UpdateComic extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.comic);
-        console.log(this.props.location.state);
         if(this.props.location.state !== undefined){
             if(!this.props.location.state.flag) this.setState({showSeries: true});
             if(this.props.location.state.flag) { 
@@ -164,7 +162,6 @@ class UpdateComic extends Component {
     }   
     
     componentWillUnmount() {
-        console.log("UNMOUNTING UPDATE COMIC");
         // In case they want to navigate out and back again
         this.props.saveUpdateComic({
             comicName: this.state.comicName,
@@ -198,10 +195,8 @@ class UpdateComic extends Component {
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            console.log('PRESSED ENTER');
             let newUsers = this.state.userInput.split(' ');
             let newUsers2 = newUsers.filter(item => item !== "")
-            console.log('USERS TO ADD', newUsers2);
             this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2], userInput: '' }); 
         }
     }
@@ -267,7 +262,15 @@ class UpdateComic extends Component {
             this.setState({ error: "You need at least one panel." });
             return;
         }
-        const canvases = this.state.comicPanels.map(panel => panel.canvas);
+        // const canvases = this.state.comicPanels.map(panel => panel.canvas);
+        const canvases = [];
+        for (const p of this.state.comicPanels) {
+            if (typeof p.canvas === "string") {
+                canvases.push(p.canvas);
+            } else {
+                canvases.push(JSON.stringify(p.canvas));
+            }
+        }
         const images = this.state.comicPanels.map(panel => panel.image);
         console.log(canvases);
         console.log(images);
@@ -362,7 +365,6 @@ class UpdateComic extends Component {
     }
 
     render() {
-        console.log(this.state.showSeries);
         var props = {
             dots: false,
             infinite: false,
