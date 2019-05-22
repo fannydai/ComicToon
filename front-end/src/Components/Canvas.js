@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import NavigationBar from './NavigationBar';
@@ -19,8 +19,9 @@ import OutlineButton from './OutlineButton';
 import FillButton from './FillButton';
 import ColorButton from './ColorButton';
 import HighlightButton from './HighlightButton';
+// import EyeDropper from './EyeDrop';
 import './styles/Canvas.css';
-import { addPanel, updateNewComicPanel, updateComicPanel, addUpdatePanel } from '../Actions/ComicActions';
+import { addPanel, updateNewComicPanel, updateComicPanel } from '../Actions/ComicActions';
 
 const history = require('browser-history');
 var SCALE_FACTOR = 1.3;
@@ -96,19 +97,13 @@ class Canvas extends Component {
                     this.canvas.renderAll();
                 });
             }
-            else if (this.props.location.state.previous === '/update') {
-                const data = this.props.location.state.panel;
-                if (data.canvas) {
-                    this.canvas.loadFromJSON(JSON.parse(data.canvas), () => {
-                        this.canvas.renderAll();
-                    });
-                }
-                else {
-                    fabric.Image.fromURL(data.image, (img) => {
-                        this.canvas.add(img);
-                        this.canvas.renderAll();
-                    });
-                }
+            else if (this.props.location.state.previous === 'fromjson') {
+                console.log('FROM JSON');
+                this.canvas.loadFromJSON(JSON.parse(this.props.location.state.panel.canvas), () => {
+                    this.canvas.renderAll();
+                }, (o, object) => {
+                    console.log(o, object);
+                });
             }
         }
 
@@ -1119,17 +1114,9 @@ class Canvas extends Component {
                 this.props.updateNewComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
                 history(-1);
             }
-            else if (this.props.location.state.previous === '/update') {
-                this.props.updateComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
-                this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
-                    previous: '/canvas'
-                });
-            }
-            else if (this.props.location.state.previous === '/update/new') {
-                this.props.addUpdatePanel(this.canvas.toDataURL(), this.canvas.toJSON());
-                this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
-                    previous: '/canvas'
-                });
+            else if (this.props.location.state.previous === 'fromjson') {
+                this.props.updateComicPanel(this.canvas.toDataURL(), this.canvas.toJSON(), 
+                    this.props.location.state.panel, this.props.location.state.panelIndex, this.props.location.state.comicIndex);
             }
         } else {
             // Done with drawing, reroute back to create comic
@@ -1213,10 +1200,14 @@ class Canvas extends Component {
                                 <td><FontAwesomeIcon className="icon" icon="trash" onClick={this.handleDeleteObject}  title="Delete Selected Object"/></td>
                                 <td><FontAwesomeIcon className="icon" onClick={this.handleClearCanvas} icon="eraser"  title="Clear Canvas"/></td> 
                             </tr>
-                            <tr>
+                            {/* <tr>
                                 <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo} disabled={this.state.undoBtn}  title="Undo"/></td>
                                 <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo} disabled={this.state.redoBtn}  title="Redo"/></td> 
-                            </tr>
+                            </tr> */}
+                            {/* <tr>
+                                <td><FontAwesomeIcon className="icon" icon="eye-dropper" title="Color Picker"/></td> 
+                                <td><div className="eye-drop-container"><EyeDropper initializedColor={this.state.setColor}/></div></td>
+                            </tr> */}
                             <tr>
                                 <td><FillButton changeColor={this.handleFillColor}  title="Fill Color"/></td>
                                 <td><OutlineButton changeColor={this.handleStrokeColor}  title="Stroke Color"/></td>
@@ -1260,11 +1251,11 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handlePencilSpray}>Spray</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilCircle}>Circle</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilPattern}>Poka dots</Dropdown.Item>
-                            {/*
+
                             <Dropdown.Item onClick={this.handlePencilHline}>H Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilVline}>V Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilSquare}>Square</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item>*/}
+                            <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item>
                         </DropdownButton>
                     </div>
                     <div className="bottom-bar">
@@ -1321,4 +1312,4 @@ Canvas.propTypes = {
     CurrUser: PropTypes.object
 }
 
-export default connect(StateToProps, { addPanel, updateComicPanel, updateNewComicPanel, addUpdatePanel })(withRouter(Canvas));
+export default connect(StateToProps, { addPanel, updateComicPanel, updateNewComicPanel })(withRouter(Canvas));
