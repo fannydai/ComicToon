@@ -36,15 +36,21 @@ io.on('connection', socket => {
     socket.on('updating', (data)=> {
         console.log("in update.. ", data);
         if(comicClients.has(data.comicName)){
+            console.log("someone useing.. ");
             socket.emit('err'); //someone already editing comic
         }
         else{
+            console.log("new user.. ");
             comicClients.set(data.comicName, data.user);
         }
+        console.log("map in update..");
+        console.log(comicClients);
     });
 
     socket.on('doneUpdating', (data) => {
         if(comicClients.has(data)) comicClients.delete(data);
+        console.log("map... ");
+        console.log(comicClients);
     });
 
     socket.on('saveMessage', function(data){
