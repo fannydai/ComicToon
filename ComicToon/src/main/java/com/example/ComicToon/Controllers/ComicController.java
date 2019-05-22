@@ -152,7 +152,7 @@ public class ComicController{
                 for(String comicID : candidate.getComics()){
                     System.out.println("GETTING COMICS");
                     ComicModel comic = comicRepository.findByid(comicID);
-                    if (comic != null) {
+                    if (comic != null && (viewer.getUsername().equals(owner.getUsername()) || comic.getSharedWith().contains(viewer.getUsername()))) {
                         System.out.println("FORMATTING COMIC");
                         //result.getComics().add(comic);
                         ViewAllComicsResult pans = new ViewAllComicsResult();
@@ -910,6 +910,8 @@ public class ComicController{
         int suggestions_Found = 0;
 
         List<ComicModel> findComicList = comicRepository.findAll();
+        // Add comic ID to list if it has been added
+        ArrayList<String> found = new ArrayList<>();
         if(findComicList!=null){
             //check for comics of same author
             for(ComicModel comic : findComicList){
@@ -931,6 +933,7 @@ public class ComicController{
                                 }
                                 result.getBundleComicList().add(pans);
                                 suggestions_Found +=1;
+                                found.add(comic.getId());
                     }
                 }
             }
@@ -942,6 +945,9 @@ public class ComicController{
                     if(suggestions_Found == 5)
                         break;
                     if(viewedComic.getId().equals(comic.getId()))
+                        continue;
+                    // Check if comic has been added
+                    if (found.contains(comic.getId()))
                         continue;
                     ComicSeriesModel tempSeries = ComicSeriesRepository.findByid(comic.getComicSeriesID());
                     ArrayList<String> tempGenres = tempSeries.getGenre();
@@ -967,6 +973,7 @@ public class ComicController{
                                 }
                                 result.getBundleComicList().add(pans);
                                 suggestions_Found +=1;
+                                found.add(comic.getId());
                     }
                 }
             }
@@ -976,6 +983,9 @@ public class ComicController{
                 if(suggestions_Found == 5)
                     break;
                 ComicModel temp = findComicList.get(i);
+                // Check if comic has been added
+                if (found.contains(temp.getId()))
+                    continue;
                 // Should not be your comic
                 if (!temp.getUsername().equals(user.getUsername())) {
                     // Check permissions
@@ -991,6 +1001,7 @@ public class ComicController{
                         pans.getComicList().add(firstPanel);
                         result.getBundleComicList().add(pans);
                         suggestions_Found +=1;
+                        found.add(temp.getId());
                     }
                 }
             }
@@ -1022,6 +1033,8 @@ public class ComicController{
             for(String id: favs){
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 ComicModel com = comicRepository.findByid(id);
+                ComicSeriesModel series = ComicSeriesRepository.findByid(com.getComicSeriesID());
+                pans.setComicSeriesName(series.getName());
                 pans.setComicID(com.getId());
                 pans.setComicName(com.getName());
                 pans.setDate(com.getDate());

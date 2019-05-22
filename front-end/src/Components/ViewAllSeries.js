@@ -80,7 +80,6 @@ class ViewAllSeries extends Component {
         console.log('SENDING THIS TO UPDATE', series);
         this.props.history.push(`/update/series/${this.props.CurrUser.username}/${series.name}`, {
             genre: series.genre,
-            addUserList: series.sharedWith,
             privacy: series.privacy,
             description: series.description,
             id: series.id

@@ -24,8 +24,6 @@ class UpdateSeries extends Component {
             seriesDescription: '',
             genre: '',
             genreList: [],
-            addUser: '',
-            addUserList: [],
             privacy: 'Private'
         }
     }
@@ -79,7 +77,7 @@ class UpdateSeries extends Component {
                         if (content) {
                             for (const series of content.comicSeries) {
                                 if (series && series.name === this.props.match.params.seriesName) {
-                                    this.setState({ id: series.id, seriesDescription: series.description, genreList: series.genre, addUserList: series.sharedWith, privacy: series.privacy });
+                                    this.setState({ id: series.id, seriesDescription: series.description, genreList: series.genre, privacy: series.privacy });
                                     break;
                                 }
                             }
@@ -106,7 +104,7 @@ class UpdateSeries extends Component {
                     this.props.history.push("/");
                 } else {
                     this.setState({ id: this.props.location.state.id, genreList: this.props.location.state.genre, 
-                        addUserList: this.props.location.state.addUserList, privacy: this.props.location.state.privacy, 
+                        privacy: this.props.location.state.privacy, 
                         seriesDescription: this.props.location.state.description });
                 }
             })(); 
@@ -119,27 +117,12 @@ class UpdateSeries extends Component {
         });
     }
 
-    renderAddUserEnter() {
-        return this.state.addUserList.map((user, i) => {
-            return <tr key={i}><td>{user}</td><td><button className="btn-danger" onClick={(e) => this.handleDeleteUser(i, e)}>Delete</button></td></tr>
-        });
-    }
-
     handleDeleteGenre = (index, event) => {
         event.preventDefault();
         var copy = [...this.state.genreList];
         if (index !== -1) {
             copy.splice(index, 1);
             this.setState({ genreList: copy });
-        }
-    }
-
-    handleDeleteUser = (index, event) => {
-        event.preventDefault();
-        var copy = [...this.state.addUserList];
-        if (index !== -1) {
-            copy.splice(index, 1);
-            this.setState({ addUserList: copy });
         }
     }
 
@@ -213,7 +196,6 @@ class UpdateSeries extends Component {
                 new_Name: this.state.seriesName,
                 new_Description: this.state.seriesDescription,
                 new_Genres: this.state.genreList,
-                new_SharedWith: this.state.addUserList,
                 new_Privacy: this.state.privacy
               })
             });
@@ -231,15 +213,17 @@ class UpdateSeries extends Component {
             <div className="create-series-container">
                  <NavigationBar />
                 <Form className="create-form" onSubmit={this.handleUpdate}>
+                    <h1>Update Series</h1>
                     <Form.Control required className="create-series-form-control" type="text" placeholder="Type Series Name..." name="seriesName" value={this.state.seriesName} onChange={this.handleChange} />
                     <Form.Control required className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" name="seriesDescription" value={this.state.seriesDescription} onChange={this.handleChange} />
                     <div style={{ marginBottom: "1vh" }}>
                         <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handleChange} />
                         <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
                     </div>
+                    <Form.Control type="text" placeholder="Press 'Enter' to Add Genre (ex. #horror)" name="genre" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddGenreEnter} style={{ marginBottom: "1vh", width: "50%" }} />
                     <div className="update-series-genre-input">
                         <div className="update-series-table-container">
-                            <Form.Control type="text" placeholder="Press 'Enter' to Add Genre (ex. #horror)" name="genre" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddGenreEnter} style={{ marginBottom: "1vh" }} />
+                            <h2>Genres </h2>
                             <Table bordered hover className="update-series-genre-table">
                                 <tbody>
                                     {this.renderGenre()}

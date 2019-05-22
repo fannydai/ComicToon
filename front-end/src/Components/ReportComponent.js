@@ -66,7 +66,7 @@ class ReportComponent extends Component {
         return (
             <div>
                 <NavigationBar />
-                <h1> Report Page </h1>
+                <h1 style={{ textAlign: "center", color: "white" }}> Report Page </h1>
                 <Form className="welcome" onSubmit={this.handleReport}>
                 <p>Report Type: </p>
                 <div className="bubbletext">
