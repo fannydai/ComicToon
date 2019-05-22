@@ -428,7 +428,7 @@ class ViewComic extends Component {
             <Button onClick={this.handleUnSubscribe}>Unsubscribe</Button>
         </div> :
         <div className="ml-auto">
-            <Button onClick={this.handleSubscribe}>Subscribe</Button>
+            <Button onClick={this.handleSubscribe}>Subscribe To User</Button>
         </div> : null;
         return (
             <div className="view-comic-container">
