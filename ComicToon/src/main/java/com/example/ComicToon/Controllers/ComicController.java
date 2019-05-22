@@ -461,12 +461,35 @@ public class ComicController{
             }
 
             // Get the original series
+            
             ArrayList<ComicSeriesModel> allSeries = ComicSeriesRepository.findByname(form.getOldSeries());
             ComicSeriesModel oldSeries = null;
+            UserModel usr = userRepository.findByusername(toUpdate);
+            if(form.getFlag()){
+                // if(form.getSharedWith().contains(theUser.getUsername())){
+                //     //get the comic
+                    
+                //     for(ArrayList<String> sharedComic : theUser.getSharedComics()) {
+                //         if (sharedComic.get(0).equals(toUpdate) && sharedComic.get(1).equals(form.getOldName())) {
+                            
+                //         }
+                //     }
+                // }
+               
+                
+                
+            }
+            
             for (ComicSeriesModel tempSeries : allSeries) {
                 if (tempSeries.getUserID().equals(theUser.getId())) {
                     oldSeries = tempSeries;
                     break;
+                }
+                if(form.getFlag()){
+                    if(usr.getId().equals(tempSeries.getUserID()) && tempSeries.getName().equals(form.getOldName())){
+                        oldSeries = tempSeries;
+                        break;
+                    }
                 }
             }
             if ( !form.getFlag() && oldSeries == null) {
