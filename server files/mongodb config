@@ -43,6 +43,3 @@ journal=true
 #nocursors = true
 
 # Ignore query hints
-
-^G Get Help     ^O Write Out    ^W Where Is     ^K Cut Text     ^J Justify      ^C Cur Pos      M-U Undo        M-A Mark Text   M-] To Bracket  ^B Back         ^Left Prev Word
-^X Exit         ^R Read File    ^\ Replace      ^U Uncut Text   ^T To Spell     ^_ Go To Line   M-E Redo        M-6 Copy Text   M-W WhereIs Next^F Forward      ^Right Next Word
