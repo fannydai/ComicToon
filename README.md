@@ -56,25 +56,25 @@
 ### TO DO FOR CANVAS:
 #### Pencil
 * [X] Circle
-* [] Crayon
-* [] Ink
-* [] Marker
-* [] Drip
+* [ ] Crayon
+* [ ] Ink
+* [ ] Marker
+* [ ] Drip
 * [X] Spray
 * [X] Pattern
-* [] Hline
-* [] Vline
-* [] Square
-* [] Diamond
+* [ ] Hline
+* [ ] Vline
+* [ ] Square
+* [ ] Diamond
 
 #### Text
-* [] Size
-* [] Italic
-* [] Bold
-* [] Underline
-* [] Line Through
-* [] Line Over
-* [] Font Family
+* [ ] Size
+* [ ] Italic
+* [ ] Bold
+* [ ] Underline
+* [ ] Line Through
+* [ ] Line Over
+* [ ] Font Family
 
 #### Shapes
 * [X] Line
@@ -85,24 +85,24 @@
 * [X] Image
 * [X] Being able to drag the shape to make it rather than setting it a certain size at the top left
 
-* [] Brush Color (fill color)
-* [] Border Color
-* [] Background Color
+* [ ] Brush Color (fill color)
+* [ ] Border Color
+* [ ] Background Color
 * [X] Line Width
 * [X] Opacity
 * [X] Shadow
 * [X] Shadow Offset
 * [X] Shadow Color
-* [] Dotted Border
-* [] Thickness of border
-* [] Shadow
-* [] Gradient
+* [ ] Dotted Border
+* [ ] Thickness of border
+* [ ] Shadow
+* [ ] Gradient
 
-* [] Grid
+* [ ] Grid
 * [X] Zoom In
 * [X] Zoom Out
 * [X] Reset Zoom
-* [] Pan
+* [ ] Pan
 * [X] Cut
 * [X] Copy
 * [X] Paste
@@ -112,10 +112,10 @@
 * [X] Move Backward
 * [X] Move Front
 * [X] Move Back
-* [] Group Items
+* [ ] Group Items
 * [X] Download
 * [X] Save
-* [] Move single object
+* [ ] Move single object
 * [X] Delete Shape
 * [X] Clear Canvas
 * [X] Background color
