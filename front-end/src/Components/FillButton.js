@@ -51,7 +51,7 @@ class FillButton extends React.Component {
         return (
         <div>
             <span onClick={this.handleClick}>
-                <FontAwesomeIcon style={palette} className="icon" icon="fill" />
+                <FontAwesomeIcon style={palette} className="icon" icon="fill" title="Fill Color" />
             </span>
             {this.state.displayColorPicker ? 
                 <div style={popover}> <div style={cover} onClick={this.handleClose} />

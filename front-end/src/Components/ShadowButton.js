@@ -51,7 +51,7 @@ class ShadowButton extends React.Component {
         return (
         <div>
             <span onClick={this.handleClick}>
-                <FontAwesomeIcon style={palette} className="icon" icon="cloud" />
+                <FontAwesomeIcon style={palette} className="icon" icon="cloud" title="Shadow Color" />
             </span>
             {this.state.displayColorPicker ? 
                 <div style={popover}> <div style={cover} onClick={this.handleClose} />
