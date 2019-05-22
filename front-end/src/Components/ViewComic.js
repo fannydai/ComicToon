@@ -417,10 +417,6 @@ class ViewComic extends Component {
         );
     }
 
-    handleReportComic = () => {
-        console.log(this.props);
-    }
-
     render() {
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
@@ -433,10 +429,6 @@ class ViewComic extends Component {
         </div> :
         <div className="ml-auto">
             <Button onClick={this.handleSubscribe}>Subscribe</Button>
-        </div> : null;
-        const reportComicButton = this.props.CurrUser.username !== this.props.match.params.username ?
-        <div className="ml-auto">
-            <Button onClick={this.handleReportComic}>Report Comic</Button>
         </div> : null;
         return (
             <div className="view-comic-container">
@@ -480,7 +472,6 @@ class ViewComic extends Component {
                                                 <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                             </div>
                                             {subButton}
-                                            {reportComicButton}
                                         </div>
                                     </Card.Body>
                                 </Card>
