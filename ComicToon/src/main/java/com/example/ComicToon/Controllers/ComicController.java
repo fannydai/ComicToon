@@ -321,6 +321,13 @@ public class ComicController{
                             }
                         }   
                     }
+                    List<UserModel> all = userRepository.findAll();
+                    for(UserModel us: all){
+                        if(us.getFavorites().contains(r.getId())){
+                            us.getFavorites().remove(r.getId());
+                            userRepository.save(us);
+                        }
+                    }
                     comicRepository.delete(r);
                     result.setResult("Deleted Comic and reference in its series");
                 }

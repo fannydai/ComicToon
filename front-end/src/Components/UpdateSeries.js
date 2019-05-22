@@ -156,15 +156,6 @@ class UpdateSeries extends Component {
         }
     }
 
-    handleAddUserEnter = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            let newUsers = this.state.addUser.split(' ');
-            newUsers = newUsers.filter(item => item !== "")
-            this.setState({ addUserList: [...this.state.addUserList, ...newUsers], addUser: '' }); 
-        }
-    }
-
     handleDelete = (event) => {
         event.preventDefault();
         (async () => {
@@ -252,14 +243,6 @@ class UpdateSeries extends Component {
                             <Table bordered hover className="update-series-genre-table">
                                 <tbody>
                                     {this.renderGenre()}
-                                </tbody>
-                            </Table>
-                        </div>
-                        <div className="update-series-table-container">
-                            <Form.Control type="text" placeholder="Add User... (ex. Sean Jeffrey Fanny Joel)" name="addUser" value={this.state.addUser} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} style={{ marginBottom: "1vh" }} />
-                            <Table bordered hover className="update-series-genre-table">
-                                <tbody>
-                                    {this.renderAddUserEnter()}
                                 </tbody>
                             </Table>
                         </div>
