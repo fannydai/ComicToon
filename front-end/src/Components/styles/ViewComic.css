@@ -7,6 +7,7 @@
 
 .view-comic-bottom {
     min-height: 85%;
+    width: 100%;
     display: flex;
     justify-content: center;
     padding-top: 25px;
@@ -16,6 +17,7 @@
 .view-comic-overlay {
     background-color : whitesmoke;
     display: flex;
+    width: 100%;
 }
 
 .view-comic-left {
