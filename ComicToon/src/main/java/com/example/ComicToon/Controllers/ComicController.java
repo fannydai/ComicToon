@@ -1375,6 +1375,14 @@ public class ComicController{
         ComicSeriesRepository.save(series);
         comicRepository.delete(toDel);
 
+        List<UserModel> all = userRepository.findAll();
+        for(UserModel us: all){
+            if(us.getFavorites().contains(toDel.getId())){
+                us.getFavorites().remove(toDel.getId());
+                userRepository.save(us);
+            }
+        }
+
         List<ReportedComicsModel> temp = reportedComicsRepo.findBycomicID(form.getId());
         if(temp.size() == 0){
             result.setStatus("comics don't exist");
