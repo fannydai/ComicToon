@@ -8,7 +8,6 @@ import JSZip from 'jszip';
 
 import NavigationBar from './NavigationBar';
 import './styles/ViewComic.css';
-import pusheen from './images/pusheen.png';
 import { viewComic } from './../Actions/NavbarActions';
 import { clearPanels, saveNewComic } from './../Actions/ComicActions';
 
@@ -42,24 +41,40 @@ class ViewComic extends Component {
             if (!this.props.match.params.username || !this.props.match.params.comicName) {
                 this.props.history.goBack();
             }
-            /*
-            // Load comic only if this page is not redirected from create comic
-            if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
-                console.log('VIEW COMIC FETCHING DATA');
-                this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
-            }*/
-            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
-            //this.updateRating();
+            this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName, this.props.match.params.seriesName, this.props.CurrUser.token);
+            // Check if subbed
+            (async () => {
+                const res = await fetch("http://localhost:8080/isSubbed", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: this.props.CurrUser.token,
+                        username: this.props.match.params.username
+                    })
+                });
+                let content = await res.json();
+                console.log(content)
+                this.setState({ subbed: content.result })
+            })();
         }
     }
 
     componentWillReceiveProps(nextProps){
+        console.log("COMPONENT RECEIVING PROPS");
+        // Reload for suggestions
+        if (this.props.location.pathname !== nextProps.location.pathname) {
+            console.log("CLICKED ON SUGGESTED COMIC");
+            this.props.viewComic(nextProps.match.params.username, nextProps.CurrUser.username, nextProps.match.params.comicName, nextProps.match.params.seriesName, nextProps.CurrUser.token);
+        } else {
         // Set the new comments
         if (nextProps.comic.saveNewComic.commentsList) {
             this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
         }
         if((nextProps.comic.saveNewComic.privacy === "Private" && this.props.CurrUser.username !== this.props.match.params.username) && nextProps.comic.saveNewComic.sharedWith.indexOf(this.props.CurrUser.username) === -1){
-           console.log("NSDGDSG");
+        console.log("NSDGDSG");
             this.props.history.push('/*');
         }
         (async () => {
@@ -76,7 +91,7 @@ class ViewComic extends Component {
             let content = await res.json();
             console.log(content)
             this.setState({rating: content.result})
-        })();
+        })(); }
     }
 
     updateRating(){
@@ -122,7 +137,6 @@ class ViewComic extends Component {
         console.log("DOWNLOADING");
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         if (panels.length) {
-            console.log(panels);
             const zip =new JSZip();
             for (var i = 0; i < panels.length; i++) {
                 // Look for the type of file
@@ -263,6 +277,7 @@ class ViewComic extends Component {
                 body: JSON.stringify({
                     comicOwner: this.props.match.params.username,
                     comicName: this.props.match.params.comicName,
+                    seriesName: this.props.match.params.seriesName,
                     commenterName: this.props.CurrUser.token,
                     content: this.state.comment
                 })
@@ -286,6 +301,7 @@ class ViewComic extends Component {
                     },
                     body: JSON.stringify({
                         comicName: this.props.match.params.comicName,
+                        seriesName: this.props.match.params.seriesName,
                         comicOwnerName: this.props.match.params.username,
                         viewerName: this.props.CurrUser.token
                     })
@@ -312,18 +328,17 @@ class ViewComic extends Component {
     }
 
     renderComments = () => {
-        console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="trash" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
             const reportButton = comment.username !== this.props.CurrUser.username ? 
-                <p style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >REPORT</p> : null;
+                <Button variant="danger" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >Report Comment</Button> : null;
             return (
-                <Card key={index}>
+                <Card style={{ marginLeft: 0, marginRight: 0 }} key={index}>
                     <Card.Body>
                         <Card.Title>{ comment.username }</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">{ comment.date }</Card.Subtitle>
-                        <Card.Text>{ comment.content }</Card.Text>
+                        <pre>{ comment.content }</pre>
                         {deleteButton}
                         {reportButton}
                     </Card.Body>
@@ -398,16 +413,31 @@ class ViewComic extends Component {
         }
     }
 
+    handleViewSuggestion = (suggestion) => {
+        this.props.history.push(`/view/comic/${suggestion.username}/${suggestion.comicSeriesName}/${suggestion.comicName}`);
+    }
+
+    renderSuggestions() {
+        return (this.props.comic.suggestions.length ? 
+            this.props.comic.suggestions.map((suggestion, index) => {
+                return (
+                    <Card className="view-comic-suggestions-card" style={{ marginLeft: 0, marginRight: 0 }} key={"suggestion-" +  suggestion.comicID} onClick={e => this.handleViewSuggestion(suggestion)}>
+                        <Card.Img variant="top" src={suggestion.comicList[0].image} />
+                        <Card.Body>
+                            <Card.Title>{suggestion.comicName}</Card.Title>
+                        </Card.Body>
+                    </Card>
+
+                )
+            })
+            : <h5>No Suggestions</h5>
+        );
+    }
+
     render() {
-        console.log(this.props.comic);
-        /*
-        {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
-        {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
-        {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
-        */
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
-            this.props.history.push('/notfound');
+            this.props.history.push('/');
         }
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         const subButton = this.props.CurrUser.username !== this.props.match.params.username ? this.state.subbed ? 
@@ -415,7 +445,7 @@ class ViewComic extends Component {
             <Button onClick={this.handleUnSubscribe}>Unsubscribe</Button>
         </div> :
         <div className="ml-auto">
-            <Button onClick={this.handleSubscribe}>Subscribe</Button>
+            <Button onClick={this.handleSubscribe}>Subscribe To User</Button>
         </div> : null;
         return (
             <div className="view-comic-container">
@@ -435,7 +465,7 @@ class ViewComic extends Component {
                                 </div>
                             </div>
                             <div className="view-comic-left-bottom">
-                                <Card>
+                                <Card style={{ marginLeft: 0, marginRight: 0 }}>
                                     <Card.Body>
                                         <div className="view-comic-title-row">
                                             <h1>{this.props.match.params.comicName}</h1>
@@ -462,7 +492,7 @@ class ViewComic extends Component {
                                         </div>
                                     </Card.Body>
                                 </Card>
-                                <Card>
+                                <Card style={{ marginLeft: 0, marginRight: 0 }}>
                                     <Card.Body>
                                         <h1>Description</h1>
                                         <pre>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</pre>
@@ -478,21 +508,8 @@ class ViewComic extends Component {
                             </div>
                         </div>
                         <div className="view-comic-right">
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
-                            <div className="view-comic-right-img-container">
-                                <img className="view-comic-right-img" src={pusheen} alt="can't load"/>
-                            </div>
+                            <h3>Suggestions</h3>
+                            {this.renderSuggestions()}
                         </div>
                     </div>
                 </div>

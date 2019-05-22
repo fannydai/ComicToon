@@ -21,7 +21,6 @@ class LoginForm extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps);
         if(nextProps.user.username !== "") {
             this.props.history.push('/home');
             // localStorage.setItem('user', nextProps.user.username);

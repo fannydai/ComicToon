@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES, UPDATE_COMIC_PANEL } from './../Actions/Types';
+import { ERR, CREATESERIES, CREATECOMIC, UPLOAD, VIEWCOMIC, VIEWSERIES } from './../Actions/Types';
 
 const initState = {
     User_Series: "",
@@ -32,15 +32,6 @@ export default function(state = initState, action) {
                 ...state,
                 User_Comic_View: action.payload.comics
             };
-        case UPDATE_COMIC_PANEL:
-            // console.log(state);
-            // console.log(action.payload);
-            state.User_Comic_View[action.payload.comicIndex].comicList[action.payload.panelIndex].image = action.payload.image;
-            state.User_Comic_View[action.payload.comicIndex].comicList[action.payload.panelIndex].canvas = JSON.stringify(action.payload.canvas);
-            // console.log(state);
-            return {
-                ...state
-            }
         case VIEWSERIES:
             return {
                 //todo

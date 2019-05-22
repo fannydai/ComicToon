@@ -1,14 +1,16 @@
-import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA, ADD_UPDATE_PANEL, DELETE_NEW_COMIC_PANEL, CREATE_COMIC_ERROR, DRAG_NEW_COMIC_PANEL, UPDATE_NEW_COMIC_PANEL } from './../Actions/Types';
+import { GET_USER_SERIES, GET_SUBSCRIPTIONS, GET_RECENT_CREATIONS, GET_FAVORITES, ADD_PANEL, SAVE_NEW_COMIC_DATA, GET_ALL_SERIES, CLEAR_PANELS, SAVE_UPDATE_COMIC_DATA, ADD_UPDATE_PANEL, DELETE_NEW_COMIC_PANEL, CREATE_COMIC_ERROR, DRAG_NEW_COMIC_PANEL, UPDATE_NEW_COMIC_PANEL, UPDATE_COMIC_PANEL, SET_SUGGESTIONS } from './../Actions/Types';
 
 const initState = {
     subscriptions: [],
     recentCreations: [],
     favorites: [],
     newComic: [],
+    newUpdateComic: null,
     saveNewComic: {},
     saveUpdateComic: {},
     allSeries: [],
     userSeries: [],
+    suggestions: [],
     createComicError: ""
 }
 
@@ -30,7 +32,6 @@ export default function(state = initState, action) {
                 favorites: action.payload.favorites
             };
         case ADD_PANEL:
-            console.log(action.payload);
             return {
                 ...state,
                 newComic: [...state.newComic, action.payload]
@@ -50,10 +51,8 @@ export default function(state = initState, action) {
                 newComic: items
             }
         case UPDATE_NEW_COMIC_PANEL:
-            console.log(action.payload);
             let temp = state.newComic;
             temp[action.payload.index] = { image: action.payload.image, json: action.payload.json }
-            console.log(temp);
             return {
                 ...state,
                 newComic: temp
@@ -63,7 +62,15 @@ export default function(state = initState, action) {
             updatedComic.comicPanels = [...updatedComic.comicPanels, { image: action.payload.image, canvas: JSON.stringify(action.payload.json) }];
             return {
                 ...state,
-                saveUpdateComic: updatedComic
+                saveUpdateComic: updatedComic,
+                newUpdateComic: { image: action.payload.image, canvas: JSON.stringify(action.payload.json) }
+            }
+        case UPDATE_COMIC_PANEL:
+            let updatedComic2 = state.saveUpdateComic;
+            updatedComic2.comicPanels[action.payload.index] = { image: action.payload.image, canvas: action.payload.json }
+            return {
+                ...state,
+                saveUpdateComic: updatedComic2
             }
         case CLEAR_PANELS:
             return {
@@ -89,6 +96,11 @@ export default function(state = initState, action) {
             return {
                 ...state,
                 userSeries: action.payload.userSeries
+            }
+        case SET_SUGGESTIONS:
+            return {
+                ...state,
+                suggestions: action.payload.suggestions
             }
         case CREATE_COMIC_ERROR:
             return {

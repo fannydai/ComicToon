@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR, SET_SUGGESTIONS } from './Types';
 
 export const createSeries = (token, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
@@ -11,7 +11,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
             body: JSON.stringify({ username: token, name: seriesName, description: description, genre: genres, privacy: privacy })
         });
         let content = await res.json();
-        console.log("CREATE SERIES RESULT", content);
         if(content.result === "success"){
             dispatch({
                 type: CREATESERIES,
@@ -30,7 +29,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
                   })
                 });
                 let content = await res.json();
-                console.log(content);
                 if (content.comicSeries) {
                     dispatch({
                         type: GET_ALL_SERIES,
@@ -54,7 +52,6 @@ export const createSeries = (token, seriesName, description, genres, privacy, hi
 
 export const createComic = (username, token, desc, comicName, seriesName, userList, privacy, canvases, images, history) => (dispatch) => {
     (async () => {
-        console.log('sharedWITH', userList);
         const res = await fetch("http://localhost:8080/create/comic", {
             method: "POST",
             headers: {
@@ -74,7 +71,6 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
               })
         });
         let content = await res.json();
-        console.log(content)
         if(content.result === 'success'){ 
             dispatch({
                 type: CREATECOMIC,
@@ -82,7 +78,7 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
             });
             // Navigate only if successful
             history.push({
-                pathname: `/view/comic/${username}/${comicName}`,
+                pathname: `/view/comic/${username}/${seriesName}/${comicName}`,
                 state: {
                     series: seriesName
                 }
@@ -97,7 +93,7 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
     })();
 }
 
-export const viewComic = (username, viewerName, comicName) => (dispatch) => {
+export const viewComic = (username, viewerName, comicName, seriesName, token) => (dispatch) => {
     (async () => {
         const res = await fetch('http://localhost:8080/view/comic', {
             method: "POST",
@@ -107,12 +103,12 @@ export const viewComic = (username, viewerName, comicName) => (dispatch) => {
             },
             body: JSON.stringify({
                 comicName: comicName,
+                seriesName: seriesName,
                 comicOwnerName: username,
-                viewerName: viewerName
+                viewerName: token
             })
         });
         let content = await res.json();
-        console.log(content);
         if (!content.comicName) {
             dispatch({
                 type: SAVE_NEW_COMIC_DATA,
@@ -123,6 +119,27 @@ export const viewComic = (username, viewerName, comicName) => (dispatch) => {
                 type: SAVE_NEW_COMIC_DATA,
                 payload: { saveNewComic: content }
             });
+            // Get suggestions
+            (async (content, token, viewerName) => {
+                const res = await fetch("http://localhost:8080/sidebar", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        viewerName: viewerName,
+                        viewedComicID: content.comicID
+                    })
+                });
+                let content2 = await res.json();
+                const suggestions = content2.bundleComicList && content2.bundleComicList.length > 0 ? content2.bundleComicList : [];
+                dispatch({
+                    type: SET_SUGGESTIONS,
+                    payload: { suggestions: suggestions }
+                });
+            })(content, token, viewerName);
         }
     })();
 }
@@ -132,15 +149,6 @@ export const viewAllComics = (newComics) => (dispatch) => {
         type: VIEWCOMIC,
         payload: { comics: newComics }
     });
-}
-
-export const updateComicPanel = (image, canvas, panel, panelIndex, comicIndex) => (dispatch) => {
-    // Call backend to update the panel and update User_Comic_View with it
-    dispatch({
-        type: UPDATE_COMIC_PANEL,
-        payload: { image: image, canvas: canvas, panel: panel, panelIndex: panelIndex, comicIndex: comicIndex }
-    });
-    console.log(panel);
 }
 
 export const setCreateComicError = (value) => (dispatch) => {

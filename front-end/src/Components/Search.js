@@ -188,8 +188,8 @@ class Search extends Component {
         this.props.history.push(`/view/series/${username}/${seriesName}`);
     }
 
-    handleViewComic = (username, comic) => {
-        this.props.history.push(`/view/comic/${username}/${comic}`);
+    handleViewComic = (comic) => {
+        this.props.history.push(`/view/comic/${comic.username}/${comic.comicSeriesName}/${comic.comicName}`);
     }
 
     getRating = (id) => {
@@ -230,7 +230,7 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO USERS FOUND</h3>
+        }) : <h3 > No Users Found With Search Keywords.</h3>
         const matchedSeries = this.state.seriess.length ? this.state.seriess.map((ser, i) => {
             return (
                 ser ?
@@ -243,24 +243,25 @@ class Search extends Component {
                 </Card>
                 : null
             )
-        }) : <h3> NO SERIES FOUND</h3>
+        }) : <h3 > No Series Found With Search Keywords.</h3>
         const matchedComics = this.state.comics.length ? this.state.comics.map((com, i)=> {
             return (
                 com ?
-                <Card key={com.id} className="search-card">
+                <Card key={com.comicID} className="search-card">
                     <Card.Body>
-                        <Card.Title className="search-user-card-title" onClick={() => {this.handleViewComic(com.username, com.name)}}>Comic Name: {com.name} (click here to see more details)</Card.Title>
+                        <Card.Title className="search-user-card-title" onClick={() => {this.handleViewComic(com)}}>Comic Name: {com.comicName} (click here to see more details)</Card.Title>
                         <Card.Text>Artist: {com.username}</Card.Text>
                         <Card.Text>Rating: {this.state.ratings[i]}</Card.Text>
-                        <Button name={com.name} onClick={(e) => {this.handleReport(e, com.id, this.props.CurrUser.id, "comic")}} variant="danger">Report Comic</Button>
+                        <Button name={com.name} onClick={(e) => {this.handleReport(e, com.comicID, this.props.CurrUser.id, "comic")}} variant="danger">Report Comic</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
-        }) : <h3> NO COMICS FOUND</h3>
+        }) : <h3 > No Comics Found With Search Keywords.</h3>
         return (
             <div className="home-main-container">
                 <NavigationBar history={this.props.history}/>
+                <Card className = "search-card">
                 {this.state.success ? <Alert variant="success" className="search-alert">{this.state.success}</Alert> : this.state.error ? <Alert variant="danger" className="search-alert">{this.state.error}</Alert> : <Alert variant="danger" className="search-alert" style={{ visibility: "hidden" }}>Hi</Alert>}
                 <div className="search-results-container"> {/*add this to css */}
                     {matchedUsers}
@@ -269,6 +270,7 @@ class Search extends Component {
                     <hr/>
                     {matchedComics}
                 </div>
+                </Card>
             </div>
         );
     }

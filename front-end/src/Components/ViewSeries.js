@@ -33,10 +33,10 @@ class ViewSeries extends Component {
     componentDidMount() {
         console.log(this.props.match.params.username)
         if(this.props.match.params.username !== this.props.CurrUser.username){
-            this.setState({visible: false})
+            this.setState({visible: false});
         }
         else{
-            this.setState({visible: true})
+            this.setState({visible: true});
         }
         (async () => {
             const res = await fetch('http://localhost:8080/view/comic-series', {
@@ -52,53 +52,24 @@ class ViewSeries extends Component {
                 })
             });
             let content = await res.json();
-            if (content.result === "error") {
+            console.log(content);
+            if (content.result === "failure") {
                 //alert('Could not find series.'); // No comic/no permission
                 this.props.history.push('/notfound');
             } else {
-                this.setState({ comicData: content.comics });
-                for (const comic of content.comics) {
-                    console.log(comic)
-                    // Get the panel for each comic in the series
-                    const pan = await fetch('http://localhost:8080/view/panel', {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                        body: JSON.stringify({
-                            id: comic.panelsList[0]
-                        })
-                    });
-                    console.log('PANEL', pan);
-                    if (pan.panel) {
-                        this.setState({ panels: [...this.state.panels, pan.panel] });
-                    }
-
-                    const res = await fetch('http://localhost:8080/comic/rate/getRating', {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                        body: JSON.stringify({
-                            comicID: comic.id
-                        })
-                    });
-                    let content = await res.json();
-                    this.setState({ratings: [...this.state.ratings, content.result]})
-                }
+                this.setState({ comicData: content.bundleComicList });
             }
         })();
     }
 
     handleClick = (comic, event) => {
         console.log(comic);
-        this.props.history.push(`/view/comic/${comic.username}/${comic.name}`);
+        this.props.history.push(`/view/comic/${comic.username}/${this.props.match.params.seriesName}/${comic.comicName}`);
     }
 
     handleUpdate = (comic, event) => {
-        this.props.history.push(`/update/comic/${comic.username}/${this.props.match.params.seriesName}/${comic.name}`);
+        console.log(comic);
+        this.props.history.push(`/update/comic/${comic.username}/${this.props.match.params.seriesName}/${comic.comicName}`);
     }
 
     handleReport = (e, reportedID, reportingID, type) => {
@@ -117,8 +88,20 @@ class ViewSeries extends Component {
         }  
     }
 
+    renderOne(panelList, comicIndex){
+        return (
+            panelList.map((item, i)=> {
+                return item !== null ?
+                <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, comicIndex, e)}>
+                    <img className="view-comics-panel-img" src={item.image} alt="can't load"></img>
+                </div>
+                :
+                null
+            })
+        )
+    }
+
     render() {
-        
         const cards = this.state.comicData ? this.state.comicData.map((comic, i) => {
             const BtnComp = () => {
                 return (
@@ -126,20 +109,16 @@ class ViewSeries extends Component {
                 )
             }
             return (
-                <Card key={i} className="view-one-series-card">
-                    <Card.Img variant="top" src={this.state.panels[i]} />
-                    <Card.Body>
-                        <Card.Title className="view-one-series-card-title" onClick={(e) => this.handleClick(comic, e)}>{comic.name}</Card.Title>
-                        <Card.Text>{comic.description}</Card.Text>
-                        <Card.Text>Artist: {comic.username}</Card.Text>
-                        <Card.Text>Series: {this.props.match.params.seriesName}</Card.Text>
-                        <Card.Text> Rating: {this.state.ratings[i]}</Card.Text>
-                        {this.state.visible ? <BtnComp /> : null}
-                        {!this.state.visible ? 
-                        <Button name={comic.username} onClick={(e)=>{this.handleReport(e,comic.id,this.props.CurrUser.id,"comic")}} variant="danger">Report Comic</Button>
-                        : null}
-                    </Card.Body>
-                </Card>
+                <div className="view-comics-strip-container" key={comic.comicID}>
+                    <div className="view-comics-strip-top">
+                        <h3 className="view-comics-h3" onClick={(e) => this.handleClick(comic, e)}>{comic.comicName}</h3>
+                        {this.state.visible ? <Button onClick={(e) => this.handleUpdate(comic, e)}>Update</Button> : <Button name={comic.username} onClick={(e)=>{this.handleReport(e,comic.comicID,this.props.CurrUser.id,"comic")}} variant="danger">Report Comic</Button>}
+                    </div>
+                    <div className="view-comics-strip-bottom">
+                        {this.renderOne(comic.comicList, i)}
+                    </div>
+                    <hr style={{ height: "1vh", width: "100%" }} />
+                </div>
             );
         }) : null;
         return (

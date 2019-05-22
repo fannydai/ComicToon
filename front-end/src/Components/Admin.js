@@ -27,6 +27,7 @@ class Admin extends Component {
             series: [],
             comments: [],
             owners: [],
+            comicSeriesNames: [],
             isLoading: true
         }
     }
@@ -104,7 +105,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DEACTIVATED!!");}
+            if(content.status === "success") {alert("User has been deactivated");}
             this.componentDidMount();
         })();
         
@@ -124,7 +125,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED COMIC!!");}
+            if(content.status === "success") {alert("Deleted Comic.");}
             else{alert("COMIC NOT FOUND");}
             this.componentDidMount();
         })();
@@ -144,7 +145,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED SERIES AND ITS COMICS!!");}
+            if(content.status === "success") {alert("Deleted Series and all Comics in the series.");}
             else{alert("SERIES NOT FOUND");}
             this.componentDidMount();
         })(); 
@@ -164,7 +165,7 @@ class Admin extends Component {
             });
             let content = await res.json();
             console.log(content)
-            if(content.status === "success") {alert("DELETED COMMENT!!");}
+            if(content.status === "success") {alert("Comment has been deleted.");}
             else{alert("COMMENT NOT FOUND");}
             this.componentDidMount();
         })();
@@ -184,8 +185,49 @@ class Admin extends Component {
         this.props.history.push(`/view/series/${username}/${seriesName}`);
     }
 
-    handleSeeComic = (username, comicName) => {
-        this.props.history.push(`/view/comic/${username}/${comicName}`);
+    handleSeeComic = (username, comicName, seriesName) => {
+        this.props.history.push(`/view/comic/${username}/${seriesName}/${comicName}`);
+    }
+
+    populateSeriesName = (comic, index) => {
+        (async () => {
+            const res = await fetch("http://localhost:8080/view/series-data", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    id: comic.seriesId
+                })
+            });
+            let content = await res.json();
+            console.log(content);
+            if (content) {
+                this.setState({ comicSeriesNames: [...this.state.comicSeriesNames, content.name ]});
+            }
+        })();
+    }
+
+    handleDelReport = (e, item, type) => {
+        console.log(item);
+        (async () => {
+            const res = await fetch("http://localhost:8080/delete-report", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    type: type,
+                    reportedID: item
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            this.componentDidMount();
+        })();
+
     }
 
     render() {
@@ -198,12 +240,17 @@ class Admin extends Component {
                         <Card.Text>Number of Times Reported: {this.state.usersValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deactivateUser} variant="danger">Deactivate User</Button>
                         <Button name={item} onClick={() => {this.handleSeeUser(this.state.users[i].username)}} variant="primary">See User Details</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "user")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
-        }) : <h3> NO USERS FOUND</h3>
+        }) : <h3> No Reported Users Found</h3>
         const badComics = this.state.comicsKeys.length ? this.state.comicsKeys.map((item, i) => {
+            // Get corresponding comic series name for each reported comic (only when not already populated)
+            if (!this.state.comicSeriesNames.length) {
+                this.populateSeriesName(item, i);
+            }
             return (
                 item ?
                 <Card key={item}>
@@ -211,12 +258,13 @@ class Admin extends Component {
                         <Card.Title>Comic ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.comicsValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteComic} variant="danger">Delete Comic</Button>
-                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name)}} variant="primary">See Comic Details</Button>
+                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name, this.state)}} variant="primary">See Comic Details</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "comic")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
-        }) : <h3> NO COMICS FOUND</h3>
+        }) : <h3> No Reported Comics Found</h3>
         const badSeries = this.state.seriesKeys.length ? this.state.seriesKeys.map((item, i) => {
             return (
                 item ?
@@ -226,11 +274,12 @@ class Admin extends Component {
                         <Card.Text>Number of Times Reported: {this.state.seriesValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteSeries} variant="danger">Delete Series</Button>
                         <Button name={item} onClick={() => {this.handleSeeSeries(this.state.owners[i], this.state.series[i].name)}} variant="primary">See Series Details</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "series")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
-        }) : <h3> NO SERIES FOUND</h3>
+        }) : <h3> No Reported Series Found</h3>
         const badComments = this.state.commentsKeys.length ? this.state.commentsKeys.map((item, i) => {
             return (
                 item ?
@@ -241,18 +290,26 @@ class Admin extends Component {
                         <Card.Text>Ower of Comment: {this.state.comments[i].username}</Card.Text>
                         <Card.Text>Content of Comment: "{this.state.comments[i].content}"</Card.Text>
                         <Button name={item} onClick={this.deleteComment} variant="danger">Delete Comment</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "comment")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
             )
-        }) : <h3> NO COMMENTS FOUND</h3>
+        }) : <h3> No Reported Comments Found</h3>
         if (this.state.isLoading) {
             return <LoadingScreen />
         }
         return (
             <div>
+                
                 <NavigationBar />
-                <h1> ADMIN WELCOME </h1>
+                <Card style={{ width: 'auto' }}> 
+                <Card style={{ width: 'auto' }}> 
+                <Card.Title>
+                <h1> Admin DashBoard </h1>
+                </Card.Title>
+                </Card>
+                
                 <div className="de-active">
                     <h3>Reported Users: </h3>
                     {badUsers}
@@ -272,6 +329,7 @@ class Admin extends Component {
                     <h3>Reported Comments: </h3>
                     {badComments}
                 </div>
+                </Card>
                 <Footer />
             </div>
         );

@@ -7,6 +7,7 @@
 
 .view-comic-bottom {
     min-height: 85%;
+    width: 100%;
     display: flex;
     justify-content: center;
     padding-top: 25px;
@@ -16,6 +17,7 @@
 .view-comic-overlay {
     background-color : whitesmoke;
     display: flex;
+    width: 100%;
 }
 
 .view-comic-left {
@@ -113,11 +115,11 @@
 .view-comic-comment-input {
     width: 100%;
 }
-
+/*
 .view-comic-comment-form {
     margin-left: 10px;
     margin-right: 10px;
-}
+}*/
 
 .view-comic-comment-container {
     width: 100%;
@@ -143,7 +145,7 @@
     flex-direction: column;
     align-items: center;
 }
-
+/*
 .view-comic-right-img-container {
     width: 75%;
     height: 20%;
@@ -153,7 +155,7 @@
     height: 100%;
     width: 100%;
     object-fit: cover;
-}
+}*/
 
 .view-comic-button:hover {
     cursor: pointer;
@@ -165,4 +167,9 @@
 
 .view-comic-rating-button:after {
     content: none;
+}
+
+.view-comic-suggestions-card:hover {
+    cursor: pointer;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2), 0 10px 10px rgba(0, 0, 0, 0.5);
 }

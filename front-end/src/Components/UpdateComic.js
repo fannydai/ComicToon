@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { Alert, Button, Dropdown, Form } from 'react-bootstrap';
 import Slider from 'react-slick';
-
 import NavigationBar from './NavigationBar';
 import './styles/CreateComic.css';
 import Panel from './Panel';
@@ -12,7 +11,10 @@ import Footer from './Footer';
 import ComicSharingTable from './ComicSharingTable';
 import addPanel from './images/addPanel.png';
 import { saveUpdateComic, clearPanels } from './../Actions/ComicActions';
+import io from 'socket.io-client';
 const history = require('browser-history');
+
+let socket;
 
 const StateToProps = (state) => ({ //application level state via redux
     CurrUser: state.user,
@@ -33,7 +35,8 @@ class UpdateComic extends Component {
             series: [],
             selected_series: '',
             showSeries: false,
-            error: ""
+            error: "",
+            updateErr: false
         }
     }
 
@@ -45,10 +48,17 @@ class UpdateComic extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.comic);
-        console.log(this.props.location.state);
+        socket = io('http://localhost:4000', { transports: ['websocket'] }); 
+        socket.emit('updating', {comicName: this.props.match.params.comicName, user: this.props.CurrUser.username})
+        socket.on('err', () => {
+            alert("Someone is currently editing... please wait");
+            history(-1);
+            this.setState({updateErr: true});
+            //socket.off('err');
+        });
         if(this.props.location.state !== undefined){
             if(!this.props.location.state.flag) this.setState({showSeries: true});
+          
         }
         else{ this.setState({showSeries: true});}
 
@@ -56,8 +66,9 @@ class UpdateComic extends Component {
             this.props.history.push("/");
         }
         // Load saved data if any
-        else if (this.props.location.state && this.props.location.state.previous === 'canvas') {
+        else if (this.props.location.state && this.props.location.state.previous === '/canvas') {
             const savedData = this.props.comic.saveUpdateComic;
+            console.log(savedData);
             if (savedData.comicName) {
                 this.setState({ comicName: savedData.comicName });
             }
@@ -80,15 +91,18 @@ class UpdateComic extends Component {
                 this.setState({ sharedUsersList: savedData.sharedUsersList });
             }
             if (savedData.comicPanels) {
+                /*
                 // Potentially add a new panel if any
-                if (this.props.comic.newComic.length) {
-                    this.setState({ comicPanels: [...savedData.comicPanels, ...this.props.comic.newComic]});
-                    this.props.clearPanels();
+                if (this.props.comic.newUpdateComic) {
+                    this.setState({ comicPanels: [...savedData.comicPanels, ...this.props.comic.newUpdateComic]});
+                    this.props.clearUpdateComic();
                 } else {
                     this.setState({ comicPanels: savedData.comicPanels });
-                }
+                }*/
+                this.setState({ comicPanels: savedData.comicPanels });
             }
         }
+        else {
 
         (async () => {
             // Need to fetch panel data
@@ -100,6 +114,7 @@ class UpdateComic extends Component {
                 },
                 body: JSON.stringify({
                     comicName: this.props.match.params.comicName,
+                    seriesName: this.props.match.params.seriesName,
                     comicOwnerName: this.props.match.params.username,
                     viewerName: this.props.CurrUser.token
                 })
@@ -128,6 +143,7 @@ class UpdateComic extends Component {
                 this.props.history.goBack();
             }
         })();
+    }
         if(this.props.location.state === undefined || this.props.location.state.flag){
             (async () => {
                 const res = await fetch("http://localhost:8080/view/series", {
@@ -148,7 +164,6 @@ class UpdateComic extends Component {
     }   
     
     componentWillUnmount() {
-        console.log("UNMOUNTING UPDATE COMIC");
         // In case they want to navigate out and back again
         this.props.saveUpdateComic({
             comicName: this.state.comicName,
@@ -160,6 +175,11 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
+
+       // if(socket !== undefined && socket !== null){
+           if(!this.state.updateErr) {socket.emit("doneUpdating", this.props.match.params.comicName);}
+            socket.disconnect();
+       // }
     }
 
     handleComicName = (event) => {
@@ -177,11 +197,11 @@ class UpdateComic extends Component {
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            console.log('PRESSED ENTER');
-            let newUsers = this.state.userInput.split(' ');
-            let newUsers2 = newUsers.filter(item => item !== "")
-            console.log('USERS TO ADD', newUsers2);
-            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2], userInput: '' }); 
+            //let newUsers = this.state.userInput.split(' ');
+            //let newUsers2 = newUsers.filter(item => item !== "")
+            if (this.state.userInput) {
+                this.setState({ sharedUsersList: [...this.state.sharedUsersList, this.state.userInput], userInput: '' }); 
+            }
         }
     }
 
@@ -202,6 +222,7 @@ class UpdateComic extends Component {
         )
     }
 
+    // Create new panel to the comic
     handleNavigateCanvas = (event) => {
         this.props.saveUpdateComic({
             comicName: this.state.comicName,
@@ -213,7 +234,19 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
-        this.props.history.push('/canvas', { previous: 'update', username: this.props.match.params.username, series: this.props.match.params.seriesName, comic: this.props.match.params.comicName });
+        this.props.history.push('/canvas', { previous: '/update/new', username: this.props.match.params.username, seriesName: this.props.match.params.seriesName, comicName: this.props.match.params.comicName  });
+    }
+
+    // Change an existing panel
+    handleEditPanel = (e, panel, index) => {
+        this.props.history.push("/canvas", {
+            previous: '/update',
+            panel: panel,
+            index: index,
+            username: this.props.match.params.username, 
+            seriesName: this.props.match.params.seriesName, 
+            comicName: this.props.match.params.comicName
+        })
     }
 
     handleDeleteShare = (index, event) => {
@@ -233,7 +266,15 @@ class UpdateComic extends Component {
             this.setState({ error: "You need at least one panel." });
             return;
         }
-        const canvases = this.state.comicPanels.map(panel => panel.canvas);
+        // const canvases = this.state.comicPanels.map(panel => panel.canvas);
+        const canvases = [];
+        for (const p of this.state.comicPanels) {
+            if (typeof p.canvas === "string") {
+                canvases.push(p.canvas);
+            } else {
+                canvases.push(JSON.stringify(p.canvas));
+            }
+        }
         const images = this.state.comicPanels.map(panel => panel.image);
         console.log(canvases);
         console.log(images);
@@ -264,7 +305,7 @@ class UpdateComic extends Component {
             console.log(content);
             if (content.result === "success") {
                 this.props.saveUpdateComic({});
-                history(-1);
+                this.props.history.push('/view/comics');
             } else {
                 this.setState({ error: content.result });
             }
@@ -328,7 +369,6 @@ class UpdateComic extends Component {
     }
 
     render() {
-        console.log(this.state.showSeries);
         var props = {
             dots: false,
             infinite: false,
@@ -375,7 +415,7 @@ class UpdateComic extends Component {
                             <Slider {...props}>
                                 {this.state.comicPanels.length ? 
                                     this.state.comicPanels.map((panel, i) => {
-                                        return <Panel comic={panel} key={i} close={e => this.handleClosePanel(i)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
+                                        return <Panel comic={panel} key={i} edit={e => this.handleEditPanel(e, panel, i)} close={e => this.handleClosePanel(i)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                     }) : null}
                                 <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
                             </Slider>
@@ -401,7 +441,7 @@ class UpdateComic extends Component {
                                 </div>
                                 <div className="create-comic-sharing-right">
                                     <label>Add User: (Press 'Enter' to Add)</label>
-                                    <Form.Control type="text" placeholder= "Sean Jeffrey Fanny" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
+                                    <Form.Control type="text" placeholder= "e.g. Sean Fang" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
                                     <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                     <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                 </div>

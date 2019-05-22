@@ -42,7 +42,6 @@ class ForgotForm extends Component {
                         })
                     });
                     let content = await res.json();
-                    console.log(content)
                     if (content.result === "success") {
                         this.setState({ success: "Your password has been changed.", info: "", error: "" });
                     } else{
@@ -64,8 +63,7 @@ class ForgotForm extends Component {
         } else if (!/.+@.+\..+/.test(this.state.email)) {
             this.setState({ error: "Invalid email.", info: "", success: "" });
         }
-        else{ 
-            console.log(this.state.email);
+        else{
             (async () => {
                 const res = await fetch("http://localhost:8080/forgot", {
                     method: "POST",
@@ -78,8 +76,8 @@ class ForgotForm extends Component {
                     })
                 });
                 let content = await res.json();
-                console.log(content)
-                this.setState({ key: content.key, info: "Email has been sent.", error: "", success: "" });
+                const msg = content.result === "Success" ? "Email has been sent." : content.result; 
+                this.setState({ key: content.key, info: msg, error: "", success: "" });
             })();
         } 
     }

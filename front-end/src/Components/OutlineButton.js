@@ -51,7 +51,7 @@ class OutlineButton extends React.Component {
         return (
         <div>
             <span onClick={this.handleClick}>
-                <FontAwesomeIcon style={palette} className="icon" icon="dot-circle" />
+                <FontAwesomeIcon style={palette} className="icon" icon="dot-circle" title="Stroke Color" />
             </span>
             {this.state.displayColorPicker ? 
                 <div style={popover}> <div style={cover} onClick={this.handleClose} />

@@ -25,10 +25,32 @@ MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true })
 .then((db) => {UserModelDBConnection = db.db('ComicToonDB')}).catch((err) => console.log("NOOOOOO ", err));
 
 let clients = new Map();
+let comicClients = new Map();
+
 io.on('connection', socket => {
     console.log('A user just connected.. ');
     socket.on('init', function(data){
         clients.set(data, socket.id);
+    });
+
+    socket.on('updating', (data)=> {
+        console.log("in update.. ", data);
+        if(comicClients.has(data.comicName)){
+            console.log("someone useing.. ");
+            socket.emit('err'); //someone already editing comic
+        }
+        else{
+            console.log("new user.. ");
+            comicClients.set(data.comicName, data.user);
+        }
+        console.log("map in update..");
+        console.log(comicClients);
+    });
+
+    socket.on('doneUpdating', (data) => {
+        if(comicClients.has(data)) comicClients.delete(data);
+        console.log("map... ");
+        console.log(comicClients);
     });
 
     socket.on('saveMessage', function(data){

@@ -14,7 +14,6 @@ public class ComicSeriesModel{
     private String description;
     private ArrayList<String> comics;
     private ArrayList<String> genre;
-    private ArrayList<String> sharedWith;
     private String privacy;
 
     public ArrayList<String> getGenre() {
@@ -75,14 +74,6 @@ public class ComicSeriesModel{
         this.comics = comics;
     }
 
-    public ArrayList<String> getSharedWith() {
-        return this.sharedWith;
-    }
-
-    public void setSharedWith(ArrayList<String> sharedWith) {
-        this.sharedWith = sharedWith;
-    }
-
     public String getPrivacy() {
         return this.privacy;
     }
@@ -102,7 +93,6 @@ public class ComicSeriesModel{
         for(String gen: genre){
             this.genre.add(gen);
         }
-        this.setSharedWith(new ArrayList<String>());
     }
 
     
