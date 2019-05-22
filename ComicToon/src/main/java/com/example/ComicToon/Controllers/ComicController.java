@@ -321,6 +321,13 @@ public class ComicController{
                             }
                         }   
                     }
+                    List<UserModel> all = userRepository.findAll();
+                    for(UserModel us: all){
+                        if(us.getFavorites().contains(r.getId())){
+                            us.getFavorites().remove(r.getId());
+                            userRepository.save(us);
+                        }
+                    }
                     comicRepository.delete(r);
                     result.setResult("Deleted Comic and reference in its series");
                 }
@@ -1238,7 +1245,7 @@ public class ComicController{
             List<ReportedUsersModel> reports = reportedUsersRepo.findAll();
             boolean delete = false;
             for(ReportedUsersModel report: reports){
-                if(report.getId().equals(form.getReportedID())){
+                if(report.getReportedUserID().equals(form.getReportedID())){
                     reportedUsersRepo.delete(report);
                 }
                 delete = true;
@@ -1251,7 +1258,7 @@ public class ComicController{
             List<ReportedComicsModel> reports = reportedComicsRepo.findAll();
             boolean delete = false;
             for(ReportedComicsModel report: reports){
-                if(report.getId().equals(form.getReportedID())){
+                if(report.getComicID().equals(form.getReportedID())){
                     reportedComicsRepo.delete(report);
                 }
                 delete = true;
@@ -1264,7 +1271,7 @@ public class ComicController{
             List<ReportedSeriesModel> reports = reportedSeriesRepo.findAll();
             boolean delete = false;
             for(ReportedSeriesModel report: reports){
-                if(report.getId().equals(form.getReportedID())){
+                if(report.getSeriesID().equals(form.getReportedID())){
                     reportedSeriesRepo.delete(report);
                 }
                 delete = true;
@@ -1277,7 +1284,7 @@ public class ComicController{
             List<ReportedCommentsModel> reports = reportedCommentsRepo.findAll();
             boolean delete = false;
             for(ReportedCommentsModel report: reports){
-                if(report.getId().equals(form.getReportedID())){
+                if(report.getCommentID().equals(form.getReportedID())){
                     reportedCommentsRepo.delete(report);
                 }
                 delete = true;

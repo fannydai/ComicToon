@@ -209,6 +209,27 @@ class Admin extends Component {
         })();
     }
 
+    handleDelReport = (e, item, type) => {
+        console.log(item);
+        (async () => {
+            const res = await fetch("http://localhost:8080/delete-report", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({
+                    type: type,
+                    reportedID: item
+                })
+            });
+            let content = await res.json();
+            console.log(content)
+            this.componentDidMount();
+        })();
+
+    }
+
     render() {
         const badUsers = this.state.usersKeys.length ? this.state.usersKeys.map((item, i) => {
             return (
@@ -219,6 +240,7 @@ class Admin extends Component {
                         <Card.Text>Number of Times Reported: {this.state.usersValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deactivateUser} variant="danger">Deactivate User</Button>
                         <Button name={item} onClick={() => {this.handleSeeUser(this.state.users[i].username)}} variant="primary">See User Details</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "user")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -237,6 +259,7 @@ class Admin extends Component {
                         <Card.Text>Number of Times Reported: {this.state.comicsValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteComic} variant="danger">Delete Comic</Button>
                         <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name, this.state)}} variant="primary">See Comic Details</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "comic")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -251,6 +274,7 @@ class Admin extends Component {
                         <Card.Text>Number of Times Reported: {this.state.seriesValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteSeries} variant="danger">Delete Series</Button>
                         <Button name={item} onClick={() => {this.handleSeeSeries(this.state.owners[i], this.state.series[i].name)}} variant="primary">See Series Details</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "series")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
@@ -266,6 +290,7 @@ class Admin extends Component {
                         <Card.Text>Ower of Comment: {this.state.comments[i].username}</Card.Text>
                         <Card.Text>Content of Comment: "{this.state.comments[i].content}"</Card.Text>
                         <Button name={item} onClick={this.deleteComment} variant="danger">Delete Comment</Button>
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "comment")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null

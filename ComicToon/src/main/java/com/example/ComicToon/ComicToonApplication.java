@@ -68,6 +68,7 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/delete/comment",
             "/welcomefavorites",
             "/getSharedComics",
+            "/delete-report",
             "/sidebar",
             "/view/series-data"
             )
