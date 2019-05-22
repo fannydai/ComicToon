@@ -454,6 +454,15 @@ class ViewComic extends Component {
 
     }
 
+    handleSeeUser = () => {
+        this.props.history.push({
+            pathname: '/dashboard', 
+            state: {
+              username: this.props.match.params.username
+            }
+        })
+    }
+
     render() {
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
@@ -508,7 +517,7 @@ class ViewComic extends Component {
                                         </div>
                                         <div className="view-comic-second-row">
                                             <div className="mr-auto">
-                                                <h2>By: {this.props.match.params.username}</h2>
+                                                <h2 className="view-comic-series-h2" onClick={this.handleSeeUser}>By: {this.props.match.params.username}</h2>
                                             </div>
                                             <div className="view-comic-second-middle">
                                                 <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
