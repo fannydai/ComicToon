@@ -144,8 +144,7 @@ public class ComicController{
             System.out.println(candidate.getUserID());
             if(candidate.getUserID().equals(owner.getId())){
                 // Check permission
-                ArrayList<String> shared = candidate.getSharedWith();
-                if (!form.getOwnerName().equals(viewer.getUsername()) && candidate.getPrivacy().equals("Private") && !shared.contains(viewer.getUsername())) {
+                if (!form.getOwnerName().equals(viewer.getUsername()) && candidate.getPrivacy().equals("Private")) {
                     result.setResult("error");
                     return result;
                 }
@@ -200,7 +199,7 @@ public class ComicController{
         List<ComicSeriesModel> series = ComicSeriesRepository.findAll();
         ArrayList<ComicSeriesModel> allowed = new ArrayList<>();
         for (ComicSeriesModel s : series) {
-            if (s.getUserID().equals(owner.getId()) && (s.getUserID().equals(user.getId()) || s.getPrivacy().equals("Public") || s.getSharedWith().contains(user.getUsername()))) {
+            if (s.getUserID().equals(owner.getId()) && (s.getUserID().equals(user.getId()) || s.getPrivacy().equals("Public"))) {
                 allowed.add(s);
             }
         }
@@ -422,7 +421,6 @@ public class ComicController{
             series.setDescription(form.getNew_Description());
             series.setPrivacy(form.getNew_Privacy());
             series.setGenre(form.getNew_Genres());
-            series.setSharedWith(form.getNew_SharedWith());
             ComicSeriesRepository.save(series);
             result.setResult("success");
         }
@@ -769,7 +767,7 @@ public class ComicController{
         for( ComicSeriesModel c : allseries){
             if(c.getName2().contains(form.getQuery().toLowerCase()) || form.getQuery().toLowerCase().contains(c.getName2())){
                 // Check permissions
-                if (c.getUserID().equals(user.getId()) || c.getPrivacy().equals("Public") || c.getSharedWith().contains(user.getUsername())) {
+                if (c.getUserID().equals(user.getId()) || c.getPrivacy().equals("Public")) {
                     matchedSeries.add(c);
                     seriesOwners.add(userRepository.findByid(c.getUserID()).getUsername());
                 }
