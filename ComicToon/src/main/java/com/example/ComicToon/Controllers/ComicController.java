@@ -486,7 +486,7 @@ public class ComicController{
                     break;
                 }
                 if(form.getFlag()){
-                    if(usr.getId().equals(tempSeries.getUserID()) && tempSeries.getName().equals(form.getOldName())){
+                    if(usr.getId().equals(tempSeries.getUserID()) && tempSeries.getName().equals(form.getOldSeries())){
                         oldSeries = tempSeries;
                         break;
                     }

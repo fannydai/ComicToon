@@ -117,9 +117,16 @@ class Canvas extends Component {
             else if (this.props.location.state.previous === '/update') {
                 const data = this.props.location.state.panel;
                 if (data.canvas) {
-                    this.canvas.loadFromJSON(JSON.parse(data.canvas), () => {
-                        this.canvas.renderAll();
-                    });
+                    if (typeof data.canvas === 'string') {
+                        this.canvas.loadFromJSON(JSON.parse(data.canvas), () => {
+                            this.canvas.renderAll();
+                        });
+                    }
+                    else {
+                        this.canvas.loadFromJSON(data.canvas, () => {
+                            this.canvas.renderAll();
+                        });
+                    }
                 }
                 else {
                     fabric.Image.fromURL(data.image, (img) => {
@@ -1139,15 +1146,32 @@ class Canvas extends Component {
             }
             else if (this.props.location.state.previous === '/update') {
                 this.props.updateComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
-                this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
-                    previous: '/canvas'
-                });
+                if(this.props.location.state.flag){
+                    this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
+                        previous: '/canvas',
+                        flag: true
+                    });
+                }
+                else{
+                    this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
+                        previous: '/canvas'
+                    });
+                }
             }
             else if (this.props.location.state.previous === '/update/new') {
+                console.log(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`);
                 this.props.addUpdatePanel(this.canvas.toDataURL(), this.canvas.toJSON());
-                this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
-                    previous: '/canvas'
-                });
+                if(this.props.location.state.flag) {
+                    this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
+                        previous: '/canvas',
+                        flag: true
+                    });
+                }
+                else{
+                    this.props.history.push(`/update/comic/${this.props.location.state.username}/${this.props.location.state.seriesName}/${this.props.location.state.comicName}`, {
+                        previous: '/canvas'
+                    });
+                }
             }
         } else {
             // Done with drawing, reroute back to create comic

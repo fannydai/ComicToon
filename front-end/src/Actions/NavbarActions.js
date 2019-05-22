@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR, SET_SUGGESTIONS } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR, SET_SUGGESTIONS, SET_NEW_COMIC } from './Types';
 
 export const createSeries = (token, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
@@ -109,6 +109,7 @@ export const viewComic = (username, viewerName, comicName, seriesName, token) =>
             })
         });
         let content = await res.json();
+        console.log(content);
         if (!content.comicName) {
             dispatch({
                 type: SAVE_NEW_COMIC_DATA,
@@ -118,6 +119,10 @@ export const viewComic = (username, viewerName, comicName, seriesName, token) =>
             dispatch({
                 type: SAVE_NEW_COMIC_DATA,
                 payload: { saveNewComic: content }
+            });
+            dispatch({
+                type: SET_NEW_COMIC,
+                payload: { newComic: content.panels }
             });
             // Get suggestions
             (async (content, token, viewerName) => {

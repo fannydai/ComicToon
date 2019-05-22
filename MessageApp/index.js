@@ -37,7 +37,7 @@ io.on('connection', socket => {
         console.log("in update.. ", data);
         if(comicClients.has(data.comicName)){
             console.log("someone useing.. ");
-            socket.emit('err'); //someone already editing comic
+            if(comicClients.get(data.comicName) !== data.user) socket.emit('err'); //someone already editing comic
         }
         else{
             console.log("new user.. ");

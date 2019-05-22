@@ -235,7 +235,7 @@ class UpdateComic extends Component {
             sharedUsersList: this.state.sharedUsersList,
             comicPanels: this.state.comicPanels
         });
-        this.props.history.push('/canvas', { previous: '/update/new', username: this.props.match.params.username, seriesName: this.props.match.params.seriesName, comicName: this.props.match.params.comicName  });
+        this.props.history.push('/canvas', {flag: this.props.location.state ? this.props.location.state.flag : false, previous: '/update/new', username: this.props.match.params.username, seriesName: this.props.match.params.seriesName, comicName: this.props.match.params.comicName  });
     }
 
     // Change an existing panel
@@ -246,7 +246,8 @@ class UpdateComic extends Component {
             index: index,
             username: this.props.match.params.username, 
             seriesName: this.props.match.params.seriesName, 
-            comicName: this.props.match.params.comicName
+            comicName: this.props.match.params.comicName,
+            flag: this.props.location.state ? this.props.location.state.flag : false
         })
     }
 
@@ -306,7 +307,11 @@ class UpdateComic extends Component {
             console.log(content);
             if (content.result === "success") {
                 this.props.saveUpdateComic({});
-                this.props.history.push('/view/comics');
+                if (this.props.location.state && this.props.location.state.flag) {
+                    this.props.history.push('/sharedComics');
+                } 
+                else { this.props.history.push('/view/comics');}
+                
             } else {
                 this.setState({ error: content.result });
             }
