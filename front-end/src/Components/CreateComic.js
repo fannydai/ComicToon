@@ -323,9 +323,9 @@ class CreateComic extends Component {
                                 <Slider {...props}>
                                     {this.props.comic.newComic.length ? 
                                         this.props.comic.newComic.map((panel, i) => {
-                                            return <Panel comic={panel} key={i} edit={e => this.handleEditPanel(e, panel, i)} close={e => this.handleClosePanel(i, e)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
+                                            return <Panel className="comic-panel" comic={panel} key={i} edit={e => this.handleEditPanel(e, panel, i)} close={e => this.handleClosePanel(i, e)} dragstart={e => this.handleDragStart(e, i)} dragend={this.handleDragEnd} dragover={e => this.handleDragOver(i)} draggable />
                                         }) : null}
-                                    <img src={addPanel} className="panel" onClick={this.handleNavigateCanvas} alt="" />
+                                    <img src={addPanel} className="comic-panel" onClick={this.handleNavigateCanvas} alt="" />
                                 </Slider>
                             </div>
                             <div className="create-comic-info">

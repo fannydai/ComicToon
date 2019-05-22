@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { Alert, Button, Form, Table } from 'react-bootstrap';
+import { Alert, Button, Form, Table, Modal } from 'react-bootstrap';
 
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
@@ -209,6 +209,14 @@ class UpdateSeries extends Component {
         })();
         //this.props.history.push('/view/series');
     }
+    
+    handleClose = () => {
+        this.setState({ show: false });
+      }
+    
+    handleShow = () => {
+        this.setState({ show: true });
+    }
 
     render() {
         return (
@@ -236,7 +244,21 @@ class UpdateSeries extends Component {
                     {this.state.error ? <Alert variant="danger" >{this.state.error}</Alert> : <Alert variant="danger" style={{ visibility: "hidden" }}>Hi</Alert>}
                     <div className="create-series-bottom">
                         <Button type="submit" variant="primary">Update Series</Button>
-                        <Button onClick={this.handleDelete} variant="danger">Delete Series</Button>
+                        <Button onClick={this.handleShow} variant="danger">Delete Series</Button>
+                        <Modal show={this.state.show} onHide={this.handleClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Confirm Delete</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>Do you want to delete this series?</Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={this.handleClose}>
+                                    Close
+                                    </Button>
+                                    <Button variant="danger" onClick={this.handleDelete}>
+                                    Delete
+                                    </Button>
+                                </Modal.Footer>
+                        </Modal>
                     </div>
                 </Form>
                 <Footer />
