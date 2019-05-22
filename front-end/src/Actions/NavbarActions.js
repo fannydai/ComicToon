@@ -1,4 +1,4 @@
-import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR } from './Types';
+import { ERR, CREATESERIES, CREATECOMIC, VIEWCOMIC, GET_ALL_SERIES, SAVE_NEW_COMIC_DATA, UPDATE_COMIC_PANEL, CREATE_COMIC_ERROR, SET_SUGGESTIONS } from './Types';
 
 export const createSeries = (token, seriesName, description, genres, privacy, history) => (dispatch) => {
     (async () => {
@@ -82,7 +82,7 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
             });
             // Navigate only if successful
             history.push({
-                pathname: `/view/comic/${username}/${comicName}`,
+                pathname: `/view/comic/${username}/${seriesName}/${comicName}`,
                 state: {
                     series: seriesName
                 }
@@ -97,7 +97,7 @@ export const createComic = (username, token, desc, comicName, seriesName, userLi
     })();
 }
 
-export const viewComic = (username, viewerName, comicName) => (dispatch) => {
+export const viewComic = (username, viewerName, comicName, seriesName, token) => (dispatch) => {
     (async () => {
         const res = await fetch('http://localhost:8080/view/comic', {
             method: "POST",
@@ -107,8 +107,9 @@ export const viewComic = (username, viewerName, comicName) => (dispatch) => {
             },
             body: JSON.stringify({
                 comicName: comicName,
+                seriesName: seriesName,
                 comicOwnerName: username,
-                viewerName: viewerName
+                viewerName: token
             })
         });
         let content = await res.json();
@@ -123,6 +124,31 @@ export const viewComic = (username, viewerName, comicName) => (dispatch) => {
                 type: SAVE_NEW_COMIC_DATA,
                 payload: { saveNewComic: content }
             });
+            // Get suggestions
+            (async (content, token, viewerName) => {
+                console.log(content);
+                console.log(token);
+                console.log(viewerName);
+                const res = await fetch("http://localhost:8080/sidebar", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        viewerName: viewerName,
+                        viewedComicID: content.comicID
+                    })
+                });
+                let content2 = await res.json();
+                console.log(content2);
+                const suggestions = content2.bundleComicList && content2.bundleComicList.length > 0 ? content2.bundleComicList : [];
+                dispatch({
+                    type: SET_SUGGESTIONS,
+                    payload: { suggestions: suggestions }
+                });
+            })(content, token, viewerName);
         }
     })();
 }

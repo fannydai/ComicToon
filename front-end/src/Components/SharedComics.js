@@ -67,7 +67,7 @@ class SharedComics extends Component {
 
     handleClick = (item, event) => {
         console.log(item);
-        this.props.history.push(`/view/comic/${item.username}/${item.comicName}`);
+        this.props.history.push(`/view/comic/${item.username}/${item.comicSeriesName}/${item.comicName}`);
     }
 
     renderAll(){

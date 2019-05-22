@@ -10,7 +10,7 @@ public class SearchResult {
     private ArrayList<UserModel> users;
     private ArrayList<ComicSeriesModel> all_series;
     private ArrayList<String> seriesOwners;
-    private ArrayList<ComicModel> all_comics;
+    private ArrayList<ViewAllComicsResult> all_comics;
 
     public ArrayList<ComicSeriesModel> getAll_series() {
         return all_series;
@@ -20,11 +20,11 @@ public class SearchResult {
         this.all_series = all_series;
     }
 
-    public ArrayList<ComicModel> getAll_comics() {
+    public ArrayList<ViewAllComicsResult> getAll_comics() {
         return all_comics;
     }
 
-    public void setAll_comics(ArrayList<ComicModel> all_comics) {
+    public void setAll_comics(ArrayList<ViewAllComicsResult> all_comics) {
         this.all_comics = all_comics;
     }
 
