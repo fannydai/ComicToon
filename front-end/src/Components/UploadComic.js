@@ -256,7 +256,7 @@ class UploadComic extends Component {
                             <div className="upload-sharing-inner">
                                 <div className="upload-table-container">
                                 <label>Add User: (Press 'Enter' to Add)</label>
-                                <Form.Control type="text" placeholder="Sean Jeffrey Fanny Joel" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
+                                <Form.Control type="text" placeholder="e.g. Sean Fang" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter} />
                                     <Table bordered hover className="upload-sharing-table">
                                         <tbody>
                                             {trs}

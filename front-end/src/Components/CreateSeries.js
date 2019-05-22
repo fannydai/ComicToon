@@ -82,9 +82,11 @@ class CreateSeries extends Component {
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            let newGenres = this.state.genre.split(' ');
-            let newGenres2 = newGenres.filter(item => item !== "")
-            this.setState({ genreList: [...this.state.genreList, ...newGenres2], genre: '' }); 
+            //let newGenres = this.state.genre.split(' ');
+            //let newGenres2 = newGenres.filter(item => item !== "")
+            if (this.state.genre) {
+                this.setState({ genreList: [...this.state.genreList, this.state.genre], genre: '' }); 
+            }
         }
     }
 
