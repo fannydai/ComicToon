@@ -22,12 +22,15 @@ import HighlightButton from './HighlightButton';
 // import EyeDropper from './EyeDrop';
 import './styles/Canvas.css';
 import { addPanel, updateNewComicPanel, updateComicPanel, addUpdatePanel } from '../Actions/ComicActions';
-
+import io from 'socket.io-client'
 const history = require('browser-history');
 var SCALE_FACTOR = 1.3;
 
+let socket;
+
 const StateToProps = (state) => ({ //application level state via redux
-    CurrUser: state.user
+    CurrUser: state.user,
+    comic: state.comic
 });
 
 const SHAPES = {
@@ -73,6 +76,7 @@ class Canvas extends Component {
 
             fontSize                : 20,
             fontFamily              : 'Times New Roman',
+            updateErr: false
         }
     }
 
@@ -82,7 +86,20 @@ class Canvas extends Component {
         }
     }
 
+    componentWillUnmount(){
+        if(!this.state.updateErr) {socket.emit("doneUpdating", this.props.comic.saveNewComic.comicName);}
+            socket.disconnect();
+    }
+
     componentDidMount() {
+        socket = io('http://localhost:4000', { transports: ['websocket'] }); 
+        socket.emit('updating', {comicName: this.props.comic.saveNewComic.comicName, user: this.props.CurrUser.username})
+        socket.on('err', () => {
+            alert("Someone is currently editing... please wait");
+            history(-1);
+            this.setState({updateErr: true});
+            //socket.off('err');
+        });
         this.canvas = new fabric.Canvas('canvas', {
             height: 600,
             width: 900,

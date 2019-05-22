@@ -32,14 +32,14 @@ let store;
     if(persistedState === undefined){
     store = createStore(rootReducer, initState, 
         compose(
-            applyMiddleware(...middleware)//
+            applyMiddleware(...middleware)
             //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() //redux chrome extension
         ));
     }
     else{
     store = createStore(rootReducer, persistedState, 
         compose(
-            applyMiddleware(...middleware)//,
+            applyMiddleware(...middleware)
             //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() //redux chrome extension
         ));  
     }
