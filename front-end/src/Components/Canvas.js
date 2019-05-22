@@ -979,6 +979,10 @@ class Canvas extends Component {
     }
 
     handleSave = (event) => {
+        this.setState({
+            selectedShape: null,
+            drawShape: SHAPES.none
+        });
         if(this.state.save === false ) {
             this.setState({save: true});
             return;
@@ -1214,10 +1218,10 @@ class Canvas extends Component {
                                 <td><FontAwesomeIcon className="icon" icon="trash" onClick={this.handleDeleteObject}  title="Delete Selected Object"/></td>
                                 <td><FontAwesomeIcon className="icon" onClick={this.handleClearCanvas} icon="eraser"  title="Clear Canvas"/></td> 
                             </tr>
-                            <tr>
+                            {/* <tr>
                                 <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo} disabled={this.state.undoBtn}  title="Undo"/></td>
                                 <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo} disabled={this.state.redoBtn}  title="Redo"/></td> 
-                            </tr>
+                            </tr> */}
                             {/* <tr>
                                 <td><FontAwesomeIcon className="icon" icon="eye-dropper" title="Color Picker"/></td> 
                                 <td><div className="eye-drop-container"><EyeDropper initializedColor={this.state.setColor}/></div></td>
