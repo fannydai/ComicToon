@@ -258,12 +258,8 @@ class Admin extends Component {
                         <Card.Title>Comic ID: {item}</Card.Title>
                         <Card.Text>Number of Times Reported: {this.state.comicsValues[i]}</Card.Text>
                         <Button name={item} onClick={this.deleteComic} variant="danger">Delete Comic</Button>
-<<<<<<< HEAD
-                        <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name)}} variant="primary">See Comic Details</Button>
-                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "comic")}} variant="danger">Delete Report</Button>
-=======
                         <Button name={item} onClick={() => {this.handleSeeComic(this.state.comics[i].username, this.state.comics[i].name, this.state)}} variant="primary">See Comic Details</Button>
->>>>>>> 66c174ef9e5e27fc70d8dce585aee670ec2ae1e7
+                        <Button name={item} onClick={ (e) => {this.handleDelReport(e, item, "comic")}} variant="danger">Delete Report</Button>
                     </Card.Body>
                 </Card>
                 : null
