@@ -224,11 +224,11 @@ class CreateComic extends Component {
     handleAddUserEnter = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            console.log('PRESSED ENTER');
-            let newUsers = this.state.userInput.split(' ');
-            let newUsers2 = newUsers.filter(item => item !== "")
-            console.log('USERS TO ADD', newUsers2);
-            this.setState({ sharedUsersList: [...this.state.sharedUsersList, ...newUsers2], userInput: '' }); 
+            //let newUsers = this.state.userInput.split(' ');
+            //let newUsers2 = newUsers.filter(item => item !== "")
+            if (this.state.userInput) {
+                this.setState({ sharedUsersList: [...this.state.sharedUsersList, this.state.userInput], userInput: '' }); 
+            }
         }
     }
 
@@ -352,7 +352,7 @@ class CreateComic extends Component {
                                     </div>
                                     <div className="create-comic-sharing-right">
                                         <label>Add User: (Press 'Enter' to Add)</label>
-                                        <Form.Control type="text" placeholder= "Sean Jeffrey Fanny Joel" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
+                                        <Form.Control type="text" placeholder= "e.g. Sean Fang" name="userInput" value={this.state.userInput} onChange={this.handleAddUser} onKeyPress={this.handleAddUserEnter}/>
                                         <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handlePrivacy} />
                                         <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handlePrivacy} />
                                     </div>

@@ -133,9 +133,11 @@ class UpdateSeries extends Component {
     handleAddGenreEnter = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            let newGenres = this.state.genre.split(' ');
-            newGenres = newGenres.filter(item => item !== "")
-            this.setState({ genreList: [...this.state.genreList, ...newGenres], genre: '' }); 
+            //let newGenres = this.state.genre.split(' ');
+            //newGenres = newGenres.filter(item => item !== "")
+            if (this.state.genre) {
+                this.setState({ genreList: [...this.state.genreList, this.state.genre], genre: '' }); 
+            }
         }
     }
 

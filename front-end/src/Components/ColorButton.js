@@ -51,7 +51,7 @@ class ColorButton extends React.Component {
         return (
         <div>
             <span onClick={this.handleClick}>
-                <FontAwesomeIcon style={palette} className="icon" icon="palette" />
+                <FontAwesomeIcon style={palette} className="icon" icon="palette" title="Background Color" />
             </span>
             {this.state.displayColorPicker ? 
                 <div style={popover}> <div style={cover} onClick={this.handleClose} />

@@ -1260,11 +1260,11 @@ class Canvas extends Component {
                             <Dropdown.Item onClick={this.handlePencilSpray}>Spray</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilCircle}>Circle</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilPattern}>Poka dots</Dropdown.Item>
-
+                            {/*
                             <Dropdown.Item onClick={this.handlePencilHline}>H Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilVline}>V Line</Dropdown.Item>
                             <Dropdown.Item onClick={this.handlePencilSquare}>Square</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item>
+                            <Dropdown.Item onClick={this.handlePencilDiamond}>Diamond</Dropdown.Item>*/}
                         </DropdownButton>
                     </div>
                     <div className="bottom-bar">

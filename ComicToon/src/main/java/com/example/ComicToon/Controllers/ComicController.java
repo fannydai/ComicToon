@@ -1030,6 +1030,18 @@ public class ComicController{
         ArrayList<String> favs = user.getFavorites();
         if(favs.size() != 0){
             for(String id: favs){
+                // upvotes only
+                List<RatingModel> ratings = ratingRepository.findBycomicID(id);
+                boolean negative = false;
+                for (RatingModel rating : ratings) {
+                    if (rating.getUserID().equals(user.getId()) && rating.getRating() != 1) {
+                        negative = true;
+                        break;
+                    }
+                }
+                if (negative) {
+                    continue;
+                }
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 ComicModel com = comicRepository.findByid(id);
                 ComicSeriesModel series = ComicSeriesRepository.findByid(com.getComicSeriesID());
