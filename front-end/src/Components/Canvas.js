@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import NavigationBar from './NavigationBar';
@@ -19,6 +19,7 @@ import OutlineButton from './OutlineButton';
 import FillButton from './FillButton';
 import ColorButton from './ColorButton';
 import HighlightButton from './HighlightButton';
+// import EyeDropper from './EyeDrop';
 import './styles/Canvas.css';
 import { addPanel, updateNewComicPanel } from '../Actions/ComicActions';
 import { updateComicPanel } from '../Actions/NavbarActions';
@@ -1110,7 +1111,7 @@ class Canvas extends Component {
         this.setState({ redo: [] });
         // If it is from JSON (from view comic) save the panel and return
         if (this.props.location.state) {
-            if (this.props.location.state.previous == '/create') {
+            if (this.props.location.state.previous === '/create') {
                 this.props.updateNewComicPanel(this.props.location.state.index, this.canvas.toDataURL(), this.canvas.toJSON());
                 history(-1);
             }
@@ -1204,6 +1205,10 @@ class Canvas extends Component {
                                 <td><FontAwesomeIcon className={this.state.undoBtn} icon="undo" onClick={this.handleUndo} disabled={this.state.undoBtn}  title="Undo"/></td>
                                 <td><FontAwesomeIcon className={this.state.redoBtn} icon="redo" onClick={this.handleRedo} disabled={this.state.redoBtn}  title="Redo"/></td> 
                             </tr>
+                            {/* <tr>
+                                <td><FontAwesomeIcon className="icon" icon="eye-dropper" title="Color Picker"/></td> 
+                                <td><div className="eye-drop-container"><EyeDropper initializedColor={this.state.setColor}/></div></td>
+                            </tr> */}
                             <tr>
                                 <td><FillButton changeColor={this.handleFillColor}  title="Fill Color"/></td>
                                 <td><OutlineButton changeColor={this.handleStrokeColor}  title="Stroke Color"/></td>

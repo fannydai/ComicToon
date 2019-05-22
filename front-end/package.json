@@ -31,6 +31,7 @@
     "react-bootstrap": "^1.0.0-beta.6",
     "react-color": "^2.17.0",
     "react-dom": "^16.8.5",
+    "react-eyedropper": "0.0.10",
     "react-glide": "^3.2.0",
     "react-keyboard-event-handler": "^1.4.1",
     "react-native-numeric-input": "^1.6.5",
