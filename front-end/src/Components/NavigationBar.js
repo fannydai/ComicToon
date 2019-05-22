@@ -10,7 +10,8 @@ import PropTypes from 'prop-types';
 import { createSeries , createComic } from './../Actions/NavbarActions';
 
 const StateToProps = (state) => ({ //application level state via redux
-    NavBar: state.NavBar
+    NavBar: state.NavBar,
+    user: state.user
 });
 
 class NavigationBar extends Component {
@@ -70,7 +71,7 @@ class NavigationBar extends Component {
                         <Button variant="success" type="submit">Search</Button>
                     </Form>
                     <Nav className="ml-auto">
-                        <Nav.Link href="/logout" onClick={this.handleLogout}>Log Out</Nav.Link>
+                        {this.props.user.token ? <Nav.Link href="/logout" onClick={this.handleLogout}>Log Out</Nav.Link> : <Nav.Link href="/">Log In</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
