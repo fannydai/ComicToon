@@ -122,10 +122,8 @@ public class ComicController{
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/view/comic-series", method = RequestMethod.POST, consumes = {"application/json"})
     @ResponseBody
-    public ViewComicSeriesResult viewComicSeries(@RequestBody ViewComicSeriesForm form){
-        ViewComicSeriesResult result = new ViewComicSeriesResult();
-        result.setComics(new ArrayList<ComicModel>());
-
+    public BundleViewAllComics viewComicSeries(@RequestBody ViewComicSeriesForm form){
+        BundleViewAllComics result = new BundleViewAllComics();
         ArrayList <ComicSeriesModel> candidates = ComicSeriesRepository.findByname(form.getComicSeriesName());
         if (candidates.size() == 0) {
             result.setResult("failure");
@@ -152,9 +150,22 @@ public class ComicController{
                     return result;
                 }
                 for(String comicID : candidate.getComics()){
+                    System.out.println("GETTING COMICS");
                     ComicModel comic = comicRepository.findByid(comicID);
                     if (comic != null) {
-                        result.getComics().add(comic);
+                        System.out.println("FORMATTING COMIC");
+                        //result.getComics().add(comic);
+                        ViewAllComicsResult pans = new ViewAllComicsResult();
+                        pans.setComicName(comic.getName());
+                        pans.setComicID(comic.getId());
+                        pans.setComicSeriesName(candidate.getName());
+                        pans.setUsername(owner.getUsername());
+                        pans.setDate(comic.getDate());
+                        for(int j=0; j<comic.getPanelsList().size(); j++){
+                            PanelModel real = panelRepository.findByid(comic.getPanelsList().get(j));
+                            pans.getComicList().add(real);
+                        }
+                        result.getBundleComicList().add(pans);
                     }
                 }
                 break;

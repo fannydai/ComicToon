@@ -42,24 +42,23 @@ class ViewComic extends Component {
             if (!this.props.match.params.username || !this.props.match.params.comicName) {
                 this.props.history.goBack();
             }
-            /*
-            // Load comic only if this page is not redirected from create comic
-            if (!this.props.comic.saveNewComic.comicName || this.props.comic.newComic.length === 0) {
-                console.log('VIEW COMIC FETCHING DATA');
-                this.props.viewComic(this.props.match.params.username, this.props.CurrUser.token, this.props.match.params.comicName);
-            }*/
             this.props.viewComic(this.props.match.params.username, this.props.CurrUser.username, this.props.match.params.comicName, this.props.match.params.seriesName, this.props.CurrUser.token);
-            //this.updateRating();
         }
     }
 
     componentWillReceiveProps(nextProps){
+        console.log("COMPONENT RECEIVING PROPS");
+        // Reload for suggestions
+        if (this.props.location.pathname !== nextProps.location.pathname) {
+            console.log("CLICKED ON SUGGESTED COMIC");
+            this.props.viewComic(nextProps.match.params.username, nextProps.CurrUser.username, nextProps.match.params.comicName, nextProps.match.params.seriesName, nextProps.CurrUser.token);
+        } else {
         // Set the new comments
         if (nextProps.comic.saveNewComic.commentsList) {
             this.setState({ comments: nextProps.comic.saveNewComic.commentsList });
         }
         if((nextProps.comic.saveNewComic.privacy === "Private" && this.props.CurrUser.username !== this.props.match.params.username) && nextProps.comic.saveNewComic.sharedWith.indexOf(this.props.CurrUser.username) === -1){
-           console.log("NSDGDSG");
+        console.log("NSDGDSG");
             this.props.history.push('/*');
         }
         (async () => {
@@ -76,7 +75,7 @@ class ViewComic extends Component {
             let content = await res.json();
             console.log(content)
             this.setState({rating: content.result})
-        })();
+        })(); }
     }
 
     updateRating(){
@@ -122,7 +121,6 @@ class ViewComic extends Component {
         console.log("DOWNLOADING");
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         if (panels.length) {
-            console.log(panels);
             const zip =new JSZip();
             for (var i = 0; i < panels.length; i++) {
                 // Look for the type of file
@@ -314,7 +312,6 @@ class ViewComic extends Component {
     }
 
     renderComments = () => {
-        console.log("MAKING SURE THE STATE EXISTS", this.state);
         return this.state.comments.map((comment, index) => {
             const deleteButton = comment.username === this.props.CurrUser.username ? 
                 <FontAwesomeIcon icon="trash" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleDeleteComment(comment, index, e)} /> : null;
@@ -325,7 +322,7 @@ class ViewComic extends Component {
                     <Card.Body>
                         <Card.Title>{ comment.username }</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">{ comment.date }</Card.Subtitle>
-                        <Card.Text>{ comment.content }</Card.Text>
+                        <pre>{ comment.content }</pre>
                         {deleteButton}
                         {reportButton}
                     </Card.Body>
@@ -401,8 +398,6 @@ class ViewComic extends Component {
     }
 
     handleViewSuggestion = (suggestion) => {
-        console.log(suggestion);
-        console.log(`/view/comic/${suggestion.username}/${suggestion.comicSeriesName}/${suggestion.comicName}`);
         this.props.history.push(`/view/comic/${suggestion.username}/${suggestion.comicSeriesName}/${suggestion.comicName}`);
     }
 
@@ -424,16 +419,9 @@ class ViewComic extends Component {
     }
 
     render() {
-        console.log(this.props.comic);
-        console.log(this.state);
-        /*
-        {panels && panels[this.state.panelIndex + 1] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 1].image} alt="can't load"/></div> : null}
-        {panels && panels[this.state.panelIndex + 2] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 2].image} alt="can't load"/></div> : null}
-        {panels && panels[this.state.panelIndex + 3] ? <div className="view-comic-panel-inner"><img className="view-comic-panel-img" src={panels[this.state.panelIndex + 3].image} alt="can't load"/></div> : null}
-        */
         // Check permissions
         if (this.props.comic.saveNewComic.error) {
-            this.props.history.push('/notfound');
+            this.props.history.push('/');
         }
         const panels = this.props.comic.newComic.length ? this.props.comic.newComic : this.props.comic.saveNewComic.panels ? this.props.comic.saveNewComic.panels : [];
         const subButton = this.props.CurrUser.username !== this.props.match.params.username ? this.state.subbed ? 
