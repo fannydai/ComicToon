@@ -92,7 +92,7 @@ class ViewSeries extends Component {
         return (
             panelList.map((item, i)=> {
                 return item !== null ?
-                <div className="view-comics-panel-container" key={item.id} onClick={(e) => this.handlePanelClick(item, i, comicIndex, e)}>
+                <div className="view-comics-panel-container" key={item.id}>
                     <img className="view-comics-panel-img" src={item.image} alt="can't load"></img>
                 </div>
                 :
