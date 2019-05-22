@@ -888,6 +888,25 @@ public class ComicController{
         return result;
     }
 
+    // Check if is subbed to someone
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "/isSubbed", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseBody
+    public IsSubbedResult isSubbed(@RequestBody IsSubbedForm form){
+        IsSubbedResult result = new IsSubbedResult();
+        UserModel user = userRepository.findBytoken(form.getToken());
+        if(user==null){
+            result.setResult(false);
+            return result;
+        }
+        if (user.getSubscriptions().contains(form.getUsername())) {
+            result.setResult(true);
+        } else {
+            result.setResult(false);
+        }
+        return result;
+    }
+
     //SIDEBAR RECOMMENDATIONS   Recommendations are returned based on same user of the comic in question or same genre.
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/sidebar", method = RequestMethod.POST, consumes = {"application/json"})

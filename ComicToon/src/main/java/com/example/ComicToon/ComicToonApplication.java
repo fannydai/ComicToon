@@ -70,7 +70,8 @@ protected static class SecurityConfiguration extends WebSecurityConfigurerAdapte
             "/getSharedComics",
             "/delete-report",
             "/sidebar",
-            "/view/series-data"
+            "/view/series-data",
+            "/isSubbed"
             )
         .permitAll()
         .and()
