@@ -22,6 +22,7 @@ class CreateSeries extends Component {
             genre : "",
             genreList: [],
             seriesDes: "",
+            privacy: "Private",
             error: ""
         }
     }
@@ -69,7 +70,7 @@ class CreateSeries extends Component {
             this.setState({ error: "Enter a description for the series." });
         } else {
             console.log(this.state)
-            this.props.createSeries(this.props.CurrUser.token, this.state.seriesName, this.state.seriesDes, this.state.genreList, "Private", this.props.history);
+            this.props.createSeries(this.props.CurrUser.token, this.state.seriesName, this.state.seriesDes, this.state.genreList, this.state.privacy, this.props.history);
         }
     }
 
@@ -108,6 +109,10 @@ class CreateSeries extends Component {
                     <h1>Create Series</h1>
                     <Form.Control required className="create-series-form-control" name="seriesName" type="text" placeholder="Type Series Name..." onChange={this.handleChange} />
                     <Form.Control required className="create-series-description-input" as="textarea" rows="3"  placeholder="Write a description of the series" value={this.state.seriesDes} onChange={this.handleSeriesDescription} />
+                    <div style={{ marginBottom: "1vh" }}>
+                        <Form.Check required type="radio" name="privacy" value="Public" label="Public" checked={this.state.privacy === 'Public'} onChange={this.handleChange} />
+                        <Form.Check type="radio" name="privacy" value="Private" label="Private" checked={this.state.privacy === 'Private'} onChange={this.handleChange} />
+                    </div>
                     <Form.Control type="text" name="genre" placeholder="Press 'Enter' to Add Genre (ex. #horror)" value={this.state.genre} onChange={this.handleChange} onKeyPress={this.handleAddUserEnter} className="create-series-form-control" />
                     <div className="create-series-genre-input">
                         <h2>Genres </h2>

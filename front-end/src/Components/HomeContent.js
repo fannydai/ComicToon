@@ -146,7 +146,7 @@ class HomeContent extends Component {
             return (
                 this.state.subscriptionComics.slice(0, 10).map(item => {
                     return item !== null ?
-                    <span key={"subscription-" + item.comicName} onClick={() => this.handleViewRecent(item.comicName, item.username)}>
+                    <span key={"subscription-" + item.comicName} onClick={() => this.handleViewRecent(item)}>
                         {this.renderSubscription(item)}
                     </span>
                     : null
@@ -167,7 +167,7 @@ class HomeContent extends Component {
             return (
                 this.state.favorites.slice(0, 10).map(item => {
                     return item !== null ?
-                    <span key={"favorite-" + item.comicName} onClick={() => this.handleViewRecent(item.comicName, item.username)}>
+                    <span key={"favorite-" + item.comicName} onClick={() => this.handleViewRecent(item)}>
                         {this.renderFavorite(item)}
                     </span>
                     : null

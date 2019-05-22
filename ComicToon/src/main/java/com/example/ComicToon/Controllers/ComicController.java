@@ -152,7 +152,7 @@ public class ComicController{
                 for(String comicID : candidate.getComics()){
                     System.out.println("GETTING COMICS");
                     ComicModel comic = comicRepository.findByid(comicID);
-                    if (comic != null) {
+                    if (comic != null && (viewer.getUsername().equals(owner.getUsername()) || comic.getSharedWith().contains(viewer.getUsername()))) {
                         System.out.println("FORMATTING COMIC");
                         //result.getComics().add(comic);
                         ViewAllComicsResult pans = new ViewAllComicsResult();
@@ -994,7 +994,7 @@ public class ComicController{
                         pans.getComicList().add(firstPanel);
                         result.getBundleComicList().add(pans);
                         suggestions_Found +=1;
-                        found.add(comic.getId());
+                        found.add(temp.getId());
                     }
                 }
             }
@@ -1026,6 +1026,8 @@ public class ComicController{
             for(String id: favs){
                 ViewAllComicsResult pans = new ViewAllComicsResult();
                 ComicModel com = comicRepository.findByid(id);
+                ComicSeriesModel series = ComicSeriesRepository.findByid(com.getComicSeriesID());
+                pans.setComicSeriesName(series.getName());
                 pans.setComicID(com.getId());
                 pans.setComicName(com.getName());
                 pans.setDate(com.getDate());

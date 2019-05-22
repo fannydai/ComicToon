@@ -8,7 +8,6 @@ import JSZip from 'jszip';
 
 import NavigationBar from './NavigationBar';
 import './styles/ViewComic.css';
-import pusheen from './images/pusheen.png';
 import { viewComic } from './../Actions/NavbarActions';
 import { clearPanels, saveNewComic } from './../Actions/ComicActions';
 
@@ -318,7 +317,7 @@ class ViewComic extends Component {
             const reportButton = comment.username !== this.props.CurrUser.username ? 
                 <Button variant="danger" style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={(e) => this.handleReportComment(comment.id, this.props.CurrUser.id, "comment")} >Report Comment</Button> : null;
             return (
-                <Card key={index}>
+                <Card style={{ marginLeft: 0, marginRight: 0 }} key={index}>
                     <Card.Body>
                         <Card.Title>{ comment.username }</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">{ comment.date }</Card.Subtitle>
@@ -405,7 +404,7 @@ class ViewComic extends Component {
         return (this.props.comic.suggestions.length ? 
             this.props.comic.suggestions.map((suggestion, index) => {
                 return (
-                    <Card className="view-comic-suggestions-card" key={"suggestion-" +  suggestion.comicID} onClick={e => this.handleViewSuggestion(suggestion)}>
+                    <Card className="view-comic-suggestions-card" style={{ marginLeft: 0, marginRight: 0 }} key={"suggestion-" +  suggestion.comicID} onClick={e => this.handleViewSuggestion(suggestion)}>
                         <Card.Img variant="top" src={suggestion.comicList[0].image} />
                         <Card.Body>
                             <Card.Title>{suggestion.comicName}</Card.Title>
@@ -416,6 +415,10 @@ class ViewComic extends Component {
             })
             : <h5>No Suggestions</h5>
         );
+    }
+
+    handleReportComic = () => {
+        console.log(this.props);
     }
 
     render() {
@@ -430,6 +433,10 @@ class ViewComic extends Component {
         </div> :
         <div className="ml-auto">
             <Button onClick={this.handleSubscribe}>Subscribe</Button>
+        </div> : null;
+        const reportComicButton = this.props.CurrUser.username !== this.props.match.params.username ?
+        <div className="ml-auto">
+            <Button onClick={this.handleReportComic}>Report Comic</Button>
         </div> : null;
         return (
             <div className="view-comic-container">
@@ -449,7 +456,7 @@ class ViewComic extends Component {
                                 </div>
                             </div>
                             <div className="view-comic-left-bottom">
-                                <Card>
+                                <Card style={{ marginLeft: 0, marginRight: 0 }}>
                                     <Card.Body>
                                         <div className="view-comic-title-row">
                                             <h1>{this.props.match.params.comicName}</h1>
@@ -473,10 +480,11 @@ class ViewComic extends Component {
                                                 <h2 className="view-comic-series-h2" onClick={this.handleSeries}>Series: {this.props.comic.saveNewComic.seriesName ? this.props.comic.saveNewComic.seriesName : null }</h2>
                                             </div>
                                             {subButton}
+                                            {reportComicButton}
                                         </div>
                                     </Card.Body>
                                 </Card>
-                                <Card>
+                                <Card style={{ marginLeft: 0, marginRight: 0 }}>
                                     <Card.Body>
                                         <h1>Description</h1>
                                         <pre>{this.props.comic.saveNewComic.description ? this.props.comic.saveNewComic.description : null}</pre>
